@@ -1,0 +1,9 @@
+name: Ask a question
+description: Please ask and answer questions here.
+body:
+  - type: textarea
+    attributes:
+      label: Question
+      description: Please provide the question here.
+    validations:
+      required: true

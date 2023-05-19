@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <property name="now" value="sysdate" dbms="oracle"/>
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+
+
+    <changeSet id="insertImages" author="MDeLuise">
+        <insert tableName="abstract_images">
+            <column name="id" value="99"/>
+            <column name="image_type" value="1"/>
+            <column name="name" value="99.jpeg"/>
+            <column name="saved_at" value="${now}"/>
+        </insert>
+        <insert tableName="abstract_images">
+            <column name="id" value="98"/>
+            <column name="image_type" value="1"/>
+            <column name="name" value="98.jpeg"/>
+            <column name="saved_at" value="${now}"/>
+        </insert>
+        <insert tableName="abstract_images">
+            <column name="id" value="97"/>
+            <column name="image_type" value="1"/>
+            <column name="name" value="97.jpeg"/>
+            <column name="saved_at" value="${now}"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertBotanicalName" author="MDeLuise">
+        <insert tableName="botanical_infos">
+            <column name="id" value="99"/>
+            <column name="scientific_name" value="Sedum spectabile"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Hylotelephium"/>
+            <column name="image_id" value="99"/>
+        </insert>
+        <insert tableName="botanical_infos">
+            <column name="id" value="98"/>
+            <column name="scientific_name" value="Sedum palmeri"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Sedum"/>
+            <column name="image_id" value="98"/>
+        </insert>
+        <insert tableName="botanical_infos">
+            <column name="id" value="97"/>
+            <column name="scientific_name" value="Kalanchoe rotundifolia"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Kalanchoe"/>
+            <column name="image_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertPlants" author="MDeLuise">
+        <insert tableName="tracked_entities">
+            <column name="id" value="99"/>
+            <column name="start_date" value="${now}"/>
+            <column name="personal_name" value="Mario"/>
+            <column name="state" value="ALIVE"/>
+            <column name="type" value="PLANT"/>
+            <column name="entity_type" value="1"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="99"/>
+        </insert>
+        <insert tableName="tracked_entities">
+            <column name="id" value="98"/>
+            <column name="start_date" value="${now}"/>
+            <column name="personal_name" value="Luigi"/>
+            <column name="state" value="ALIVE"/>
+            <column name="type" value="PLANT"/>
+            <column name="entity_type" value="1"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="98"/>
+        </insert>
+        <insert tableName="tracked_entities">
+            <column name="id" value="97"/>
+            <column name="start_date" value="${now}"/>
+            <column name="state" value="ALIVE"/>
+            <column name="type" value="PLANT"/>
+            <column name="entity_type" value="1"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertDiary" author="MDeLuise">
+        <insert tableName="diaries">
+            <column name="id" value="99"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="99"/>
+        </insert>
+        <insert tableName="diaries">
+            <column name="id" value="98"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="98"/>
+        </insert>
+        <insert tableName="diaries">
+            <column name="id" value="97"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertDiaryEntry" author="MDeLuise">
+        <insert tableName="diary_entries">
+            <column name="id" value="99"/>
+            <column name="type" value="SEEDING"/>
+            <column name="note" value="First log entry"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="99"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="98"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value="This is a note for the entry 98"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="99"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="97"/>
+            <column name="type" value="TRANSPLANTING"/>
+            <column name="note" value=""/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="98"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="96"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value="This is a note for the entry 96"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="98"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="95"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value=""/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="97"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

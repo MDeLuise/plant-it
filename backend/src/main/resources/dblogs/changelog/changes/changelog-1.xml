@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="insertAdminUser" author="MDeLuise">
+        <preConditions onFail="HALT">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM application_users
+                WHERE username = 'admin';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="application_users">
+            <column name="id" value="0"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$12$oHF8QcxYvDkIDqIy9YjRauhxGxJEW4qpWiAC74mBBLQmqnG3kBCu6"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertAdminRole" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM application_roles
+                WHERE name = 'ROLE_ADMIN';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="application_roles">
+            <column name="id" value="0"/>
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertAdminRoleRelation" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM application_roles
+                WHERE name = 'user_roles';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="user_roles">
+            <column name="user_id" value="0"/>
+            <column name="role_id" value="0"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

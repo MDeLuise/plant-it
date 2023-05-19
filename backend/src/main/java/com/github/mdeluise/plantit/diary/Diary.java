@@ -1,0 +1,75 @@
+package com.github.mdeluise.plantit.diary;
+
+import com.github.mdeluise.plantit.authentication.User;
+import com.github.mdeluise.plantit.diary.entry.DiaryEntry;
+import com.github.mdeluise.plantit.tracked.AbstractTrackedEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Set;
+
+@Entity
+@Table(name = "diaries")
+public class Diary {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @OneToOne
+    @JoinColumn(name = "target_id", nullable = false)
+    private AbstractTrackedEntity target;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
+    private Set<DiaryEntry> entries;
+
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public AbstractTrackedEntity getTarget() {
+        return target;
+    }
+
+
+    public void setTarget(AbstractTrackedEntity target) {
+        this.target = target;
+    }
+
+
+    public User getOwner() {
+        return owner;
+    }
+
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+
+    public Set<DiaryEntry> getEntries() {
+        return entries;
+    }
+
+
+    public void setEntries(Set<DiaryEntry> entries) {
+        this.entries = entries;
+    }
+}
