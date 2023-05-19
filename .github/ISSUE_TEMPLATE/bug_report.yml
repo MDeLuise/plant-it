@@ -1,0 +1,40 @@
+name: Bug Report
+description: Report a bug in YTSMS
+body:
+  - type: checkboxes
+    attributes:
+      label: Avoid duplicated bug reports
+      description: Please avoid bug report duplication
+      options:
+        - label: I've found a bug and checked that there are no open or closed bug report related to this.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: Please provide a brief description of the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behaviour
+      description: Please describe precisely what you'd expect to happen. Be specific.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Please describe the steps to reproduce the bug.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Additional info
+      description: Please provide any additional information that seem useful.

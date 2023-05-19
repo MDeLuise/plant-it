@@ -1,0 +1,10 @@
+# target
+target/
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Other
+.DS_Store
+*.iml

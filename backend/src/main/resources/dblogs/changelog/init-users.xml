@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="insertUser" author="MDeLuise">
+        <preConditions onFail="HALT">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM application_users
+                WHERE username = 'user';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="application_users">
+            <column name="id" value="99"/>
+            <column name="username" value="user"/>
+            <column name="password" value="$2a$10$TwhwicHicKzaC4TIdXNN8.siFXTRhY6Elfic.hS0/ZyLA3LL1GZS2"/> <!-- user -->
+        </insert>
+    </changeSet>
+
+    <changeSet id="insertUser1" author="MDeLuise">
+        <preConditions onFail="HALT">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM application_users
+                WHERE username = 'user1';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="application_users">
+            <column name="id" value="98"/>
+            <column name="username" value="user1"/>
+            <column name="password" value="$2a$10$bSb1UTsLzi3mF1FEygFtV.y/EJ3ZO7AX5vf4vcTJJRk/WdoazxB7K6"/> <!-- user1 -->
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

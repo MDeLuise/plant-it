@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="createUserTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="application_users">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createApiKeyTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="api_keys"/>
+            </not>
+        </preConditions>
+        <createTable tableName="api_keys">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_apiKey_user" references="application_users(id)"/>
+            </column>
+            <column name="api_key_value" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+            </column>
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                columnNames="user_id, name"
+                constraintName="api_key_name_unique"
+                tableName="api_keys"
+        />
+    </changeSet>
+
+
+    <changeSet id="createEntityImageTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="entity_images"/>
+            </not>
+        </preConditions>
+        <createTable tableName="entity_images">
+            <column name="id" type="varchar(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="image_type" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="botanical_info_entity_id" type="bigint">
+            </column>
+            <column name="plant_entity_id" type="bigint">
+            </column>
+            <column name="description" type="varchar(100)">
+            </column>
+            <column name="saved_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="varchar(255)">
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="createBotanicalInfoTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="botanical_infos"/>
+            </not>
+        </preConditions>
+        <createTable tableName="botanical_infos">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="scientific_name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="family" type="varchar(40)">
+            </column>
+            <column name="genus" type="varchar(40)">
+            </column>
+            <column name="species" type="varchar(40)">
+            </column>
+            <column name="botanical_info_type" type="tinyint(1)" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                columnNames="species, user_id"
+                constraintName="botanical_name_species_unique"
+                tableName="botanical_infos"
+        />
+        <addUniqueConstraint
+                columnNames="scientific_name, user_id"
+                constraintName="botanical_name_scientific_name_unique"
+                tableName="botanical_infos"
+        />
+    </changeSet>
+
+
+    <changeSet id="createPlantTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="plants"/>
+            </not>
+        </preConditions>
+        <createTable tableName="plants">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="start_date" type="timestamp">
+            </column>
+            <column name="end_date" type="timestamp">
+            </column>
+            <column name="personal_name" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plant_state" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="note" type="varchar(8500)">
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_plant_user" references="application_users(id)"/>
+            </column>
+            <column name="botanical_name_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_plant_botanicalName" references="botanical_infos(id)"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                columnNames="owner_id, personal_name"
+                constraintName="plants_name_unique"
+                tableName="plants"
+        />
+    </changeSet>
+
+
+    <changeSet id="createDiaryTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="diaries"/>
+            </not>
+        </preConditions>
+        <createTable tableName="diaries">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_diary_user" references="application_users(id)"/>
+            </column>
+            <column name="target_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_diary_trackedEntity"
+                             references="plants(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="createDiaryEntryTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="diary_entries"/>
+            </not>
+        </preConditions>
+        <createTable tableName="diary_entries">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="note" type="varchar(255)">
+            </column>
+            <column name="date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="diary_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_diaryEntry_diary" references="diaries(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+version: "3"
+
+name: plant-it
+services:
+  backend:
+    image: msdeluise/plant-it-backend:4242
+    env_file: backend.env
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+
+  db:
+    image: mysql:latest
+    restart: always
+    env_file: backend.env
+
+  cache:
+    image: redis:latest
+    restart: always
+
+  frontend:
+    image: msdeluise/plant-it-frontend:4242
+    env_file: frontend.env
+    links:
+      - backend
+
+  reverse-proxy:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - backend
+      - frontend

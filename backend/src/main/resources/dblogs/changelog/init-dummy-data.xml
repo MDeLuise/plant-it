@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <property name="now" value="sysdate" dbms="oracle"/>
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+
+
+    <changeSet id="insertBotanicalInfo" author="MDeLuise">
+        <insert tableName="botanical_infos">
+            <column name="id" value="99"/>
+            <column name="scientific_name" value="Sedum spectabile"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Hylotelephium"/>
+            <column name="species" value="Sedum spectabile"/>
+            <column name="botanical_info_type" value="1"/>
+        </insert>
+        <insert tableName="botanical_infos">
+            <column name="id" value="98"/>
+            <column name="scientific_name" value="Sedum palmeri"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Sedum"/>
+            <column name="species" value="Sedum palmeri"/>
+            <column name="botanical_info_type" value="1"/>
+        </insert>
+        <insert tableName="botanical_infos">
+            <column name="id" value="97"/>
+            <column name="scientific_name" value="Echeveria Perle von Nurnberg"/>
+            <column name="family" value="Crassulaceae"/>
+            <column name="genus" value="Echeveria"/>
+            <column name="species" value="Echeveria Perle von Nurnberg"/>
+            <column name="botanical_info_type" value="1"/>
+            <column name="user_id" value="99"/>
+            <column name="botanical_info_type" value="2"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertPlants" author="MDeLuise">
+        <insert tableName="plants">
+            <column name="id" value="99"/>
+            <column name="start_date" value="${now}"/>
+            <column name="personal_name" value="Mario"/>
+            <column name="plant_state" value="ALIVE"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="99"/>
+            <column name="personal_name" value="Sedum spectabile"/>
+        </insert>
+        <insert tableName="plants">
+            <column name="id" value="98"/>
+            <column name="start_date" value="${now}"/>
+            <column name="personal_name" value="Sedum palmeri"/>
+            <column name="plant_state" value="ALIVE"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="98"/>
+        </insert>
+        <insert tableName="plants">
+            <column name="id" value="97"/>
+            <column name="start_date" value="${now}"/>
+            <column name="plant_state" value="ALIVE"/>
+            <column name="owner_id" value="99"/>
+            <column name="botanical_name_id" value="97"/>
+            <column name="personal_name" value="Echeveria Perle von Nurnberg"/>
+            <column name="note" value="Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                            when an unknown printer took a galley of type and scrambled it to make a type
+                            specimen book. It has survived not only five centuries, but also the leap into
+                            electronic typesetting, remaining essentially unchanged. It was popularised in
+                            the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+                            and more recently with desktop publishing software like Aldus PageMaker
+                            including versions of Lorem Ipsum."/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertImages" author="MDeLuise">
+        <insert tableName="entity_images">
+            <column name="id" value="6a204453-175f-426f-8111-dabf3489d3e1"/>
+            <column name="image_type" value="1"/>
+            <column name="saved_at" value="${now}"/>
+            <column name="url" value="https://bs.plantnet.org/image/o/b649fffd28d057200573eefeeafb01f9a82c9a8c"/>
+            <column name="botanical_info_entity_id" value="99"/>
+        </insert>
+        <insert tableName="entity_images">
+            <column name="id" value="72028063-00ba-4a63-88f3-412b69d66650"/>
+            <column name="image_type" value="1"/>
+            <column name="saved_at" value="${now}"/>
+            <column name="url" value="https://bs.plantnet.org/image/o/ec1bdc007ab8b716b2e1cfc41404e561949e09d2"/>
+            <column name="botanical_info_entity_id" value="98"/>
+        </insert>
+        <insert tableName="entity_images">
+            <column name="id" value="3531aae7-486f-4650-a4e3-047d3755a759"/>
+            <column name="image_type" value="1"/>
+            <column name="saved_at" value="${now}"/>
+            <column name="url" value="/3531aae7-486f-4650-a4e3-047d3755a759"/>
+            <column name="path" value="upload-dir/dummy-image.jpg"/>
+            <column name="botanical_info_entity_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertDiary" author="MDeLuise">
+        <insert tableName="diaries">
+            <column name="id" value="99"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="99"/>
+        </insert>
+        <insert tableName="diaries">
+            <column name="id" value="98"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="98"/>
+        </insert>
+        <insert tableName="diaries">
+            <column name="id" value="97"/>
+            <column name="user_id" value="99"/>
+            <column name="target_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertDiaryEntry" author="MDeLuise">
+        <insert tableName="diary_entries">
+            <column name="id" value="99"/>
+            <column name="type" value="SEEDING"/>
+            <column name="note" value="First log entry"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="99"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="98"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value="This is a note for the entry 98"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="99"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="97"/>
+            <column name="type" value="TRANSPLANTING"/>
+            <column name="note" value=""/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="98"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="96"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value="This is a note for the entry 96"/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="98"/>
+        </insert>
+        <insert tableName="diary_entries">
+            <column name="id" value="95"/>
+            <column name="type" value="WATERING"/>
+            <column name="note" value=""/>
+            <column name="date" value="${now}"/>
+            <column name="diary_id" value="97"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

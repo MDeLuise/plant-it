@@ -1,0 +1,198 @@
+pipeline {
+    
+    environment {
+        DOCKER_ID = credentials('DOCKER_ID')
+        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+        BUILDER_NAME = 'mbuilder'
+        SERVICE = 'plant-it'
+    }
+
+    parameters {
+        booleanParam(name: "PUSH_IMAGES", defaultValue: false, description: "Push the images on Docker Hub")
+        booleanParam(name: "BUILD_IMAGES", defaultValue: false, description: "Build the docker images")
+        text(name: "IMAGES_VERSION", defaultValue: "vX.X.X", description: "Version of the docker images")
+        booleanParam(name: "IMAGES_LATEST", defaultValue: true, description: "Update the latest version of the images on Docker Hub")
+    }
+
+    agent any
+    stages {
+        stage('Build and test') {
+            parallel {
+                stage('Backend') {
+                    agent {
+                        docker {
+                            image "maven:3-eclipse-temurin-20"
+                            args "-u root"
+                        }
+                    }
+                    stages {
+                        stage('Build') {
+                            steps {
+                                dir("backend") {
+                                    echo 'Compiling...'
+                                    sh 'mvn clean install -DskipTests -Dcheckstyle.skip'
+                                }
+                            }
+                        }
+                        stage('Test') {
+                            steps {
+                                dir("backend") {
+                                    echo 'Testing...'
+                                    sh 'mvn verify -Dcheckstyle.skip'     
+                                }
+                            }
+                        }
+                        stage('Checkstyle') {
+                            steps {
+                                dir("backend") {
+                                    echo 'Checkstyle...'
+                                    sh 'mvn checkstyle:check'
+                                }
+                            }
+                        }
+                        stage('Package') {
+                            steps {
+                                dir("backend") {
+                                    echo 'Packaging...'
+                                    sh 'mvn package -DskipTests -Dcheckstyle.skip'
+                                    stash includes: 'target/*.jar', name: 'jarFiles'
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            dir("backend") {
+                                sh 'mvn clean'
+                            }
+                        }
+                    }
+                }
+                stage('Frontend') {
+                    agent {
+                        docker {
+                            image 'node:lts-bullseye-slim'
+                        }
+                    }
+                    stages {
+                        stage('Build') {
+                            steps {
+                                dir("frontend") {
+                                    echo 'Compiling frontend...'
+                                    sh """
+                                        npm install
+                                        CI=false npm run build
+                                    """
+                                }
+                            }
+                        }
+                        stage('Test') {
+                            steps {
+                                dir("frontend") {
+                                    sh """
+                                        npm test -- --watchAll=false
+                                    """
+                                    echo 'Testing...'
+                                    echo 'Testing stub'  
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            dir("frontend") {
+                                sh 'rm -rf build'
+                            }
+                        }
+                    }
+                }     
+            }
+        }
+        stage('Build and publish docker images of backend') {
+            agent any
+            stages {
+                stage('Login') {
+                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    steps {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
+                    }
+                }
+                stage("Create Buildx Builder") {
+                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    steps {
+                        sh """
+                        docker context create $BUILDER_NAME
+                        docker context use $BUILDER_NAME
+                        docker buildx create --bootstrap --use $BUILDER_NAME
+                        """
+                    }
+                }
+                stage("Build (and publish) multi-arch image") {
+                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    parallel {
+                        stage('Build backend image') {
+                            steps {
+                                dir("backend") {
+                                    unstash 'jarFiles'
+                                    script {
+                                        if (params.PUSH_IMAGES) {
+                                            sh """
+                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                            if (params.IMAGES_LATEST) {
+                                                sh """
+                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:latest -f deployment/Dockerfile .
+                                                """
+                                            }
+                                        } else {
+                                            sh """
+                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        stage('Build frontend image') {
+                            steps {
+                                dir("frontend") {
+                                    script {
+                                        if (params.PUSH_IMAGES) {
+                                            sh """
+                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                            if (params.IMAGES_LATEST) {
+                                                sh """
+                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:latest -f deployment/Dockerfile .
+                                                """
+                                            }
+                                        } else {
+                                            sh """
+                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        if (params.BUILD_IMAGES) {
+                            sh """
+                                docker stop \$(docker ps -a -q)
+                                docker images -q | xargs --no-run-if-empty docker rmi -f
+                                docker buildx use default
+                                docker context rm $BUILDER_NAME
+                                rm -rf backend/target
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+name: Automated tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.2.1
+        with:
+          java-version: 20
+
+      - name: Build
+        run: mvn clean install -DskipTests -Dcheckstyle.skip
+        working-directory: ./backend
+
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.2.1
+        with:
+          java-version: 20
+
+      - name: Verify the checkstyle
+        run: mvn checkstyle:check
+        working-directory: ./backend
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.2.1
+        with:
+          java-version: 20
+
+      - name: Run the tests
+        run: mvn test
+        working-directory: ./backend
