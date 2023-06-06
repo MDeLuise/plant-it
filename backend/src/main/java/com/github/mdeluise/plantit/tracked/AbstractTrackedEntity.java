@@ -36,6 +36,7 @@ public abstract class AbstractTrackedEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date startDate;
+    @NotNull
     @Length(max = 30)
     private String personalName;
     private Date endDate;

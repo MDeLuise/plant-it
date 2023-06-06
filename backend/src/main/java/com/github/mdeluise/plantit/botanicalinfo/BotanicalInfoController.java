@@ -31,7 +31,7 @@ public class BotanicalInfoController {
     @GetMapping
     public ResponseEntity<Page<BotanicalInfoDTO>> getAll(
         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
-        @RequestParam(defaultValue = "25", required = false) Integer pageSize,
+        @RequestParam(defaultValue = "5", required = false) Integer pageSize,
         @RequestParam(defaultValue = "scientificName", required = false) String sortBy,
         @RequestParam(defaultValue = "ASC", required = false) Sort.Direction sortDir) {
         final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);

@@ -12,8 +12,8 @@ public class BotanicalInfoDTO {
     private String family;
     @Schema(description = "Genus of the botanical info.")
     private String genus;
-    @Schema(description = "ID of the botanical info image.")
-    private String imageId;
+    @Schema(description = "URL of the botanical info image.")
+    private String imageUrl;
 
 
     public Long getId() {
@@ -56,12 +56,12 @@ public class BotanicalInfoDTO {
     }
 
 
-    public String getImageId() {
-        return imageId;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -1,7 +1,7 @@
 import { Box, InputAdornment, OutlinedInput, Skeleton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
-import { botanicalName } from "../interfaces";
+import { botanicalInfo } from "../interfaces";
 import TopBar from "./TopBar";
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -10,7 +10,7 @@ import { isBigScreen } from "../common";
 
 export default function AddEntities(props: { requestor: AxiosInstance, isLoggedIn: () => boolean }) {
     const [scientificName, setScientificName] = useState<string>("");
-    const [botanicalNames, setBotanicalNames] = useState<botanicalName[]>([]);
+    const [botanicalNames, setBotanicalNames] = useState<botanicalInfo[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     const retrieveBotanicalNames = (): void => {
@@ -23,8 +23,8 @@ export default function AddEntities(props: { requestor: AxiosInstance, isLoggedI
         setLoading(true);
         props.requestor.get(backendUrl)
             .then((res => {
-                let newBotanicalNames: botanicalName[] = [];
-                res.data.content.forEach((botanicalName: botanicalName) => {
+                let newBotanicalNames: botanicalInfo[] = [];
+                res.data.content.forEach((botanicalName: botanicalInfo) => {
                     newBotanicalNames.push(botanicalName);
                 })
                 setBotanicalNames(newBotanicalNames);
@@ -49,7 +49,7 @@ export default function AddEntities(props: { requestor: AxiosInstance, isLoggedI
                 }
                 endAdornment={
                     <InputAdornment position="start" sx={{ opacity: 0.5 }}>
-                        <CloseRoundedIcon onClick={() => setScientificName("")}/>
+                        <CloseRoundedIcon onClick={() => setScientificName("")} />
                     </InputAdornment>
                 }
                 placeholder="Search"
@@ -59,8 +59,8 @@ export default function AddEntities(props: { requestor: AxiosInstance, isLoggedI
                 {
                     loading &&
                     <>
-                        <Skeleton variant="rounded" sx={{ width: isBigScreen() ? "30vw" : "39vw", height: 20 / 9 * (isBigScreen() ? 30 : 39) + "vw"}} />
-                        <Skeleton variant="rounded" sx={{ width: isBigScreen() ? "30vw" : "39vw", height: 20 / 9 * (isBigScreen() ? 30 : 39) + "vw" }} />
+                        <Skeleton variant="rounded" animation="wave" sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }} />
+                        <Skeleton variant="rounded" animation="wave" sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }} />
                     </>
                 }
                 {botanicalNames.map(botNa => {

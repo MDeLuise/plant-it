@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit;
 
+import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractor;
+import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +27,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
         license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
         contact = @Contact(name = "GitHub page", url = "https://github.com/MDeLuise/plant-it")
     ), security = {@SecurityRequirement(name = "bearerAuth")}, servers = {
-    @Server(description = "Production", url = "http://localhost:8080/api"),
-    @Server(description = "Developer", url = "http://localhost:8085/api")
+    @Server(description = "Developer", url = "http://localhost:8085/api"),
+    @Server(description = "Production", url = "http://localhost:8080/api")
 }
 )
 @SecurityScheme(
@@ -36,8 +39,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableMethodSecurity
 @EnableCaching
 public class ApplicationConfig {
+    @Autowired
+    PlantInfoExtractorFactory plantInfoExtractorFactory;
+
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+
+    @Bean
+    public PlantInfoExtractor plantInfoExtractor() {
+        return plantInfoExtractorFactory.getPlantInfoExtractor();
     }
 }

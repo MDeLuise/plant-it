@@ -153,6 +153,8 @@
             <column name="saved_at" type="datetime">
                 <constraints nullable="false"/>
             </column>
+            <column name="url" type="varchar(255)">
+            </column>
         </createTable>
     </changeSet>
 
@@ -198,6 +200,7 @@
             <column name="end_date" type="timestamp">
             </column>
             <column name="personal_name" type="varchar(30)">
+                <constraints nullable="false"/>
             </column>
             <column name="state" type="varchar(20)">
                 <constraints nullable="false"/>
@@ -218,6 +221,12 @@
                 <constraints foreignKeyName="fk_plant_arrangement" references="tracked_entities(id)"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint
+                columnNames="owner_id, personal_name"
+                constraintName="tracked_entity_name_unique"
+                tableName="tracked_entities"
+        />
     </changeSet>
 
 

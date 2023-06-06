@@ -33,4 +33,17 @@ public class ImageService {
         InputStream in = new FileInputStream(ResourceUtils.getFile("classpath:images/" + imageInfo.getName()));
         return IOUtils.toByteArray(in);
     }
+
+
+    /*
+    public AbstractImage download(String imageUrl) throws IOException, URISyntaxException {
+        InputStream in = new URL(imageUrl).openStream();
+        final String name = System.currentTimeMillis() + ".jpg";
+        Files.copy(in, Path.of("images/" + name));
+        AbstractImage abstractImage = new BotanicalNameImage();
+        abstractImage.setName(name);
+        abstractImage.setSavedAt(new Date());
+        return imageRepository.save(abstractImage);
+    }
+     */
 }

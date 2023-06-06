@@ -15,12 +15,12 @@ export interface observation {
     value: number
 }
 
-export interface botanicalName {
+export interface botanicalInfo {
     id: number,
     scientificName: string,
     family: string,
     genus: string,
-    imageId: number
+    imageUrl: string
 }
 
 export interface trackedEntity {
@@ -31,7 +31,7 @@ export interface trackedEntity {
     state: string,
     ownerId: number,
     type: "PLANT" | "ARRANGEMENT",
-    botanicalName: botanicalName,
+    botanicalName: botanicalInfo,
     diaryId: number
 }
 

@@ -1,53 +1,34 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import { botanicalName } from "../interfaces";
+import { botanicalInfo } from "../interfaces";
 import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Buffer } from "buffer";
 import { isBigScreen } from "../common";
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 
-export default function BotanicalEntity(props: { entity: botanicalName, requestor: AxiosInstance }) {
-    const [image, setImage] = useState<string>();
-
-    useEffect(() => {
-        props.requestor.get(`image/${props.entity.imageId}`, { responseType: 'arraybuffer' })
-            .then((res) => {
-                setImage(Buffer.from(res.data).toString("base64"));
-            })
-    }, [props.entity]);
-
+export default function BotanicalEntity(props: { entity: botanicalInfo, requestor: AxiosInstance }) {
     return (
-        // <Box sx={{
-        //     width: isBigScreen() ? "30vw" : "39vw",
-        //     borderRadius: "5px",
-        //     overflow: "hidden",
-        //     aspectRatio: "9 / 20"
-        // }}>
-        //     {image != undefined &&
-        //         <img
-        //             src={`data:image/png;base64,${image}`}
-        //             style={{
-        //                 width: "100%",
-        //                 height: "65%",
-        //                 objectFit: "cover"
-        //             }}
-        //         />
-        //     }
-        //     <Typography variant="h6">
-        //         {props.entity.scientificName}
-        //     </Typography>
-        //     <Typography variant="body1">
-        //         {props.entity.family}, {props.entity.genus}
-        //     </Typography>
-        // </Box >
-        <Card sx={{ width: isBigScreen() ? "30vw" : "100%" }}>
+        <Card sx={{ width: isBigScreen() ? "30vw" : "100%", borderRadius: "5px" }}>
             <CardActionArea>
+                <Box sx={{
+                        position: "absolute",
+                        bottom: "75px",
+                        right: "15px",
+                        backgroundColor: "primary.main",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        zIndex: 10
+                    }}>
+                    <AddRoundedIcon/>
+                </Box>
+
                 <CardMedia
                     component="img"
                     height="140px"
-                    image={`data:image/png;base64,${image}`}
+                    image={props.entity.imageUrl}
                     alt={props.entity.scientificName}
                 />
-                <CardContent sx={{height: "20%"}} >
+                <CardContent sx={{ height: "20%" }} >
                     <Typography gutterBottom variant="h5" component="div">
                         {props.entity.scientificName}
                     </Typography>
