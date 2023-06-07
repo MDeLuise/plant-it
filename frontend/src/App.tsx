@@ -80,9 +80,6 @@ export default function AppWithColorMode() {
               background: {
                 default: '#efefef',
               },
-              shape: {
-                borderRadius: 4,
-              },
             }
             : {
               // palette values for dark mode
@@ -96,20 +93,20 @@ export default function AppWithColorMode() {
                 default: "#303030",
                 paper: "#424242",
               },
-              shape: {
-                borderRadius: 4,
-              },
             }),
         },
         typography: {
-          fontFamily: "Montserrat",
+          fontFamily: "Quicksand",
           body1: {
             lineHeight: 1.5,
           },
           body2: {
             lineHeight: 1.5,
           },
-        }
+        },
+        shape: {
+          borderRadius: 4,
+        },
       }),
     [mode],
   );

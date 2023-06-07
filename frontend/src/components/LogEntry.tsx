@@ -27,10 +27,15 @@ export default function LogEntry(props: { entity: diaryEntry, last: boolean }) {
     };
 
     return (
-        <Box sx={{
-            display: "flex",
-            gap: "20px",
-        }}>
+        <Box
+            boxShadow={2}
+            sx={{
+                display: "flex",
+                gap: "20px",
+                backgroundColor: "background.paper",
+                borderRadius: "10px",
+                padding: "10px",
+            }}>
             <Box sx={{
                 backgroundColor: getTypeIconBackground(props.entity.type),
                 width: "fit-content",
@@ -43,17 +48,18 @@ export default function LogEntry(props: { entity: diaryEntry, last: boolean }) {
                     border: '1px solid #c0bfbf',
                     content: '""',
                     display: props.last ? 'none' : 'block',
-                    height: '40px',
+                    height: '60px',
                     left: '50%',
                     position: 'absolute',
                     top: '50px',
+                    boxShadow: "0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);"
                 }
             }}>
                 {getTypeIcon(props.entity.type)}
             </Box>
             <Box>
                 <Typography>{new Date(props.entity.date).toLocaleString()}</Typography>
-                <Typography style={{fontWeight: 500}}>{props.entity.diaryTargetPersonalName}</Typography>
+                <Typography style={{ fontWeight: 500 }}>{props.entity.diaryTargetPersonalName}</Typography>
                 <Typography>{titleCase(props.entity.type)}</Typography>
             </Box>
         </Box>

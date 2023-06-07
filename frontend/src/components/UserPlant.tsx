@@ -5,7 +5,7 @@ import { isBigScreen } from "../common";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function UserPlant(props: { entity: trackedEntity }) {
+export default function UserPlant(props: { entity: trackedEntity, style?: {} }) {
     const name: string = props.entity.personalName != undefined ?
         props.entity.personalName :
         "plant " + props.entity.id
@@ -23,8 +23,9 @@ export default function UserPlant(props: { entity: trackedEntity }) {
                 aspectRatio: ".7",
                 backgroundColor: "background.paper",
                 padding: "10px",
-                flexShrink: 0
-            }}>
+                flexShrink: 0,
+            }}
+            style={props.style}>
             {!imageLoaded &&
                 <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
             }

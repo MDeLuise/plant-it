@@ -9,12 +9,13 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import UserPlant from "./UserPlant";
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ForestOutlinedIcon from '@mui/icons-material/ForestOutlined';
 import LogEntry from "./LogEntry";
+import AllPlants from "./AllPlants";
+import SearchPage from "./SearchPage";
 
 
 function UserTopBar(props: {}) {
@@ -42,6 +43,7 @@ function UserTopBar(props: {}) {
 
 function UserPlantsList(props: {requestor: AxiosInstance}) {
     const [entities, setEntities] = useState<trackedEntity[]>([]);
+    const [plantName, setPlantName] = useState<string>("");
 
     useEffect(() => {
         props.requestor.get("/tracked-entity")
@@ -70,12 +72,18 @@ function UserPlantsList(props: {requestor: AxiosInstance}) {
                 }
                 endAdornment={
                     <InputAdornment position="start" sx={{ opacity: 0.5 }}>
-                        <CloseOutlinedIcon />
+                        <CloseOutlinedIcon
+                            sx={{visibility: plantName === "" ? "hidden" : "initial"}}
+                            onClick={() => setPlantName("")}
+                        />
                     </InputAdornment>
                 }
                 placeholder="Search your plants"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPlantName(event.target.value)}
+                value={plantName}
                 sx={{
-                    margin: "10px 0"
+                    margin: "10px 0",
+                    backgroundColor: "#eae8e8"
                 }}
             />
             <Box sx= {{
@@ -111,7 +119,7 @@ function DiaryEntriesList(props: {requestor: AxiosInstance}) {
                 alignItems: "center",
                 margin: "10px 0"
             }}>
-                <Typography variant="body1" style={{ fontWeight: 600 }}>Your logs</Typography>
+                <Typography variant="body1" style={{ fontWeight: 600 }}>Your diary</Typography>
                 <Box sx={{flexGrow: 1}}></Box>
                 <Typography variant="body1" mx={.5}><Link href="#">All</Link></Typography>
                 <Typography variant="body1" mx={.5}><Link href="#">Add</Link></Typography>
@@ -146,11 +154,14 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     <UserPlantsList requestor={props.requestor}/>
 
                     <DiaryEntriesList requestor={props.requestor}/>
-                    {/* <ListOfUserEntities entities={entities} requestor={props.requestor} loading={loadingPlants} /> */}
                 </Box>
 
                 <Box sx={{ display: activeTab === 1 ? "visible" : "none" }}>
-                    {/* <ListOfUserDiariesEntries entities={diariesEntries} requestor={props.requestor} loading={loadingDiaryEntries} /> */}
+                    <AllPlants requestor={props.requestor}/>
+                </Box>
+
+                <Box sx={{ display: activeTab === 3 ? "visible" : "none" }}>
+                    <SearchPage requestor={props.requestor}/>
                 </Box>
 
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
@@ -165,7 +176,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         <BottomNavigationAction label="Home" icon={<HomeOutlinedIcon />} />
                         <BottomNavigationAction label="Garden" icon={<ForestOutlinedIcon />} />
                         <BottomNavigationAction label="Diary" icon={<MenuBookOutlinedIcon />} />
-                        <BottomNavigationAction label="Whishlist" icon={<FavoriteOutlinedIcon />} />
+                        <BottomNavigationAction label="Search" icon={<SearchOutlinedIcon />} />
                         <BottomNavigationAction label="Profile" icon={<PersonOutlinedIcon />} />
                     </BottomNavigation>
                 </Paper>
