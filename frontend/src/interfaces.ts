@@ -3,7 +3,7 @@ export interface tracker {
     name: string,
     description: string,
     unit: string,
-    lastObservation?: observation
+    lastObservation?: observation,
 }
 
 export interface observation {
@@ -12,7 +12,7 @@ export interface observation {
     trackerName: string,
     unit: string,
     instant: Date,
-    value: number
+    value: number,
 }
 
 export interface botanicalInfo {
@@ -20,7 +20,7 @@ export interface botanicalInfo {
     scientificName: string,
     family: string,
     genus: string,
-    imageUrl: string
+    imageUrl: string,
 }
 
 export interface trackedEntity {
@@ -32,7 +32,7 @@ export interface trackedEntity {
     ownerId: number,
     type: "PLANT" | "ARRANGEMENT",
     botanicalName: botanicalInfo,
-    diaryId: number
+    diaryId: number,
 }
 
 export interface diaryEntry {
@@ -41,5 +41,6 @@ export interface diaryEntry {
     note: string,
     date: Date,
     diaryId: number,
-    diaryTargetId: number
+    diaryTargetId: number,
+    diaryTargetPersonalName: string,
 }

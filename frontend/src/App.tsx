@@ -83,14 +83,6 @@ export default function AppWithColorMode() {
               shape: {
                 borderRadius: 4,
               },
-              typography: {
-                body1: {
-                  lineHeight: 1.5,
-                },
-                subtitle2: {
-                  lineHeight: 1.5,
-                },
-              },
             }
             : {
               // palette values for dark mode
@@ -107,15 +99,16 @@ export default function AppWithColorMode() {
               shape: {
                 borderRadius: 4,
               },
-              typography: {
-                subtitle1: {
-                  lineHeight: 1.5,
-                },
-                subtitle2: {
-                  lineHeight: 1.5,
-                },
-              }
             }),
+        },
+        typography: {
+          fontFamily: "Montserrat",
+          body1: {
+            lineHeight: 1.5,
+          },
+          body2: {
+            lineHeight: 1.5,
+          },
         }
       }),
     [mode],

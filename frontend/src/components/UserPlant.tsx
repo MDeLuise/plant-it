@@ -1,12 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { trackedEntity } from "../interfaces";
-import { useEffect, useState } from "react";
-import { AxiosInstance } from "axios";
 import { Buffer } from "buffer";
 import { isBigScreen } from "../common";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
-export default function UserPlant(props: { entity: trackedEntity, requestor: AxiosInstance }) {
+export default function UserPlant(props: { entity: trackedEntity }) {
     const name: string = props.entity.personalName != undefined ?
         props.entity.personalName :
         "plant " + props.entity.id
@@ -35,7 +33,7 @@ export default function UserPlant(props: { entity: trackedEntity, requestor: Axi
                     marginBottom: "10px",
                 }}
             />
-            <Typography variant="body1" style={{fontWeight: 800}}>
+            <Typography variant="body1" style={{fontWeight: 600}}>
                 {name}
             </Typography>
             <Typography variant="body1">

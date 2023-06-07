@@ -18,6 +18,8 @@ public class DiaryEntryDTO {
     private Long diaryId;
     @Schema(description = "ID of the tracked entity.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryTargetId;
+    @Schema(description = "Personal name of the tracked entity.", accessMode = Schema.AccessMode.READ_ONLY)
+    private String diaryTargetPersonalName;
 
 
     public Long getId() {
@@ -77,5 +79,15 @@ public class DiaryEntryDTO {
 
     public void setDiaryTargetId(Long diaryTargetId) {
         this.diaryTargetId = diaryTargetId;
+    }
+
+
+    public String getDiaryTargetPersonalName() {
+        return diaryTargetPersonalName;
+    }
+
+
+    public void setDiaryTargetPersonalName(String diaryTargetPersonalName) {
+        this.diaryTargetPersonalName = diaryTargetPersonalName;
     }
 }
