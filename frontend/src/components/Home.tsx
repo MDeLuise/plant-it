@@ -3,114 +3,128 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import "../style/Home.scss";
 import "../style/Base.scss";
-import { Avatar, BottomNavigation, BottomNavigationAction, Box, List, ListItem, ListItemAvatar, ListItemText, Paper, Skeleton, SvgIconTypeMap, Typography } from "@mui/material";
+import { Avatar, BottomNavigation, BottomNavigationAction, Box, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, OutlinedInput, Paper, Skeleton, SvgIconTypeMap, Typography } from "@mui/material";
 import { diaryEntry, trackedEntity } from "../interfaces";
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
-import ForestRoundedIcon from '@mui/icons-material/ForestRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import PlantEntity from "./PlantEntity";
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import UserPlant from "./UserPlant";
 import AddPlantPlaceholder from "./AddPlantPlaceholder";
 import { isBigScreen, titleCase } from "../common";
-import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
-import WaterDropRoundedIcon from '@mui/icons-material/WaterDropRounded';
-import YardRoundedIcon from '@mui/icons-material/YardRounded';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import QuestionMarkOutlinedIcon from '@mui/icons-material/QuestionMarkOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import YardOutlinedIcon from '@mui/icons-material/YardOutlined';
+import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import ForestOutlinedIcon from '@mui/icons-material/ForestOutlined';
 
 
-function ListOfUserEntities(props: { loading: boolean, entities: trackedEntity[], requestor: AxiosInstance }) {
+function UserTopBar(props: {}) {
     return (
-        <Box sx={{ display: "flex", gap: "40px", flexWrap: "wrap", marginTop: "30px" }}>
-            <AddPlantPlaceholder />
-            {
-                props.loading &&
-                <>
-                    <Skeleton variant="rounded" sx={{ height: isBigScreen() ? "20vw" : "39vw", width: isBigScreen() ? "20vw" : "39vw" }} />
-                    <Skeleton variant="rounded" sx={{ height: isBigScreen() ? "20vw" : "39vw", width: isBigScreen() ? "20vw" : "39vw" }} />
-                </>
-            }
-            {props.entities.map((en: trackedEntity) => {
-                return <PlantEntity entity={en} requestor={props.requestor} />
-            })}
+        <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "30px"
+        }}>
+            <Box sx={{
+                display: "flex",
+                gap: "15px"
+            }}>
+                <Avatar alt="user" src="/static/images/avatar/1.jpg" />
+                <Box>
+                    <Typography variant="body2">Welcome back</Typography>
+                    <Typography variant="body1" style={{ fontWeight: 600 }}>user 👋</Typography>
+                </Box>
+            </Box>
+            <NotificationsOutlinedIcon />
+        </Box>
+    )
+}
+
+function UserPlantsList(props: {requestor: AxiosInstance}) {
+    const [entities, setEntities] = useState<trackedEntity[]>([]);
+
+    useEffect(() => {
+        props.requestor.get("/tracked-entity")
+        .then((res) => {
+            setEntities(res.data.content);
+        })
+    }, []);
+
+    return (
+        <Box>
+            <Typography variant="subtitle1" style={{ fontWeight: 600 }}>Your plants</Typography>
+            <OutlinedInput
+                fullWidth
+                startAdornment={
+                    <InputAdornment position="start" sx={{ opacity: 0.5 }}>
+                        <SearchOutlinedIcon />
+                    </InputAdornment>
+                }
+                endAdornment={
+                    <InputAdornment position="start" sx={{ opacity: 0.5 }}>
+                        <CloseOutlinedIcon />
+                    </InputAdornment>
+                }
+                placeholder="Search your plants"
+                sx={{
+                    margin: "10px 0"
+                }}
+            />
+            <Box sx= {{
+                display: "flex",
+                gap: "20px",
+                overflowX: "scroll",
+                padding: "5px 0",
+                '&::-webkit-scrollbar': {display: "none"}
+            }}>
+                {entities.map((entity) => {
+                    return <UserPlant entity={entity} requestor={props.requestor} key={entity.id}/>
+                })}
+            </Box>
         </Box>
     )
 }
 
 
-function ListOfUserDiariesEntries(props: { loading: boolean, entities: diaryEntry[], requestor: AxiosInstance }) {
-    let navigate: NavigateFunction = useNavigate();
-    const [entitiesNames, setEntitiesNames] = useState(new Map<number, string>());
+function DiaryEntriesList(props: {requestor: AxiosInstance}) {
+    const [entities, setEntities] = useState<trackedEntity[]>([]);
+
+    useEffect(() => {
+        props.requestor.get("/tracked-entity")
+        .then((res) => {
+            setEntities(res.data.content);
+        })
+    }, []);
 
     const getTypeIcon = (type: string): ReactElement<any, any> => {
         switch (type.toLowerCase()) {
-            case "watering": return <WaterDropRoundedIcon />
-            case "seeding": return <YardRoundedIcon />
-            case "transplanting": return <AutorenewRoundedIcon />
-            default: return <QuestionMarkRoundedIcon />
+            case "watering": return <WaterDropOutlinedIcon />
+            case "seeding": return <YardOutlinedIcon />
+            case "transplanting": return <AutorenewOutlinedIcon />
+            default: return <QuestionMarkOutlinedIcon />
         }
     };
-
-    const getEntityName = (id: number): void => {
-        if (entitiesNames.has(id)) {
-            return;
-        }
-        props.requestor.get(`/tracked-entity/${id}`)
-            .then((response) => {
-                let name = response.data.personalName != undefined ?
-                    response.data.personalName :
-                    "Plant " + id;
-                entitiesNames.set(id, name);
-            })
-    };
-
-    useEffect(() => {
-        props.entities.forEach((en) => {
-            getEntityName(en.diaryTargetId);
-        })
-    }, [props.entities]);
 
     return (
-        <List sx={{ display: "flex", flexWrap: "wrap", marginTop: "30px" }}>
-            <ListItem sx={{backgroundColor: "primary.main", borderRadius: "5px"}} onClick={() => navigate("/diary/add")}>
-                <ListItemAvatar>
-                    <Avatar>
-                        <AddRoundedIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Add new" />
-            </ListItem>
-            {
-                props.entities.map((en: diaryEntry) => {
-                    return (
-                        <ListItem alignItems="flex-start" sx={{borderRadius: "5px"}} onClick={() => navigate(`/diary/edit/${en.id}`)}>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    {getTypeIcon(en.type)}
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={entitiesNames.get(en.diaryTargetId)}
-                                secondary={
-                                    <Fragment>
-                                        <Typography
-                                            sx={{ display: 'inline' }}
-                                            component="span"
-                                            variant="body2"
-                                            color="text.primary"
-                                        >
-                                            {titleCase(en.type)}
-                                        </Typography>
-
-                                        {` - ${new Date(en.date).toLocaleDateString()}`}
-                                    </Fragment>
-                                }
-                            />
-                        </ListItem>
-                    )
-                })
-            }
-        </List>
-
+        <Box sx={{marginTop: "20px"}}>
+            <Typography variant="subtitle1" style={{ fontWeight: 600 }}>Your logs</Typography>
+            
+            {/* <Box sx= {{
+                display: "flex",
+                gap: "10px",
+                overflowX: "scroll",
+            }}>
+                {entities.map((entity) => {
+                    return <UserPlant entity={entity} requestor={props.requestor} key={entity.id}/>
+                })}
+            </Box> */}
+        </Box>
     )
 }
 
@@ -161,11 +175,16 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
 
                 <Box sx={{ display: activeTab === 0 ? "visible" : "none" }}>
-                    <ListOfUserEntities entities={entities} requestor={props.requestor} loading={loadingPlants} />
+                    <UserTopBar></UserTopBar>
+
+                    <UserPlantsList requestor={props.requestor}/>
+
+                    <DiaryEntriesList requestor={props.requestor}/>
+                    {/* <ListOfUserEntities entities={entities} requestor={props.requestor} loading={loadingPlants} /> */}
                 </Box>
 
                 <Box sx={{ display: activeTab === 1 ? "visible" : "none" }}>
-                    <ListOfUserDiariesEntries entities={diariesEntries} requestor={props.requestor} loading={loadingDiaryEntries} />
+                    {/* <ListOfUserDiariesEntries entities={diariesEntries} requestor={props.requestor} loading={loadingDiaryEntries} /> */}
                 </Box>
 
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
@@ -177,9 +196,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         }}
 
                     >
-                        <BottomNavigationAction label="My plants" icon={<ForestRoundedIcon />} />
-                        <BottomNavigationAction label="Diary" icon={<MenuBookRoundedIcon />} />
-                        <BottomNavigationAction label="Menu" icon={<SettingsRoundedIcon />} />
+                        <BottomNavigationAction label="Home" icon={<HomeOutlinedIcon />} />
+                        <BottomNavigationAction label="Garden" icon={<ForestOutlinedIcon />} />
+                        <BottomNavigationAction label="Diary" icon={<MenuBookOutlinedIcon />} />
+                        <BottomNavigationAction label="Whishlist" icon={<FavoriteOutlinedIcon />} />
+                        <BottomNavigationAction label="Profile" icon={<PersonOutlinedIcon />} />
                     </BottomNavigation>
                 </Paper>
             </Box>

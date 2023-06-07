@@ -6,7 +6,7 @@ import { Buffer } from "buffer";
 import { isBigScreen } from "../common";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
-export default function PlantEntity(props: { entity: trackedEntity, requestor: AxiosInstance }) {
+export default function UserPlant(props: { entity: trackedEntity, requestor: AxiosInstance }) {
     const name: string = props.entity.personalName != undefined ?
         props.entity.personalName :
         "plant " + props.entity.id
@@ -15,29 +15,31 @@ export default function PlantEntity(props: { entity: trackedEntity, requestor: A
     return (
         <Box
             onClick={() => navigate(`/entity/${props.entity.id}`)}
+            boxShadow={2}
             sx={{
-                width: isBigScreen() ? "20vw" : "39vw",
+                width: isBigScreen() ? "20vw" : "45vw",
                 borderRadius: "5px",
-                position: "relative",
                 overflow: "hidden",
-                aspectRatio: "1"
+                aspectRatio: ".7",
+                backgroundColor: "background.paper",
+                padding: "10px",
+                flexShrink: 0
             }}>
             <img
                 src={props.entity.botanicalName.imageUrl}
                 style={{
                     width: "100%",
-                    height: "100%",
-                    objectFit: "cover"
+                    height: "70%",
+                    objectFit: "cover",
+                    borderRadius: "5px",
+                    marginBottom: "10px",
                 }}
             />
-            <Typography
-                variant="h6"
-                sx={{
-                    position: "absolute",
-                    bottom: "0",
-                    padding: "10px"
-                }}>
+            <Typography variant="body1" style={{fontWeight: 800}}>
                 {name}
+            </Typography>
+            <Typography variant="body1">
+                {props.entity.botanicalName.family}
             </Typography>
         </Box>
     )

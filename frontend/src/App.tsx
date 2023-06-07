@@ -8,7 +8,7 @@ import axios from "axios";
 import secureLocalStorage from "react-secure-storage";
 import React from "react";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import SearchEntities from "./components/SearchEntities";
 import AddCustom from "./components/AddCustom";
 import PlantPage from "./components/PlantPage";
@@ -43,9 +43,9 @@ export function App() {
         <Route path="/auth" element={<Auth requestor={axiosReq} />} />
         <Route path="/search" element={<SearchEntities requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
         <Route path="/add" element={<AddCustom requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
-        <Route path="/entity/:entityId" element={<PlantPage requestor={axiosReq} isLoggedIn={isLoggedIn}/>} />
-        <Route path="/diary/add" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn}/>} />
-        <Route path="/diary/edit/:diaryEntryId" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn}/>} />
+        <Route path="/entity/:entityId" element={<PlantPage requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
+        <Route path="/diary/add" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
+        <Route path="/diary/edit/:diaryEntryId" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
       </Routes>
     </BrowserRouter>
   );
@@ -53,7 +53,7 @@ export function App() {
 
 
 export default function AppWithColorMode() {
-  const [mode, setMode] = React.useState<'light' | 'dark'>(localStorage.getItem("plant-it-dark") != "false" ? "dark" : "light");
+  const [mode, setMode] = React.useState<'light' | 'dark'>(localStorage.getItem("plant-it-dark") != "false" ? "light" : "dark");
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
@@ -72,14 +72,25 @@ export default function AppWithColorMode() {
             ? {
               // palette values for light mode
               primary: {
-                main: '#3f51b5',
+                main: '#3a5e49',
               },
               secondary: {
-                main: '#f50057',
+                main: '#e64a19',
               },
               background: {
-                default: '#303030',
-              }
+                default: '#efefef',
+              },
+              shape: {
+                borderRadius: 4,
+              },
+              typography: {
+                body1: {
+                  lineHeight: 1.5,
+                },
+                subtitle2: {
+                  lineHeight: 1.5,
+                },
+              },
             }
             : {
               // palette values for dark mode
@@ -92,6 +103,17 @@ export default function AppWithColorMode() {
               background: {
                 default: "#303030",
                 paper: "#424242",
+              },
+              shape: {
+                borderRadius: 4,
+              },
+              typography: {
+                subtitle1: {
+                  lineHeight: 1.5,
+                },
+                subtitle2: {
+                  lineHeight: 1.5,
+                },
               }
             }),
         }
