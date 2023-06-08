@@ -1,6 +1,5 @@
 package com.github.mdeluise.plantit.image;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -10,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -22,10 +22,10 @@ public abstract class AbstractImage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
-    private String name;
+    @Length(max = 100)
+    private String description;
     @NotNull
-    private Date savedAt;
+    private Date savedAt = new Date();
 
 
     public Long getId() {
@@ -39,12 +39,12 @@ public abstract class AbstractImage {
 
 
     public String getName() {
-        return name;
+        return description;
     }
 
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String description) {
+        this.description = description;
     }
 
 

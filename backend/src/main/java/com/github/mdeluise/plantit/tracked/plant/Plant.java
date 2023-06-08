@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.tracked.plant;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.tracked.AbstractTrackedEntity;
 import com.github.mdeluise.plantit.tracked.arrangement.Arrangement;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -13,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 @DiscriminatorValue("1")
 public class Plant extends AbstractTrackedEntity {
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "botanical_name_id", nullable = false)
     private BotanicalInfo botanicalInfo;
     @ManyToOne
@@ -21,12 +22,17 @@ public class Plant extends AbstractTrackedEntity {
     private Arrangement arrangement;
 
 
-    public BotanicalInfo getBotanicalName() {
+    public Plant() {
+        super();
+    }
+
+
+    public BotanicalInfo getBotanicalInfo() {
         return botanicalInfo;
     }
 
 
-    public void setBotanicalName(BotanicalInfo botanicalInfo) {
+    public void setBotanicalInfo(BotanicalInfo botanicalInfo) {
         this.botanicalInfo = botanicalInfo;
     }
 

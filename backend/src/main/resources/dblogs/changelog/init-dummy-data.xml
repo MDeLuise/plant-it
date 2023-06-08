@@ -15,21 +15,18 @@
         <insert tableName="abstract_images">
             <column name="id" value="99"/>
             <column name="image_type" value="1"/>
-            <column name="name" value="99.jpeg"/>
             <column name="saved_at" value="${now}"/>
             <column name="url" value="https://bs.plantnet.org/image/o/b649fffd28d057200573eefeeafb01f9a82c9a8c"/>
         </insert>
         <insert tableName="abstract_images">
             <column name="id" value="98"/>
             <column name="image_type" value="1"/>
-            <column name="name" value="98.jpeg"/>
             <column name="saved_at" value="${now}"/>
             <column name="url" value="https://bs.plantnet.org/image/o/ec1bdc007ab8b716b2e1cfc41404e561949e09d2"/>
         </insert>
         <insert tableName="abstract_images">
             <column name="id" value="97"/>
             <column name="image_type" value="1"/>
-            <column name="name" value="97.jpeg"/>
             <column name="saved_at" value="${now}"/>
             <column name="url" value="https://bs.plantnet.org/image/o/3e1e625826f746597927eee1ab007fc3923f5ae0"/>
         </insert>

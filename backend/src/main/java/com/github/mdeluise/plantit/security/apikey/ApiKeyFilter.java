@@ -51,7 +51,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     private void sendError(String message, HttpServletResponse response) throws IOException {
-        ErrorMessage error = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), message, "");
+        ErrorMessage error = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), message, "", "");
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(objectMapper.writeValueAsString(error));

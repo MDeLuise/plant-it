@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TrackedEntityDTOConverter extends AbstractDTOConverter<AbstractTrackedEntity, AbstractTrackedEntityDTO> {
+public class TrackedEntityDTOConverter extends AbstractDTOConverter<AbstractTrackedEntity, TrackedEntityDTO> {
     private final PlantDTOConverter plantDtoConverter;
     private final ArrangementDTOConverter arrangementDtoConverter;
 
@@ -27,22 +27,22 @@ public class TrackedEntityDTOConverter extends AbstractDTOConverter<AbstractTrac
 
 
     @Override
-    public AbstractTrackedEntity convertFromDTO(AbstractTrackedEntityDTO dto) {
+    public AbstractTrackedEntity convertFromDTO(TrackedEntityDTO dto) {
         AbstractTrackedEntity result;
-        if (dto instanceof PlantDTO p) {
-            result = plantDtoConverter.convertFromDTO(p);
-        } else if (dto instanceof ArrangementDTO a) {
-            result = arrangementDtoConverter.convertFromDTO(a);
+        if (dto.getType().equals(TrackedEntityType.PLANT.name())) {
+            result = plantDtoConverter.convertFromDTO((PlantDTO) dto);
+        } else if (dto.getType().equals(TrackedEntityType.ARRANGEMENT.name())) {
+            result = arrangementDtoConverter.convertFromDTO((ArrangementDTO) dto);
         } else {
-            throw new IllegalArgumentException("Cannot convert object " + dto.toString());
+            throw new IllegalArgumentException("Cannot convert object " + dto);
         }
         return result;
     }
 
 
     @Override
-    public AbstractTrackedEntityDTO convertToDTO(AbstractTrackedEntity data) {
-        AbstractTrackedEntityDTO result;
+    public TrackedEntityDTO convertToDTO(AbstractTrackedEntity data) {
+        TrackedEntityDTO result;
         if (data instanceof Plant p) {
             result = plantDtoConverter.convertToDTO(p);
         } else if (data instanceof Arrangement a) {

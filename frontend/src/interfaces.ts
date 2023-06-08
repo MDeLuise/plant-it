@@ -27,11 +27,11 @@ export interface trackedEntity {
     id: number,
     startDate?: Date,
     endDate?: Date,
-    personalName?: string,
+    personalName: string,
     state: string,
     ownerId: number,
     type: "PLANT" | "ARRANGEMENT",
-    botanicalName: botanicalInfo,
+    botanicalInfo: botanicalInfo,
     diaryId: number,
 }
 

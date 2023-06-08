@@ -1,21 +1,26 @@
 version: "3"
 
-name: ytsms
+name: plant-it
 services:
   backend:
-    image: msdeluise/ytsms-backend:1.3.0
+    image: msdeluise/plant-it-backend:latest
     env_file: backend.env
     depends_on:
       - db
+      - cache
     restart: unless-stopped
 
   db:
-    image: mysql:8.0
+    image: mysql:latest
     restart: always
     env_file: backend.env
 
+  cache:
+    image: redis:latest
+    restart: always
+
   frontend:
-    image: msdeluise/ytsms-frontend:1.3.0
+    image: msdeluise/plant-it-frontend:latest
     env_file: frontend.env
     links:
       - backend

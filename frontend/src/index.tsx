@@ -4,6 +4,16 @@ import './index.css';
 import AppWithColorMode from './App';
 import reportWebVitals from './reportWebVitals';
 
+export {};
+
+declare global {
+  interface Window {
+    _env_: {
+      REACT_APP_API_URL: string
+    }
+  }
+}
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

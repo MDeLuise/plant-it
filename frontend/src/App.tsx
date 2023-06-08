@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import "./style/Base.scss";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Auth from "./components/Auth";
 import Home from "./components/Home";
@@ -9,16 +8,14 @@ import secureLocalStorage from "react-secure-storage";
 import React from "react";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from "@mui/material";
-import SearchEntities from "./components/SearchEntities";
-import AddCustom from "./components/AddCustom";
-import PlantPage from "./components/PlantPage";
-import AddEditDiaryEntry from "./components/AddEditDiaryEntry";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
+
 export function App() {
   const isLoggedIn: () => boolean = () => secureLocalStorage.getItem("plant-it-key") != null;
-  const backendURL = process.env.REACT_APP_API_URL != null ? process.env.REACT_APP_API_URL : "http://localhost:8085/api";
+  const backendURL = window._env_.REACT_APP_API_URL != null ? window._env_.REACT_APP_API_URL : "http://localhost:8085/api";
+  console.log(window._env_.REACT_APP_API_URL);
   const axiosReq = axios.create({
     baseURL: backendURL,
     timeout: 1000
@@ -41,11 +38,6 @@ export function App() {
       <Routes>
         <Route path="/" element={<Home requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
         <Route path="/auth" element={<Auth requestor={axiosReq} />} />
-        <Route path="/search" element={<SearchEntities requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
-        <Route path="/add" element={<AddCustom requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
-        <Route path="/entity/:entityId" element={<PlantPage requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
-        <Route path="/diary/add" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
-        <Route path="/diary/edit/:diaryEntryId" element={<AddEditDiaryEntry requestor={axiosReq} isLoggedIn={isLoggedIn} />} />
       </Routes>
     </BrowserRouter>
   );
@@ -73,6 +65,7 @@ export default function AppWithColorMode() {
               // palette values for light mode
               primary: {
                 main: '#3a5e49',
+                light: "#7dc996",
               },
               secondary: {
                 main: '#e64a19',
@@ -96,7 +89,7 @@ export default function AppWithColorMode() {
             }),
         },
         typography: {
-          fontFamily: "Quicksand",
+          fontFamily: "Raleway",//"Quicksand",
           body1: {
             lineHeight: 1.5,
           },
@@ -105,7 +98,7 @@ export default function AppWithColorMode() {
           },
         },
         shape: {
-          borderRadius: 4,
+          borderRadius: 10,
         },
       }),
     [mode],

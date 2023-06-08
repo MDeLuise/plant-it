@@ -7,7 +7,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
 @Entity
 @DiscriminatorValue("2")
@@ -18,8 +17,6 @@ public class TrackedEntityImage extends AbstractImage {
     private AbstractTrackedEntity abstractTrackedEntity;
     @OneToOne(mappedBy = "thumbnailImage")
     private AbstractTrackedEntity thumbnailOf;
-    @Length(max = 100)
-    private String description;
 
 
     public AbstractTrackedEntity getAbstractTrackedEntity() {
@@ -39,15 +36,5 @@ public class TrackedEntityImage extends AbstractImage {
 
     public void setThumbnailOf(AbstractTrackedEntity thumbnailOf) {
         this.thumbnailOf = thumbnailOf;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

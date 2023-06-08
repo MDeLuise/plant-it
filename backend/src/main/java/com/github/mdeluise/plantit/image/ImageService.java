@@ -35,6 +35,11 @@ public class ImageService {
     }
 
 
+    public AbstractImage save(AbstractImage toSave) {
+        return imageRepository.save(toSave);
+    }
+
+
     /*
     public AbstractImage download(String imageUrl) throws IOException, URISyntaxException {
         InputStream in = new URL(imageUrl).openStream();

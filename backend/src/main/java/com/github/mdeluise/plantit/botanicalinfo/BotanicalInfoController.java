@@ -18,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class BotanicalInfoController {
     private final PlantInfoExtractor plantInfoExtractor;
     private final BotanicalInfoDTOConverter botanicalInfoDtoConverter;
+    private final BotanicalInfoService botanicalInfoService;
 
 
     @Autowired
     public BotanicalInfoController(PlantInfoExtractor plantInfoExtractor,
-                                   BotanicalInfoDTOConverter botanicalInfoDtoConverter) {
+                                   BotanicalInfoDTOConverter botanicalInfoDtoConverter,
+                                   BotanicalInfoService botanicalInfoService) {
         this.plantInfoExtractor = plantInfoExtractor;
         this.botanicalInfoDtoConverter = botanicalInfoDtoConverter;
+        this.botanicalInfoService = botanicalInfoService;
     }
 
 
@@ -50,5 +53,11 @@ public class BotanicalInfoController {
         final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
         final Page<BotanicalInfo> result = plantInfoExtractor.extractPlants(partialScientificName, pageable);
         return ResponseEntity.ok(result.map(botanicalInfoDtoConverter::convertToDTO));
+    }
+
+
+    @GetMapping("/{id}/_count")
+    public ResponseEntity<Integer> count(@PathVariable Long id) {
+        return ResponseEntity.ok(botanicalInfoService.countPlants(id));
     }
 }

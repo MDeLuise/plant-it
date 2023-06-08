@@ -59,6 +59,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 HttpStatus.FORBIDDEN.value(),
                 new Date(),
                 message,
+                "",
                 ""
         );
         response.setContentType("application/json");

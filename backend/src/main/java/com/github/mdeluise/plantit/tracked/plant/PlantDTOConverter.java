@@ -21,7 +21,7 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
     @Override
     public Plant convertFromDTO(PlantDTO dto) {
         final Plant result = modelMapper.map(dto, Plant.class);
-        result.setBotanicalName(botanicalInfoDtoConverter.convertFromDTO(dto.getBotanicalName()));
+        result.setBotanicalInfo(botanicalInfoDtoConverter.convertFromDTO(dto.getBotanicalInfo()));
         return result;
     }
 
@@ -29,7 +29,7 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
     @Override
     public PlantDTO convertToDTO(Plant data) {
         final PlantDTO result = modelMapper.map(data, PlantDTO.class);
-        result.setBotanicalName(botanicalInfoDtoConverter.convertToDTO(data.getBotanicalName()));
+        result.setBotanicalInfo(botanicalInfoDtoConverter.convertToDTO(data.getBotanicalInfo()));
         return result;
     }
 }

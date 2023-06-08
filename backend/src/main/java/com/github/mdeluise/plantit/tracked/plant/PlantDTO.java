@@ -1,24 +1,29 @@
 package com.github.mdeluise.plantit.tracked.plant;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
-import com.github.mdeluise.plantit.tracked.AbstractTrackedEntityDTO;
+import com.github.mdeluise.plantit.tracked.TrackedEntityDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Plant", description = "Represents a plant.")
-public class PlantDTO extends AbstractTrackedEntityDTO {
-    @Schema(description = "Target ID of the plant.")
-    private BotanicalInfoDTO botanicalName;
+public class PlantDTO extends TrackedEntityDTO {
+    @Schema(description = "Botanical info ID of the plant.")
+    private BotanicalInfoDTO botanicalInfo;
     @Schema(description = "Arrangement ID of the plant.")
     private Long arrangementId;
 
 
-    public BotanicalInfoDTO getBotanicalName() {
-        return botanicalName;
+    public PlantDTO() {
+        super();
     }
 
 
-    public void setBotanicalName(BotanicalInfoDTO botanicalName) {
-        this.botanicalName = botanicalName;
+    public BotanicalInfoDTO getBotanicalInfo() {
+        return botanicalInfo;
+    }
+
+
+    public void setBotanicalInfo(BotanicalInfoDTO botanicalInfo) {
+        this.botanicalInfo = botanicalInfo;
     }
 
 

@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "tracked_entities")
@@ -44,14 +45,14 @@ public abstract class AbstractTrackedEntity {
     private State state;
     @Enumerated(EnumType.STRING)
     private TrackedEntityType type;
-    @OneToOne(mappedBy = "target")
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL)
     private Diary diary;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
     @OneToMany(mappedBy = "abstractTrackedEntity")
-    private Set<TrackedEntityImage> images;
+    private Set<TrackedEntityImage> images = new HashSet<>();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "thumbnail_image_id", referencedColumnName = "id")
     private TrackedEntityImage thumbnailImage;

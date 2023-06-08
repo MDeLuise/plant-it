@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 
-public abstract class AbstractTrackedEntityDTO {
+public class TrackedEntityDTO {
     @Schema(description = "ID of the entity.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     @Schema(description = "Start date entity.")
@@ -16,14 +16,18 @@ public abstract class AbstractTrackedEntityDTO {
     private Date endDate;
     @Schema(description = "State of the entity.")
     private State state;
-    @Schema(description = "Owner ID of the entity.")
+    @Schema(description = "Owner ID of the entity.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long ownerId;
     @Schema(description = "Type of the entity.")
     private String type;
-    @Schema(description = "ID of the entity's thumbnail.")
+    @Schema(description = "ID of the entity's thumbnail.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long thumbnailImageId;
-    @Schema(description = "ID of the entity's diary.")
+    @Schema(description = "ID of the entity's diary.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryId;
+
+
+    public TrackedEntityDTO() {
+    }
 
 
     public Long getId() {

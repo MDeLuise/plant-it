@@ -15,6 +15,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -31,7 +32,7 @@ public class Diary {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
-    private Set<DiaryEntry> entries;
+    private Set<DiaryEntry> entries = new HashSet<>();
 
 
     public Long getId() {

@@ -15,16 +15,16 @@ public class DiaryEntryDTOConverter extends AbstractDTOConverter<DiaryEntry, Dia
 
     @Override
     public DiaryEntry convertFromDTO(DiaryEntryDTO dto) {
-        return modelMapper.map(dto, DiaryEntry.class);
+        final DiaryEntry result = modelMapper.map(dto, DiaryEntry.class);
+        if (result.getDate() == null) {
+            result.setDate(new Date());
+        }
+        return result;
     }
 
 
     @Override
     public DiaryEntryDTO convertToDTO(DiaryEntry data) {
-        final DiaryEntryDTO result = modelMapper.map(data, DiaryEntryDTO.class);
-        if (result.getDate() == null) {
-            result.setDate(new Date());
-        }
-        return result;
+        return modelMapper.map(data, DiaryEntryDTO.class);
     }
 }

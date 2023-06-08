@@ -16,8 +16,8 @@ public class PlantInfoFiller {
 
 
     public Plant fillInfo(Plant toFill) {
-        toFill.setBotanicalName(plantInfoExtractor.extractInfo(toFill.getPersonalName())
-                                                  .orElse(toFill.getBotanicalName()));
+        toFill.setBotanicalInfo(plantInfoExtractor.extractInfo(toFill.getPersonalName())
+                                                  .orElse(toFill.getBotanicalInfo()));
         return toFill;
     }
 }
