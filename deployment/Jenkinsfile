@@ -127,45 +127,52 @@ pipeline {
                         """
                     }
                 }
-                stage("Build multi-arch image") {
+                stage("Build (and publish) multi-arch image") {
                     when { environment name: 'BUILD_IMAGES', value: 'true' }
                     parallel {
                         stage('Build backend image') {
                             steps {
                                 dir("backend") {
                                     unstash 'jarFiles'
-                                    sh """
-                                        docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
-                                    """
+                                    script {
+                                        if (params.PUSH_IMAGES) {
+                                            sh """
+                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                            if (params.IMAGES_LATEST) {
+                                                sh """
+                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:latest -f deployment/Dockerfile .
+                                                """
+                                            }
+                                        } else {
+                                            sh """
+                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                        }
+                                    }
                                 }
                             }
                         }
                         stage('Build frontend image') {
                             steps {
                                 dir("frontend") {
-                                    sh """
-                                        docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
-                                    """
+                                    script {
+                                        if (params.PUSH_IMAGES) {
+                                            sh """
+                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                            if (params.IMAGES_LATEST) {
+                                                sh """
+                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:latest -f deployment/Dockerfile .
+                                                """
+                                            }
+                                        } else {
+                                            sh """
+                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                            """
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    }
-                }
-                stage('Publish') {
-                    when { environment name: 'PUSH_IMAGES', value: 'true' }
-                    parallel {
-                        stage('Publish backend image') {
-                            steps {
-                                sh """
-                                docker push $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION
-                                """
-                            }
-                        }
-                        stage('Publish frontend image') {
-                            steps {
-                                sh """
-                                docker push $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION
-                                """
                             }
                         }
                     }
