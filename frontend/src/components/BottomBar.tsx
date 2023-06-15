@@ -71,7 +71,7 @@ export default function BottomBar(props: {
             boxShadow={.5}
             sx={{
                 position: "fixed",
-                bottom: "10px",
+                bottom: "20px",
                 left: "50%",
                 transform: "translate(-50%, 0%)",
                 right: "50%",

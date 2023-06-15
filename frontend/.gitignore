@@ -22,3 +22,6 @@ yarn-error.log*
 
 # IDE specific files
 .vscode/
+
+public/env-config.js
+env-config.js

@@ -69,14 +69,17 @@ public class TrefleRequestMaker {
         List<BotanicalInfo> botanicalInfos = new ArrayList<>();
         responseJson.get("data").getAsJsonArray().forEach(plantResult -> {
             BotanicalInfo botanicalInfo = new BotanicalInfo();
-            botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
-            botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
-            botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());
-            final JsonElement imageElement = plantResult.getAsJsonObject().get("image_url");
-            if (!imageElement.isJsonNull()) {
-                fillImage(botanicalInfo, plantResult.getAsJsonObject().get("image_url").getAsString());
+            try {
+                botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
+                botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
+                botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());
+                final JsonElement imageElement = plantResult.getAsJsonObject().get("image_url");
+                if (!imageElement.isJsonNull()) {
+                    fillImage(botanicalInfo, plantResult.getAsJsonObject().get("image_url").getAsString());
+                }
+                botanicalInfos.add(botanicalInfo);
+            } catch (UnsupportedOperationException ignore) {
             }
-            botanicalInfos.add(botanicalInfo);
         });
         return new PageImpl<>(botanicalInfos);
     }
