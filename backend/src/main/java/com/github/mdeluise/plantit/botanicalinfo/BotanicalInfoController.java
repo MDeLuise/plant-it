@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,5 +61,12 @@ public class BotanicalInfoController {
     @GetMapping("/{id}/_count")
     public ResponseEntity<Integer> count(@PathVariable Long id) {
         return ResponseEntity.ok(botanicalInfoService.countPlants(id));
+    }
+
+
+    @PostMapping
+    public ResponseEntity<BotanicalInfoDTO> save(@RequestBody BotanicalInfoDTO toSave) {
+        final BotanicalInfo result = botanicalInfoService.save(botanicalInfoDtoConverter.convertFromDTO(toSave));
+        return ResponseEntity.ok(botanicalInfoDtoConverter.convertToDTO(result));
     }
 }

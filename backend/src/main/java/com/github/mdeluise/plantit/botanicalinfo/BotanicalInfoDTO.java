@@ -14,6 +14,8 @@ public class BotanicalInfoDTO {
     private String genus;
     @Schema(description = "URL of the botanical info image.")
     private String imageUrl;
+    @Schema(description = "True if botanical info is system wide, false if it's user created")
+    private boolean isSystemWide;
 
 
     public Long getId() {
@@ -63,5 +65,15 @@ public class BotanicalInfoDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+
+    public boolean isSystemWide() {
+        return isSystemWide;
+    }
+
+
+    public void setSystemWide(boolean systemWide) {
+        isSystemWide = systemWide;
     }
 }

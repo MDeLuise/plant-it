@@ -21,7 +21,7 @@ import secureLocalStorage from "react-secure-storage";
 
 function UserTopBar(props: {}) {
     const username = secureLocalStorage.getItem("plant-it-username") as string;
-    
+
     return (
         <Box sx={{
             display: "flex",
@@ -167,9 +167,17 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     };
 
     useEffect(() => {
-        getAllEntities();
-        getLog();
+        if (!props.isLoggedIn()) {
+            navigate("/auth");
+        } else {
+            getAllEntities();
+            getLog();
+        }
     }, []);
+
+    if (!props.isLoggedIn()) {
+        return <></>;
+    }
 
     return (
         <>
@@ -201,7 +209,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 </Box>
 
                 <Box sx={{ display: activeTab === 3 ? "visible" : "none" }}>
-                    <Settings requestor={props.requestor}/>
+                    <Settings requestor={props.requestor} />
                 </Box>
             </Box>
             <BottomBar

@@ -15,12 +15,16 @@ public class BotanicalInfoDTOConverter extends AbstractDTOConverter<BotanicalInf
 
     @Override
     public BotanicalInfo convertFromDTO(BotanicalInfoDTO dto) {
-        return modelMapper.map(dto, BotanicalInfo.class);
+        Class<? extends BotanicalInfo> concreteClass =
+            dto.isSystemWide() ? GlobalBotanicalInfo.class : UserCreatedBotanicalInfo.class;
+        return modelMapper.map(dto, concreteClass);
     }
 
 
     @Override
     public BotanicalInfoDTO convertToDTO(BotanicalInfo data) {
-        return modelMapper.map(data, BotanicalInfoDTO.class);
+        final BotanicalInfoDTO result = modelMapper.map(data, BotanicalInfoDTO.class);
+        result.setSystemWide(!(data instanceof UserCreatedBotanicalInfo));
+        return result;
     }
 }

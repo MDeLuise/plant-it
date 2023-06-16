@@ -3,7 +3,6 @@ package com.github.mdeluise.plantit.plantinfo.trafle;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.exception.InfoExtractionException;
 import com.github.mdeluise.plantit.image.BotanicalNameImage;
-import com.github.mdeluise.plantit.image.ImageService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -29,13 +28,11 @@ import java.util.Optional;
 public class TrefleRequestMaker {
     private final String token;
     private final String baseEndpoint = "https://trefle.io/api/v1";
-    private final ImageService imageService;
 
 
     @Autowired
-    public TrefleRequestMaker(@Value("${trefle.key}") String token, ImageService imageService) {
+    public TrefleRequestMaker(@Value("${trefle.key}") String token) {
         this.token = token;
-        this.imageService = imageService;
     }
 
 

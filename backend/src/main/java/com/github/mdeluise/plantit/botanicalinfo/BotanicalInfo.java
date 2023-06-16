@@ -4,24 +4,28 @@ import com.github.mdeluise.plantit.image.BotanicalNameImage;
 import com.github.mdeluise.plantit.tracked.plant.Plant;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-// http://theseedsite.co.uk/class.html
-// https://www.edendeifiori.it/8615/che-differenza-ce-tra-genere-specie-sottospecie-varieta-e-cultivar.php
-@Entity
-@Table(name = "botanical_infos")
+@Entity(name = "botanical_infos")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+    name = "botanical_info_type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "TINYINT(1)"
+)
 public class BotanicalInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

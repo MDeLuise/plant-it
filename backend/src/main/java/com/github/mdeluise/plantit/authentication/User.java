@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mdeluise.plantit.authorization.permission.Permission;
 import com.github.mdeluise.plantit.authorization.role.Role;
+import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.IdentifiedEntity;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.security.apikey.ApiKey;
@@ -66,6 +67,8 @@ public class User implements IdentifiedEntity<Long> {
     private Set<Diary> diaries = new HashSet<>();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<AbstractTrackedEntity> entities = new HashSet<>();
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private Set<UserCreatedBotanicalInfo> abstractBotanicalInfos = new HashSet<>();
 
 
     public User(Long id, String username, String password, Set<Role> roles, Set<Permission> permissions) {
@@ -191,6 +194,26 @@ public class User implements IdentifiedEntity<Long> {
 
     public void setEntities(Set<AbstractTrackedEntity> entities) {
         this.entities = entities;
+    }
+
+
+    public Set<UserCreatedBotanicalInfo> getBotanicalInfos() {
+        return abstractBotanicalInfos;
+    }
+
+
+    public void setBotanicalInfos(Set<UserCreatedBotanicalInfo> abstractBotanicalInfos) {
+        this.abstractBotanicalInfos = abstractBotanicalInfos;
+    }
+
+
+    public Set<Diary> getDiaries() {
+        return diaries;
+    }
+
+
+    public void setDiaries(Set<Diary> diaries) {
+        this.diaries = diaries;
     }
 
 

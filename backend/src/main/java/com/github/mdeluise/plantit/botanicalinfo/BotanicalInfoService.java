@@ -54,6 +54,9 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
 
 
     public BotanicalInfo save(BotanicalInfo toSave) {
+        if (toSave instanceof UserCreatedBotanicalInfo u) {
+            u.setCreator(getAuthenticatedUser());
+        }
         final BotanicalInfo result = botanicalInfoRepository.save(toSave);
         final BotanicalNameImage image = result.getImage();
         image.setBotanicalName(result);
@@ -65,7 +68,4 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
     public BotanicalInfo get(Long id) {
         return botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
-
-
-    //public Optional<BotanicalInfo> get()
 }

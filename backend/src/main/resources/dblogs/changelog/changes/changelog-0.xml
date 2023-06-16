@@ -156,7 +156,7 @@
     </changeSet>
 
 
-    <changeSet id="createBotanicalNameTable" author="MDeLuise">
+    <changeSet id="createBotanicalInfoTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="botanical_infos"/>
@@ -178,7 +178,18 @@
             <column name="image_id" type="bigint">
                 <constraints foreignKeyName="fk_botanicalName_image" references="abstract_images(id)"/>
             </column>
+            <column name="botanical_info_type" type="tinyint(1)" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+            </column>
         </createTable>
+
+        <addUniqueConstraint
+                columnNames="scientific_name, family, genus"
+                constraintName="botanical_name_unique"
+                tableName="botanical_infos"
+        />
     </changeSet>
 
 
@@ -208,7 +219,7 @@
             <column name="owner_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_plant_user" references="application_users(id)"/>
             </column>
-            <column name="entity_type" type="tinyint(1)">
+            <column name="entity_type" type="tinyint(1)" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
             <column name="botanical_name_id" type="bigint">

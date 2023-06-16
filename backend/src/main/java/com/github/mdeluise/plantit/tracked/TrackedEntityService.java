@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.tracked;
 
 import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
+import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -59,6 +60,9 @@ public class TrackedEntityService extends AbstractAuthenticatedService {
         }
         if (toSave instanceof Plant p && p.getBotanicalInfo().getId() != null) {
             p.setBotanicalInfo(botanicalInfoService.get(p.getBotanicalInfo().getId()));
+        }
+        if (toSave instanceof Plant p && p.getBotanicalInfo() instanceof UserCreatedBotanicalInfo u) {
+            u.setCreator(getAuthenticatedUser());
         }
         return trackedEntityRepository.save(toSave);
     }

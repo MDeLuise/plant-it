@@ -67,6 +67,65 @@ function BotanicalEntity(props: {
     );
 }
 
+function AddNewBotanicalInfo(props: {
+    addClick: () => void;
+}) {
+    const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+
+    return <Box
+        key={"new"}
+        sx={{
+            width: isBigScreen() ? "20vw" : "43vw",
+            borderRadius: "5px",
+            overflow: "hidden",
+            aspectRatio: ".65",
+            flexShrink: 0,
+            position: "relative",
+        }}>
+        {!imageLoaded &&
+            <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
+        }
+
+        <Box sx={{
+            position: "absolute",
+            bottom: "53px",
+            right: "8px",
+            backgroundColor: "primary.light",
+            borderRadius: "50%",
+            padding: "5px",
+            zIndex: 1,
+            color: "white",
+            visibility: imageLoaded ? "initial" : "hidden",
+        }}>
+            <AddOutlinedIcon onClick={() => props.addClick()} />
+        </Box>
+
+        <Box sx={{
+            overflow: "hidden",
+            borderRadius: "10px",
+            width: "100%",
+            height: "80%",
+            marginBottom: "5px",
+            visibility: imageLoaded ? "initial" : "hidden",
+        }}>
+            <img
+                src={"https://www.gardeningknowhow.com/wp-content/uploads/2018/12/Perle-von-Nurnberg.jpg"}
+                onLoad={() => setImageLoaded(true)}
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    filter: "blur(7px)",
+                }}
+            />
+        </Box>
+        <Typography noWrap variant="body1" style={{ fontWeight: 600, textOverflow: "hidden" }} >
+            Custom
+        </Typography>
+    </Box>;
+}
+
 export default function SearchPage(props: {
     requestor: AxiosInstance,
     trackedEntities: trackedEntity[];
@@ -156,6 +215,7 @@ export default function SearchPage(props: {
                         addEntity={(en: trackedEntity) => props.trackedEntities.push(en)}
                     />;
                 })}
+                < AddNewBotanicalInfo addClick={() => console.log("a")} />
             </Box>
         </Box>
     );

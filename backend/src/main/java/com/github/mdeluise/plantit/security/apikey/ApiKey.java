@@ -34,7 +34,6 @@ public class ApiKey implements IdentifiedEntity<Long> {
     @NotNull
     @Length(min = 25)
     private String value;
-
     @NotNull
     private Date createdOn = new Date();
 
