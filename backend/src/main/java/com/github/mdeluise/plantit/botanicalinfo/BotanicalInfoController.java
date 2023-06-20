@@ -1,11 +1,8 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
-import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractor;
+import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
+import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,46 +12,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/botanical-info")
 public class BotanicalInfoController {
-    private final PlantInfoExtractor plantInfoExtractor;
+    private final AbstractPlantInfoExtractor abstractPlantInfoExtractor;
     private final BotanicalInfoDTOConverter botanicalInfoDtoConverter;
     private final BotanicalInfoService botanicalInfoService;
 
 
     @Autowired
-    public BotanicalInfoController(PlantInfoExtractor plantInfoExtractor,
+    public BotanicalInfoController(PlantInfoExtractorFactory plantInfoExtractorFactory,
                                    BotanicalInfoDTOConverter botanicalInfoDtoConverter,
                                    BotanicalInfoService botanicalInfoService) {
-        this.plantInfoExtractor = plantInfoExtractor;
+        this.abstractPlantInfoExtractor = plantInfoExtractorFactory.getPlantInfoExtractor();
         this.botanicalInfoDtoConverter = botanicalInfoDtoConverter;
         this.botanicalInfoService = botanicalInfoService;
     }
 
 
     @GetMapping
-    public ResponseEntity<Page<BotanicalInfoDTO>> getAll(
-        @RequestParam(defaultValue = "0", required = false) Integer pageNo,
-        @RequestParam(defaultValue = "5", required = false) Integer pageSize,
-        @RequestParam(defaultValue = "scientificName", required = false) String sortBy,
-        @RequestParam(defaultValue = "ASC", required = false) Sort.Direction sortDir) {
-        final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
-        final Page<BotanicalInfo> result = plantInfoExtractor.getAll(pageable);
-        return ResponseEntity.ok(result.map(botanicalInfoDtoConverter::convertToDTO));
+    public ResponseEntity<Collection<BotanicalInfoDTO>> getAll(
+        @RequestParam(defaultValue = "5", required = false) Integer size) {
+        final List<BotanicalInfo> result = abstractPlantInfoExtractor.getAll(size);
+        final Set<BotanicalInfoDTO> convertedResult =
+            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
+        return ResponseEntity.ok(convertedResult);
     }
 
 
     @GetMapping("/partial/{partialScientificName}")
-    public ResponseEntity<Page<BotanicalInfoDTO>> getPartial(
-        @RequestParam(defaultValue = "0", required = false) Integer pageNo,
-        @RequestParam(defaultValue = "5", required = false) Integer pageSize,
-        @RequestParam(defaultValue = "scientificName", required = false) String sortBy,
-        @RequestParam(defaultValue = "ASC", required = false) Sort.Direction sortDir,
+    public ResponseEntity<Collection<BotanicalInfoDTO>> getPartial(
+        @RequestParam(defaultValue = "5", required = false) Integer size,
         @PathVariable String partialScientificName) {
-        final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
-        final Page<BotanicalInfo> result = plantInfoExtractor.extractPlants(partialScientificName, pageable);
-        return ResponseEntity.ok(result.map(botanicalInfoDtoConverter::convertToDTO));
+        final List<BotanicalInfo> result = abstractPlantInfoExtractor.extractPlants(partialScientificName, size);
+        final Set<BotanicalInfoDTO> convertedResult =
+            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
+        return ResponseEntity.ok(convertedResult);
     }
 
 

@@ -7,9 +7,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@DiscriminatorValue("2")
+@DiscriminatorValue("3")
 public class TrackedEntityImage extends AbstractImage {
     @NotNull
     @ManyToOne
@@ -17,6 +18,8 @@ public class TrackedEntityImage extends AbstractImage {
     private AbstractTrackedEntity abstractTrackedEntity;
     @OneToOne(mappedBy = "thumbnailImage")
     private AbstractTrackedEntity thumbnailOf;
+    @Size(max = 1000000)
+    private byte[] content;
 
 
     public AbstractTrackedEntity getAbstractTrackedEntity() {
@@ -36,5 +39,15 @@ public class TrackedEntityImage extends AbstractImage {
 
     public void setThumbnailOf(AbstractTrackedEntity thumbnailOf) {
         this.thumbnailOf = thumbnailOf;
+    }
+
+
+    public byte[] getContent() {
+        return content;
+    }
+
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 }

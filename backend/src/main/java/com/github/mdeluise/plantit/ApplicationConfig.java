@@ -1,6 +1,6 @@
 package com.github.mdeluise.plantit;
 
-import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractor;
+import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
 import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -50,7 +50,7 @@ public class ApplicationConfig {
 
 
     @Bean
-    public PlantInfoExtractor plantInfoExtractor() {
+    public AbstractPlantInfoExtractor plantInfoExtractor() {
         return plantInfoExtractorFactory.getPlantInfoExtractor();
     }
 }

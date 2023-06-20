@@ -20,7 +20,8 @@ export interface botanicalInfo {
     scientificName: string,
     family: string,
     genus: string,
-    imageUrl: string,
+    imageUrl?: string,
+    imageId?: string,
 }
 
 export interface trackedEntity {

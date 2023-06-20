@@ -3,13 +3,14 @@ package com.github.mdeluise.plantit.botanicalinfo;
 import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
-import com.github.mdeluise.plantit.image.BotanicalNameImage;
+import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,13 +34,18 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
     }
 
 
-    public Page<BotanicalInfo> getByPartialScientificName(String partialScientificName, Pageable pageable) {
-        return botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName, pageable);
+    public List<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
+        final Page<BotanicalInfo> result =
+            botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName,
+                                                                           Pageable.ofSize(size)
+            );
+        return result.getContent();
     }
 
 
-    public Page<BotanicalInfo> getAll(Pageable pageable) {
-        return botanicalInfoRepository.findAll(pageable);
+    public List<BotanicalInfo> getAll(int size) {
+        final Page<BotanicalInfo> result = botanicalInfoRepository.findAll(Pageable.ofSize(size));
+        return result.getContent();
     }
 
 
@@ -58,7 +64,7 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
             u.setCreator(getAuthenticatedUser());
         }
         final BotanicalInfo result = botanicalInfoRepository.save(toSave);
-        final BotanicalNameImage image = result.getImage();
+        final AbstractBotanicalInfoImage image = result.getImage();
         image.setBotanicalName(result);
         imageService.save(image);
         return result;

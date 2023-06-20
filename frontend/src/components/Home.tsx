@@ -93,7 +93,10 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
             >
                 {props.trackedEntities.map((entity) => {
                     return <Box sx={{ margin: "0 10px" }} className="card-panel" key={entity.id}>
-                        <UserPlant entity={entity} key={entity.id} />
+                        <UserPlant
+                            entity={entity}
+                            key={entity.id}
+                            requestor={props.requestor} />
                     </Box>;
                 })}
                 <ViewportSlot>

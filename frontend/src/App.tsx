@@ -18,7 +18,7 @@ export function App() {
   console.log(window._env_.REACT_APP_API_URL);
   const axiosReq = axios.create({
     baseURL: backendURL,
-    timeout: 1000
+    timeout: 5000
   });
 
   axiosReq.interceptors.request.use(

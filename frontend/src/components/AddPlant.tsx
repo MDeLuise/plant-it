@@ -1,7 +1,12 @@
-import { Box, Button, Drawer, TextField } from "@mui/material";
+import { Box, Button, Drawer, Switch, TextField } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { botanicalInfo, trackedEntity } from "../interfaces";
 import { useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import { Buffer } from "buffer";
 
 export default function AddPlant(props: {
     requestor: AxiosInstance,
@@ -11,10 +16,29 @@ export default function AddPlant(props: {
     trackedEntities: trackedEntity[];
 }) {
     const [plantName, setPlantName] = useState<string>("");
+    const [family, setFamily] = useState<string>();
+    const [genus, setGenus] = useState<string>();
+    const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
+    const [useDate, setUseDate] = useState<boolean>(true);
+    const [selectedImage, setSelectedImage] = useState<File>();
+    const [downloadedImg, setDownloadedImg] = useState<string>();
+    let imgSrc = props.entity == undefined ? "" : props.entity.imageUrl != undefined ?
+        props.entity.imageUrl :
+        `data:image/png;base64,${downloadedImg}`;
+
+    const readImage = (): void => {
+        props.requestor.get(`image/botanical-info/${props.entity!.imageId}`)
+            .then((res) => {
+                let { id, description, savedAt, content } = res.data;
+                console.log(id);
+                console.log(Buffer.from(res.data.content, "utf-8").toString());
+                setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
+            });
+    };
 
     const getName = (): void => {
         if (props.entity === undefined) {
-            setPlantName("unknown");
+            setPlantName("");
             return;
         }
         if (props.entity.id === null) {
@@ -32,11 +56,20 @@ export default function AddPlant(props: {
     };
 
     const addPlant = (): void => {
+        if (props.entity != undefined) {
+            addPlantOldBotanicalInfo();
+        } else {
+            addPlantNewBotanicalInfo();
+        }
+    };
+
+    const addPlantOldBotanicalInfo = (): void => {
         props.requestor.post("/tracked-entity/plant", {
             botanicalInfo: props.entity,
             personalName: plantName,
-            type: "PLANT",  
+            type: "PLANT",
             state: "PURCHASED",
+            startDate: date,
         })
             .then((res) => {
                 props.setOpen(false);
@@ -46,8 +79,40 @@ export default function AddPlant(props: {
             });
     };
 
+    const addPlantNewBotanicalInfo = (): void => {
+        let formData = new FormData();
+        formData.append('image', selectedImage!);
+        props.requestor.post("/image", formData)
+            .then((res) => {
+                let botanicalInfoToUse = {
+                    scientificName: plantName,
+                    family: family,
+                    genus: genus,
+                    isSystemWide: false,
+                    imageId: res.data,
+                };
+                props.requestor.post("/tracked-entity/plant", {
+                    botanicalInfo: botanicalInfoToUse,
+                    personalName: plantName,
+                    type: "PLANT",
+                    state: "PURCHASED",
+                    startDate: date,
+                })
+                    .then((res) => {
+                        props.setOpen(false);
+                        props.trackedEntities.push(res.data);
+                        //props.entity = res.data.botanicalInfo;
+                        getName();
+                    });
+            });
+    };
+
     useEffect(() => {
+        if (props.entity != undefined && props.entity.imageUrl == undefined) {
+            readImage();
+        }
         getName();
+        setUseDate(true);
     }, [props.entity]);
 
     return (
@@ -59,12 +124,24 @@ export default function AddPlant(props: {
                 style: { borderRadius: "15px 15px 0 0" }
             }}
         >
+            <input
+                id="upload-image"
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(event) => {
+                    if (event.target.files != undefined) {
+                        setSelectedImage(event.target.files[0]);
+                    }
+                }}
+            />
             <Box
                 sx={{
                     height: "90vh",
                     display: "flex",
                     flexDirection: "column",
                     padding: "35px",
+                    gap: "30px",
                 }}>
                 <Box sx={{
                     display: "flex",
@@ -76,25 +153,108 @@ export default function AddPlant(props: {
                         borderRadius: "50%",
                         height: "65px",
                         width: "65px",
-                        overflow: "hidden"
+                        overflow: "hidden",
+                        position: "relative",
                     }}>
-                        <img
-                            src={props.entity?.imageUrl}
-                            style={{
-                                height: "100%",
-                                width: "100%",
-                                objectFit: "cover"
-                            }}
-                        />
+                        {
+                            props.entity != undefined &&
+                            <img
+                                src={imgSrc}
+                                style={{
+                                    height: "100%",
+                                    width: "100%",
+                                    objectFit: "cover"
+                                }}
+                            />
+                        }
+                        {
+                            selectedImage != undefined &&
+                            <>
+                                <Box
+                                    style={{
+                                        height: "100%",
+                                        width: "100%",
+                                    }}
+                                    onClick={() => {
+                                        document.getElementById("upload-image")?.click();
+                                    }}>
+                                    <img
+                                        src={URL.createObjectURL(selectedImage)}
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                            objectFit: "cover",
+                                            position: "relative",
+                                        }}
+                                    />
+                                </Box>
+                            </>
+                        }
+                        <Box sx={{
+                            backgroundColor: "primary.main",
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            display: selectedImage == undefined ? "flex" : "none",
+                        }}
+                            onClick={() => {
+                                document.getElementById("upload-image")?.click();
+                            }}>
+                            <AddPhotoAlternateOutlinedIcon fontSize="large" />
+                        </Box>
+
                     </Box>
                     <TextField
                         variant="outlined"
-                        placeholder="Name"
+                        label="Name"
+                        required
                         sx={{ flexGrow: "1" }}
                         value={plantName}
                         onChange={(event) => setPlantName(event.target.value)}
                     />
                 </Box>
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    label="Family"
+                    fullWidth
+                    required
+                    value={props.entity?.family}
+                    onChange={(event) => setFamily(event.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    fullWidth
+                    required
+                    label="Genus"
+                    value={props.entity?.genus}
+                    onChange={(event) => setGenus(event.target.value)}
+                />
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "30px",
+                    alignItems: "center",
+                }}>
+                    <Switch
+                        checked={useDate}
+                        onChange={(event) => setUseDate(event.target.checked)}
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Date of purchase"
+                            value={date}
+                            disabled={!useDate}
+                            onChange={(newValue) => setDate(newValue)}
+                            sx={{
+                                flexGrow: 1
+                            }}
+                        />
+                    </LocalizationProvider>
+                </Box>
+
                 <Box sx={{ flexGrow: "1" }}></Box>
                 <Button
                     variant="contained"

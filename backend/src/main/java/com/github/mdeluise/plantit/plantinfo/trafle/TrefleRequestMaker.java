@@ -2,7 +2,7 @@ package com.github.mdeluise.plantit.plantinfo.trafle;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.exception.InfoExtractionException;
-import com.github.mdeluise.plantit.image.BotanicalNameImage;
+import com.github.mdeluise.plantit.image.WebBotanicalInfoImage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -120,10 +120,10 @@ public class TrefleRequestMaker {
         //        } catch (URISyntaxException e) {
         //            throw new RuntimeException(e);
         //        }
-        //        botanicalInfo.setImage((BotanicalNameImage) image);
-        final BotanicalNameImage botanicalNameImage = new BotanicalNameImage();
-        botanicalNameImage.setUrl(imageUrl);
-        botanicalInfo.setImage(botanicalNameImage);
+        //        botanicalInfo.setImage((AbstractBotanicalInfoImage) image);
+        final WebBotanicalInfoImage webBotanicalInfoImage = new WebBotanicalInfoImage();
+        webBotanicalInfoImage.setUrl(imageUrl);
+        botanicalInfo.setImage(webBotanicalInfoImage);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
-import com.github.mdeluise.plantit.image.BotanicalNameImage;
+import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.tracked.plant.Plant;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +42,7 @@ public class BotanicalInfo {
     private Set<Plant> plants = new HashSet<>();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private BotanicalNameImage image;
+    private AbstractBotanicalInfoImage image;
 
 
     public Long getId() {
@@ -95,12 +95,12 @@ public class BotanicalInfo {
     }
 
 
-    public BotanicalNameImage getImage() {
+    public AbstractBotanicalInfoImage getImage() {
         return image;
     }
 
 
-    public void setImage(BotanicalNameImage image) {
+    public void setImage(AbstractBotanicalInfoImage image) {
         this.image = image;
     }
 

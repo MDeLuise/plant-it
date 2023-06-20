@@ -32,7 +32,7 @@ export default function AddLogEntry(props: {
     setOpen: (arg: boolean) => void,
     updateLog: (arg: diaryEntry) => void,
 }) {
-    const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()));
+    const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
     const [allEventType, setAllEventType] = useState<string[]>([]);
     const theme = useTheme();
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
@@ -111,7 +111,6 @@ export default function AddLogEntry(props: {
                         // setSnackbarMessage("Diaries entries added successfully");
                         // setSnackbarOpen(true);
                         res.data.diaryTargetPersonalName = plantId; // TODO should not be necessary but backend problem
-                        console.log(res.data)
                         props.updateLog(res.data);
                         props.setOpen(false);
                     })

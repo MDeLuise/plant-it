@@ -4,8 +4,9 @@ import java.util.Date;
 
 public class ImageDTO {
     private Long id;
-    private String name;
     private Date savedAt;
+    private String url;
+    private byte[] content;
 
 
     public Long getId() {
@@ -18,16 +19,6 @@ public class ImageDTO {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     public Date getSavedAt() {
         return savedAt;
     }
@@ -35,5 +26,25 @@ public class ImageDTO {
 
     public void setSavedAt(Date savedAt) {
         this.savedAt = savedAt;
+    }
+
+
+    public String getUrl() {
+        return url;
+    }
+
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+
+    public byte[] getContent() {
+        return content;
+    }
+
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 }

@@ -7,6 +7,7 @@ import { botanicalInfo, trackedEntity } from "../interfaces";
 import { isBigScreen } from "../common";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddPlant from "./AddPlant";
+import { Buffer } from "buffer";
 
 function BotanicalEntity(props: {
     entity: botanicalInfo,
@@ -15,6 +16,23 @@ function BotanicalEntity(props: {
     addEntity: (arg: trackedEntity) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+    const [downloadedImg, setDownloadedImg] = useState<string>();
+    let imgSrc = props.entity.imageUrl != undefined ?
+        props.entity.imageUrl :
+        `data:image/png;base64,${downloadedImg}`;
+
+    const readImage = (): void => {
+        props.requestor.get(`image/botanical-info/${props.entity.imageId}`)
+            .then((res) => {
+                setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
+            });
+    };
+
+    useEffect(() => {
+        if (props.entity.imageUrl == undefined) {
+            readImage();
+        }
+    });
 
     return (
         <Box
@@ -33,8 +51,8 @@ function BotanicalEntity(props: {
 
             <Box sx={{
                 position: "absolute",
-                bottom: "53px",
-                right: "8px",
+                bottom: "65px",
+                right: "10px",
                 backgroundColor: "primary.light",
                 borderRadius: "50%",
                 padding: "5px",
@@ -46,7 +64,7 @@ function BotanicalEntity(props: {
             </Box>
 
             <img
-                src={props.entity.imageUrl}
+                src={imgSrc}
                 onLoad={() => setImageLoaded(true)}
                 style={{
                     width: "100%",
@@ -68,7 +86,8 @@ function BotanicalEntity(props: {
 }
 
 function AddNewBotanicalInfo(props: {
-    addClick: () => void;
+    addClick: () => void,
+    requestor: AxiosInstance;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
@@ -88,8 +107,8 @@ function AddNewBotanicalInfo(props: {
 
         <Box sx={{
             position: "absolute",
-            bottom: "53px",
-            right: "8px",
+            bottom: "65px",
+            right: "10px",
             backgroundColor: "primary.light",
             borderRadius: "50%",
             padding: "5px",
@@ -147,7 +166,7 @@ export default function SearchPage(props: {
         props.requestor.get(backendUrl)
             .then((res => {
                 let newBotanicalInfos: botanicalInfo[] = [];
-                res.data.content.forEach((botanicalInfo: botanicalInfo) => {
+                res.data.forEach((botanicalInfo: botanicalInfo) => {
                     newBotanicalInfos.push(botanicalInfo);
                 });
                 setBotanicalInfos(newBotanicalInfos);
@@ -215,7 +234,11 @@ export default function SearchPage(props: {
                         addEntity={(en: trackedEntity) => props.trackedEntities.push(en)}
                     />;
                 })}
-                < AddNewBotanicalInfo addClick={() => console.log("a")} />
+                < AddNewBotanicalInfo addClick={() => {
+                    setSelectedBotanicalInfo(undefined);
+                    setAddPlantOpen(true);
+                }}
+                    requestor={props.requestor} />
             </Box>
         </Box>
     );
