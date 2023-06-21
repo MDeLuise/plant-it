@@ -11,6 +11,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "abstract_images")
@@ -18,7 +19,7 @@ import java.util.Date;
 @DiscriminatorColumn(
     name = "image_type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "TINYINT(1)"
 )
-public abstract class AbstractImage {
+public abstract class AbstractImage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

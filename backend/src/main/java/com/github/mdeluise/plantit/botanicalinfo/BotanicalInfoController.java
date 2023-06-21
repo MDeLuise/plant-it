@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,22 +35,22 @@ public class BotanicalInfoController {
 
 
     @GetMapping
-    public ResponseEntity<Collection<BotanicalInfoDTO>> getAll(
+    public ResponseEntity<List<BotanicalInfoDTO>> getAll(
         @RequestParam(defaultValue = "5", required = false) Integer size) {
-        final Set<BotanicalInfo> result = abstractPlantInfoExtractor.getAll(size);
-        final Set<BotanicalInfoDTO> convertedResult =
-            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
+        final Collection<BotanicalInfo> result = abstractPlantInfoExtractor.getAll(size);
+        final List<BotanicalInfoDTO> convertedResult =
+            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(convertedResult);
     }
 
 
     @GetMapping("/partial/{partialScientificName}")
-    public ResponseEntity<Collection<BotanicalInfoDTO>> getPartial(
+    public ResponseEntity<List<BotanicalInfoDTO>> getPartial(
         @RequestParam(defaultValue = "5", required = false) Integer size,
         @PathVariable String partialScientificName) {
-        final Set<BotanicalInfo> result = abstractPlantInfoExtractor.extractPlants(partialScientificName, size);
-        final Set<BotanicalInfoDTO> convertedResult =
-            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
+        final Collection<BotanicalInfo> result = abstractPlantInfoExtractor.extractPlants(partialScientificName, size);
+        final List<BotanicalInfoDTO> convertedResult =
+            result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(convertedResult);
     }
 

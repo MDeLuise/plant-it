@@ -21,9 +21,6 @@ export default function UserPlant(props: {
     const readImage = (): void => {
         props.requestor.get(`image/botanical-info/${props.entity.botanicalInfo.imageId}`)
             .then((res) => {
-                let {id, description, savedAt, content} = res.data;
-                console.log(id)
-                console.log(Buffer.from(res.data.content, "utf-8").toString())
                 setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
             });
     };

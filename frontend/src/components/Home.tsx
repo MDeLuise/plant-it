@@ -147,7 +147,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const getAllEntities = (): void => {
         props.requestor.get("tracked-entity/_count")
             .then((res) => {
-                getEntities(res.data);
+                let entitiesSize = res.data > 0 ? res.data : 1;
+                getEntities(entitiesSize);
             });
     };
 

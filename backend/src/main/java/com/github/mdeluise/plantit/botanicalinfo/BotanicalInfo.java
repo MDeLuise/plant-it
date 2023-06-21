@@ -17,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.Set;
 @DiscriminatorColumn(
     name = "botanical_info_type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "TINYINT(1)"
 )
-public class BotanicalInfo {
+public class BotanicalInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -122,6 +123,6 @@ public class BotanicalInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(family, genus);
+        return Objects.hash(scientificName, family, genus);
     }
 }

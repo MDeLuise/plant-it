@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractPlantInfoExtractor {
@@ -17,8 +18,8 @@ public abstract class AbstractPlantInfoExtractor {
 
 
     @Cacheable(value = "info", key = "{#partialPlantScientificName, #size}")
-    public Set<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
-        return extractPlants(partialPlantScientificName, size, new HashSet<>());
+    public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
+        return new ArrayList<>(extractPlants(partialPlantScientificName, size, new HashSet<>()));
     }
 
 
@@ -37,8 +38,8 @@ public abstract class AbstractPlantInfoExtractor {
 
 
     @Cacheable(value = "info", key = "#size")
-    public Set<BotanicalInfo> getAll(int size) {
-        return getAll(size, new HashSet<>());
+    public List<BotanicalInfo> getAll(int size) {
+        return new ArrayList<>(getAll(size, new HashSet<>()));
     }
 
 

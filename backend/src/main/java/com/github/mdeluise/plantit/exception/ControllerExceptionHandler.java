@@ -22,7 +22,7 @@ public class ControllerExceptionHandler {
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false),
-                ex.getCause().getMessage()
+                ex.getCause() != null ? ex.getCause().getMessage() : ""
         );
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
