@@ -13,11 +13,15 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import redis.embedded.RedisServer;
 
 @Configuration
 @OpenAPIDefinition(
@@ -52,5 +56,15 @@ public class ApplicationConfig {
     @Bean
     public AbstractPlantInfoExtractor plantInfoExtractor() {
         return plantInfoExtractorFactory.getPlantInfoExtractor();
+    }
+
+
+    @Bean
+    @Profile(value = "dev")
+    public CommandLineRunner initEmbeddedCache(@Value("${spring.data.redis.port}") int port) {
+        return args -> {
+            RedisServer redisServer = new RedisServer(port);
+            redisServer.start();
+        };
     }
 }

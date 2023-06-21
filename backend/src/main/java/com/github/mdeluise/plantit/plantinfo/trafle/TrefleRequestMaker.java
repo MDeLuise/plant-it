@@ -6,6 +6,8 @@ import com.github.mdeluise.plantit.image.WebBotanicalInfoImage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class TrefleRequestMaker {
     private final String token;
     private final String baseEndpoint = "https://trefle.io/api/v1";
+    private final Logger logger = LoggerFactory.getLogger(TrefleRequestMaker.class);
 
 
     @Autowired
@@ -46,6 +49,7 @@ public class TrefleRequestMaker {
 
 
     public Page<BotanicalInfo> fetchInfoFromPartial(String partialPlantScientificName, Pageable pageable) throws InfoExtractionException {
+        logger.debug("Fetching info for \"{}\" from Trefle", partialPlantScientificName);
         final String encodedPartialName = URLEncoder.encode(partialPlantScientificName, StandardCharsets.UTF_8);
         final String url = String.format("%s/species/search?q=%s&limit=%s&page=%s&token=%s",
                                          baseEndpoint, encodedPartialName, pageable.getPageSize(),
@@ -83,6 +87,7 @@ public class TrefleRequestMaker {
 
 
     public Page<BotanicalInfo> fetchAll(Pageable pageable) {
+        logger.debug("Fetching all info from Trefle");
         final String url = String.format("%s/species/search?limit=%s&page=%s&token=%s&q=*",
                                          baseEndpoint, pageable.getPageSize(), pageable.getPageNumber() + 1, token);
         HttpClient client = HttpClient.newHttpClient();

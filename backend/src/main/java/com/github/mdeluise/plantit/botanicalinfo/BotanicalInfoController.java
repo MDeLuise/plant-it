@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class BotanicalInfoController {
     @GetMapping
     public ResponseEntity<Collection<BotanicalInfoDTO>> getAll(
         @RequestParam(defaultValue = "5", required = false) Integer size) {
-        final List<BotanicalInfo> result = abstractPlantInfoExtractor.getAll(size);
+        final Set<BotanicalInfo> result = abstractPlantInfoExtractor.getAll(size);
         final Set<BotanicalInfoDTO> convertedResult =
             result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
         return ResponseEntity.ok(convertedResult);
@@ -49,7 +48,7 @@ public class BotanicalInfoController {
     public ResponseEntity<Collection<BotanicalInfoDTO>> getPartial(
         @RequestParam(defaultValue = "5", required = false) Integer size,
         @PathVariable String partialScientificName) {
-        final List<BotanicalInfo> result = abstractPlantInfoExtractor.extractPlants(partialScientificName, size);
+        final Set<BotanicalInfo> result = abstractPlantInfoExtractor.extractPlants(partialScientificName, size);
         final Set<BotanicalInfoDTO> convertedResult =
             result.stream().map(botanicalInfoDtoConverter::convertToDTO).collect(Collectors.toSet());
         return ResponseEntity.ok(convertedResult);

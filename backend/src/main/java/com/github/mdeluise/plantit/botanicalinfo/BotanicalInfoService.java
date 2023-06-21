@@ -10,8 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,18 +35,18 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
     }
 
 
-    public List<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
+    public Set<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
         final Page<BotanicalInfo> result =
             botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName,
                                                                            Pageable.ofSize(size)
             );
-        return result.getContent();
+        return new HashSet<>(result.getContent());
     }
 
 
-    public List<BotanicalInfo> getAll(int size) {
+    public Set<BotanicalInfo> getAll(int size) {
         final Page<BotanicalInfo> result = botanicalInfoRepository.findAll(Pageable.ofSize(size));
-        return result.getContent();
+        return new HashSet<>(result.getContent());
     }
 
 

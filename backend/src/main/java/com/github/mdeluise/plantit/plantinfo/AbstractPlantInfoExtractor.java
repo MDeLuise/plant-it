@@ -4,7 +4,8 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractPlantInfoExtractor {
     private AbstractPlantInfoExtractor next;
@@ -16,42 +17,40 @@ public abstract class AbstractPlantInfoExtractor {
 
 
     @Cacheable(value = "info", key = "{#partialPlantScientificName, #size}")
-    public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
-        return extractPlants(partialPlantScientificName, size, new ArrayList<>());
+    public Set<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
+        return extractPlants(partialPlantScientificName, size, new HashSet<>());
     }
 
 
-    // FIXME problem of duplicated BotanicalInfo from different sources
-    private List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size,
-                                              List<BotanicalInfo> chainResult) {
-        final List<BotanicalInfo> personalResult = extractPlantsInternal(partialPlantScientificName, size);
+    private Set<BotanicalInfo> extractPlants(String partialPlantScientificName, int size,
+                                              Set<BotanicalInfo> chainResult) {
+        final Set<BotanicalInfo> personalResult = extractPlantsInternal(partialPlantScientificName, size);
         chainResult.addAll(personalResult);
         if (chainResult.size() >= size || next == null) {
-            return chainResult.subList(0, size);
+            return new HashSet<>(new ArrayList<>(chainResult).subList(0, Math.min(size, chainResult.size())));
         }
         return next.extractPlants(partialPlantScientificName, size, chainResult);
     }
 
 
-    protected abstract List<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size);
+    protected abstract Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size);
 
 
     @Cacheable(value = "info", key = "#size")
-    public List<BotanicalInfo> getAll(int size) {
-        return getAll(size, new ArrayList<>());
+    public Set<BotanicalInfo> getAll(int size) {
+        return getAll(size, new HashSet<>());
     }
 
 
-    // FIXME problem of duplicated BotanicalInfo from different sources
-    public List<BotanicalInfo> getAll(int size, List<BotanicalInfo> chainResult) {
-        final List<BotanicalInfo> personalResult = getAllInternal(size);
+    public Set<BotanicalInfo> getAll(int size, Set<BotanicalInfo> chainResult) {
+        final Set<BotanicalInfo> personalResult = getAllInternal(size);
         chainResult.addAll(personalResult);
         if (chainResult.size() >= size || next == null) {
-            return chainResult.subList(0, size);
+            return new HashSet<>(new ArrayList<>(chainResult).subList(0, Math.min(size, chainResult.size())));
         }
         return next.getAll(size, chainResult);
     }
 
 
-    protected abstract List<BotanicalInfo> getAllInternal(int size);
+    protected abstract Set<BotanicalInfo> getAllInternal(int size);
 }

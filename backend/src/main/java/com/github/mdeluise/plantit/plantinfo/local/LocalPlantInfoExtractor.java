@@ -6,7 +6,7 @@ import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class LocalPlantInfoExtractor extends AbstractPlantInfoExtractor {
@@ -20,13 +20,13 @@ public class LocalPlantInfoExtractor extends AbstractPlantInfoExtractor {
 
 
     @Override
-    protected List<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size) {
+    protected Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size) {
         return botanicalInfoService.getByPartialScientificName(partialPlantScientificName, size);
     }
 
 
     @Override
-    protected List<BotanicalInfo> getAllInternal(int size) {
+    protected Set<BotanicalInfo> getAllInternal(int size) {
         return botanicalInfoService.getAll(size);
     }
 }

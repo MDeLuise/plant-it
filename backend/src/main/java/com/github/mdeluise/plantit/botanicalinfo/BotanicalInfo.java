@@ -114,7 +114,9 @@ public class BotanicalInfo {
             return false;
         }
         final BotanicalInfo that = (BotanicalInfo) o;
-        return Objects.equals(family, that.family) && Objects.equals(genus, that.genus);
+        return Objects.equals(id, that.id) ||
+                   Objects.equals(scientificName, that.scientificName) && Objects.equals(family, that.family) &&
+                        Objects.equals(genus, that.genus);
     }
 
 

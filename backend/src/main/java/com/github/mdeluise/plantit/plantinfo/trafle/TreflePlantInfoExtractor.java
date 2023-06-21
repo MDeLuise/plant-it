@@ -7,7 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class TreflePlantInfoExtractor extends AbstractPlantInfoExtractor {
@@ -21,16 +22,16 @@ public class TreflePlantInfoExtractor extends AbstractPlantInfoExtractor {
 
 
     @Override
-    protected List<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size) {
+    protected Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size) {
         final Page<BotanicalInfo> result =
             trefleRequestMaker.fetchInfoFromPartial(partialPlantScientificName, Pageable.ofSize(size));
-        return result.getContent();
+        return new HashSet<>(result.getContent());
     }
 
 
     @Override
-    protected List<BotanicalInfo> getAllInternal(int size) {
+    protected Set<BotanicalInfo> getAllInternal(int size) {
         final Page<BotanicalInfo> result = trefleRequestMaker.fetchAll(Pageable.ofSize(size));
-        return result.getContent();
+        return new HashSet<>(result.getContent());
     }
 }
