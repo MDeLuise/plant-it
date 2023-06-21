@@ -4,6 +4,7 @@ import com.github.mdeluise.plantit.tracked.AbstractTrackedEntity;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,8 @@ public class TrackedEntityImage extends AbstractImage {
     private AbstractTrackedEntity abstractTrackedEntity;
     @OneToOne(mappedBy = "thumbnailImage")
     private AbstractTrackedEntity thumbnailOf;
-    @Size(max = 1000000)
+    @Size(max = 100000)
+    @Lob
     private byte[] content;
 
 

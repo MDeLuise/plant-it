@@ -152,7 +152,7 @@
             </column>
             <column name="url" type="varchar(255)">
             </column>
-            <column name="content" type="varbinary(1000000)">
+            <column name="content" type="blob">
             </column>
         </createTable>
     </changeSet>
