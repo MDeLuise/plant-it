@@ -111,7 +111,7 @@ public class BotanicalInfo implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof BotanicalInfo)) {
             return false;
         }
         final BotanicalInfo that = (BotanicalInfo) o;

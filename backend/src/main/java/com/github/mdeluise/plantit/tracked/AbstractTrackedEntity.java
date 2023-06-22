@@ -23,6 +23,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +33,7 @@ import java.util.Set;
 @DiscriminatorColumn(
     name = "entity_type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "TINYINT(1)"
 )
-public abstract class AbstractTrackedEntity {
+public abstract class AbstractTrackedEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

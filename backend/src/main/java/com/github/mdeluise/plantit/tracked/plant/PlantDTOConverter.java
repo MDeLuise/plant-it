@@ -50,8 +50,7 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
             modelMapper.typeMap(BotanicalInfoDTO.class, BotanicalInfo.class);
         }
 
-        final Plant result = modelMapper.map(dto, Plant.class);
-        return result;
+        return modelMapper.map(dto, Plant.class);
     }
 
 

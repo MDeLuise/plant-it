@@ -33,7 +33,7 @@ function UserTopBar(props: {}) {
                 display: "flex",
                 gap: "15px"
             }}>
-                <Avatar alt="user" src="/static/images/avatar/1.jpg" />
+                <Avatar alt={username} src="/static/images/avatar/1.jpg" />
                 <Box>
                     <Typography variant="body2">Welcome back</Typography>
                     <Typography variant="body1" style={{ fontWeight: 600 }}>{username} 👋</Typography>

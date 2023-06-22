@@ -15,7 +15,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorMessage> entityNotFoundException(
-        com.github.mdeluise.plantit.exception.ResourceNotFoundException ex,
+        ResourceNotFoundException ex,
         WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),

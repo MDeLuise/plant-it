@@ -6,6 +6,7 @@ import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,11 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
     }
 
 
+    @CacheEvict(
+        cacheNames = "botanical-info",
+        condition = "#toSave instanceof UserCreatedBotanicalInfo.class",
+        allEntries = true
+    )
     public BotanicalInfo save(BotanicalInfo toSave) {
         if (toSave instanceof UserCreatedBotanicalInfo u) {
             u.setCreator(getAuthenticatedUser());

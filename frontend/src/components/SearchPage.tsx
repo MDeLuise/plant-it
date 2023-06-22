@@ -29,7 +29,7 @@ function BotanicalEntity(props: {
     };
 
     useEffect(() => {
-        if (props.entity.imageUrl == undefined) {
+        if (props.entity.imageUrl == undefined && props.entity.imageId != undefined) {
             readImage();
         }
     });

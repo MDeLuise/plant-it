@@ -17,7 +17,7 @@ public abstract class AbstractPlantInfoExtractor {
     }
 
 
-    @Cacheable(value = "info", key = "{#partialPlantScientificName, #size}")
+    @Cacheable(value = "botanical-info", key = "{#partialPlantScientificName, #size}")
     public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
         return new ArrayList<>(extractPlants(partialPlantScientificName, size, new HashSet<>()));
     }
@@ -37,7 +37,7 @@ public abstract class AbstractPlantInfoExtractor {
     protected abstract Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size);
 
 
-    @Cacheable(value = "info", key = "#size")
+    @Cacheable(value = "botanical-info", key = "#size")
     public List<BotanicalInfo> getAll(int size) {
         return new ArrayList<>(getAll(size, new HashSet<>()));
     }

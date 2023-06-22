@@ -71,18 +71,23 @@ public class TrefleRequestMaker {
         responseJson.get("data").getAsJsonArray().forEach(plantResult -> {
             BotanicalInfo botanicalInfo = new BotanicalInfo();
             try {
-                botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
-                botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
-                botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());
-                final JsonElement imageElement = plantResult.getAsJsonObject().get("image_url");
-                if (!imageElement.isJsonNull()) {
-                    fillImage(botanicalInfo, plantResult.getAsJsonObject().get("image_url").getAsString());
-                }
+                fillTrefleInfo(plantResult, botanicalInfo);
                 botanicalInfos.add(botanicalInfo);
             } catch (UnsupportedOperationException ignore) {
             }
         });
         return new PageImpl<>(botanicalInfos);
+    }
+
+
+    private void fillTrefleInfo(JsonElement plantResult, BotanicalInfo botanicalInfo) {
+        botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
+        botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
+        botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());
+        final JsonElement imageElement = plantResult.getAsJsonObject().get("image_url");
+        if (!imageElement.isJsonNull() && !imageElement.getAsString().equals("null")) {
+            fillImage(botanicalInfo, plantResult.getAsJsonObject().get("image_url").getAsString());
+        }
     }
 
 
@@ -106,10 +111,7 @@ public class TrefleRequestMaker {
         List<BotanicalInfo> botanicalInfos = new ArrayList<>();
         responseJson.get("data").getAsJsonArray().forEach(plantResult -> {
             BotanicalInfo botanicalInfo = new BotanicalInfo();
-            botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
-            botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
-            botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());
-            fillImage(botanicalInfo, plantResult.getAsJsonObject().get("image_url").getAsString());
+            fillTrefleInfo(plantResult, botanicalInfo);
             botanicalInfos.add(botanicalInfo);
         });
         return new PageImpl<>(botanicalInfos);
