@@ -81,6 +81,7 @@ public class TrefleRequestMaker {
 
 
     private void fillTrefleInfo(JsonElement plantResult, BotanicalInfo botanicalInfo) {
+        botanicalInfo.setSpecies(plantResult.getAsJsonObject().get("scientific_name").getAsString());
         botanicalInfo.setScientificName(plantResult.getAsJsonObject().get("scientific_name").getAsString());
         botanicalInfo.setFamily(plantResult.getAsJsonObject().get("family").getAsString());
         botanicalInfo.setGenus(plantResult.getAsJsonObject().get("genus").getAsString());

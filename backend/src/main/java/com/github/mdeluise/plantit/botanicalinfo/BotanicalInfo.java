@@ -3,7 +3,6 @@ package com.github.mdeluise.plantit.botanicalinfo;
 import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.tracked.plant.Plant;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -32,12 +31,12 @@ public class BotanicalInfo implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    @Column(unique = true)
     private String scientificName;
     @NotNull
-    private String family; // http://www.theplantlist.org/browse/-/
+    private String family;
     @NotNull
     private String genus;
+    private String species;
     @NotNull
     @OneToMany(mappedBy = "botanicalInfo")
     private Set<Plant> plants = new HashSet<>();
@@ -86,6 +85,16 @@ public class BotanicalInfo implements Serializable {
     }
 
 
+    public String getSpecies() {
+        return species;
+    }
+
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+
     public Set<Plant> getPlants() {
         return plants;
     }
@@ -115,14 +124,12 @@ public class BotanicalInfo implements Serializable {
             return false;
         }
         final BotanicalInfo that = (BotanicalInfo) o;
-        return Objects.equals(id, that.id) ||
-                   Objects.equals(scientificName, that.scientificName) && Objects.equals(family, that.family) &&
-                        Objects.equals(genus, that.genus);
+        return Objects.equals(id, that.id) || Objects.equals(species, that.species);
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(scientificName, family, genus);
+        return Objects.hash(species);
     }
 }

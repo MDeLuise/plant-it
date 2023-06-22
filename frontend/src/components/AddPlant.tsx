@@ -18,6 +18,7 @@ export default function AddPlant(props: {
     const [plantName, setPlantName] = useState<string>("");
     const [family, setFamily] = useState<string>();
     const [genus, setGenus] = useState<string>();
+    const [species, setSpecies] = useState<string>();
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
     const [useDate, setUseDate] = useState<boolean>(true);
     const [selectedImage, setSelectedImage] = useState<File>();
@@ -29,9 +30,6 @@ export default function AddPlant(props: {
     const readImage = (): void => {
         props.requestor.get(`image/botanical-info/${props.entity!.imageId}`)
             .then((res) => {
-                let { id, description, savedAt, content } = res.data;
-                console.log(id);
-                console.log(Buffer.from(res.data.content, "utf-8").toString());
                 setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
             });
     };
@@ -76,6 +74,7 @@ export default function AddPlant(props: {
                 props.trackedEntities.push(res.data);
                 props.entity!.id = res.data.botanicalInfo.id;
                 getName();
+                cleanup();
             });
     };
 
@@ -85,9 +84,10 @@ export default function AddPlant(props: {
         props.requestor.post("/image", formData)
             .then((res) => {
                 let botanicalInfoToUse = {
-                    scientificName: plantName,
+                    scientificName: species != undefined ? species : genus,
                     family: family,
                     genus: genus,
+                    species: species,
                     isSystemWide: false,
                     imageId: res.data,
                 };
@@ -101,10 +101,19 @@ export default function AddPlant(props: {
                     .then((res) => {
                         props.setOpen(false);
                         props.trackedEntities.push(res.data);
-                        //props.entity = res.data.botanicalInfo;
                         getName();
+                        cleanup();
                     });
             });
+    };
+
+    const cleanup = (): void => {
+        setSelectedImage(undefined);
+        setDownloadedImg(undefined);
+        setFamily(undefined);
+        setGenus(undefined);
+        setPlantName("");
+        setUseDate(true);
     };
 
     useEffect(() => {
@@ -112,7 +121,6 @@ export default function AddPlant(props: {
             readImage();
         }
         getName();
-        setUseDate(true);
     }, [props.entity]);
 
     return (
@@ -231,6 +239,14 @@ export default function AddPlant(props: {
                     label="Genus"
                     value={props.entity?.genus}
                     onChange={(event) => setGenus(event.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    fullWidth
+                    label="Species"
+                    value={props.entity?.species}
+                    onChange={(event) => setSpecies(event.target.value)}
                 />
                 <Box sx={{
                     display: "flex",

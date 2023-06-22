@@ -12,11 +12,16 @@ public class BotanicalInfoDTO {
     private String family;
     @Schema(description = "Genus of the botanical info.")
     private String genus;
+    @Schema(description = "Species of the botanical info.")
+    private String species;
     @Schema(description = "URL of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String imageUrl;
     @Schema(description = "ID of the botanical info image.")
     private Long imageId;
-    @Schema(description = "True if botanical info is system wide, false if it's user created", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(
+        description = "True if botanical info is system wide, false if it's user created",
+        accessMode = Schema.AccessMode.READ_ONLY
+    )
     private boolean isSystemWide;
 
 
@@ -57,6 +62,16 @@ public class BotanicalInfoDTO {
 
     public void setGenus(String genus) {
         this.genus = genus;
+    }
+
+
+    public String getSpecies() {
+        return species;
+    }
+
+
+    public void setSpecies(String species) {
+        this.species = species;
     }
 
 

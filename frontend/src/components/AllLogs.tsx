@@ -76,8 +76,23 @@ export default function AllLogs(props: { requestor: AxiosInstance, entries: diar
                 flexDirection: "column",
                 gap: "20px",
             }}>
-                {
+                {/* {
                     props.entries.filter((en) => !entities.includes(en)).map((entity) => {
+                        return <LogEntry
+                            entity={entity}
+                            last={false}
+                            key={entity.id} lastRef={myRef}
+                        />;
+                    })
+                } */}
+
+                {/*
+                  * FIXME: If page refresh and immediately click on "calendar icon",
+                  * then mess with diary log entries order
+                */}
+
+                {
+                    props.entries.filter((enToCheck: diaryEntry) => !entities.find((en) => en.id === enToCheck.id)).map((entity) => {
                         return <LogEntry
                             entity={entity}
                             last={false}

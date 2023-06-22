@@ -46,7 +46,6 @@ function UserTopBar(props: {}) {
 
 function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trackedEntity[]; }) {
     const [plantName, setPlantName] = useState<string>("");
-    const [addPlantOpen, setAddPlantOpen] = useState<boolean>(false);
 
     return (
         <Box>
@@ -79,7 +78,7 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                 value={plantName}
                 sx={{
                     margin: "10px 0",
-                    backgroundColor: "#eae8e8"
+                    backgroundColor: "#eae8e8",
                 }}
             />
             <Flicking

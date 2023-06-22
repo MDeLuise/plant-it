@@ -76,10 +76,11 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
                 throw new RuntimeException(e);
             }
 
+            botanicalInfo.setScientificName(botanicalInfoDTO.getScientificName());
             botanicalInfo.setFamily(botanicalInfoDTO.getFamily());
             botanicalInfo.setGenus(botanicalInfoDTO.getGenus());
-            botanicalInfo.setScientificName(botanicalInfoDTO.getScientificName());
             botanicalInfo.setId(botanicalInfoDTO.getId());
+            botanicalInfo.setSpecies(botanicalInfoDTO.getSpecies());
             if (botanicalInfoDTO.getImageId() != null) {
                 botanicalInfo.setImage((AbstractBotanicalInfoImage) imageService.get(botanicalInfoDTO.getImageId()));
             } else if (botanicalInfoDTO.getImageUrl() != null) {

@@ -169,13 +169,16 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="scientific_name" type="varchar(40)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="family" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
             <column name="genus" type="varchar(40)">
                 <constraints nullable="false"/>
+            </column>
+            <column name="species" type="varchar(40)">
+                <constraints nullable="true"/>
             </column>
             <column name="image_id" type="bigint">
                 <constraints foreignKeyName="fk_botanicalName_image" references="abstract_images(id)"/>
@@ -188,8 +191,13 @@
         </createTable>
 
         <addUniqueConstraint
-                columnNames="scientific_name, family, genus"
-                constraintName="botanical_name_unique"
+                columnNames="species, user_id"
+                constraintName="botanical_name_species_unique"
+                tableName="botanical_infos"
+        />
+        <addUniqueConstraint
+                columnNames="scientific_name, user_id"
+                constraintName="botanical_name_scientific_name_unique"
                 tableName="botanical_infos"
         />
     </changeSet>

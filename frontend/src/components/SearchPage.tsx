@@ -207,7 +207,8 @@ export default function SearchPage(props: {
                 value={scientificName}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setScientificName(event.target.value)}
                 sx={{
-                    margin: "5px 0"
+                    margin: "5px 0",
+                    backgroundColor: "#eae8e8",
                 }}
             />
             <Box sx={{
