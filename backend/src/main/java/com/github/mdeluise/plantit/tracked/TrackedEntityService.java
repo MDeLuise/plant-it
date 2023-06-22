@@ -30,13 +30,13 @@ public class TrackedEntityService extends AbstractAuthenticatedService {
     }
 
 
-    @Cacheable(value = "tracked-entities", key = "#pageable")
+    @Cacheable(value = "tracked-entities", key = "{#pageable, '#{this.getAuthenticatedUser().id}'}")
     public Page<AbstractTrackedEntity> getAll(Pageable pageable) {
         return trackedEntityRepository.findAllByOwner(getAuthenticatedUser(), pageable);
     }
 
 
-    @Cacheable(value = "tracked-entities", key = "#id")
+    @Cacheable(value = "tracked-entities", key = "{#id, '#{this.getAuthenticatedUser().id}'}")
     public AbstractTrackedEntity get(Long id) {
         return trackedEntityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
