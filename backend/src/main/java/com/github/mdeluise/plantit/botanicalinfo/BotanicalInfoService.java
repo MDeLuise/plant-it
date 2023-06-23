@@ -1,16 +1,16 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class BotanicalInfoService {
 
 
     @Autowired
-    public BotanicalInfoService(AuthenticatedUserService authenticatedUserService, BotanicalInfoRepository botanicalInfoRepository,
-                                ImageService imageService) {
+    public BotanicalInfoService(AuthenticatedUserService authenticatedUserService,
+                                BotanicalInfoRepository botanicalInfoRepository, ImageService imageService) {
         this.authenticatedUserService = authenticatedUserService;
         this.botanicalInfoRepository = botanicalInfoRepository;
         this.imageService = imageService;
@@ -37,34 +37,44 @@ public class BotanicalInfoService {
 
 
     public Set<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
-        final Page<BotanicalInfo> result =
-            botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName,
-                                                                           Pageable.ofSize(size)
-            );
-        return new HashSet<>(result.getContent());
+        final List<BotanicalInfo> result =
+            botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName).stream().filter(
+                botanicalInfo -> isBotanicalInfoAccessibleToUser(botanicalInfo,
+                                                                 authenticatedUserService.getAuthenticatedUser()
+                )).limit(size).toList();
+        return new HashSet<>(result.subList(0, Math.min(size, result.size())));
     }
 
 
     public Set<BotanicalInfo> getAll(int size) {
-        final Page<BotanicalInfo> result = botanicalInfoRepository.findAll(Pageable.ofSize(size));
-        return new HashSet<>(result.getContent());
+        final List<BotanicalInfo> result = botanicalInfoRepository.findAll().stream().filter(
+            botanicalInfo -> isBotanicalInfoAccessibleToUser(botanicalInfo,
+                                                             authenticatedUserService.getAuthenticatedUser()
+            )).limit(size).toList();
+        return new HashSet<>(result);
+    }
+
+
+    private boolean isBotanicalInfoAccessibleToUser(BotanicalInfo botanicalInfo, User user) {
+        return botanicalInfo instanceof GlobalBotanicalInfo || botanicalInfo instanceof UserCreatedBotanicalInfo &&
+                                                                   ((UserCreatedBotanicalInfo) botanicalInfo).getCreator()
+                                                                                                             .equals(
+                                                                                                                 user);
     }
 
 
     public int countPlants(Long botanicalInfoId) {
         return botanicalInfoRepository.findById(botanicalInfoId)
-                                      .orElseThrow(() -> new ResourceNotFoundException(botanicalInfoId))
-                                      .getPlants()
-                                      .stream().filter(pl -> pl.getOwner().equals(
-                                          authenticatedUserService.getAuthenticatedUser()))
-                                      .collect(Collectors.toSet())
+                                      .orElseThrow(() -> new ResourceNotFoundException(botanicalInfoId)).getPlants()
+                                      .stream().filter(
+                pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser())).collect(Collectors.toSet())
                                       .size();
     }
 
 
     @CacheEvict(
         cacheNames = "botanical-info",
-        condition = "#toSave instanceof UserCreatedBotanicalInfo.class",
+        condition = "#toSave instanceof T(com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo)",
         allEntries = true
     )
     public BotanicalInfo save(BotanicalInfo toSave) {
