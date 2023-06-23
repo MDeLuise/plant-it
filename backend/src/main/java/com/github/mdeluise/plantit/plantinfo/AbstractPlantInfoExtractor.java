@@ -1,21 +1,23 @@
 package com.github.mdeluise.plantit.plantinfo;
 
-import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
-import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
+import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractPlantInfoExtractor extends AbstractAuthenticatedService {
+@Component
+public abstract class AbstractPlantInfoExtractor {
+    private final AuthenticatedUserService authenticatedUserService;
     private AbstractPlantInfoExtractor next;
 
 
-    protected AbstractPlantInfoExtractor(UserService userService) {
-        super(userService);
+    protected AbstractPlantInfoExtractor(AuthenticatedUserService authenticatedUserService) {
+        this.authenticatedUserService = authenticatedUserService;
     }
 
 
@@ -24,7 +26,10 @@ public abstract class AbstractPlantInfoExtractor extends AbstractAuthenticatedSe
     }
 
 
-    @Cacheable(value = "botanical-info", key = "{#partialPlantScientificName, #size, '#{this.getAuthenticatedUser().id}'}")
+    @Cacheable(
+        value = "botanical-info",
+        key = "{#partialPlantScientificName, #size, @authenticatedUserService.getAuthenticatedUser().id}"
+    )
     public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
         return new ArrayList<>(extractPlants(partialPlantScientificName, size, new HashSet<>()));
     }
@@ -44,7 +49,7 @@ public abstract class AbstractPlantInfoExtractor extends AbstractAuthenticatedSe
     protected abstract Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size);
 
 
-    @Cacheable(value = "botanical-info", key = "{#size, '#{this.getAuthenticatedUser().id}'}")
+    @Cacheable(value = "botanical-info", key = "{#size, @authenticatedUserService.getAuthenticatedUser().id}")
     public List<BotanicalInfo> getAll(int size) {
         return new ArrayList<>(getAll(size, new HashSet<>()));
     }

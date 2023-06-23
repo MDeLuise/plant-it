@@ -1,7 +1,6 @@
 package com.github.mdeluise.plantit.diary.entry;
 
-import com.github.mdeluise.plantit.authentication.UserService;
-import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
+import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.diary.DiaryService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -14,28 +13,30 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class DiaryEntryService extends AbstractAuthenticatedService {
+public class DiaryEntryService {
+    private final AuthenticatedUserService authenticatedUserService;
     private final DiaryEntryRepository diaryEntryRepository;
     private final DiaryService diaryService;
 
 
     @Autowired
-    public DiaryEntryService(UserService userService, DiaryEntryRepository diaryEntryRepository,
-                             DiaryService diaryService) {
-        super(userService);
+    public DiaryEntryService(AuthenticatedUserService authenticatedUserService,
+                             DiaryEntryRepository diaryEntryRepository, DiaryService diaryService) {
+        this.authenticatedUserService = authenticatedUserService;
         this.diaryEntryRepository = diaryEntryRepository;
         this.diaryService = diaryService;
     }
 
 
     public Page<DiaryEntry> getAll(Pageable pageable) {
-        return diaryEntryRepository.findAllByDiaryOwner(getAuthenticatedUser(), pageable);
+        return diaryEntryRepository.findAllByDiaryOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
     }
 
 
     public Page<DiaryEntry> getAll(Long diaryId, Pageable pageable) {
         final Diary diary = diaryService.get(diaryId);
-        return diaryEntryRepository.findAllByDiaryOwnerAndDiary(getAuthenticatedUser(), diary, pageable);
+        return diaryEntryRepository.findAllByDiaryOwnerAndDiary(
+            authenticatedUserService.getAuthenticatedUser(), diary, pageable);
     }
 
 

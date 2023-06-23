@@ -1,7 +1,6 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
-import com.github.mdeluise.plantit.authentication.UserService;
-import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
+import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageService;
@@ -17,15 +16,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class BotanicalInfoService extends AbstractAuthenticatedService {
+public class BotanicalInfoService {
+    private final AuthenticatedUserService authenticatedUserService;
     private final BotanicalInfoRepository botanicalInfoRepository;
     private final ImageService imageService;
 
 
     @Autowired
-    public BotanicalInfoService(UserService userService, BotanicalInfoRepository botanicalInfoRepository,
+    public BotanicalInfoService(AuthenticatedUserService authenticatedUserService, BotanicalInfoRepository botanicalInfoRepository,
                                 ImageService imageService) {
-        super(userService);
+        this.authenticatedUserService = authenticatedUserService;
         this.botanicalInfoRepository = botanicalInfoRepository;
         this.imageService = imageService;
     }
@@ -55,7 +55,8 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
         return botanicalInfoRepository.findById(botanicalInfoId)
                                       .orElseThrow(() -> new ResourceNotFoundException(botanicalInfoId))
                                       .getPlants()
-                                      .stream().filter(pl -> pl.getOwner().equals(getAuthenticatedUser()))
+                                      .stream().filter(pl -> pl.getOwner().equals(
+                                          authenticatedUserService.getAuthenticatedUser()))
                                       .collect(Collectors.toSet())
                                       .size();
     }
@@ -68,7 +69,7 @@ public class BotanicalInfoService extends AbstractAuthenticatedService {
     )
     public BotanicalInfo save(BotanicalInfo toSave) {
         if (toSave instanceof UserCreatedBotanicalInfo u) {
-            u.setCreator(getAuthenticatedUser());
+            u.setCreator(authenticatedUserService.getAuthenticatedUser());
         }
         final BotanicalInfo result = botanicalInfoRepository.save(toSave);
         final AbstractBotanicalInfoImage image = result.getImage();

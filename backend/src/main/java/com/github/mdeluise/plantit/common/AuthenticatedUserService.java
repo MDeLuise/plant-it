@@ -2,20 +2,24 @@ package com.github.mdeluise.plantit.common;
 
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.authentication.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
-public abstract class AbstractAuthenticatedService {
+@Component
+public class AuthenticatedUserService {
     private final UserService userService;
 
 
-    protected AbstractAuthenticatedService(UserService userService) {
+    @Autowired
+    public AuthenticatedUserService(UserService userService) {
         this.userService = userService;
     }
 
 
-    protected User getAuthenticatedUser() {
+    public User getAuthenticatedUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         String username = authentication.getName();
