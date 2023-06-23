@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @DiscriminatorValue("2")
 public class LocalBotanicalInfoImage extends AbstractBotanicalInfoImage {
-    @Size(max = 100000)
+    @Size(max = 20000000) // 20MB
     @Lob
     private byte[] content;
 

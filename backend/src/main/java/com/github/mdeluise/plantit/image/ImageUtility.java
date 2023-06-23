@@ -1,41 +1,53 @@
 package com.github.mdeluise.plantit.image;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Iterator;
+
 public class ImageUtility {
-    public static byte[] compressImage(byte[] data) {
-        //        Deflater deflater = new Deflater();
-        //        deflater.setLevel(Deflater.BEST_COMPRESSION);
-        //        deflater.setInput(data);
-        //        deflater.finish();
-        //
-        //        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        //        byte[] tmp = new byte[4 * 1024];
-        //        while (!deflater.finished()) {
-        //            int size = deflater.deflate(tmp);
-        //            outputStream.write(tmp, 0, size);
-        //        }
-        //        try {
-        //            outputStream.close();
-        //        } catch (Exception e) {
-        //        }
-        //        return outputStream.toByteArray();
-        return data;
+    public static byte[] compressImage(int maxSize, File data) throws IOException {
+        File compressedImageFile =
+            new File(System.getProperty("java.io.tmpdir") + "/" + data.getName() + "_compressed.jpg");
+        OutputStream os = new FileOutputStream(compressedImageFile);
+
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+        ImageWriter writer = writers.next();
+
+        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+        writer.setOutput(ios);
+
+        ImageWriteParam param = writer.getDefaultWriteParam();
+
+        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        // param.setCompressionQuality(compressPercentage(maxSize, data.length()));
+        param.setCompressionQuality(0.5f);
+
+        final BufferedImage image = ImageIO.read(data);
+        writer.write(null, new IIOImage(image, null, null), param);
+
+        os.close();
+        ios.close();
+        writer.dispose();
+
+        final FileInputStream fl = new FileInputStream(compressedImageFile);
+        byte[] arr = new byte[(int) compressedImageFile.length()];
+        fl.read(arr);
+        fl.close();
+        return arr;
     }
 
 
-    public static byte[] decompressImage(byte[] data) {
-        //        Inflater inflater = new Inflater();
-        //        inflater.setInput(data);
-        //        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        //        byte[] tmp = new byte[4 * 1024];
-        //        try {
-        //            while (!inflater.finished()) {
-        //                int count = inflater.inflate(tmp);
-        //                outputStream.write(tmp, 0, count);
-        //            }
-        //            outputStream.close();
-        //        } catch (Exception exception) {
-        //        }
-        //        return outputStream.toByteArray();
-        return data;
+    private static float compressPercentage(int maxSize, long actualSize) {
+        // maxSize : 100 = actualSize : x
+        return actualSize * 100 / maxSize / 100;
     }
 }

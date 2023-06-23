@@ -1,6 +1,8 @@
 package com.github.mdeluise.plantit.plantinfo;
 
+import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
+import com.github.mdeluise.plantit.common.AbstractAuthenticatedService;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.ArrayList;
@@ -8,8 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractPlantInfoExtractor {
+public abstract class AbstractPlantInfoExtractor extends AbstractAuthenticatedService {
     private AbstractPlantInfoExtractor next;
+
+
+    protected AbstractPlantInfoExtractor(UserService userService) {
+        super(userService);
+    }
 
 
     public void setNext(AbstractPlantInfoExtractor next) {
@@ -17,7 +24,7 @@ public abstract class AbstractPlantInfoExtractor {
     }
 
 
-    @Cacheable(value = "botanical-info", key = "{#partialPlantScientificName, #size}")
+    @Cacheable(value = "botanical-info", key = "{#partialPlantScientificName, #size, '#{this.getAuthenticatedUser().id}'}")
     public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
         return new ArrayList<>(extractPlants(partialPlantScientificName, size, new HashSet<>()));
     }
@@ -37,7 +44,7 @@ public abstract class AbstractPlantInfoExtractor {
     protected abstract Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size);
 
 
-    @Cacheable(value = "botanical-info", key = "#size")
+    @Cacheable(value = "botanical-info", key = "{#size, '#{this.getAuthenticatedUser().id}'}")
     public List<BotanicalInfo> getAll(int size) {
         return new ArrayList<>(getAll(size, new HashSet<>()));
     }

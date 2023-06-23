@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.plantinfo.local;
 
+import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
@@ -14,7 +15,8 @@ public class LocalPlantInfoExtractor extends AbstractPlantInfoExtractor {
 
 
     @Autowired
-    public LocalPlantInfoExtractor(BotanicalInfoService botanicalInfoService) {
+    public LocalPlantInfoExtractor(UserService userService, BotanicalInfoService botanicalInfoService) {
+        super(userService);
         this.botanicalInfoService = botanicalInfoService;
     }
 

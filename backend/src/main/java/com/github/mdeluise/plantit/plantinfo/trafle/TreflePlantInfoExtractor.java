@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.plantinfo.trafle;
 
+import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,8 @@ public class TreflePlantInfoExtractor extends AbstractPlantInfoExtractor {
 
 
     @Autowired
-    public TreflePlantInfoExtractor(TrefleRequestMaker trefleRequestMaker) {
+    public TreflePlantInfoExtractor(UserService userService, TrefleRequestMaker trefleRequestMaker) {
+        super(userService);
         this.trefleRequestMaker = trefleRequestMaker;
     }
 

@@ -19,7 +19,7 @@ public class TrackedEntityImage extends AbstractImage {
     private AbstractTrackedEntity abstractTrackedEntity;
     @OneToOne(mappedBy = "thumbnailImage")
     private AbstractTrackedEntity thumbnailOf;
-    @Size(max = 100000)
+    @Size(max = 20000000) // 20MB
     @Lob
     private byte[] content;
 
