@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Switch, TextField } from "@mui/material";
+import { Box, Button, Divider, Drawer, Switch, TextField } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { botanicalInfo, trackedEntity } from "../interfaces";
 import { useEffect, useState } from "react";
@@ -13,9 +13,10 @@ export default function AddPlant(props: {
     open: boolean,
     setOpen: (arg: boolean) => void,
     entity?: botanicalInfo,
-    trackedEntities: trackedEntity[];
+    trackedEntities: trackedEntity[],
+    name?: string;
 }) {
-    const [plantName, setPlantName] = useState<string>("");
+    const [plantName, setPlantName] = useState<string>();
     const [family, setFamily] = useState<string>();
     const [genus, setGenus] = useState<string>();
     const [species, setSpecies] = useState<string>();
@@ -25,7 +26,9 @@ export default function AddPlant(props: {
     const [downloadedImg, setDownloadedImg] = useState<string>();
     let imgSrc = props.entity == undefined ? "" : props.entity.imageUrl != undefined ?
         props.entity.imageUrl :
-        `data:image/png;base64,${downloadedImg}`;
+        props.entity.imageId != undefined ?
+            `data:image/png;base64,${downloadedImg}` :
+            process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
         props.requestor.get(`image/botanical-info/${props.entity!.imageId}`)
@@ -36,7 +39,11 @@ export default function AddPlant(props: {
 
     const getName = (): void => {
         if (props.entity === undefined) {
-            setPlantName("");
+            if (props.name === undefined) {
+                setPlantName("");
+            } else {
+                setPlantName(props.name);
+            }
             return;
         }
         if (props.entity.id === null) {
@@ -79,31 +86,50 @@ export default function AddPlant(props: {
     };
 
     const addPlantNewBotanicalInfo = (): void => {
-        let formData = new FormData();
-        formData.append('image', selectedImage!);
-        props.requestor.post("/image", formData)
+        if (selectedImage == undefined) {
+            let botanicalInfoToUse = {
+                scientificName: species != undefined ? species : plantName,
+                family: family,
+                genus: genus,
+                species: species != undefined ? species : plantName,
+                isSystemWide: false,
+            };
+            addPlantWithUploadedId(botanicalInfoToUse, undefined);
+        } else {
+            let formData = new FormData();
+            formData.append('image', selectedImage!);
+            props.requestor.post("/image", formData)
+                .then((res) => {
+                    let botanicalInfoToUse = {
+                        scientificName: species != undefined ? species : plantName,
+                        family: family,
+                        genus: genus,
+                        species: species,
+                        isSystemWide: false,
+                    };
+                    addPlantWithUploadedId(botanicalInfoToUse, res.data);
+                });
+        }
+    };
+
+    const addPlantWithUploadedId = (botanicalInfo?: any, imageId?: number): void => {
+        if (botanicalInfo != undefined) {
+            botanicalInfo.imageId = imageId;
+        }
+        botanicalInfo.imageId = imageId;
+
+        props.requestor.post("/tracked-entity/plant", {
+            botanicalInfo: botanicalInfo,
+            personalName: plantName,
+            type: "PLANT",
+            state: "PURCHASED",
+            startDate: date,
+        })
             .then((res) => {
-                let botanicalInfoToUse = {
-                    scientificName: species != undefined ? species : genus,
-                    family: family,
-                    genus: genus,
-                    species: species,
-                    isSystemWide: false,
-                    imageId: res.data,
-                };
-                props.requestor.post("/tracked-entity/plant", {
-                    botanicalInfo: botanicalInfoToUse,
-                    personalName: plantName,
-                    type: "PLANT",
-                    state: "PURCHASED",
-                    startDate: date,
-                })
-                    .then((res) => {
-                        props.setOpen(false);
-                        props.trackedEntities.push(res.data);
-                        getName();
-                        cleanup();
-                    });
+                props.setOpen(false);
+                props.trackedEntities.push(res.data);
+                getName();
+                cleanup();
             });
     };
 
@@ -114,14 +140,17 @@ export default function AddPlant(props: {
         setGenus(undefined);
         setPlantName("");
         setUseDate(true);
+        setDate(dayjs(new Date()));
     };
 
     useEffect(() => {
-        if (props.entity != undefined && props.entity.imageUrl == undefined) {
+        if (props.entity != undefined &&
+            props.entity.imageUrl == undefined &&
+            props.entity.imageId != undefined) {
             readImage();
         }
         getName();
-    }, [props.entity]);
+    }, [props.entity, props.name]);
 
     return (
         <Drawer
@@ -222,32 +251,6 @@ export default function AddPlant(props: {
                         onChange={(event) => setPlantName(event.target.value)}
                     />
                 </Box>
-                <TextField
-                    variant="outlined"
-                    disabled={props.entity != undefined}
-                    label="Family"
-                    fullWidth
-                    required
-                    value={props.entity?.family}
-                    onChange={(event) => setFamily(event.target.value)}
-                />
-                <TextField
-                    variant="outlined"
-                    disabled={props.entity != undefined}
-                    fullWidth
-                    required
-                    label="Genus"
-                    value={props.entity?.genus}
-                    onChange={(event) => setGenus(event.target.value)}
-                />
-                <TextField
-                    variant="outlined"
-                    disabled={props.entity != undefined}
-                    fullWidth
-                    label="Species"
-                    value={props.entity?.species}
-                    onChange={(event) => setSpecies(event.target.value)}
-                />
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -270,6 +273,31 @@ export default function AddPlant(props: {
                         />
                     </LocalizationProvider>
                 </Box>
+                <Divider>Botanical info</Divider>
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    label="Family"
+                    fullWidth
+                    value={props.entity?.family}
+                    onChange={(event) => setFamily(event.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    fullWidth
+                    label="Genus"
+                    value={props.entity?.genus}
+                    onChange={(event) => setGenus(event.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    disabled={props.entity != undefined}
+                    fullWidth
+                    label="Species"
+                    value={props.entity?.species}
+                    onChange={(event) => setSpecies(event.target.value)}
+                />
 
                 <Box sx={{ flexGrow: "1" }}></Box>
                 <Button

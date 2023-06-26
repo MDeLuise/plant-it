@@ -27,6 +27,8 @@ export default function LogEntry(props: { entity: diaryEntry, last?: boolean, la
             case "watering": return "rgb(64, 123, 213)"
             case "seeding": return "rgb(48, 86, 54)"
             case "transplanting": return "rgb(121, 72, 36)"
+            case "fertilizing": return "rgb(234, 94, 7)"
+            case "biostimulating": return "rgb(234, 147, 7)"
             default: return "rgb(226, 233, 243)"
         }
     };

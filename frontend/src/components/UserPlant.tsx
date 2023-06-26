@@ -16,7 +16,8 @@ export default function UserPlant(props: {
     const [downloadedImg, setDownloadedImg] = useState<string>();
     let imgSrc = props.entity.botanicalInfo.imageUrl != undefined ?
         props.entity.botanicalInfo.imageUrl :
-        `data:image/png;base64,${downloadedImg}`;
+        props.entity.botanicalInfo.imageId != undefined ?
+            `data:image/png;base64,${downloadedImg}` : process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
         props.requestor.get(`image/botanical-info/${props.entity.botanicalInfo.imageId}`)
@@ -26,7 +27,8 @@ export default function UserPlant(props: {
     };
 
     useEffect(() => {
-        if (props.entity.botanicalInfo.imageUrl == undefined) {
+        if (props.entity.botanicalInfo.imageUrl == undefined &&
+            props.entity.botanicalInfo.imageId != undefined) {
             readImage();
         }
     });

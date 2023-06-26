@@ -19,7 +19,8 @@ function BotanicalEntity(props: {
     const [downloadedImg, setDownloadedImg] = useState<string>();
     let imgSrc = props.entity.imageUrl != undefined ?
         props.entity.imageUrl :
-        `data:image/png;base64,${downloadedImg}`;
+        props.entity.imageId != undefined ?
+            `data:image/png;base64,${downloadedImg}` : process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
         props.requestor.get(`image/botanical-info/${props.entity.imageId}`)
@@ -29,7 +30,8 @@ function BotanicalEntity(props: {
     };
 
     useEffect(() => {
-        if (props.entity.imageUrl == undefined && props.entity.imageId != undefined) {
+        if (props.entity.imageUrl == undefined &&
+            props.entity.imageId != undefined) {
             readImage();
         }
     });
@@ -44,7 +46,9 @@ function BotanicalEntity(props: {
                 aspectRatio: ".65",
                 flexShrink: 0,
                 position: "relative",
-            }}>
+            }}
+            onClick={() => props.addClick(props.entity)}
+        >
             {!imageLoaded &&
                 <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
             }
@@ -60,7 +64,7 @@ function BotanicalEntity(props: {
                 color: "white",
                 visibility: imageLoaded ? "initial" : "hidden",
             }}>
-                <AddOutlinedIcon onClick={() => props.addClick(props.entity)} />
+                <AddOutlinedIcon />
             </Box>
 
             <img
@@ -87,7 +91,8 @@ function BotanicalEntity(props: {
 
 function AddNewBotanicalInfo(props: {
     addClick: () => void,
-    requestor: AxiosInstance;
+    requestor: AxiosInstance,
+    searchedTerm: string;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
@@ -100,7 +105,9 @@ function AddNewBotanicalInfo(props: {
             aspectRatio: ".65",
             flexShrink: 0,
             position: "relative",
-        }}>
+        }}
+        onClick={() => props.addClick()}
+    >
         {!imageLoaded &&
             <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
         }
@@ -116,7 +123,7 @@ function AddNewBotanicalInfo(props: {
             color: "white",
             visibility: imageLoaded ? "initial" : "hidden",
         }}>
-            <AddOutlinedIcon onClick={() => props.addClick()} />
+            <AddOutlinedIcon />
         </Box>
 
         <Box sx={{
@@ -186,6 +193,7 @@ export default function SearchPage(props: {
                 setOpen={setAddPlantOpen}
                 entity={selectedBotanicalInfo}
                 trackedEntities={props.trackedEntities}
+                name={scientificName}
             />
 
             <OutlinedInput
@@ -239,6 +247,7 @@ export default function SearchPage(props: {
                     setSelectedBotanicalInfo(undefined);
                     setAddPlantOpen(true);
                 }}
+                    searchedTerm={scientificName}
                     requestor={props.requestor} />
             </Box>
         </Box>

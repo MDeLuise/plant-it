@@ -1,15 +1,3 @@
-# FROM node:alpine
-
-# WORKDIR /app
-# COPY . .
-# RUN chmod +x env.sh
-# RUN apk add --no-cache bash
-# RUN npm install && \
-#     npm run build
-
-# ENTRYPOINT ["/bin/bash", "-c", "./env.sh && npx serve -s build"]
-
-
 FROM node:alpine as builder
 WORKDIR /app
 COPY . .

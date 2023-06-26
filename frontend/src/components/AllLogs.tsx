@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { diaryEntry } from "../interfaces";
 
 export default function AllLogs(props: { requestor: AxiosInstance, entries: diaryEntry[]; }) {
-    const pageSize = 2;
+    const pageSize = 5;
     const [entities, setEntities] = useState<diaryEntry[]>([]);
     const [pageNo, setPageNo] = useState<number>(-1);
     const [circularProgressVisible, setCircularProgressVisible] = useState<boolean>(false);

@@ -17,6 +17,7 @@ import AllLogs from "./AllLogs";
 import LogEntry from "./LogEntry";
 import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
+import { indigo } from "@mui/material/colors";
 
 
 function UserTopBar(props: {}) {
@@ -91,11 +92,19 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                 style={{ marginTop: "10px" }}
             >
                 {props.trackedEntities.map((entity) => {
-                    return <Box sx={{ margin: "0 10px" }} className="card-panel" key={entity.id}>
+                    return <Box
+                        sx={{
+                            margin: "0 10px",
+                            display: entity.personalName.toLowerCase().includes(plantName.toLowerCase()) ? "initial" : "none"
+                        }}
+                        className={entity.personalName.toLowerCase().includes(plantName.toLowerCase()) ? "card-panel" : ""}
+                        key={entity.id}
+                    >
                         <UserPlant
                             entity={entity}
                             key={entity.id}
-                            requestor={props.requestor} />
+                            requestor={props.requestor}
+                        />
                     </Box>;
                 })}
                 <ViewportSlot>
@@ -108,6 +117,7 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
 
 
 function DiaryEntriesList(props: { logEntries: diaryEntry[]; }) {
+
     return (
         <Box sx={{ marginTop: "20px" }}>
             <Box sx={{
@@ -126,7 +136,7 @@ function DiaryEntriesList(props: { logEntries: diaryEntry[]; }) {
                 flexDirection: "column",
                 gap: "20px",
             }}>
-                {props.logEntries.map((entity) => {
+                {props.logEntries.slice(0, 5).map((entity) => {
                     return <LogEntry entity={entity} key={entity.id} />;
                 })}
             </Box>
@@ -221,8 +231,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 requestor={props.requestor}
                 trackedEntities={trackedEntities}
                 updateLogEntries={(arg: diaryEntry) => {
-                    logEntries.unshift(arg);
-                    setLogEntries(logEntries.slice(0, logPageSize));
+                    let newLogEntries = [...logEntries];
+                    newLogEntries.unshift(arg)
+                    setLogEntries(newLogEntries);
                 }}
             ></BottomBar>
         </>

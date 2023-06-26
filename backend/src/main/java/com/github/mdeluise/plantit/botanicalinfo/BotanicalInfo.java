@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.botanicalinfo;
 
 import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
 import com.github.mdeluise.plantit.tracked.plant.Plant;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -14,6 +15,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
@@ -30,16 +32,15 @@ public class BotanicalInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotNull
+    @NotBlank
     private String scientificName;
-    @NotNull
     private String family;
-    @NotNull
     private String genus;
     private String species;
     @NotNull
     @OneToMany(mappedBy = "botanicalInfo")
     private Set<Plant> plants = new HashSet<>();
+    @Nullable
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private AbstractBotanicalInfoImage image;

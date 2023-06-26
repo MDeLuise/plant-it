@@ -44,10 +44,10 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
                    .setConverter(new BotanicalInfoConverter());
 
         if (dto.getBotanicalInfo().getId() == null) {
-            modelMapper.typeMap(BotanicalInfoDTO.class, BotanicalInfo.class)
+            modelMapper.typeMap(BotanicalInfoDTO.class, UserCreatedBotanicalInfo.class)
                        .addMappings(mapper -> mapper.skip(BotanicalInfo::setId));
         } else {
-            modelMapper.typeMap(BotanicalInfoDTO.class, BotanicalInfo.class);
+            modelMapper.typeMap(BotanicalInfoDTO.class, GlobalBotanicalInfo.class);
         }
 
         return modelMapper.map(dto, Plant.class);
@@ -66,7 +66,7 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
         @Override
         public BotanicalInfo convert(MappingContext<BotanicalInfoDTO, BotanicalInfo> context) {
             final BotanicalInfoDTO botanicalInfoDTO = context.getSource();
-            Class<? extends BotanicalInfo> clazz = botanicalInfoDTO.getImageId() == null ?
+            Class<? extends BotanicalInfo> clazz = botanicalInfoDTO.isSystemWide() ?
                                                        GlobalBotanicalInfo.class : UserCreatedBotanicalInfo.class;
 
             final BotanicalInfo botanicalInfo;

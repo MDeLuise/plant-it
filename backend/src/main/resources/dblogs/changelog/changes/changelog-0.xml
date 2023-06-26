@@ -172,13 +172,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="family" type="varchar(40)">
-                <constraints nullable="false"/>
             </column>
             <column name="genus" type="varchar(40)">
-                <constraints nullable="false"/>
             </column>
             <column name="species" type="varchar(40)">
-                <constraints nullable="true"/>
             </column>
             <column name="image_id" type="bigint">
                 <constraints foreignKeyName="fk_botanicalName_image" references="abstract_images(id)"/>
