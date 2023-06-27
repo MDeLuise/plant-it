@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    ButtonGroup,
     Drawer,
     InputLabel,
     MenuItem,
@@ -12,7 +13,7 @@ import {
     useTheme
 } from "@mui/material";
 import { AxiosInstance } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { diaryEntry, trackedEntity } from "../interfaces";
 import { GrClose } from "react-icons/gr";
 import { titleCase } from "../common";
@@ -27,13 +28,13 @@ import { alpha } from "@mui/material";
 
 export default function AddLogEntry(props: {
     requestor: AxiosInstance,
+    eventTypes: string[],
     trackedEntities: trackedEntity[],
     open: boolean,
     setOpen: (arg: boolean) => void,
     updateLog: (arg: diaryEntry) => void,
 }) {
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
-    const [allEventType, setAllEventType] = useState<string[]>([]);
     const theme = useTheme();
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
     const [selectedEventType, setSelectedEventType] = useState<string[]>([]);
@@ -89,13 +90,6 @@ export default function AddLogEntry(props: {
         );
     };
 
-    const getDiaryEvents = (): void => {
-        props.requestor.get("diary/entry/type")
-            .then((res) => {
-                setAllEventType(res.data);
-            });
-    };
-
     const addEvent = (): void => {
         setLoading(true);
         selectedPlantName.forEach((plantId) => {
@@ -107,33 +101,20 @@ export default function AddLogEntry(props: {
                     note: note
                 })
                     .then((res) => {
-                        // setSnackbarSeverity("success");
-                        // setSnackbarMessage("Diaries entries added successfully");
-                        // setSnackbarOpen(true);
                         res.data.diaryTargetPersonalName = plantId; // TODO should not be necessary but backend problem
                         props.updateLog(res.data);
                         props.setOpen(false);
                     })
-                    .catch((error) => {
-                        // setSnackbarSeverity("error");
-                        // setSnackbarMessage(error.message);
-                        // setSnackbarOpen(true);
-                    })
-                    .finally(() => setLoading(false))
+                    .finally(() => setLoading(false));
             });
         });
     };
-
-    useEffect(() => {
-        getDiaryEvents();
-    }, []);
 
     return (
         <Drawer
             anchor={"bottom"}
             open={props.open}
             onClose={() => props.setOpen(false)}
-            //onOpen={() => props.setOpen(true)}
             PaperProps={{
                 style: { borderRadius: "15px 15px 0 0" }
             }}
@@ -143,8 +124,8 @@ export default function AddLogEntry(props: {
                 onClick={() => props.setOpen(false)}
                 style={{
                     position: "absolute",
-                    top: "10px",
-                    right: "10px",
+                    top: "20px",
+                    right: "20px",
                 }}
             />
 
@@ -193,7 +174,7 @@ export default function AddLogEntry(props: {
                         MenuProps={MenuProps}
                         input={<OutlinedInput label="Event type" />}
                     >
-                        {allEventType.map((type) => (
+                        {props.eventTypes.map((type) => (
                             <MenuItem
                                 key={type}
                                 value={type}
@@ -205,20 +186,26 @@ export default function AddLogEntry(props: {
                     </Select>
                 </Box>
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        label="Date"
-                        value={date}
-                        onChange={(newValue) => setDate(newValue)}
-                    />
-                </LocalizationProvider>
+                <Box sx={{ width: "100%" }}>
+                    <InputLabel>Date</InputLabel>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                        <DatePicker
+                            value={date}
+                            onChange={(newValue) => setDate(newValue)}
+                            slotProps={{ textField: { fullWidth: true } }}
+                        />
+                    </LocalizationProvider>
+                </Box>
 
-                <TextField
-                    label="Note"
-                    multiline
-                    rows={4}
-                    onChange={(event) => setNote(event.target.value)}
-                />
+                <Box sx={{ width: "100%" }}>
+                    <TextField
+                        label="Note"
+                        multiline
+                        rows={4}
+                        onChange={(event) => setNote(event.target.value)}
+                        fullWidth
+                    />
+                </Box>
             </Box>
 
             {/* <Button sx={{
@@ -257,7 +244,7 @@ export default function AddLogEntry(props: {
             }}
                 disabled={loading}
                 onClick={addEvent}
-                startIcon={loading ? <CircularProgress size={25}/> : undefined}
+                startIcon={loading ? <CircularProgress size={25} /> : undefined}
             >Save event</Button>
         </Drawer>
     );

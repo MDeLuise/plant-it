@@ -37,6 +37,7 @@ function BottomBarSection(props: {
             }}
             onClick={() => {
                 if (props.active) {
+                    window.scrollTo({top: 0, left: 0, behavior: "auto"});
                     setToggle(false);
                     setTimeout(() => {
                         setToggle(true);
@@ -53,13 +54,14 @@ function BottomBarSection(props: {
                 <props.iconDisabled fontSize={"25px"} />
             }
         </Box>
-    )
+    );
 }
 
 export default function BottomBar(props: {
     activeTab: number,
     setActiveTab: (arg: number) => void,
     requestor: AxiosInstance,
+    eventTypes: string[],
     trackedEntities: trackedEntity[],
     updateLogEntries: (arg: diaryEntry) => void,
 }
@@ -89,14 +91,25 @@ export default function BottomBar(props: {
 
             <AddLogEntry
                 requestor={props.requestor}
+                eventTypes={props.eventTypes}
                 trackedEntities={props.trackedEntities}
                 open={addDiaryLogOpen}
                 setOpen={setAddDiaryLogOpen}
                 updateLog={props.updateLogEntries}
             />
 
-            <BottomBarSection setActive={() => props.setActiveTab(0)} active={props.activeTab == 0} iconEnabled={AiFillHome} iconDisabled={AiOutlineHome} />
-            <BottomBarSection setActive={() => props.setActiveTab(1)} active={props.activeTab == 1} iconEnabled={AiFillCalendar} iconDisabled={AiOutlineCalendar} />
+            <BottomBarSection
+                setActive={() => props.setActiveTab(0)}
+                active={props.activeTab == 0}
+                iconEnabled={AiFillHome}
+                iconDisabled={AiOutlineHome}
+            />
+            <BottomBarSection
+                setActive={() => props.setActiveTab(1)}
+                active={props.activeTab == 1}
+                iconEnabled={AiFillCalendar}
+                iconDisabled={AiOutlineCalendar}
+            />
             <Fab
                 color="primary"
                 aria-label="add"
@@ -108,8 +121,18 @@ export default function BottomBar(props: {
             >
                 <AddIcon />
             </Fab>
-            <BottomBarSection setActive={() => props.setActiveTab(2)} active={props.activeTab == 2} iconEnabled={AiOutlineSearch} iconDisabled={AiOutlineSearch} />
-            <BottomBarSection setActive={() => props.setActiveTab(3)} active={props.activeTab == 3} iconEnabled={FaUser} iconDisabled={AiOutlineUser} />
+            <BottomBarSection
+                setActive={() => props.setActiveTab(2)}
+                active={props.activeTab == 2}
+                iconEnabled={AiOutlineSearch}
+                iconDisabled={AiOutlineSearch}
+            />
+            <BottomBarSection
+                setActive={() => props.setActiveTab(3)}
+                active={props.activeTab == 3}
+                iconEnabled={FaUser}
+                iconDisabled={AiOutlineUser}
+            />
         </Box>
-    )
+    );
 }

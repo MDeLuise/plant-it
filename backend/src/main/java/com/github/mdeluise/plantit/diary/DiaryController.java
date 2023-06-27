@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/diary")
@@ -35,14 +36,17 @@ public class DiaryController {
     }
 
 
+    @SuppressWarnings("ParameterNumber")
     @GetMapping("/entry")
     public ResponseEntity<Page<DiaryEntryDTO>> getAllEntries(
         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
         @RequestParam(defaultValue = "25", required = false) Integer pageSize,
         @RequestParam(defaultValue = "date", required = false) String sortBy,
-        @RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDir) {
+        @RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDir,
+        @RequestParam(defaultValue = "", required = false) List<Long> plantIds,
+        @RequestParam(defaultValue = "", required = false) List<String> eventTypes) {
         final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
-        final Page<DiaryEntry> result = diaryEntryService.getAll(pageable);
+        final Page<DiaryEntry> result = diaryEntryService.getAll(pageable, plantIds, eventTypes);
         return ResponseEntity.ok(result.map(diaryEntryDtoConverter::convertToDTO));
     }
 
@@ -59,7 +63,8 @@ public class DiaryController {
         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
         @RequestParam(defaultValue = "25", required = false) Integer pageSize,
         @RequestParam(defaultValue = "date", required = false) String sortBy,
-        @RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDir, @PathVariable Long diaryId) {
+        @RequestParam(defaultValue = "DESC", required = false) Sort.Direction sortDir,
+        @PathVariable Long diaryId) {
         final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
         final Page<DiaryEntry> result = diaryEntryService.getAll(diaryId, pageable);
         return ResponseEntity.ok(result.map(diaryEntryDtoConverter::convertToDTO));

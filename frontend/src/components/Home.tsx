@@ -151,6 +151,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [logEntries, setLogEntries] = useState<diaryEntry[]>([]);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [error, setError] = useState<string>();
+    const [allEventTypes, setAllEventTypes] = useState<string[]>([]);
     const logPageSize = 5;
 
     const getAllEntities = (): void => {
@@ -179,10 +180,18 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             });
     };
 
+    const getDiaryEvents = (): void => {
+        props.requestor.get("diary/entry/type")
+            .then((res) => {
+                setAllEventTypes(res.data);
+            });
+    };
+
     useEffect(() => {
         if (!props.isLoggedIn()) {
             navigate("/auth");
         } else {
+            getDiaryEvents();
             getAllEntities();
             getLog();
         }
@@ -211,6 +220,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     <AllLogs
                         requestor={props.requestor}
                         entries={logEntries}
+                        eventTypes={allEventTypes}
+                        trackedEntities={trackedEntities}
                     />
                 </Box>
 
@@ -230,6 +241,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 setActiveTab={setActiveTab}
                 requestor={props.requestor}
                 trackedEntities={trackedEntities}
+                eventTypes={allEventTypes}
                 updateLogEntries={(arg: diaryEntry) => {
                     let newLogEntries = [...logEntries];
                     newLogEntries.unshift(arg)

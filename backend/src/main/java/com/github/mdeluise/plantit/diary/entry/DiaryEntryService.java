@@ -6,6 +6,7 @@ import com.github.mdeluise.plantit.diary.DiaryService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,21 @@ public class DiaryEntryService {
     }
 
 
-    public Page<DiaryEntry> getAll(Pageable pageable) {
-        return diaryEntryRepository.findAllByDiaryOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
+    public Page<DiaryEntry> getAll(Pageable pageable, List<Long> plantIds, List<String> eventTypes) {
+        if (plantIds.isEmpty() && eventTypes.isEmpty()) {
+            return diaryEntryRepository.findAllByDiaryOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
+        }
+
+        final List<DiaryEntry> filteredResult =
+            diaryEntryRepository.findAllByDiaryOwner(
+                authenticatedUserService.getAuthenticatedUser(), Pageable.unpaged()).stream()
+                .filter(entry -> plantIds.isEmpty() || plantIds.contains(entry.getDiary().getTarget().getId()))
+                .filter(entry -> eventTypes.isEmpty() || eventTypes.contains(entry.getType().name()))
+                .toList();
+
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min(start + pageable.getPageSize(), filteredResult.size());
+        return new PageImpl<>(filteredResult.subList(start, end), pageable, filteredResult.size());
     }
 
 
