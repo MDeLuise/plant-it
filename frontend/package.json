@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@egjs/flicking-plugins": "^4.7.0",
-    "@egjs/react-flicking": "^4.10.9",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^4.5.8",
@@ -26,7 +24,6 @@
     "buffer": "^6.0.3",
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.7",
-    "md5": "^2.3.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -39,6 +36,7 @@
     "sass": "^1.58.3",
     "serve": "^14.2.0",
     "styled-components": "^5.3.10",
+    "swiper": "^9.4.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

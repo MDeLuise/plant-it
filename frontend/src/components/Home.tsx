@@ -9,10 +9,11 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import SearchPage from "./SearchPage";
 import BottomBar from "./BottomBar";
-import Flicking, { ViewportSlot } from "@egjs/react-flicking";
-import "@egjs/react-flicking/dist/flicking.css";
-import { Pagination, Perspective } from "@egjs/flicking-plugins";
-import "@egjs/flicking-plugins/dist/pagination.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Virtual } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import 'swiper/css/virtual';
 import AllLogs from "./AllLogs";
 import LogEntry from "./LogEntry";
 import Settings from "./Settings";
@@ -74,7 +75,7 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                         />
                     </InputAdornment>
                 }
-                placeholder="Search your plants"
+                placeholder="Search in your plants"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPlantName(event.target.value)}
                 value={plantName}
                 sx={{
@@ -82,35 +83,35 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                     backgroundColor: "#eae8e8",
                 }}
             />
-            <Flicking
-                align="center"
-                //bound={true}
-                circular={true}
-                plugins={[new Perspective({ rotate: 0, scale: 0 }), new Pagination({ type: "bullet" })]}
-                moveType={"snap"}
-                bulletCount={1}
-                style={{ marginTop: "10px" }}
+            <Swiper
+                pagination={{
+                    dynamicBullets: true,
+                    clickable: true,
+                }}
+                modules={[Pagination, Virtual]}
+                className="mySwiper"
+                slidesPerView={"auto"}
+                spaceBetween={30}
+                centeredSlides={true}
             >
-                {props.trackedEntities.map((entity) => {
-                    return <Box
-                        sx={{
-                            margin: "0 10px",
-                            display: entity.personalName.toLowerCase().includes(plantName.toLowerCase()) ? "initial" : "none"
-                        }}
-                        className={entity.personalName.toLowerCase().includes(plantName.toLowerCase()) ? "card-panel" : ""}
-                        key={entity.id}
-                    >
-                        <UserPlant
-                            entity={entity}
-                            key={entity.id}
-                            requestor={props.requestor}
-                        />
-                    </Box>;
-                })}
-                <ViewportSlot>
-                    <Box className="flicking-pagination"></Box>
-                </ViewportSlot>
-            </Flicking>
+                {
+                    props.trackedEntities.filter(
+                        (en) => en.personalName.toLocaleLowerCase().includes(plantName.toLocaleLowerCase()))
+                        .map((entity, index) => {
+                            return <SwiperSlide
+                                key={entity.id}
+                                style={{ width: "45vw" }}
+                                virtualIndex={index}
+                            >
+                                <UserPlant
+                                    entity={entity}
+                                    key={entity.id}
+                                    requestor={props.requestor}
+                                />
+                            </SwiperSlide>;
+                        })
+                }
+            </Swiper>
         </Box >
     );
 }
@@ -243,7 +244,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     let newLogEntries = [...logEntries].filter((en) => en.id !== diaryEntryId);
                     setLogEntries(newLogEntries);
                 }}
-            toEdit={eventToEdit}
+                toEdit={eventToEdit}
             />
 
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>

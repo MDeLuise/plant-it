@@ -20,7 +20,6 @@ import { diaryEntry, trackedEntity } from "../interfaces";
 import { titleCase } from "../common";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import "@egjs/react-flicking/dist/flicking.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { GrClose } from "react-icons/gr";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
