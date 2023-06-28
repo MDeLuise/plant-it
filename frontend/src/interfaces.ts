@@ -23,6 +23,7 @@ export interface botanicalInfo {
     species?: string,
     imageUrl?: string,
     imageId?: string,
+    systemWide: boolean,
 }
 
 export interface trackedEntity {

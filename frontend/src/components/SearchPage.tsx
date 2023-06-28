@@ -1,4 +1,4 @@
-import { Box, InputAdornment, OutlinedInput, Skeleton, Typography } from "@mui/material";
+import { Box, Chip, InputAdornment, OutlinedInput, Skeleton, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
@@ -8,6 +8,8 @@ import { isBigScreen } from "../common";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddPlant from "./AddPlant";
 import { Buffer } from "buffer";
+import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
+import { alpha } from "@mui/material";
 
 function BotanicalEntity(props: {
     entity: botanicalInfo,
@@ -53,19 +55,19 @@ function BotanicalEntity(props: {
                 <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
             }
 
-            <Box sx={{
-                position: "absolute",
-                bottom: "65px",
-                right: "10px",
-                backgroundColor: "primary.light",
-                borderRadius: "50%",
-                padding: "5px",
-                zIndex: 1,
-                color: "white",
-                visibility: imageLoaded ? "initial" : "hidden",
-            }}>
-                <AddOutlinedIcon />
-            </Box>
+            <Chip
+                sx={{
+                    position: "absolute",
+                    bottom: "65px",
+                    right: "5px",
+                    backgroundColor: alpha("#3a5e49", .7),
+                    padding: "5px",
+                    zIndex: 1,
+                    color: "white",
+                    display: props.entity.systemWide ? "none" : "inherit"
+                }}
+                icon={<FaceOutlinedIcon color="inherit"/>} label="Custom"
+            />
 
             <img
                 src={imgSrc}
@@ -252,4 +254,4 @@ export default function SearchPage(props: {
             </Box>
         </Box>
     );
-}
+};
