@@ -6,6 +6,7 @@ import { diaryEntry, trackedEntity } from "../interfaces";
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { titleCase } from "../common";
 import { GrClose } from "react-icons/gr";
+import { BsFilter } from "react-icons/bs";
 
 function Filters(props: {
     entityNames: string[],
@@ -45,7 +46,10 @@ function Filters(props: {
                     alignItems: "center",
                     justifyContent: "space-between",
                 }}>
-                    <Typography>Filter</Typography>
+                    <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
+                        <BsFilter />
+                        <Typography>Filter</Typography>
+                    </Box>
                     <GrClose
                         style={{
                             fontSize: '0.9rem',
@@ -118,7 +122,8 @@ export default function AllLogs(props: {
     requestor: AxiosInstance,
     eventTypes: string[],
     entries: diaryEntry[],
-    trackedEntities: trackedEntity[];
+    trackedEntities: trackedEntity[],
+    openEditEvent: (arg: diaryEntry) => void,
 }) {
     const pageSize = 5;
     const [entities, setEntities] = useState<diaryEntry[]>([]);
@@ -231,6 +236,7 @@ export default function AllLogs(props: {
                             last={index == entities.length - 1}
                             key={entity.id}
                             lastRef={myRef}
+                            editEvent={() => props.openEditEvent(entity)}
                         />;
                     })
                 }

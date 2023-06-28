@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    ButtonGroup,
     Drawer,
     InputLabel,
     MenuItem,
@@ -21,10 +20,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import "@egjs/react-flicking/dist/flicking.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
-import CircularProgress from '@mui/material/CircularProgress';
 import { alpha } from "@mui/material";
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 export default function AddLogEntry(props: {
     requestor: AxiosInstance,
@@ -193,6 +190,7 @@ export default function AddLogEntry(props: {
                             value={date}
                             onChange={(newValue) => setDate(newValue)}
                             slotProps={{ textField: { fullWidth: true } }}
+                            format="DD/MM/YYYY"
                         />
                     </LocalizationProvider>
                 </Box>
@@ -244,7 +242,7 @@ export default function AddLogEntry(props: {
             }}
                 disabled={loading}
                 onClick={addEvent}
-                startIcon={loading ? <CircularProgress size={25} /> : undefined}
+                startIcon={<SaveOutlinedIcon />}
             >Save event</Button>
         </Drawer>
     );

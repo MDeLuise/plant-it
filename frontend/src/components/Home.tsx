@@ -17,7 +17,7 @@ import AllLogs from "./AllLogs";
 import LogEntry from "./LogEntry";
 import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
-import { indigo } from "@mui/material/colors";
+import EditEvent from "./EditEvent";
 
 
 function UserTopBar(props: {}) {
@@ -116,7 +116,10 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
 }
 
 
-function DiaryEntriesList(props: { logEntries: diaryEntry[]; }) {
+function DiaryEntriesList(props: {
+    logEntries: diaryEntry[],
+    editEvent: (arg: diaryEntry) => void;
+}) {
 
     return (
         <Box sx={{ marginTop: "20px" }}>
@@ -137,7 +140,11 @@ function DiaryEntriesList(props: { logEntries: diaryEntry[]; }) {
                 gap: "20px",
             }}>
                 {props.logEntries.slice(0, 5).map((entity) => {
-                    return <LogEntry entity={entity} key={entity.id} />;
+                    return <LogEntry
+                        entity={entity}
+                        key={entity.id}
+                        editEvent={() => props.editEvent(entity)}
+                    />;
                 })}
             </Box>
         </Box>
@@ -153,6 +160,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [error, setError] = useState<string>();
     const [allEventTypes, setAllEventTypes] = useState<string[]>([]);
     const logPageSize = 5;
+    const [editEventVisible, setEditEventVisible] = useState<boolean>(false);
+    const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
 
     const getAllEntities = (): void => {
         props.requestor.get("tracked-entity/_count")
@@ -177,6 +186,21 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         props.requestor.get(`/diary/entry?pageSize=${logPageSize}`)
             .then((res) => {
                 setLogEntries(res.data.content);
+                // it should not be necessary, but if omitted the first time the edit event dialog is
+                // opened, the plantName and eventType are not loaded. Don't know why.
+                if (res.data.content.length > 0) {
+                    setEventToEdit(res.data.content[0]);
+                } else {
+                    setEventToEdit({
+                        id: -1,
+                        type: "WATERING",
+                        note: "This event is a dummy",
+                        date: new Date(),
+                        diaryId: -1,
+                        diaryTargetId: -1,
+                        diaryTargetPersonalName: "Foo",
+                    } as diaryEntry);
+                }
             });
     };
 
@@ -203,6 +227,25 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
     return (
         <>
+
+            <EditEvent
+                requestor={props.requestor}
+                trackedEntities={trackedEntities}
+                eventTypes={allEventTypes}
+                open={editEventVisible}
+                setOpen={(arg: boolean) => setEditEventVisible(arg)}
+                updateLog={(arg: diaryEntry) => {
+                    let newLogEntries = [...logEntries];
+                    newLogEntries.unshift(arg);
+                    setLogEntries(newLogEntries);
+                }}
+                removeFromLog={(diaryEntryId: number) => {
+                    let newLogEntries = [...logEntries].filter((en) => en.id !== diaryEntryId);
+                    setLogEntries(newLogEntries);
+                }}
+            toEdit={eventToEdit}
+            />
+
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
 
                 <Box sx={{ display: activeTab === 0 ? "visible" : "none" }}>
@@ -213,7 +256,12 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         trackedEntities={trackedEntities}
                     />
 
-                    <DiaryEntriesList logEntries={logEntries} />
+                    <DiaryEntriesList
+                        logEntries={logEntries}
+                        editEvent={(arg: diaryEntry) => {
+                            setEditEventVisible(true);
+                            setEventToEdit(arg);
+                        }} />
                 </Box>
 
                 <Box sx={{ display: activeTab === 1 ? "visible" : "none" }}>
@@ -222,6 +270,10 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         entries={logEntries}
                         eventTypes={allEventTypes}
                         trackedEntities={trackedEntities}
+                        openEditEvent={(arg: diaryEntry) => {
+                            setEventToEdit(arg);
+                            setEditEventVisible(true);
+                        }}
                     />
                 </Box>
 
@@ -236,6 +288,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     <Settings requestor={props.requestor} />
                 </Box>
             </Box>
+
             <BottomBar
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -244,7 +297,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 eventTypes={allEventTypes}
                 updateLogEntries={(arg: diaryEntry) => {
                     let newLogEntries = [...logEntries];
-                    newLogEntries.unshift(arg)
+                    newLogEntries.unshift(arg);
                     setLogEntries(newLogEntries);
                 }}
             ></BottomBar>

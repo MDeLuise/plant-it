@@ -11,9 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -82,6 +84,20 @@ public class DiaryController {
     public ResponseEntity<DiaryEntryDTO> save(@RequestBody DiaryEntryDTO diaryEntryDTO) {
         final DiaryEntry result = diaryEntryService.save(diaryEntryDtoConverter.convertFromDTO(diaryEntryDTO));
         return ResponseEntity.ok(diaryEntryDtoConverter.convertToDTO(result));
+    }
+
+
+    @PutMapping("/entry/{id}")
+    public ResponseEntity<DiaryEntryDTO> save(@PathVariable Long id, @RequestBody DiaryEntryDTO diaryEntryDTO) {
+        final DiaryEntry result = diaryEntryService.update(id, diaryEntryDtoConverter.convertFromDTO(diaryEntryDTO));
+        return ResponseEntity.ok(diaryEntryDtoConverter.convertToDTO(result));
+    }
+
+
+    @DeleteMapping("/entry/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        diaryEntryService.delete(id);
+        return ResponseEntity.ok("Success");
     }
 
 }

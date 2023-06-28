@@ -82,12 +82,12 @@ public class DiaryEntryDTO {
     }
 
 
-    public String getDiaryTargetPersonalName() {
-        return diaryTargetPersonalName;
+    public void setDiaryTargetPersonalName(String diaryTargetPersonalName) {
+        this.diaryTargetPersonalName = diaryTargetPersonalName;
     }
 
 
-    public void setDiaryTargetPersonalName(String diaryTargetPersonalName) {
-        this.diaryTargetPersonalName = diaryTargetPersonalName;
+    public String getDiaryTargetPersonalName() {
+        return diaryTargetPersonalName;
     }
 }

@@ -68,4 +68,21 @@ public class DiaryEntryService {
     public DiaryEntry get(Long id) {
         return diaryEntryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
+
+
+    public void delete(Long diaryEntryId) {
+        if (!diaryEntryRepository.existsById(diaryEntryId)) {
+            throw new ResourceNotFoundException(diaryEntryId);
+        }
+        diaryEntryRepository.deleteById(diaryEntryId);
+    }
+
+
+    public DiaryEntry update(Long id, DiaryEntry updated) {
+        if (!diaryEntryRepository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
+        updated.setId(id);
+        return diaryEntryRepository.save(updated);
+    }
 }
