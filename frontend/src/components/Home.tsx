@@ -236,9 +236,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 open={editEventVisible}
                 setOpen={(arg: boolean) => setEditEventVisible(arg)}
                 updateLog={(arg: diaryEntry) => {
-                    let newLogEntries = [...logEntries];
-                    newLogEntries.unshift(arg);
-                    setLogEntries(newLogEntries);
+                    setLogEntries([arg, ...logEntries]);
                 }}
                 removeFromLog={(diaryEntryId: number) => {
                     let newLogEntries = [...logEntries].filter((en) => en.id !== diaryEntryId);
@@ -297,9 +295,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 trackedEntities={trackedEntities}
                 eventTypes={allEventTypes}
                 updateLogEntries={(arg: diaryEntry) => {
-                    let newLogEntries = [...logEntries];
-                    newLogEntries.unshift(arg);
-                    setLogEntries(newLogEntries);
+                    // https://www.digitalocean.com/community/tutorials/react-getting-atomic-updates-with-setstate
+                    setLogEntries((prevState) => ([arg, ...prevState]));
                 }}
             ></BottomBar>
         </>

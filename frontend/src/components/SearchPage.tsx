@@ -51,7 +51,8 @@ function BotanicalEntity(props: {
             }}
             onClick={() => props.addClick(props.entity)}
         >
-            {!imageLoaded &&
+            {
+                !imageLoaded &&
                 <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
             }
 
@@ -66,7 +67,7 @@ function BotanicalEntity(props: {
                     color: "white",
                     display: props.entity.systemWide ? "none" : "inherit"
                 }}
-                icon={<FaceOutlinedIcon color="inherit"/>} label="Custom"
+                icon={<FaceOutlinedIcon color="inherit" />} label="Custom"
             />
 
             <img
