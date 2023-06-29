@@ -72,15 +72,4 @@ public class UserController {
         @Parameter(description = "The ID of the User on which to perform the operation") @PathVariable("id") Long id) {
         userService.remove(id);
     }
-
-
-    /*
-    @PostMapping
-    @Operation(
-        summary = "Create a new User", description = "Create a new User."
-    )
-    public ResponseEntity<User> save(User entityToSave) {
-        return new ResponseEntity<>(userService.save(entityToSave), HttpStatus.OK);
-    }
-    */
 }

@@ -47,6 +47,8 @@ public abstract class AbstractTrackedEntity implements Serializable {
     private State state;
     @Enumerated(EnumType.STRING)
     private TrackedEntityType type;
+    @Length(max = 8500)
+    private String note;
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL)
     private Diary diary;
     @NotNull
@@ -126,6 +128,16 @@ public abstract class AbstractTrackedEntity implements Serializable {
     }
 
 
+    public String getNote() {
+        return note;
+    }
+
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+
     public TrackedEntityType getType() {
         return type;
     }
@@ -163,6 +175,11 @@ public abstract class AbstractTrackedEntity implements Serializable {
 
     public void setImages(Set<TrackedEntityImage> images) {
         this.images = images;
+    }
+
+
+    public void addImage(TrackedEntityImage image) {
+        images.add(image);
     }
 
 

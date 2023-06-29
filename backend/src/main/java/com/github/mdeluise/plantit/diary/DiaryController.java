@@ -100,4 +100,9 @@ public class DiaryController {
         return ResponseEntity.ok("Success");
     }
 
+
+    @GetMapping("/entry/_count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(diaryEntryService.count());
+    }
 }

@@ -26,9 +26,10 @@
         </insert>
         <insert tableName="abstract_images">
             <column name="id" value="97"/>
-            <column name="image_type" value="1"/>
-            <column name="saved_at" value="${now}"/>
-            <column name="url" value="https://bs.plantnet.org/image/o/3e1e625826f746597927eee1ab007fc3923f5ae0"/>
+            <column name="image_type" value="2"/>
+            <column name="saved_at"
+                    value="2023-10-10"/> <!-- https://stackoverflow.com/questions/43636220/now-function-is-not-working-with-valueblobfile-in-liquibase -->
+            <column name="content" valueBlobFile="../../images/dummy-image.jpg"/>
         </insert>
     </changeSet>
 
@@ -54,10 +55,10 @@
         </insert>
         <insert tableName="botanical_infos">
             <column name="id" value="97"/>
-            <column name="scientific_name" value="Kalanchoe rotundifolia"/>
+            <column name="scientific_name" value="Echeveria Perle von Nurnberg"/>
             <column name="family" value="Crassulaceae"/>
-            <column name="genus" value="Kalanchoe"/>
-            <column name="species" value="Kalanchoe rotundifolia"/>
+            <column name="genus" value="Echeveria"/>
+            <column name="species" value="Echeveria Perle von Nurnberg"/>
             <column name="image_id" value="97"/>
             <column name="botanical_info_type" value="1"/>
             <column name="user_id" value="99"/>
@@ -96,7 +97,15 @@
             <column name="entity_type" value="1"/>
             <column name="owner_id" value="99"/>
             <column name="botanical_name_id" value="97"/>
-            <column name="personal_name" value="Kalanchoe"/>
+            <column name="personal_name" value="Echeveria Perle von Nurnberg"/>
+            <column name="note" value="Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                            when an unknown printer took a galley of type and scrambled it to make a type
+                            specimen book. It has survived not only five centuries, but also the leap into
+                            electronic typesetting, remaining essentially unchanged. It was popularised in
+                            the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+                            and more recently with desktop publishing software like Aldus PageMaker
+                            including versions of Lorem Ipsum."/>
         </insert>
     </changeSet>
 

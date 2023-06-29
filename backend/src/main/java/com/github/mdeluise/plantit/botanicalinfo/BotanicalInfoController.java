@@ -66,4 +66,9 @@ public class BotanicalInfoController {
         final BotanicalInfo result = botanicalInfoService.save(botanicalInfoDtoConverter.convertFromDTO(toSave));
         return ResponseEntity.ok(botanicalInfoDtoConverter.convertToDTO(result));
     }
+
+    @GetMapping("/_count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(botanicalInfoService.count());
+    }
 }

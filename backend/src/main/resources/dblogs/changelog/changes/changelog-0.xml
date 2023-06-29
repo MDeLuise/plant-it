@@ -223,6 +223,8 @@
             <column name="type" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
+            <column name="note" type="varchar(8500)">
+            </column>
             <column name="owner_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_plant_user" references="application_users(id)"/>
             </column>

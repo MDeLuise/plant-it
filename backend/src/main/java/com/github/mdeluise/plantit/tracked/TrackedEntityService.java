@@ -52,7 +52,7 @@ public class TrackedEntityService {
 
 
     public long count() {
-        return trackedEntityRepository.count();
+        return trackedEntityRepository.countByOwner(authenticatedUserService.getAuthenticatedUser());
     }
 
 

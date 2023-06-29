@@ -3,8 +3,6 @@ package com.github.mdeluise.plantit.botanicalinfo;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
-import com.github.mdeluise.plantit.image.AbstractBotanicalInfoImage;
-import com.github.mdeluise.plantit.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -19,15 +17,13 @@ import java.util.stream.Collectors;
 public class BotanicalInfoService {
     private final AuthenticatedUserService authenticatedUserService;
     private final BotanicalInfoRepository botanicalInfoRepository;
-    private final ImageService imageService;
 
 
     @Autowired
     public BotanicalInfoService(AuthenticatedUserService authenticatedUserService,
-                                BotanicalInfoRepository botanicalInfoRepository, ImageService imageService) {
+                                BotanicalInfoRepository botanicalInfoRepository) {
         this.authenticatedUserService = authenticatedUserService;
         this.botanicalInfoRepository = botanicalInfoRepository;
-        this.imageService = imageService;
     }
 
 
@@ -81,15 +77,27 @@ public class BotanicalInfoService {
         if (toSave instanceof UserCreatedBotanicalInfo u) {
             u.setCreator(authenticatedUserService.getAuthenticatedUser());
         }
-        final BotanicalInfo result = botanicalInfoRepository.save(toSave);
-        final AbstractBotanicalInfoImage image = result.getImage();
-        image.setBotanicalName(result);
-        imageService.save(image);
-        return result;
+        return botanicalInfoRepository.save(toSave);
     }
 
 
     public BotanicalInfo get(Long id) {
         return botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+
+    public long count() {
+        return botanicalInfoRepository.findAll().stream().filter(
+            botanicalInfo -> isBotanicalInfoCreatedByUser(authenticatedUserService.getAuthenticatedUser(),
+                                                          botanicalInfo
+            )).count();
+    }
+
+
+    private boolean isBotanicalInfoCreatedByUser(User user, BotanicalInfo botanicalInfo) {
+        if (botanicalInfo instanceof UserCreatedBotanicalInfo u) {
+            return u.getCreator().equals(user);
+        }
+        return false;
     }
 }

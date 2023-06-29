@@ -10,15 +10,17 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import SearchPage from "./SearchPage";
 import BottomBar from "./BottomBar";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Virtual } from "swiper";
+import { Pagination, Virtual, FreeMode } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/virtual';
+import "swiper/css/free-mode";
 import AllLogs from "./AllLogs";
 import LogEntry from "./LogEntry";
 import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
 import EditEvent from "./EditEvent";
+import PlantDetails from "./PlantDetails";
 
 
 function UserTopBar(props: {}) {
@@ -46,7 +48,11 @@ function UserTopBar(props: {}) {
     );
 }
 
-function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trackedEntity[]; }) {
+function UserPlantsList(props: {
+    requestor: AxiosInstance,
+    trackedEntities: trackedEntity[],
+    gotoDetails: (arg: trackedEntity) => void;
+}) {
     const [plantName, setPlantName] = useState<string>("");
 
     return (
@@ -88,7 +94,7 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                     dynamicBullets: true,
                     clickable: true,
                 }}
-                modules={[Pagination, Virtual]}
+                modules={[Pagination, Virtual, FreeMode]}
                 className="mySwiper"
                 slidesPerView={"auto"}
                 spaceBetween={30}
@@ -107,6 +113,7 @@ function UserPlantsList(props: { requestor: AxiosInstance, trackedEntities: trac
                                     entity={entity}
                                     key={entity.id}
                                     requestor={props.requestor}
+                                    onClick={() => props.gotoDetails(entity)}
                                 />
                             </SwiperSlide>;
                         })
@@ -163,6 +170,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const logPageSize = 5;
     const [editEventVisible, setEditEventVisible] = useState<boolean>(false);
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
+    const [plantDetailsOpen, setPlantDetailsOpen] = useState<boolean>(false);
+    const [plantDetails, setPlantDetails] = useState<trackedEntity>();
 
     const getAllEntities = (): void => {
         props.requestor.get("tracked-entity/_count")
@@ -228,7 +237,6 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
     return (
         <>
-
             <EditEvent
                 requestor={props.requestor}
                 trackedEntities={trackedEntities}
@@ -245,6 +253,13 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 toEdit={eventToEdit}
             />
 
+            <PlantDetails
+                open={plantDetailsOpen}
+                close={() => setPlantDetailsOpen(false)}
+                entity={plantDetails}
+                requestor={props.requestor}
+            />
+
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
 
                 <Box sx={{ display: activeTab === 0 ? "visible" : "none" }}>
@@ -253,6 +268,10 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     <UserPlantsList
                         requestor={props.requestor}
                         trackedEntities={trackedEntities}
+                        gotoDetails={(arg: trackedEntity) => {
+                            setPlantDetails(arg);
+                            setPlantDetailsOpen(true);
+                        }}
                     />
 
                     <DiaryEntriesList

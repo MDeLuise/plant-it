@@ -11,7 +11,5 @@ public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
 
     Page<DiaryEntry> findAllByDiaryOwnerAndDiary(User user, Diary diary, Pageable pageable);
 
-    Page<DiaryEntry> findAllByDiaryOwnerAndType(User user, DiaryEntryType type, Pageable pageable);
-
-    Page<DiaryEntry> findAllByDiaryOwnerAndDiaryAndType(User user, Diary diary, DiaryEntryType type, Pageable pageable);
+    Long countByDiaryOwner(User user);
 }

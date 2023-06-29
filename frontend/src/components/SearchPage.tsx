@@ -25,7 +25,7 @@ function BotanicalEntity(props: {
             `data:image/png;base64,${downloadedImg}` : process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
-        props.requestor.get(`image/botanical-info/${props.entity.imageId}`)
+        props.requestor.get(`image/${props.entity.imageId}`)
             .then((res) => {
                 setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
             });

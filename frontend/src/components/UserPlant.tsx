@@ -1,7 +1,6 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { trackedEntity } from "../interfaces";
 import { isBigScreen } from "../common";
-import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Buffer } from "buffer";
@@ -9,9 +8,9 @@ import { Buffer } from "buffer";
 export default function UserPlant(props: {
     entity: trackedEntity,
     style?: {},
-    requestor: AxiosInstance;
+    requestor: AxiosInstance,
+    onClick: () => void;
 }) {
-    let navigate: NavigateFunction = useNavigate();
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [downloadedImg, setDownloadedImg] = useState<string>();
     let imgSrc = props.entity.botanicalInfo.imageUrl != undefined ?
@@ -20,7 +19,7 @@ export default function UserPlant(props: {
             `data:image/png;base64,${downloadedImg}` : process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
-        props.requestor.get(`image/botanical-info/${props.entity.botanicalInfo.imageId}`)
+        props.requestor.get(`image/${props.entity.botanicalInfo.imageId}`)
             .then((res) => {
                 setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
             });
@@ -35,7 +34,7 @@ export default function UserPlant(props: {
 
     return (
         <Box
-            //onClick={() => navigate(`/entity/${props.entity.id}`)}
+            onClick={props.onClick}
             boxShadow={.5}
             sx={{
                 width: isBigScreen() ? "20vw" : "45vw",
@@ -46,7 +45,8 @@ export default function UserPlant(props: {
                 position: "relative",
             }}
             style={props.style}>
-            {!imageLoaded &&
+            {
+                !imageLoaded &&
                 <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "80%" }} />
             }
             <img

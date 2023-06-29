@@ -31,7 +31,7 @@ export default function AddPlant(props: {
             process.env.PUBLIC_URL + "botanical-info-no-img.png";
 
     const readImage = (): void => {
-        props.requestor.get(`image/botanical-info/${props.entity!.imageId}`)
+        props.requestor.get(`image/${props.entity!.imageId}`)
             .then((res) => {
                 setDownloadedImg(Buffer.from(res.data.content, "utf-8").toString());
             });
@@ -88,7 +88,7 @@ export default function AddPlant(props: {
     const addPlantNewBotanicalInfo = (): void => {
         if (selectedImage == undefined) {
             let botanicalInfoToUse = {
-                scientificName: species != undefined ? species : plantName,
+                scientificName: plantName,
                 family: family,
                 genus: genus,
                 species: species != undefined ? species : plantName,
@@ -98,13 +98,13 @@ export default function AddPlant(props: {
         } else {
             let formData = new FormData();
             formData.append('image', selectedImage!);
-            props.requestor.post("/image", formData)
+            props.requestor.post("/image/botanical-info", formData)
                 .then((res) => {
                     let botanicalInfoToUse = {
-                        scientificName: species != undefined ? species : plantName,
+                        scientificName: plantName,
                         family: family,
                         genus: genus,
-                        species: species,
+                        species: species != undefined ? species : plantName,
                         isSystemWide: false,
                     };
                     addPlantWithUploadedId(botanicalInfoToUse, res.data);
@@ -130,6 +130,11 @@ export default function AddPlant(props: {
                 props.trackedEntities.push(res.data);
                 getName();
                 cleanup();
+            })
+            .catch((_err) => {
+                if (imageId != undefined) {
+                    props.requestor.delete(`/image/${imageId}`);
+                }
             });
     };
 
@@ -273,7 +278,7 @@ export default function AddPlant(props: {
                         />
                     </LocalizationProvider>
                 </Box>
-                <Divider>Botanical info</Divider>
+                <Divider>Scientific classification</Divider>
                 <TextField
                     variant="outlined"
                     disabled={props.entity != undefined}

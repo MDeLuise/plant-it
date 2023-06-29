@@ -36,6 +36,7 @@ export interface trackedEntity {
     type: "PLANT" | "ARRANGEMENT",
     botanicalInfo: botanicalInfo,
     diaryId: number,
+    note?: string
 }
 
 export interface diaryEntry {

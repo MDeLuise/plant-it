@@ -12,4 +12,6 @@ public interface TrackedEntityRepository extends JpaRepository<AbstractTrackedEn
     Page<AbstractTrackedEntity> findAllByOwnerAndState(User user, State state, Pageable pageable);
 
     Page<AbstractTrackedEntity> findAllByOwnerAndType(User user, TrackedEntityType type, Pageable pageable);
+
+    Long countByOwner(User user);
 }

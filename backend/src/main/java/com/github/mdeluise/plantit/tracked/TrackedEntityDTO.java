@@ -16,6 +16,8 @@ public class TrackedEntityDTO {
     private Date endDate;
     @Schema(description = "State of the entity.")
     private State state;
+    @Schema(description = "Note of the entity")
+    private String note;
     @Schema(description = "Owner ID of the entity.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long ownerId;
     @Schema(description = "Type of the entity.")
@@ -77,6 +79,16 @@ public class TrackedEntityDTO {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+
+    public String getNote() {
+        return note;
+    }
+
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
 

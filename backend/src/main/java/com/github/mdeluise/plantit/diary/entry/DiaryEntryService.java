@@ -85,4 +85,9 @@ public class DiaryEntryService {
         updated.setId(id);
         return diaryEntryRepository.save(updated);
     }
+
+
+    public Long count() {
+        return diaryEntryRepository.countByDiaryOwner(authenticatedUserService.getAuthenticatedUser());
+    }
 }
