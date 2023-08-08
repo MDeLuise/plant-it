@@ -1,6 +1,8 @@
 import {
+    Autocomplete,
     Box,
     Button,
+    Checkbox,
     Drawer,
     InputLabel,
     MenuItem,
@@ -21,6 +23,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { alpha } from "@mui/material";
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 export default function AddLogEntry(props: {
     requestor: AxiosInstance,
@@ -31,59 +35,18 @@ export default function AddLogEntry(props: {
     updateLog: (arg: diaryEntry) => void,
 }) {
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
-    const theme = useTheme();
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
     const [selectedEventType, setSelectedEventType] = useState<string[]>([]);
     const [note, setNote] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
 
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-            },
-        },
+    const handleChange2 = (_event: any, newValue: string[]) => {
+        setSelectedPlantName(newValue);
     };
 
-    function getStyles(name: string, plantName: string[], theme: Theme) {
-        return {
-            fontWeight:
-                plantName.indexOf(name) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    };
 
-    const handleChange = (event: SelectChangeEvent<typeof selectedPlantName>) => {
-        const {
-            target: { value },
-        } = event;
-        setSelectedPlantName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
-
-    function getEventTypeStyles(name: string, eventName: string[], theme: Theme) {
-        return {
-            fontWeight:
-                eventName.indexOf(name) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    };
-
-    const handleEventTypeChange = (event: SelectChangeEvent<typeof selectedEventType>) => {
-        const {
-            target: { value },
-        } = event;
-        setSelectedEventType(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    const handleChange = (_event: any, newValue: string[]) => {
+        setSelectedEventType(newValue);
     };
 
     const addEvent = (): void => {
@@ -133,34 +96,64 @@ export default function AddLogEntry(props: {
                     padding: "35px",
                     gap: "20px",
                 }}>
-                <Box>
-                    <InputLabel id="plants-names">Name</InputLabel>
-                    <Select
-                        labelId="plants-names"
-                        fullWidth
-                        required
+                <Box sx={{ width: "100%" }}>
+                    <InputLabel>Name</InputLabel>
+                    <Autocomplete
+                        disableCloseOnSelect
+                        disablePortal
                         multiple
+                        options={props.plants.map(pl => pl.personalName)}
                         value={selectedPlantName}
-                        onChange={handleChange}
-                        MenuProps={MenuProps}
-                        placeholder="Plants names"
-                        input={<OutlinedInput label="Name" />}
-                    >
-                        {props.plants.map((entity) => (
-                            <MenuItem
-                                key={entity.id}
-                                value={entity.personalName}
-                                style={getStyles(entity.personalName, selectedPlantName, theme)}
-                            >
-                                {entity.personalName}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                        onChange={handleChange2}
+                        limitTags={3}
+                        fullWidth
+                        // sx={{
+                        //     ".MuiAutocomplete-inputRoot": {
+                        //         flexWrap: "nowrap !important",
+                        //         overflow: "hidden",
+                        //         width: "100%",
+                        //       }
+                        // }}
+                    renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                            <Checkbox
+                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                style={{ marginRight: 8 }}
+                                checked={selected}
+                            />
+                            {option}
+                        </li>
+                    )}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
                 </Box>
 
                 <Box>
-                    <InputLabel id="event-type">Type</InputLabel>
-                    <Select
+                    <InputLabel>Type</InputLabel>
+                    <Autocomplete
+                        disableCloseOnSelect
+                        disablePortal
+                        multiple
+                        limitTags={3}
+                        options={props.eventTypes}
+                        value={selectedEventType}
+                        getOptionLabel={(option) => titleCase(option)}
+                        onChange={handleChange}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {titleCase(option)}
+                            </li>
+                        )}
+                        renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                    {/* <Select
                         labelId="event-type"
                         fullWidth
                         multiple
@@ -179,7 +172,7 @@ export default function AddLogEntry(props: {
                                 {titleCase(type)}
                             </MenuItem>
                         ))}
-                    </Select>
+                    </Select> */}
                 </Box>
 
                 <Box sx={{ width: "100%" }}>

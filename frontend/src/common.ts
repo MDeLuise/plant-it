@@ -5,7 +5,7 @@ export const isBigScreen = (): boolean => {
 };
 
 export const titleCase = (string: string): string => {
-    return string.charAt(0) + string.substring(1).toLowerCase();
+    return string.charAt(0) + string.substring(1).toLowerCase().replaceAll("_", " ");
 };
 
 const readImage = (requestor: AxiosInstance, imageUrl: string): Promise<string> => {

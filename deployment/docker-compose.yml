@@ -9,6 +9,8 @@ services:
       - db
       - cache
     restart: unless-stopped
+    volumes:
+      - "./upload-dir:/upload-dir"
 
   db:
     image: mysql:latest

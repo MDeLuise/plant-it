@@ -58,6 +58,8 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+    volumes:
+        - "./upload-dir:/upload-dir"
 
   db:
     image: mysql:8.0
@@ -126,7 +128,7 @@ There are 2 configuration file available:
   CACHE_HOST=cache
   CACHE_PORT=6379
   TRAFLE_KEY= # put you key here, otherwise the "search" feature will include only user generated species
-  UPLOAD_DIR= # path to the directory used to store uploaded images, if on docker deployment leave at it is and change the volume binding if needed
+  UPLOAD_DIR= # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding if needed
   ```
   Change the properties values according to your system.
 
