@@ -24,6 +24,7 @@
         </createTable>
     </changeSet>
 
+
     <changeSet id="createApiKeyTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -55,37 +56,6 @@
     </changeSet>
 
 
-    <changeSet id="createEntityImageTable" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="entity_images"/>
-            </not>
-        </preConditions>
-        <createTable tableName="entity_images">
-            <column name="id" type="varchar(255)">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="image_type" type="tinyint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="botanical_info_entity_id" type="bigint">
-            </column>
-            <column name="plant_entity_id" type="bigint">
-            </column>
-            <column name="description" type="varchar(100)">
-            </column>
-            <column name="saved_at" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="url" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="path" type="varchar(255)">
-            </column>
-        </createTable>
-    </changeSet>
-
-
     <changeSet id="createBotanicalInfoTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -109,17 +79,18 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_userId" references="application_users(id)" />
             </column>
         </createTable>
 
         <addUniqueConstraint
                 columnNames="species, user_id"
-                constraintName="botanical_name_species_unique"
+                constraintName="botanical_info_species_unique"
                 tableName="botanical_infos"
         />
         <addUniqueConstraint
                 columnNames="scientific_name, user_id"
-                constraintName="botanical_name_scientific_name_unique"
+                constraintName="botanical_info_scientific_name_unique"
                 tableName="botanical_infos"
         />
     </changeSet>
@@ -142,7 +113,7 @@
             <column name="personal_name" type="varchar(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="plant_state" type="varchar(20)">
+            <column name="plant_state" type="varchar(20)" defaultValue="PURCHASED">
                 <constraints nullable="false"/>
             </column>
             <column name="note" type="varchar(8500)">
@@ -157,9 +128,42 @@
 
         <addUniqueConstraint
                 columnNames="owner_id, personal_name"
-                constraintName="plants_name_unique"
+                constraintName="plant_name_unique"
                 tableName="plants"
         />
+    </changeSet>
+
+
+    <changeSet id="createEntityImageTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="entity_images"/>
+            </not>
+        </preConditions>
+        <createTable tableName="entity_images">
+            <column name="id" type="varchar(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="image_type" type="tinyint(1)" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="botanical_info_entity_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entityImage_botanicalInfoId" references="botanical_infos(id)"/>
+            </column>
+            <column name="plant_entity_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entityImage_plantId" references="plants(id)"/>
+            </column>
+            <column name="description" type="varchar(100)">
+            </column>
+            <column name="saved_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="varchar(255)">
+            </column>
+        </createTable>
     </changeSet>
 
 
@@ -177,8 +181,7 @@
                 <constraints nullable="false" foreignKeyName="fk_diary_user" references="application_users(id)"/>
             </column>
             <column name="target_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_diary_trackedEntity"
-                             references="plants(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_diary_trackedEntity" references="plants(id)"/>
             </column>
         </createTable>
     </changeSet>

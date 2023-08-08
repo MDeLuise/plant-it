@@ -140,6 +140,42 @@
 
     </dependencies>
 
+
+    <profiles>
+        <profile>
+            <id>copy-files</id>
+            <activation>
+                <property>
+                    <name>copyFiles</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <echo>Copying files...</echo>
+                                        <copy file="${project.basedir}/src/main/resources/upload-dir/dummy-image.jpg"
+                                              tofile="/tmp/plant-it/dummy-image.jpg"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -157,6 +193,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>

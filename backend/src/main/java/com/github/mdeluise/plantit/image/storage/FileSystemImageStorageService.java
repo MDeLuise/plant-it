@@ -15,7 +15,6 @@ import com.github.mdeluise.plantit.plant.Plant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,11 +38,11 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
 
     @Autowired
-    public FileSystemImageStorageService(StorageProperties properties, ImageRepository imageRepository,
-                                         PlantImageRepository plantImageRepository,
+    public FileSystemImageStorageService(@Value("${upload.location}") String rootLocation,
+                                         ImageRepository imageRepository, PlantImageRepository plantImageRepository,
                                          @Value("${image.max_origin_size}") int maxOriginImgSize,
                                          AuthenticatedUserService authenticatedUserService) {
-        this.rootLocation = properties.getLocation();
+        this.rootLocation = rootLocation;
         this.imageRepository = imageRepository;
         this.plantImageRepository = plantImageRepository;
         this.maxOriginImgSize = maxOriginImgSize;
@@ -57,10 +56,8 @@ public class FileSystemImageStorageService implements ImageStorageService {
             throw new StorageException("Failed to save empty file.");
         }
         String fileExtension;
-        String uploadDir;
         try {
             fileExtension = file.getContentType().split("/")[1];
-            uploadDir = getClass().getClassLoader().getResource(rootLocation).getPath();
         } catch (NullPointerException e) {
             throw new StorageException("Could not retrieve file information", e);
         }
@@ -80,7 +77,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
                 } else {
                     throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
                 }
-                final String fileName = String.format("%s/%s.%s", uploadDir, entityImage.getId(), fileExtension);
+                final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
                 final Path pathToFile = Path.of(fileName);
                 Files.copy(fileInputStream, pathToFile);
                 entityImage.setPath(String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension));
@@ -106,7 +103,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Override
     public byte[] getContent(String id) {
         try {
-            final File entityImageFile = new ClassPathResource(get(id).getPath()).getFile();
+            final File entityImageFile = new File(get(id).getPath());
             if (!entityImageFile.exists() || !entityImageFile.canRead()) {
                 throw new StorageFileNotFoundException("Could not read image with id: " + id);
             }

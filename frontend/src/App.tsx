@@ -17,7 +17,7 @@ export function App() {
   const backendURL = window._env_.API_URL != null ? window._env_.API_URL : "http://localhost:8085/api";
   const axiosReq = axios.create({
     baseURL: backendURL,
-    //timeout: 5000
+    timeout: 5000
   });
 
   axiosReq.interceptors.request.use(
