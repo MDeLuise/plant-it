@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Checkbox, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import LogEntry from "./LogEntry";
 import { useState, useEffect, useRef } from "react";
@@ -7,10 +7,11 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { titleCase } from "../common";
 import { GrClose } from "react-icons/gr";
 import { BsFilter } from "react-icons/bs";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 function Filters(props: {
-    entityNames: string[],
-    entityIds: number[],
+    plants: plant[],
     setFilteredPlantIds: (ids: number[]) => void,
     eventTypes: string[],
     setFilteredEventType: (types: string[]) => void;
@@ -46,7 +47,7 @@ function Filters(props: {
                     alignItems: "center",
                     justifyContent: "space-between",
                 }}>
-                    <Box sx={{display: "flex", alignItems: "center", gap: "5px"}}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
                         <BsFilter />
                         <Typography>Filter</Typography>
                     </Box>
@@ -66,52 +67,87 @@ function Filters(props: {
             </AccordionSummary>
             <AccordionDetails sx={{ display: "flex", gap: "10px", justifyContent: "center" }}>
                 <FormControl fullWidth>
-                    <InputLabel id="plant-filter-label">Plant</InputLabel>
-                    <Select
-                        labelId="plant-filter-label"
-                        value={selectedFilteredEntitiyNames}
-                        label="Plant"
+                    <Autocomplete
+                        disableCloseOnSelect
+                        disablePortal
                         multiple
-                        onChange={(event) => {
-                            props.setFilteredPlantIds([...event.target.value].map((en) => Number(en)));
-                            setSelectedFilteredEntitiyNames([...event.target.value]);
+                        options={props.plants.map(pl => pl.personalName)}
+                        value={selectedFilteredEntitiyNames}
+                        onChange={(_event: any, newValue: string[]) => {
+                            let selectedIds = props.plants.filter(pl => newValue.includes(pl.personalName)).map(pl => pl.id);
+                            props.setFilteredPlantIds(selectedIds);
+                            setSelectedFilteredEntitiyNames(newValue);
                         }}
-                        sx={{ width: "100%" }}
-                    >
-                        {
-                            props.entityNames.map((name: string, index: number) => {
-                                return <MenuItem
-                                    value={props.entityIds[index]}
+                        renderTags={(selected) => {
+                            let renderedValues = selected.join(", ");
+                            return (
+                                <Typography
+                                    noWrap={true}
+                                    color="textPrimary"
                                 >
-                                    {name}
-                                </MenuItem>;
-                            })
-                        }
-                    </Select>
+                                    {renderedValues}
+                                </Typography>
+                            );
+                        }}
+                        sx={{
+                            ".MuiAutocomplete-inputRoot": {
+                                flexWrap: "nowrap !important",
+                            }
+                        }}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {titleCase(option)}
+                            </li>
+                        )}
+                        renderInput={(params) => <TextField {...params} label="Plant" fullWidth />}
+                    />
                 </FormControl>
                 <FormControl fullWidth>
-                    <InputLabel id="event-filter-label">Event</InputLabel>
-                    <Select
-                        labelId="event-filter-label"
-                        value={selectedFilteredEventTypes}
-                        label="Event"
+                    <Autocomplete
+                        disableCloseOnSelect
+                        disablePortal
                         multiple
-                        onChange={(event) => {
-                            props.setFilteredEventType([...event.target.value]);
-                            setSelectedFilteredEventTypes([...event.target.value]);
+                        options={props.eventTypes}
+                        value={selectedFilteredEventTypes}
+                        onChange={(_event: any, newValue: string[]) => {
+                            props.setFilteredEventType(newValue);
+                            setSelectedFilteredEventTypes(newValue);
                         }}
-                        sx={{ width: "100%" }}
-                    >
-                        {
-                            props.eventTypes.map((name: string) => {
-                                return <MenuItem
-                                    value={name}
+                        renderTags={(selected) => {
+                            let renderedValues = selected.map(ev => titleCase(ev)).join(", ");
+                            return (
+                                <Typography
+                                    noWrap={true}
+                                    color="textPrimary"
                                 >
-                                    {titleCase(name)}
-                                </MenuItem>;
-                            })
-                        }
-                    </Select>
+                                    {renderedValues}
+                                </Typography>
+                            );
+                        }}
+                        sx={{
+                            ".MuiAutocomplete-inputRoot": {
+                                flexWrap: "nowrap !important",
+                            }
+                        }}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {titleCase(option)}
+                            </li>
+                        )}
+                        renderInput={(params) => <TextField {...params} label="Event" fullWidth />}
+                    />
                 </FormControl>
             </AccordionDetails>
         </Accordion>
@@ -217,8 +253,7 @@ export default function AllLogs(props: {
             }}>
 
                 <Filters
-                    entityNames={props.plants.map((en) => en.personalName)}
-                    entityIds={props.plants.map((en) => en.id)}
+                    plants={props.plants}
                     setFilteredPlantIds={setFilteredPlantId}
                     eventTypes={props.eventTypes}
                     setFilteredEventType={setFilteredEventType}
