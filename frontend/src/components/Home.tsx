@@ -303,7 +303,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 </Box>
 
                 <Box sx={{ display: activeTab === 3 ? "visible" : "none" }}>
-                    <Settings requestor={props.requestor} />
+                    <Settings requestor={props.requestor} visibility={activeTab === 3}/>
                 </Box>
             </Box>
 

@@ -31,7 +31,8 @@ function StatsSection(props: {
 }
 
 function Stats(props: {
-    requestor: AxiosInstance;
+    requestor: AxiosInstance,
+    visibility: boolean;
 }) {
     const [expanded, setExpanded] = useState<boolean>(true);
     const [totalEvents, setTotalEvents] = useState<number>(0);
@@ -40,15 +41,17 @@ function Stats(props: {
     const [totalPhotos, setTotalPhotos] = useState<number>(0);
 
     useEffect(() => {
-        props.requestor.get("diary/entry/_count")
-            .then((res) => setTotalEvents(res.data));
-        props.requestor.get("plant/_count")
-            .then((res) => setTotalPlants(res.data));
-        props.requestor.get("plant/_countBotanicalInfo")
-            .then((res) => setTotalBotanicalInfo(res.data));
-        props.requestor.get("image/entity/_count")
-            .then((res) => setTotalPhotos(res.data));
-    }, []);
+        if (props.visibility) {
+            props.requestor.get("diary/entry/_count")
+                .then((res) => setTotalEvents(res.data));
+            props.requestor.get("plant/_count")
+                .then((res) => setTotalPlants(res.data));
+            props.requestor.get("plant/_countBotanicalInfo")
+                .then((res) => setTotalBotanicalInfo(res.data));
+            props.requestor.get("image/entity/_count")
+                .then((res) => setTotalPhotos(res.data));
+        }
+    });
 
     return (
         <Accordion
@@ -124,7 +127,10 @@ function Stats(props: {
 }
 
 // TODO make stats responsive on changes
-export default function Settings(props: { requestor: AxiosInstance; }) {
+export default function Settings(props: {
+    requestor: AxiosInstance,
+    visibility: boolean;
+}) {
     let navigate: NavigateFunction = useNavigate();
     const [version, setVersion] = useState<string>();
 
@@ -148,7 +154,7 @@ export default function Settings(props: { requestor: AxiosInstance; }) {
         flexDirection: "column",
     }}>
 
-        <Stats requestor={props.requestor} />
+        <Stats requestor={props.requestor} visibility={props.visibility}/>
         <Box
             sx={{
                 backgroundColor: "background.paper",
