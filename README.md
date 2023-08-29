@@ -6,6 +6,7 @@
 <img src="https://img.shields.io/github/v/release/MDeLuise/plant-it?style=for-the-badge&color=%2228B22" />
 </p>
 
+<p align="center"><i><b>[Still under "initial" development, some features may be unstable or change in the future, although database schemas should be stable. A first release version is planned to be packed soon].</b></i></p>
 <p align="center">Plant-it is a <b>self-hosted gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
 <p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#getting-started">Getting started</a> • <a href="https://github.com/MDeLuise/plant-it/#configuration">Configuration</a></p>
@@ -21,15 +22,15 @@
 Plant-it is a gardening companion app that helps you take care of your plants.
 
 It does not recommend you about which action to take, instead it is designed to logs the activity you are doing.
-This is on purpose, I strongly believe that the only one in charge of know when to water your plants, when to fertilize it, etc. is you (with the help of multiple online sources).
+This is on purpose, I strongly believe that the only one in charge of know when to water your plants, when to fertilize them, etc. is you (with the help of multiple online sources).
 
-Plant-it helps you remember the last time you did a treatment of your plants, which plants you have,  collection photo of your plants, and notify you about time passed since last action on them.
+Plant-it helps you remember the last time you did a treatment of your plants, which plants you have, collects photos of your plants, and notify you about time passed since last action on them.
 
 
 ## Features highlight
 * Add existing plants using [Trefle API](https://trefle.io/) or user created plants to your collection
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
-* View all the logged events, filtering by plant and/or event type
+* View all the logged events, filtering by plant and event type
 * Upload photos of your plants
 * 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 * 🔜 Dark/Light mode
@@ -59,7 +60,7 @@ services:
       - db
     restart: unless-stopped
     volumes:
-        - "./upload-dir:/upload-dir"
+      - "./upload-dir:/upload-dir"
 
   db:
     image: mysql:8.0
@@ -89,7 +90,7 @@ Run the docker compose file (`docker compose -f <file> up -d`), then the service
 
   <summary>Run on a remote host</summary>
 
-  Please notice that running the `docker-compose` file from another machine change the way to connect to the server. For example, if you run the `docker-compose` on the machine with the local IP `192.168.1.100` then you have to change the backend url in the [API_URL](#configurations) variable to `http://192.168.1.100:8080/api`. In this case, the frontend of the system will be available at `http://192.168.1.100:8080`, and the backend will be available at `http://192.168.1.100:8080/api`.
+  Please notice that running the `docker-compose` file from another machine change the way to connect to the server. For example, if you run the `docker-compose` on the machine with the local IP `192.168.1.100` then you have to change the backend url in the [API_URL](#configuration) variable to `http://192.168.1.100:8080/api`. In this case, the frontend of the system will be available at `http://192.168.1.100:8080`, and the backend will be available at `http://192.168.1.100:8080/api`.
 </details>
 
 ### Setup without docker
