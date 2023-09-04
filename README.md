@@ -32,6 +32,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
+* 🔜 Share plants with other users
 * 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 * 🔜 Dark/Light mode
 
@@ -148,7 +149,7 @@ Feel free to contribute and help improve the repo.
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Bug fix
-If you fix a bug, please follow the [contribution-guideline](https://github.com/MDeLuise/plant-it#how-to-contriobute) in order to merge the fix in the repository.
+If you fix a bug, please follow the [contribution-guideline](https://github.com/MDeLuise/plant-it#how-to-contribute) in order to merge the fix in the repository.
 
 ### Feature development
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=fr.yml).
