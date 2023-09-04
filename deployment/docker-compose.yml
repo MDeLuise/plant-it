@@ -3,7 +3,7 @@ version: "3"
 name: plant-it
 services:
   backend:
-    image: msdeluise/plant-it-backend:4242
+    image: msdeluise/plant-it-backend:latest
     env_file: backend.env
     depends_on:
       - db
@@ -22,7 +22,7 @@ services:
     restart: always
 
   frontend:
-    image: msdeluise/plant-it-frontend:4242
+    image: msdeluise/plant-it-frontend:latest
     env_file: frontend.env
     links:
       - backend
