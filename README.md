@@ -9,7 +9,7 @@
 <p align="center"><i><b>[Still under "initial" development, some features may be unstable or change in the future, although database schemas should be stable. A first release version is planned to be packed soon].</b></i></p>
 <p align="center">Plant-it is a <b>self-hosted gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
-<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#getting-started">Getting started</a> • <a href="https://github.com/MDeLuise/plant-it/#configuration">Configuration</a></p>
+<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#getting-started">Getting started</a> • <a href="https://github.com/MDeLuise/plant-it/#configuration">Configuration</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
 
 <p align="center">
   <img src="/images/screenshot-1.png" width="45%" />
@@ -141,3 +141,33 @@ There are 2 configuration file available:
   ```
   Change the properties values according to your system.
 
+## Contribute
+Feel free to contribute and help improve the repo.
+
+### Bug Report, Feature Request and Question
+You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
+
+### Bug fix
+If you fix a bug, please follow the [contribution-guideline](https://github.com/MDeLuise/plant-it#how-to-contriobute) in order to merge the fix in the repository.
+
+### Feature development
+Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=fr.yml).
+
+### How to contribute
+To fix a bug or create a feature, follow these steps:
+1. Fork the repo
+1. Create a new branch (`git checkout -b awesome-feature`)
+1. Make changes or add new changes.
+1. Commit your changes (`git add -A; git commit -m 'Awesome new feature'`)
+1. Push to the branch (`git push origin awesome-feature`)
+1. Create a Pull Request
+
+#### Conventions
+* Commits should follow the [semantic commit](https://www.conventionalcommits.org/en/v1.0.0/) specification, although not mandatory.
+
+#### Local environment
+If you want to make some changes in the project, you can use the following commands:
+* in order to run the frontend: `cd frontend`, then `npm run dev`.
+* in order to run the backend: `cd backend`, then `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`. This enables the `dev` profile, which uses an embedded h2 database instead of one external mysql instance, and creates a user with username `user` and password `user` with a predefined plant's collection.
+
+Consider that this environment speed up the developing process, but the app should be tested (at least for new big features) even without the `dev` backend profile and with a local docker deployment.
