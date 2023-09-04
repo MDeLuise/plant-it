@@ -15,6 +15,7 @@
     <description>Gardening companion system</description>
     <properties>
         <java.version>20</java.version>
+        <start-class>com.github.mdeluise.plantit.Application</start-class>
     </properties>
     <dependencies>
         <dependency>
