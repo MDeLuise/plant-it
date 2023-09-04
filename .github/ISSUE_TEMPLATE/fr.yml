@@ -1,5 +1,5 @@
 name: Feature Request
-description: Request a feature or enhancement in YTSMS
+description: Request a feature or enhancement in Plant-it
 body:
   - type: checkboxes
     attributes:
@@ -14,16 +14,16 @@ body:
       label: Description
       description: Please describe your feature request
       placeholder: |
-        - I would like YTSMS to do (thing).
+        - I would like Plant-it to do (thing).
         - What if you would add feature (feature here)?
-        - YTSMS doesn't do (thing).
+        - Plant-it doesn't do (thing).
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: Solution
-      description: Describe what your feature would add to YTSMS.
+      description: Describe what your feature would add to Plant-it.
 
   - type: textarea
     attributes:
