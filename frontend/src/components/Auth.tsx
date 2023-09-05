@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
@@ -18,13 +18,16 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
+import { FormHelperText } from "@mui/material";
 
-export default function (props: { requestor: AxiosInstance }) {
+export default function (props: { requestor: AxiosInstance; }) {
     let navigate: NavigateFunction = useNavigate();
     let [authMode, setAuthMode] = useState<string>("signin");
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState(null);
+    const [usernameError, setUsernameError] = useState<string>();
+    const [passwordError, setPasswordError] = useState<string>();
+    const [error, setError] = useState<any>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const doLogin = (event: React.SyntheticEvent) => {
@@ -81,8 +84,41 @@ export default function (props: { requestor: AxiosInstance }) {
 
     const changeAuthMode = () => {
         setAuthMode(authMode === "signin" ? "signup" : "signin");
-        setError(null);
+        setError(undefined);
+        setUsernameError(undefined);
+        setPasswordError(undefined);
     };
+
+
+    const changeUsername = (value: string): void => {
+        if (authMode == "signup" && (value.length > 20 || value.length < 3)) {
+            setUsernameError("username length must be between 3 and 20");
+        } else {
+            setUsernameError(undefined);
+        }
+        setUsername(value);
+    };
+
+
+    const changePassword = (value: string): void => {
+        if (authMode == "signup" && (value.length > 20 || value.length < 8)) {
+            setPasswordError("password length must be between 8 and 20");
+        } else {
+            setPasswordError(undefined);
+        }
+        setPassword(value);
+    };
+
+
+    const isSubmitButtonEnabled = (): boolean => {
+        return (usernameError === undefined && passwordError === undefined) &&
+            username.length > 0 && password.length > 0;
+    };
+
+
+    useEffect(() => {
+        setError(undefined);
+    }, [username, password]);
 
     return (
         <Box
@@ -117,14 +153,16 @@ export default function (props: { requestor: AxiosInstance }) {
                         name="username"
                         autoComplete="username"
                         autoFocus
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => changeUsername(e.target.value)}
+                        error={usernameError != undefined}
+                        helperText={usernameError}
                     />
                     <FormControl fullWidth margin="normal" variant="outlined" required>
                         <InputLabel htmlFor="password-input">Password</InputLabel>
                         <OutlinedInput
                             id="password-input"
                             type={showPassword ? 'text' : 'password'}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => changePassword(e.target.value)}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
@@ -137,17 +175,25 @@ export default function (props: { requestor: AxiosInstance }) {
                                 </InputAdornment>
                             }
                             label="Password"
+                            error={passwordError != undefined}
                         />
+                        {
+                            passwordError != undefined &&
+                            <FormHelperText error>
+                                {passwordError}
+                            </FormHelperText>
+                        }
                     </FormControl>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={!isSubmitButtonEnabled()}
                     >
                         {authMode == "signin" ? "Login" : "Register"}
                     </Button>
-                    <Grid container>
+                    <Grid container style={{justifyContent: "center",}}>
                         <Link href="#" variant="body2" onClick={changeAuthMode}>
                             {authMode == "signin" ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
                         </Link>
