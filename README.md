@@ -121,24 +121,31 @@ There are 2 configuration file available:
   MYSQL_PORT=3306
   MYSQL_USERNAME=root
   MYSQL_PSW=root
-  JWT_SECRET=putTheSecretHere
-  JWT_EXP=1
   MYSQL_ROOT_PASSWORD=root
   MYSQL_DATABASE=bootdb
+  
+  JWT_SECRET=putTheSecretHere
+  JWT_EXP=1
+  
   USERS_LIMIT=-1 # including the admin account, so <= 0 if undefined, >= 2 if defined
+  UPLOAD_DIR= # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding if needed
+  
   CACHE_TTL=86400
   CACHE_HOST=cache
   CACHE_PORT=6379
+  
   TRAFLE_KEY= # put you key here, otherwise the "search" feature will include only user generated species
-  UPLOAD_DIR= # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding if needed
+  FRONTEND_URL=http://localhost:3000 # CORS allowed origin
   ```
   Change the properties values according to your system.
 
 * `deployment/frontend.env`: file containing the configuration for the frontend. An example of content is the following:
   ```
   API_URL=http://localhost:8080/api
-  BROWSER=none
+  
   PAGE_SIZE=25
+  
+  BROWSER=none
   ```
   Change the properties values according to your system.
 
@@ -149,7 +156,7 @@ Feel free to contribute and help improve the repo.
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Bug fix
-If you fix a bug, please follow the [contribution-guideline](https://github.com/MDeLuise/plant-it#how-to-contribute) in order to merge the fix in the repository.
+If you fix a bug, please follow the [contribution guideline](https://github.com/MDeLuise/plant-it#how-to-contribute) in order to merge the fix in the repository.
 
 ### Feature development
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=fr.yml).
@@ -169,6 +176,6 @@ To fix a bug or create a feature, follow these steps:
 #### Local environment
 If you want to make some changes in the project, you can use the following commands:
 * in order to run the frontend: `cd frontend`, then `npm run dev`.
-* in order to run the backend: `cd backend`, then `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`. This enables the `dev` profile, which uses an embedded h2 database instead of one external mysql instance, and creates a user with username `user` and password `user` with a predefined plant's collection.
+* in order to run the backend: `cd backend`, then `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev -DcopyFiles`. This enables the `dev` profile, which uses an embedded h2 database instead of one external mysql instance, and creates a user with username `user` and password `user` with a predefined plant's collection. Also a dummy user uploaded image is copied under `/tmp/plant-it/` directory.
 
 Consider that this environment speed up the developing process, but the app should be tested (at least for new big features) even without the `dev` backend profile and with a local docker deployment.

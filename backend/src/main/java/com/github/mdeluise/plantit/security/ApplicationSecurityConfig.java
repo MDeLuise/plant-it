@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.security;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyFilter;
 import com.github.mdeluise.plantit.security.jwt.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -103,12 +104,12 @@ public class ApplicationSecurityConfig {
 
     @Bean
     @Profile("dev")
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer corsConfigurer(@Value("${server.cors.allowed-origins}") String allowedOrigins) {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins(allowedOrigins)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTION");
             }
         };
