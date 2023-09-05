@@ -73,10 +73,10 @@ function Filters(props: {
                         multiple
                         options={props.plants.map(pl => pl.personalName)}
                         value={selectedFilteredEntitiyNames}
-                        onChange={(_event: any, newValue: string[]) => {
+                        onChange={(_event: any, newValue: readonly string[]) => {
                             let selectedIds = props.plants.filter(pl => newValue.includes(pl.personalName)).map(pl => pl.id);
                             props.setFilteredPlantIds(selectedIds);
-                            setSelectedFilteredEntitiyNames(newValue);
+                            setSelectedFilteredEntitiyNames(Array.from(newValue));
                         }}
                         renderTags={(selected) => {
                             let renderedValues = selected.join(", ");
@@ -115,9 +115,9 @@ function Filters(props: {
                         multiple
                         options={props.eventTypes}
                         value={selectedFilteredEventTypes}
-                        onChange={(_event: any, newValue: string[]) => {
-                            props.setFilteredEventType(newValue);
-                            setSelectedFilteredEventTypes(newValue);
+                        onChange={(_event: any, newValue: readonly string[]) => {
+                            props.setFilteredEventType(Array.from(newValue));
+                            setSelectedFilteredEventTypes(Array.from(newValue));
                         }}
                         renderTags={(selected) => {
                             let renderedValues = selected.map(ev => titleCase(ev)).join(", ");

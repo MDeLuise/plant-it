@@ -85,23 +85,23 @@ export default function AddLogEntry(props: {
     };
 
 
-    const changePlantName = (value: string[]): void => {
+    const changePlantName = (value: readonly string[]): void => {
         if (value.length == 0) {
             setPlantNameError("At least 1 plant must be selected");
         } else {
             setPlantNameError(undefined);
         }
-        setSelectedPlantName(value);
+        setSelectedPlantName(Array.from(value));
     };
 
 
-    const changeEventType = (value: string[]): void => {
+    const changeEventType = (value: readonly string[]): void => {
         if (value.length == 0) {
             setEventTypeError("At least 1 event must be selected");
         } else {
             setEventTypeError(undefined);
         }
-        setSelectedEventType(value);
+        setSelectedEventType(Array.from(value));
     };
 
 
@@ -155,7 +155,7 @@ export default function AddLogEntry(props: {
                         multiple
                         options={props.plants.map(pl => pl.personalName)}
                         value={selectedPlantName}
-                        onChange={(_event: any, newValue: string[]) => changePlantName(newValue)}
+                        onChange={(_event: any, newValue: readonly string[]) => changePlantName(newValue)}
                         fullWidth
                         renderTags={(selected) => {
                             let renderedValues = selected.join(", ");
@@ -203,7 +203,7 @@ export default function AddLogEntry(props: {
                         multiple
                         options={props.eventTypes}
                         value={selectedEventType}
-                        onChange={(_event: any, newValue: string[]) => changeEventType(newValue)}
+                        onChange={(_event: any, newValue: readonly string[]) => changeEventType(newValue)}
                         renderTags={(selected) => {
                             let renderedValues = selected.map(ev => titleCase(ev)).join(", ");
                             return (
