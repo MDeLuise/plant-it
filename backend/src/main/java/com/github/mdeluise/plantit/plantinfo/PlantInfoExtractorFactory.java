@@ -16,7 +16,7 @@ public class PlantInfoExtractorFactory {
                                      TreflePlantInfoExtractor treflePlantInfoExtractor,
                                      LocalPlantInfoExtractor localPlantInfoExtractor) {
         this.localPlantInfoExtractor = localPlantInfoExtractor;
-        if (trefleKey != null) {
+        if (trefleKey != null && !trefleKey.isBlank()) {
             localPlantInfoExtractor.setNext(treflePlantInfoExtractor);
         }
     }
