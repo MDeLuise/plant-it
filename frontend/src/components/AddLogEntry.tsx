@@ -7,8 +7,9 @@ import {
     InputLabel,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import React, { useState } from "react";
 import { diaryEntry, plant } from "../interfaces";
 import { GrClose } from "react-icons/gr";
@@ -16,10 +17,10 @@ import { titleCase } from "../common";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { alpha } from "@mui/material";
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import ErrorDialog from "./ErrorDialog";
 
 export default function AddLogEntry(props: {
     requestor: AxiosInstance,
@@ -32,10 +33,35 @@ export default function AddLogEntry(props: {
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
     const [selectedEventType, setSelectedEventType] = useState<string[]>([]);
+    const [plantNameError, setPlantNameError] = useState<string>();
+    const [eventTypeError, setEventTypeError] = useState<string>();
     const [note, setNote] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
+    const theme = useTheme();
+    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
+    const [errorDialogText, setErrorDialogText] = useState<string>();
+
+
+    const showErrorDialog = (res: AxiosError) => {
+        setErrorDialogText((res.response?.data as any).message);
+        setErrorDialogShown(true);
+    };
 
     const addEvent = (): void => {
+        if (plantNameError !== undefined) {
+            return;
+        }
+        if (eventTypeError !== undefined) {
+            return;
+        }
+        if (selectedPlantName.length == 0) {
+            setPlantNameError("At least 1 plant must be selected");
+            return;
+        }
+        if (selectedEventType.length == 0) {
+            setEventTypeError("At least 1 event must be selected");
+            return;
+        }
         setLoading(true);
         selectedPlantName.forEach((plantId) => {
             selectedEventType.forEach((eventType) => {
@@ -48,25 +74,64 @@ export default function AddLogEntry(props: {
                     .then((res) => {
                         res.data.diaryTargetPersonalName = plantId; // TODO should not be necessary but backend problem
                         props.updateLog(res.data);
-                        props.setOpen(false);
+                        closeDrawer();
+                    })
+                    .catch((err) => {
+                        showErrorDialog(err);
                     })
                     .finally(() => setLoading(false));
             });
         });
     };
 
+
+    const changePlantName = (value: string[]): void => {
+        if (value.length == 0) {
+            setPlantNameError("At least 1 plant must be selected");
+        } else {
+            setPlantNameError(undefined);
+        }
+        setSelectedPlantName(value);
+    };
+
+
+    const changeEventType = (value: string[]): void => {
+        if (value.length == 0) {
+            setEventTypeError("At least 1 event must be selected");
+        } else {
+            setEventTypeError(undefined);
+        }
+        setSelectedEventType(value);
+    };
+
+
+    const closeDrawer = (): void => {
+        setSelectedPlantName([]);
+        setSelectedEventType([]);
+        setNote(undefined);
+        setEventTypeError(undefined);
+        setPlantNameError(undefined);
+        props.setOpen(false);
+    };
+
     return (
         <Drawer
             anchor={"bottom"}
             open={props.open}
-            onClose={() => props.setOpen(false)}
+            onClose={closeDrawer}
             PaperProps={{
                 style: { borderRadius: "15px 15px 0 0" }
             }}
         >
 
+            <ErrorDialog
+                text={errorDialogText}
+                open={errorDialogShown}
+                close={() => setErrorDialogShown(false)}
+            />
+
             <GrClose
-                onClick={() => props.setOpen(false)}
+                onClick={closeDrawer}
                 style={{
                     position: "absolute",
                     top: "20px",
@@ -90,7 +155,7 @@ export default function AddLogEntry(props: {
                         multiple
                         options={props.plants.map(pl => pl.personalName)}
                         value={selectedPlantName}
-                        onChange={(_event: any, newValue: string[]) => setSelectedPlantName(newValue)}
+                        onChange={(_event: any, newValue: string[]) => changePlantName(newValue)}
                         fullWidth
                         renderTags={(selected) => {
                             let renderedValues = selected.join(", ");
@@ -119,7 +184,14 @@ export default function AddLogEntry(props: {
                                 {option}
                             </li>
                         )}
-                        renderInput={(params) => <TextField {...params} fullWidth />}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                fullWidth
+                                error={plantNameError !== undefined}
+                                helperText={plantNameError}
+                            />
+                        }
                     />
                 </Box>
 
@@ -131,7 +203,7 @@ export default function AddLogEntry(props: {
                         multiple
                         options={props.eventTypes}
                         value={selectedEventType}
-                        onChange={(_event: any, newValue: string[]) => setSelectedEventType(newValue)}
+                        onChange={(_event: any, newValue: string[]) => changeEventType(newValue)}
                         renderTags={(selected) => {
                             let renderedValues = selected.map(ev => titleCase(ev)).join(", ");
                             return (
@@ -159,7 +231,14 @@ export default function AddLogEntry(props: {
                                 {titleCase(option)}
                             </li>
                         )}
-                        renderInput={(params) => <TextField {...params} fullWidth />}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                fullWidth
+                                error={eventTypeError !== undefined}
+                                helperText={eventTypeError}
+                            />
+                        }
                     />
                 </Box>
 
@@ -187,7 +266,7 @@ export default function AddLogEntry(props: {
             </Box>
 
             <Button sx={{
-                backgroundColor: loading ? alpha("#3a5e49", .7) : "primary.main",
+                backgroundColor: theme.palette.primary.main + " !important",
                 color: "white",
                 width: "90%",
                 margin: "0 auto",
@@ -195,9 +274,11 @@ export default function AddLogEntry(props: {
                 padding: "15px",
             }}
                 disabled={loading}
-                onClick={addEvent}
                 startIcon={<SaveOutlinedIcon />}
-            >Save event</Button>
+                onClick={addEvent}
+            >
+                Save event
+            </Button>
         </Drawer>
     );
 }

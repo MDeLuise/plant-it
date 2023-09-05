@@ -11,4 +11,6 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
     Page<Plant> findAllByOwnerAndState(User user, PlantState plantState, Pageable pageable);
 
     Long countByOwner(User user);
+
+    boolean existsByOwnerAndPersonalName(User user, String personalName);
 }
