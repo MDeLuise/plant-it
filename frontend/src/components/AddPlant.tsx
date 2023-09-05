@@ -1,13 +1,12 @@
 import { Box, Button, Divider, Drawer, Switch, TextField } from "@mui/material";
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { botanicalInfo, plant } from "../interfaces";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import { Buffer } from "buffer";
-import { create } from "domain";
+import ErrorDialog from "./ErrorDialog";
 
 export default function AddPlant(props: {
     requestor: AxiosInstance,
@@ -18,6 +17,7 @@ export default function AddPlant(props: {
     name?: string;
 }) {
     const [plantName, setPlantName] = useState<string>();
+    const [plantNameError, setPlantNameError] = useState<string>();
     const [family, setFamily] = useState<string>();
     const [genus, setGenus] = useState<string>();
     const [species, setSpecies] = useState<string>();
@@ -26,13 +26,16 @@ export default function AddPlant(props: {
     const [selectedImage, setSelectedImage] = useState<File>();
     const [downloadedImg, setDownloadedImg] = useState<string>();
     const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
+    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
+    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const readImage = (imageUrl: string): void => {
         props.requestor.get(`image/content${imageUrl}`)
             .then((res) => {
                 setDownloadedImg(res.data);
                 setImageDownloaded(true);
-            });
+            })
+            .catch((err) => showErrorDialog(err));
     };
 
     const setAbsoluteImageUrl = (imageUrl: string | undefined, publicUrl: string): string => {
@@ -52,35 +55,74 @@ export default function AddPlant(props: {
 
     let imgSrc = setImageSrc();
 
-    const getName = (): void => {
-        if (props.entity === undefined) {
-            if (props.name === undefined) {
-                setPlantName("");
-            } else {
-                setPlantName(props.name);
-            }
-            return;
-        }
-        if (props.entity.id === null) {
-            setPlantName(props.entity.scientificName);
-            return;
-        }
-        props.requestor.get(`/botanical-info/${props.entity.id}/_count`)
-            .then((res) => {
-                let incrementalName = props.entity!.scientificName;
-                if (res.data > 0) {
-                    incrementalName += ` ${res.data}`;
+    const setName = (): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            if (props.entity === undefined) {
+                if (props.name === undefined) {
+                    setPlantName("");
+                    return resolve("");
+                } else {
+                    setPlantName(props.name);
+                    return resolve(props.name);
                 }
-                setPlantName(incrementalName);
-            });
+            }
+            if (props.entity.id === null) {
+                setPlantName(props.entity.scientificName);
+                return resolve(props.entity.scientificName);
+            }
+            props.requestor.get(`/botanical-info/${props.entity.id}/_count`)
+                .then((res) => {
+                    let incrementalName = props.entity!.scientificName;
+                    if (res.data > 0) {
+                        incrementalName += ` ${res.data}`;
+                    }
+                    setPlantName(incrementalName);
+                    return resolve(incrementalName);
+                })
+                .catch((err) => {
+                    return reject(err);
+                });
+        });
+    };
+
+
+    const isNameAvailable = (name: string): Promise<boolean> => {
+        return new Promise((resolve, reject) => {
+            props.requestor.get(`/plant/${name}/_name-exists`)
+                .then((res) => {
+                    if (res.data) {
+                        return resolve(false);
+                    } else {
+                        return resolve(true);
+                    }
+                })
+                .catch((err) => {
+                    return reject(err);
+                });
+        });
     };
 
     const addPlant = (): void => {
-        if (props.entity != undefined) {
-            addPlantOldBotanicalInfo();
-        } else {
-            addPlantNewBotanicalInfo();
+        if (plantName == undefined || plantName.length == 0) {
+            setPlantNameError("Plant name size must be between 1 and 30 characters");
+            return;
         }
+        isNameAvailable(plantName)
+            .then((res) => {
+                if (!res) {
+                    setPlantNameError("Duplicated plant name");
+                    return;
+                }
+                if (props.entity != undefined) {
+                    addPlantOldBotanicalInfo();
+                } else {
+                    addPlantNewBotanicalInfo();
+                }
+            })
+            .catch((err) => {
+                showErrorDialog(err);
+            });
+
     };
 
     const addPlantOldBotanicalInfo = (): void => {
@@ -95,8 +137,11 @@ export default function AddPlant(props: {
                 props.setOpen(false);
                 props.plants.push(res);
                 props.entity!.id = res.botanicalInfo.id;
-                getName();
+                setName();
                 cleanup();
+            })
+            .catch((err) => {
+                showErrorDialog(err);
             });
     };
 
@@ -125,25 +170,33 @@ export default function AddPlant(props: {
                             props.setOpen(false);
                             res.botanicalInfo.imageUrl = "/" + imgRes.data.id;
                             props.plants.push(res);
-                            console.log(res)
                             //props.entity!.id = res.botanicalInfo.id;
-                            getName();
+                            setName();
                             cleanup();
                         });
                 } else {
                     props.setOpen(false);
                     props.plants.push(res);
                     //props.entity!.id = res.botanicalInfo.id;
-                    getName();
+                    setName();
                     cleanup();
                 }
+            })
+            .catch((err) => {
+                showErrorDialog(err);
             });
     };
 
     const addNewPlant = (plant: {}): Promise<plant> => {
         return new Promise((accept, reject) => {
             props.requestor.post("plant", plant)
-                .then((res) => { accept(res.data); })
+                .then((res) => {
+                    if (res.status == 200) {
+                        accept(res.data);
+                    } else {
+                        reject(res.data);
+                    }
+                })
                 .catch((err) => reject(err));
         });
     };
@@ -156,23 +209,44 @@ export default function AddPlant(props: {
         setPlantName("");
         setUseDate(true);
         setDate(dayjs(new Date()));
+        setPlantNameError(undefined);
+    };
+
+    const changePlantName = (name: string): void => {
+        setPlantNameError(undefined);
+        setPlantName(name);
+    };
+
+    const showErrorDialog = (res: AxiosError) => {
+        setErrorDialogText((res.response?.data as any).message);
+        setErrorDialogShown(true);
     };
 
     useEffect(() => {
         setImageDownloaded(false);
         setImageSrc();
-        getName();
-    }, [props.entity, props.name]);
+        setName();
+    }, [props.entity, props.name, props.open]);
 
     return (
         <Drawer
             anchor={"bottom"}
             open={props.open}
-            onClose={() => props.setOpen(false)}
+            onClose={() => {
+                cleanup();
+                props.setOpen(false);
+            }}
             PaperProps={{
                 style: { borderRadius: "15px 15px 0 0" }
             }}
         >
+
+            <ErrorDialog
+                text={errorDialogText}
+                open={errorDialogShown}
+                close={() => setErrorDialogShown(false)}
+            />
+
             <input
                 id="upload-image"
                 type="file"
@@ -196,7 +270,7 @@ export default function AddPlant(props: {
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "30px",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                 }}>
                     <Box sx={{
                         borderRadius: "50%",
@@ -258,9 +332,11 @@ export default function AddPlant(props: {
                         variant="outlined"
                         label="Name"
                         required
-                        sx={{ flexGrow: "1" }}
+                        sx={{ width: "calc(100% - 95px)", maxWidth: "initial", }}
                         value={plantName}
-                        onChange={(event) => setPlantName(event.target.value)}
+                        onChange={(event) => changePlantName(event.target.value as string)}
+                        error={plantNameError != undefined}
+                        helperText={plantNameError}
                     />
                 </Box>
                 <Box sx={{

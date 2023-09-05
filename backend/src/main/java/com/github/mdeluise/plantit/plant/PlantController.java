@@ -66,4 +66,10 @@ public class PlantController {
     public ResponseEntity<Long> countDistinctBotanicalInfo() {
         return ResponseEntity.ok(plantService.getNumberOfDistinctBotanicalInfo());
     }
+
+
+    @GetMapping("/{plantName}/_name-exists")
+    public ResponseEntity<Boolean> isNameAlreadyExisting(@PathVariable String plantName) {
+        return ResponseEntity.ok(plantService.isNameAlreadyExisting(plantName));
+    }
 }

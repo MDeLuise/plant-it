@@ -93,4 +93,9 @@ public class PlantService {
                                          .map(entity -> entity.getBotanicalInfo().getId())
                                          .collect(Collectors.toSet()).size();
     }
+
+
+    public boolean isNameAlreadyExisting(String plantName) {
+        return plantRepository.existsByOwnerAndPersonalName(authenticatedUserService.getAuthenticatedUser(), plantName);
+    }
 }

@@ -14,7 +14,7 @@ import {
     TextField,
     alpha,
 } from "@mui/material";
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import React, { useEffect, useState } from "react";
 import { diaryEntry, plant } from "../interfaces";
 import { titleCase } from "../common";
@@ -26,6 +26,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import ErrorDialog from "./ErrorDialog";
 
 
 function ConfirmDialog(props: {
@@ -81,6 +82,8 @@ export default function EditEvent(props: {
     const [confirmDialogTitle, setConfirmDialogTitle] = useState<string>("");
     const [confirmDialogText, setConfirmDialogText] = useState<string>("");
     const [confirmDialogCallback, setConfirmDialogCallback] = useState<() => void>(() => () => { });
+    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
+    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const updateEvent = (): void => {
         let newTarget: plant = props.plants.filter((en) => en.personalName === selectedPlantName)[0];
@@ -95,6 +98,9 @@ export default function EditEvent(props: {
                 props.updateLog(res.data);
                 props.setOpen(false);
                 setEdit(false);
+            })
+            .catch((err) => {
+                showErrorDialog(err);
             });
     };
 
@@ -105,7 +111,16 @@ export default function EditEvent(props: {
                 props.setOpen(false);
                 setEdit(false);
                 setConfirmDialogOpen(false);
+            })
+            .catch((err) => {
+                showErrorDialog(err);
             });
+    };
+
+
+    const showErrorDialog = (res: AxiosError) => {
+        setErrorDialogText((res.response?.data as any).message);
+        setErrorDialogShown(true);
     };
 
     useEffect(() => {
@@ -119,6 +134,12 @@ export default function EditEvent(props: {
 
     return (
         <>
+            <ErrorDialog
+                text={errorDialogText}
+                open={errorDialogShown}
+                close={() => setErrorDialogShown(false)}
+            />
+
             <ConfirmDialog
                 open={confirmDialogOpen}
                 close={() => setConfirmDialogOpen(false)}
