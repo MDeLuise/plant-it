@@ -28,11 +28,12 @@ import redis.embedded.RedisServer;
 @OpenAPIDefinition(
     info = @Info(
         title = "Plant-it REST API", version = "1.0",
-        description = "<h1>Introduction</h1>" + "<p>Plant-it is a self-hosted, open " + "source, ...</p>",
-        license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
+        description = "<h1>Introduction</h1>" + "<p>Plant-it is a self-hosted, open " +
+                          "source, gardening companion app.</p>",
+        license = @License(name = "GPL 3.0", url = "https://www.gnu.org/licenses/gpl-3.0.en.html"),
         contact = @Contact(name = "GitHub page", url = "https://github.com/MDeLuise/plant-it")
     ), security = {@SecurityRequirement(name = "bearerAuth")}, servers = {
-    @Server(description = "Production", url = "/api"),
+    @Server(description = "Localhost", url = "/api"),
     @Server(
         description = "Custom",
         url = "{protocol}://{host}:{port}/{basePath}",

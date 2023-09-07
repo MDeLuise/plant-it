@@ -12,7 +12,7 @@
     <artifactId>plant-it</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Plant it</name>
-    <description>Gardening companion system</description>
+    <description>Gardening companion app</description>
     <properties>
         <java.version>20</java.version>
         <start-class>com.github.mdeluise.plantit.Application</start-class>
@@ -158,7 +158,7 @@
                         <version>1.8</version>
                         <executions>
                             <execution>
-                                <phase>test</phase>
+                                <phase>initialize</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
