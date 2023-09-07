@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
 import Avatar from '@mui/material/Avatar';
@@ -19,16 +19,19 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
 import { FormHelperText } from "@mui/material";
+import ErrorDialog from "./ErrorDialog";
+import { isBackendReachable } from "../common";
 
 export default function (props: { requestor: AxiosInstance; }) {
-    let navigate: NavigateFunction = useNavigate();
-    let [authMode, setAuthMode] = useState<string>("signin");
+    const navigate: NavigateFunction = useNavigate();
+    const [authMode, setAuthMode] = useState<string>("signin");
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [usernameError, setUsernameError] = useState<string>();
     const [passwordError, setPasswordError] = useState<string>();
-    const [error, setError] = useState<any>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
+    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const doLogin = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -42,7 +45,10 @@ export default function (props: { requestor: AxiosInstance; }) {
                 getOrCreateApiKey(jwt);
                 secureLocalStorage.setItem("plant-it-username", username);
             })
-            .catch(setError);
+            .catch((err: AxiosError) => {
+                setErrorDialogText((err.response?.data as any).message);
+                setErrorDialogShown(true);
+            });
     };
 
     const getOrCreateApiKey = (jwt: string) => {
@@ -66,7 +72,10 @@ export default function (props: { requestor: AxiosInstance; }) {
                         secureLocalStorage.setItem("plant-it-key", response.data);
                         navigate('/');
                     })
-                    .catch(setError);
+                    .catch((err) => {
+                        setErrorDialogText((err.response?.data as any).message);
+                        setErrorDialogShown(true);
+                    });
             });
     };
 
@@ -79,12 +88,14 @@ export default function (props: { requestor: AxiosInstance; }) {
             .then((_response) => {
                 doLogin(event);
             })
-            .catch(setError);
+            .catch((err: AxiosError) => {
+                setErrorDialogText((err.response?.data as any).message);
+                setErrorDialogShown(true);
+            });
     };
 
     const changeAuthMode = () => {
         setAuthMode(authMode === "signin" ? "signup" : "signin");
-        setError(undefined);
         setUsernameError(undefined);
         setPasswordError(undefined);
     };
@@ -117,7 +128,13 @@ export default function (props: { requestor: AxiosInstance; }) {
 
 
     useEffect(() => {
-        setError(undefined);
+        isBackendReachable(props.requestor)
+            .then((res) => {
+                if (!res) {
+                    setErrorDialogText("Backend not reachable");
+                    setErrorDialogShown(true);
+                }
+            });
     }, [username, password]);
 
     return (
@@ -127,6 +144,13 @@ export default function (props: { requestor: AxiosInstance; }) {
             alignItems="center"
             minHeight="100vh"
         >
+
+            <ErrorDialog
+                text={errorDialogText}
+                open={errorDialogShown}
+                close={() => setErrorDialogShown(false)}
+            />
+
             <Box
                 sx={{
                     marginTop: 8,
@@ -142,7 +166,6 @@ export default function (props: { requestor: AxiosInstance; }) {
                 <Typography component="h1" variant="h5">
                     {authMode == "signin" ? "Sign In" : "Sign Up"}
                 </Typography>
-                <p style={{ display: !error ? "none" : "initial" }} className="error text-center mt-3 mb-2">{error ? error["response"]["data"]["message"] : ""}</p>
                 <Box component="form" onSubmit={authMode === "signin" ? doLogin : signUp} noValidate sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
@@ -193,7 +216,7 @@ export default function (props: { requestor: AxiosInstance; }) {
                     >
                         {authMode == "signin" ? "Login" : "Register"}
                     </Button>
-                    <Grid container style={{justifyContent: "center",}}>
+                    <Grid container style={{ justifyContent: "center", }}>
                         <Link href="#" variant="body2" onClick={changeAuthMode}>
                             {authMode == "signin" ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
                         </Link>
