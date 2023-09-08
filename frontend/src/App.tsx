@@ -22,7 +22,8 @@ export function App() {
 
   axiosReq.interceptors.request.use(
     (req) => {
-      if (!req.url?.startsWith("authentication") && !req.url?.startsWith("api-key")) {
+      if (!req.url?.startsWith("authentication") && !req.url?.startsWith("api-key") &&
+        !req.url?.startsWith("info")) {
         req.headers['Key'] = secureLocalStorage.getItem("plant-it-key");
       }
       return req;

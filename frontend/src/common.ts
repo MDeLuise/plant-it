@@ -30,3 +30,11 @@ const setAbsoluteImageUrl = (requestor: AxiosInstance, publicUrl: string, imageU
 export const getBotanicalInfoImg = (requestor: AxiosInstance, imageUrl?: string): Promise<string> => {
     return setAbsoluteImageUrl(requestor, process.env.PUBLIC_URL, imageUrl);
 };
+
+export const isBackendReachable = (requestor: AxiosInstance): Promise<boolean> => {
+    return new Promise((resolve, _reject) => {
+        requestor.get("/info/ping")
+            .then((_res) => resolve(true))
+            .catch((_err) => resolve(false));
+    });
+};
