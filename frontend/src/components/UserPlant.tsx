@@ -9,10 +9,12 @@ export default function UserPlant(props: {
     style?: {},
     requestor: AxiosInstance,
     onClick: () => void,
+    active: boolean,
     printError: (err: any) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
+    const [wasRenderedOnce, setWasRenderedOnce] = useState<boolean>(false);
 
     const setImageSrc = (): void => {
         getBotanicalInfoImg(props.requestor, props.entity.botanicalInfo.imageUrl)
@@ -35,6 +37,16 @@ export default function UserPlant(props: {
     };
 
     useEffect(() => {
+        if (props.active && !wasRenderedOnce) {
+            setImageSrc();
+        }
+    }, [props.active]);
+
+    useEffect(() => {
+        if (props.active) {
+            setWasRenderedOnce(true);
+        }
+    }, [props.active]);
 
     return (
         <Box
@@ -50,21 +62,29 @@ export default function UserPlant(props: {
             }}
             style={props.style}>
             {
-                !imageLoaded &&
-                <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "80%" }} />
+                (!imageLoaded || !wasRenderedOnce) &&
+                <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    sx={{ width: "100%", height: "80%" }}
+                />
             }
-            <img
-                src={imgSrc}
-                onLoad={() => setImageLoaded(true)}
-                style={{
-                    width: "100%",
-                    height: "80%",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                    visibility: imageLoaded ? "initial" : "hidden",
-                    marginBottom: "5px",
-                }}
-            />
+            {
+                imageLoaded && wasRenderedOnce &&
+                <img
+                    src={imgSrc}
+                    onLoad={() => setImageLoaded(true)}
+                    style={{
+                        width: "100%",
+                        height: "80%",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                        visibility: imageLoaded ? "initial" : "hidden",
+                        marginBottom: "5px",
+                    }}
+                    loading="lazy"
+                />
+            }
             <Typography
                 noWrap
                 variant="body1"
