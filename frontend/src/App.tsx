@@ -15,9 +15,10 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 export function App() {
   const isLoggedIn: () => boolean = () => secureLocalStorage.getItem("plant-it-key") != null;
   const backendURL = window._env_.API_URL != null ? window._env_.API_URL : "http://localhost:8085/api";
+  const axiosTimeout = window._env_.WAIT_TIMEOUT != null ? window._env_.WAIT_TIMEOUT : 5000;
   const axiosReq = axios.create({
     baseURL: backendURL,
-    timeout: 5000
+    timeout: axiosTimeout,
   });
 
   axiosReq.interceptors.request.use(

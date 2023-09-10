@@ -179,6 +179,7 @@ There are 2 configuration file available:
   ```
   PORT=3000 # port that will serve the frontend, if on docker deployment leave as it is and change the port binding in the docker-compose file if needed
   API_URL=http://localhost:8080/api
+  WAIT_TIMEOUT=5000 # timeout for backend responses (in milliseconds)
   
   PAGE_SIZE=25
   
