@@ -1,5 +1,8 @@
 package com.github.mdeluise.plantit.image;
 
+import java.util.Base64;
+import java.util.Collection;
+
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
@@ -18,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Base64;
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/image")

@@ -18,7 +18,7 @@ export default function ErrorDialog(props: {
 }) {
     return <div>
         <BootstrapDialog
-            onClose={() => props.close()}
+            onClose={props.close}
             open={props.open}
         >
             <DialogTitle sx={{ m: 0, p: 2 }} >
@@ -26,7 +26,7 @@ export default function ErrorDialog(props: {
             </DialogTitle>
             <IconButton
                 aria-label="close"
-                onClick={() => props.close()}
+                onClick={props.close}
                 sx={{
                     position: 'absolute',
                     right: 8,
@@ -36,7 +36,9 @@ export default function ErrorDialog(props: {
             >
                 <CloseIcon />
             </IconButton>
-            <DialogContent dividers>
+            <DialogContent dividers sx={{
+                overflowWrap: "break-word",
+            }}>
                 <Typography gutterBottom>
                     {props.text}
                 </Typography>
@@ -44,7 +46,7 @@ export default function ErrorDialog(props: {
             <DialogActions>
                 <Button
                     autoFocus
-                    onClick={() => props.close()}
+                    onClick={props.close}
                     fullWidth
                 >
                     Ok

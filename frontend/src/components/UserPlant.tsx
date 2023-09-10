@@ -8,22 +8,45 @@ export default function UserPlant(props: {
     entity: plant,
     style?: {},
     requestor: AxiosInstance,
-    onClick: () => void;
+    onClick: () => void,
+    active: boolean,
+    printError: (err: any) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
+    const [wasRenderedOnce, setWasRenderedOnce] = useState<boolean>(false);
 
     const setImageSrc = (): void => {
         getBotanicalInfoImg(props.requestor, props.entity.botanicalInfo.imageUrl)
             .then((res) => {
                 setImageLoaded(true);
                 setImgSrc(res);
+            })
+            .catch((err) => {
+                props.printError(err);
+                getBotanicalInfoImg(props.requestor, undefined)
+                    .then((res) => {
+                        setImageLoaded(true);
+                        setImgSrc(res);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        props.printError("Cannot load image for plant " + props.entity.personalName);
+                    });
             });
     };
 
     useEffect(() => {
-        setImageSrc();
-    }, [props.entity]);
+        if (props.active && !wasRenderedOnce) {
+            setImageSrc();
+        }
+    }, [props.active]);
+
+    useEffect(() => {
+        if (props.active) {
+            setWasRenderedOnce(true);
+        }
+    }, [props.active]);
 
     return (
         <Box
@@ -39,21 +62,29 @@ export default function UserPlant(props: {
             }}
             style={props.style}>
             {
-                !imageLoaded &&
-                <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "80%" }} />
+                (!imageLoaded || !wasRenderedOnce) &&
+                <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    sx={{ width: "100%", height: "80%" }}
+                />
             }
-            <img
-                src={imgSrc}
-                onLoad={() => setImageLoaded(true)}
-                style={{
-                    width: "100%",
-                    height: "80%",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                    visibility: imageLoaded ? "initial" : "hidden",
-                    marginBottom: "5px",
-                }}
-            />
+            {
+                imageLoaded && wasRenderedOnce &&
+                <img
+                    src={imgSrc}
+                    onLoad={() => setImageLoaded(true)}
+                    style={{
+                        width: "100%",
+                        height: "80%",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                        visibility: imageLoaded ? "initial" : "hidden",
+                        marginBottom: "5px",
+                    }}
+                    loading="lazy"
+                />
+            }
             <Typography
                 noWrap
                 variant="body1"

@@ -1,12 +1,11 @@
 import { Box, Button, Divider, Drawer, Switch, TextField } from "@mui/material";
-import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import { AxiosInstance } from "axios";
 import { botanicalInfo, plant } from "../interfaces";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import ErrorDialog from "./ErrorDialog";
 
 export default function AddPlant(props: {
     requestor: AxiosInstance,
@@ -14,7 +13,8 @@ export default function AddPlant(props: {
     setOpen: (arg: boolean) => void,
     entity?: botanicalInfo,
     plants: plant[],
-    name?: string;
+    name?: string,
+    printError: (err: any) => void;
 }) {
     const [plantName, setPlantName] = useState<string>();
     const [plantNameError, setPlantNameError] = useState<string>();
@@ -26,8 +26,6 @@ export default function AddPlant(props: {
     const [selectedImage, setSelectedImage] = useState<File>();
     const [downloadedImg, setDownloadedImg] = useState<string>();
     const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
-    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
-    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const readImage = (imageUrl: string): void => {
         props.requestor.get(`image/content${imageUrl}`)
@@ -35,7 +33,7 @@ export default function AddPlant(props: {
                 setDownloadedImg(res.data);
                 setImageDownloaded(true);
             })
-            .catch((err) => showErrorDialog(err));
+            .catch((err) => props.printError(err));
     };
 
     const setAbsoluteImageUrl = (imageUrl: string | undefined, publicUrl: string): string => {
@@ -120,7 +118,7 @@ export default function AddPlant(props: {
                 }
             })
             .catch((err) => {
-                showErrorDialog(err);
+                props.printError(err);
             });
 
     };
@@ -141,7 +139,7 @@ export default function AddPlant(props: {
                 cleanup();
             })
             .catch((err) => {
-                showErrorDialog(err);
+                props.printError(err);
             });
     };
 
@@ -170,20 +168,21 @@ export default function AddPlant(props: {
                             props.setOpen(false);
                             res.botanicalInfo.imageUrl = "/" + imgRes.data.id;
                             props.plants.push(res);
-                            //props.entity!.id = res.botanicalInfo.id;
                             setName();
                             cleanup();
+                        })
+                        .catch((err) => {
+                            props.printError(err);
                         });
                 } else {
                     props.setOpen(false);
                     props.plants.push(res);
-                    //props.entity!.id = res.botanicalInfo.id;
                     setName();
                     cleanup();
                 }
             })
             .catch((err) => {
-                showErrorDialog(err);
+                props.printError(err);
             });
     };
 
@@ -217,11 +216,6 @@ export default function AddPlant(props: {
         setPlantName(name);
     };
 
-    const showErrorDialog = (res: AxiosError) => {
-        setErrorDialogText((res.response?.data as any).message);
-        setErrorDialogShown(true);
-    };
-
     useEffect(() => {
         setImageDownloaded(false);
         setImageSrc();
@@ -240,13 +234,6 @@ export default function AddPlant(props: {
                 style: { borderRadius: "15px 15px 0 0" }
             }}
         >
-
-            <ErrorDialog
-                text={errorDialogText}
-                open={errorDialogShown}
-                close={() => setErrorDialogShown(false)}
-            />
-
             <input
                 id="upload-image"
                 type="file"

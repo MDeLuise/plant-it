@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Avatar, Box, InputAdornment, Link, OutlinedInput, Typography } from "@mui/material";
@@ -21,7 +21,7 @@ import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
 import EditEvent from "./EditEvent";
 import PlantDetails from "./PlantDetails";
-import { isBackendReachable } from "../common";
+import { getErrMessage, isBackendReachable } from "../common";
 import ErrorDialog from "./ErrorDialog";
 
 
@@ -53,9 +53,11 @@ function UserTopBar(props: {}) {
 function UserPlantsList(props: {
     requestor: AxiosInstance,
     plants: plant[],
-    gotoDetails: (arg: plant) => void;
+    gotoDetails: (arg: plant) => void,
+    printError: (err: AxiosError) => void;
 }) {
     const [plantName, setPlantName] = useState<string>("");
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
     return (
         <Box>
@@ -97,10 +99,10 @@ function UserPlantsList(props: {
                     clickable: true,
                 }}
                 modules={[Pagination, Virtual, FreeMode]}
-                className="mySwiper"
                 slidesPerView={"auto"}
                 spaceBetween={30}
                 centeredSlides={true}
+                onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             >
                 {
                     props.plants.filter(
@@ -116,6 +118,8 @@ function UserPlantsList(props: {
                                     key={entity.id}
                                     requestor={props.requestor}
                                     onClick={() => props.gotoDetails(entity)}
+                                    active={Math.abs(activeIndex - index) <= 1}
+                                    printError={props.printError}
                                 />
                             </SwiperSlide>;
                         })
@@ -181,6 +185,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             .then((res) => {
                 let entitiesSize = res.data > 0 ? res.data : 1;
                 getEntities(entitiesSize);
+            })
+            .catch((err) => {
+                printError(err);
             });
     };
 
@@ -192,6 +199,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     newEntities.push(en);
                 });
                 setplants(newEntities);
+            })
+            .catch((err) => {
+                printError(err);
             });
     };
 
@@ -214,6 +224,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         diaryTargetPersonalName: "Foo",
                     } as diaryEntry);
                 }
+            })
+            .catch((err) => {
+                printError(err);
             });
     };
 
@@ -221,7 +234,16 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         props.requestor.get("diary/entry/type")
             .then((res) => {
                 setAllEventTypes(res.data);
+            })
+            .catch((err) => {
+                printError(err);
             });
+    };
+
+
+    const printError = (err: any) => {
+        setErrorDialogText(getErrMessage(err));
+        setErrorDialogShown(true);
     };
 
     useEffect(() => {
@@ -247,7 +269,6 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
     return (
         <>
-
             <ErrorDialog
                 text={errorDialogText}
                 open={errorDialogShown}
@@ -268,6 +289,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     setLogEntries(newLogEntries);
                 }}
                 toEdit={eventToEdit}
+                printError={printError}
             />
 
             <PlantDetails
@@ -275,6 +297,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 close={() => setPlantDetailsOpen(false)}
                 entity={plantDetails}
                 requestor={props.requestor}
+                printError={printError}
             />
 
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
@@ -289,6 +312,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                             setPlantDetails(arg);
                             setPlantDetailsOpen(true);
                         }}
+                        printError={printError}
                     />
 
                     <DiaryEntriesList
@@ -309,6 +333,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                             setEventToEdit(arg);
                             setEditEventVisible(true);
                         }}
+                        printError={printError}
                     />
                 </Box>
 
@@ -316,11 +341,16 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     <SearchPage
                         requestor={props.requestor}
                         plants={plants}
+                        printError={printError}
                     />
                 </Box>
 
                 <Box sx={{ display: activeTab === 3 ? "visible" : "none" }}>
-                    <Settings requestor={props.requestor} visibility={activeTab === 3} />
+                    <Settings
+                        requestor={props.requestor}
+                        visibility={activeTab === 3}
+                        printError={printError}
+                    />
                 </Box>
             </Box>
 
