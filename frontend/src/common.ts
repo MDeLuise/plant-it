@@ -33,7 +33,7 @@ export const getBotanicalInfoImg = (requestor: AxiosInstance, imageUrl?: string)
 
 export const isBackendReachable = (requestor: AxiosInstance): Promise<boolean> => {
     return new Promise((resolve, _reject) => {
-        requestor.get("/info/ping")
+        requestor.get("info/ping")
             .then((_res) => resolve(true))
             .catch((_err) => resolve(false));
     });

@@ -21,6 +21,8 @@ import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
 import EditEvent from "./EditEvent";
 import PlantDetails from "./PlantDetails";
+import { isBackendReachable } from "../common";
+import ErrorDialog from "./ErrorDialog";
 
 
 function UserTopBar(props: {}) {
@@ -165,13 +167,14 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [plants, setplants] = useState<plant[]>([]);
     const [logEntries, setLogEntries] = useState<diaryEntry[]>([]);
     const [activeTab, setActiveTab] = useState<number>(0);
-    const [error, setError] = useState<string>();
     const [allEventTypes, setAllEventTypes] = useState<string[]>([]);
     const logPageSize = 5;
     const [editEventVisible, setEditEventVisible] = useState<boolean>(false);
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
     const [plantDetailsOpen, setPlantDetailsOpen] = useState<boolean>(false);
     const [plantDetails, setPlantDetails] = useState<plant>();
+    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
+    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const getAllEntities = (): void => {
         props.requestor.get("plant/_count")
@@ -225,6 +228,13 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         if (!props.isLoggedIn()) {
             navigate("/auth");
         } else {
+            isBackendReachable(props.requestor)
+                .then((res) => {
+                    if (!res) {
+                        setErrorDialogText("Cannot connect to the backend");
+                        setErrorDialogShown(true);
+                    }
+                });
             getDiaryEvents();
             getAllEntities();
             getLog();
@@ -237,6 +247,13 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
     return (
         <>
+
+            <ErrorDialog
+                text={errorDialogText}
+                open={errorDialogShown}
+                close={() => setErrorDialogShown(false)}
+            />
+
             <EditEvent
                 requestor={props.requestor}
                 plants={plants}
@@ -303,7 +320,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 </Box>
 
                 <Box sx={{ display: activeTab === 3 ? "visible" : "none" }}>
-                    <Settings requestor={props.requestor} visibility={activeTab === 3}/>
+                    <Settings requestor={props.requestor} visibility={activeTab === 3} />
                 </Box>
             </Box>
 
