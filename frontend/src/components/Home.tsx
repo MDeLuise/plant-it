@@ -57,6 +57,7 @@ function UserPlantsList(props: {
     printError: (err: AxiosError) => void;
 }) {
     const [plantName, setPlantName] = useState<string>("");
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
     return (
         <Box>
@@ -98,10 +99,10 @@ function UserPlantsList(props: {
                     clickable: true,
                 }}
                 modules={[Pagination, Virtual, FreeMode]}
-                className="mySwiper"
                 slidesPerView={"auto"}
                 spaceBetween={30}
                 centeredSlides={true}
+                onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             >
                 {
                     props.plants.filter(
@@ -117,6 +118,7 @@ function UserPlantsList(props: {
                                     key={entity.id}
                                     requestor={props.requestor}
                                     onClick={() => props.gotoDetails(entity)}
+                                    active={Math.abs(activeIndex - index) <= 1}
                                     printError={props.printError}
                                 />
                             </SwiperSlide>;
