@@ -34,7 +34,8 @@ public class PlantController {
                                                  @RequestParam(defaultValue = "id", required = false) String sortBy,
                                                  @RequestParam(defaultValue = "DESC", required = false)
                                                  Sort.Direction sortDir) {
-        final Pageable pageable = PageRequest.of(pageNo, pageSize, sortDir, sortBy);
+        final Sort ignoreCaseSort = Sort.by(new Sort.Order(sortDir, sortBy).ignoreCase());
+        final Pageable pageable = PageRequest.of(pageNo, pageSize, ignoreCaseSort);
         final Page<Plant> result = plantService.getAll(pageable);
         return ResponseEntity.ok(result.map(plantDTOConverter::convertToDTO));
     }

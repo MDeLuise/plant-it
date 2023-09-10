@@ -192,7 +192,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     };
 
     const getEntities = (count: number): void => {
-        props.requestor.get(`plant?pageSize=${count}`)
+        props.requestor.get(`plant?sortBy=personalName&sortDir=ASC&pageSize=${count}`)
             .then((res) => {
                 let newEntities: plant[] = [];
                 res.data.content.forEach((en: plant) => {

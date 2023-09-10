@@ -133,7 +133,11 @@ export default function AddPlant(props: {
         })
             .then((res) => {
                 props.setOpen(false);
-                props.plants.push(res);
+                let insertHere = props.plants.findIndex((pl) => {
+                    return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
+                });
+                insertHere = Math.max(0, insertHere);
+                props.plants.splice(insertHere, 0, res);
                 props.entity!.id = res.botanicalInfo.id;
                 setName();
                 cleanup();
@@ -167,7 +171,11 @@ export default function AddPlant(props: {
                         .then((imgRes) => {
                             props.setOpen(false);
                             res.botanicalInfo.imageUrl = "/" + imgRes.data.id;
-                            props.plants.push(res);
+                            let insertHere = props.plants.findIndex((pl) => {
+                                return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
+                            });
+                            insertHere = Math.max(0, insertHere);
+                            props.plants.splice(insertHere, 0, res);
                             setName();
                             cleanup();
                         })
@@ -176,7 +184,11 @@ export default function AddPlant(props: {
                         });
                 } else {
                     props.setOpen(false);
-                    props.plants.push(res);
+                    let insertHere = props.plants.findIndex((pl) => {
+                        return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
+                    });
+                    insertHere = Math.max(0, insertHere);
+                    props.plants.splice(insertHere, 0, res);
                     setName();
                     cleanup();
                 }
