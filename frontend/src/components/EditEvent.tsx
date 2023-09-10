@@ -70,7 +70,8 @@ export default function EditEvent(props: {
     toEdit?: diaryEntry,
     open: boolean,
     setOpen: (arg: boolean) => void,
-    removeFromLog: (arg: number) => void;
+    removeFromLog: (arg: number) => void,
+    printError: (err: any) => void;
 }) {
     const [date, setDate] = useState<Dayjs>(dayjs());
     const [selectedPlantName, setSelectedPlantName] = useState<string>();
@@ -82,8 +83,6 @@ export default function EditEvent(props: {
     const [confirmDialogTitle, setConfirmDialogTitle] = useState<string>("");
     const [confirmDialogText, setConfirmDialogText] = useState<string>("");
     const [confirmDialogCallback, setConfirmDialogCallback] = useState<() => void>(() => () => { });
-    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
-    const [errorDialogText, setErrorDialogText] = useState<string>();
 
     const updateEvent = (): void => {
         let newTarget: plant = props.plants.filter((en) => en.personalName === selectedPlantName)[0];
@@ -100,7 +99,7 @@ export default function EditEvent(props: {
                 setEdit(false);
             })
             .catch((err) => {
-                showErrorDialog(err);
+                props.printError(err);
             });
     };
 
@@ -113,15 +112,10 @@ export default function EditEvent(props: {
                 setConfirmDialogOpen(false);
             })
             .catch((err) => {
-                showErrorDialog(err);
+                props.printError(err);
             });
     };
 
-
-    const showErrorDialog = (res: AxiosError) => {
-        setErrorDialogText((res.response?.data as any).message);
-        setErrorDialogShown(true);
-    };
 
     useEffect(() => {
         setSelectedPlantName(props.toEdit?.diaryTargetPersonalName);
@@ -134,12 +128,6 @@ export default function EditEvent(props: {
 
     return (
         <>
-            <ErrorDialog
-                text={errorDialogText}
-                open={errorDialogShown}
-                close={() => setErrorDialogShown(false)}
-            />
-
             <ConfirmDialog
                 open={confirmDialogOpen}
                 close={() => setConfirmDialogOpen(false)}

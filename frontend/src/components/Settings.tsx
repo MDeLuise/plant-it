@@ -32,7 +32,8 @@ function StatsSection(props: {
 
 function Stats(props: {
     requestor: AxiosInstance,
-    visibility: boolean;
+    visibility: boolean,
+    printError: (err: any) => void;
 }) {
     const [expanded, setExpanded] = useState<boolean>(true);
     const [totalEvents, setTotalEvents] = useState<number>(0);
@@ -43,13 +44,17 @@ function Stats(props: {
     useEffect(() => {
         if (props.visibility) {
             props.requestor.get("diary/entry/_count")
-                .then((res) => setTotalEvents(res.data));
+                .then((res) => setTotalEvents(res.data))
+                .catch((err) => props.printError(err));
             props.requestor.get("plant/_count")
-                .then((res) => setTotalPlants(res.data));
+                .then((res) => setTotalPlants(res.data))
+                .catch((err) => props.printError(err));
             props.requestor.get("plant/_countBotanicalInfo")
-                .then((res) => setTotalBotanicalInfo(res.data));
+                .then((res) => setTotalBotanicalInfo(res.data))
+                .catch((err) => props.printError(err));
             props.requestor.get("image/entity/_count")
-                .then((res) => setTotalPhotos(res.data));
+                .then((res) => setTotalPhotos(res.data))
+                .catch((err) => props.printError(err));
         }
     });
 
@@ -126,10 +131,11 @@ function Stats(props: {
     );
 }
 
-// TODO make stats responsive on changes
+
 export default function Settings(props: {
     requestor: AxiosInstance,
-    visibility: boolean;
+    visibility: boolean,
+    printError: (err: any) => void;
 }) {
     let navigate: NavigateFunction = useNavigate();
     const [version, setVersion] = useState<string>();
@@ -141,7 +147,8 @@ export default function Settings(props: {
 
     const getVersion = (): void => {
         props.requestor.get("/info/version")
-            .then((res) => setVersion(res.data));
+            .then((res) => setVersion(res.data))
+            .catch((err) => props.printError(err));
     };
 
     useEffect(() => {
@@ -154,7 +161,11 @@ export default function Settings(props: {
         flexDirection: "column",
     }}>
 
-        <Stats requestor={props.requestor} visibility={props.visibility}/>
+        <Stats
+            requestor={props.requestor}
+            visibility={props.visibility}
+            printError={props.printError}
+        />
         <Box
             sx={{
                 backgroundColor: "background.paper",

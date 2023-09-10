@@ -32,7 +32,7 @@ function PlantImage(props: {
     key: string,
     active: boolean,
     requestor: AxiosInstance,
-    showErrorDialog: (text: AxiosError) => void;
+    printError: (err: any) => void;
 }) {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [imgBase64, setImgBase64] = useState<string>();
@@ -43,7 +43,7 @@ function PlantImage(props: {
                 setImgBase64(res.data);
             })
             .catch((err) => {
-                props.showErrorDialog(err);
+                props.printError(err);
             });
     }, [props.imgId]);
 
@@ -54,7 +54,11 @@ function PlantImage(props: {
                 <Skeleton
                     variant="rounded"
                     animation="wave"
-                    sx={{ width: "100%", height: "100%", zIndex: 1 }}
+                    sx={{
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 1
+                    }}
                 />
             }
             {
@@ -79,7 +83,7 @@ function Bottombar(props: {
     visible: boolean,
     entity?: plant,
     addImageBase64: (arg: string) => void,
-    showErrorDialog: (text: AxiosError) => void;
+    printError: (err: any) => void;
 }) {
     const addEntityImage = (toUpload: File): void => {
         let formData = new FormData();
@@ -91,7 +95,7 @@ function Bottombar(props: {
                 });
             })
             .catch((err) => {
-                props.showErrorDialog(err);
+                props.printError(err);
             });
     };
 
@@ -184,7 +188,7 @@ function ReadMoreReadLess(props: {
 function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
-    showErrorDialog: (text: AxiosError) => void;
+    printError: (err: any) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [checkedImages, setCheckedImages] = useState<boolean>(false);
@@ -202,12 +206,15 @@ function PlantHeader(props: {
                             setCheckedImages(true);
                         })
                         .catch((err) => {
-                            props.showErrorDialog(err);
+                            props.printError(err);
                         });
                     return;
                 }
                 setImageIds(res.data.reverse());
                 setCheckedImages(true);
+            })
+            .catch((err) => {
+                props.printError(err);
             });
     }, [props.entity]);
 
@@ -254,7 +261,7 @@ function PlantHeader(props: {
                                     key={index.toString()}
                                     active={index === activeIndex}
                                     requestor={props.requestor}
-                                    showErrorDialog={props.showErrorDialog}
+                                    printError={props.printError}
                                 />
                             </SwiperSlide>;
                         })
@@ -330,16 +337,10 @@ export default function PlantDetails(props: {
     open: boolean,
     close: () => void;
     entity?: plant,
-    requestor: AxiosInstance;
+    requestor: AxiosInstance,
+    printError: (err: any) => void;
 }) {
     const [selectedTab, setSelectedTab] = useState<number>(0);
-    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
-    const [errorDialogText, setErrorDialogText] = useState<string>();
-
-    const showErrorDialog = (res: AxiosError) => {
-        setErrorDialogText((res.response?.data as any).message);
-        setErrorDialogShown(true);
-    };
 
     return (
         <Drawer
@@ -347,12 +348,6 @@ export default function PlantDetails(props: {
             open={props.open}
             onClose={props.close}
         >
-
-            <ErrorDialog
-                text={errorDialogText}
-                open={errorDialogShown}
-                close={() => setErrorDialogShown(false)}
-            />
 
             <Box
                 sx={{
@@ -376,7 +371,7 @@ export default function PlantDetails(props: {
                 <PlantHeader
                     requestor={props.requestor}
                     entity={props.entity}
-                    showErrorDialog={showErrorDialog}
+                    printError={props.printError}
                 />
 
                 <Box sx={{
@@ -426,7 +421,7 @@ export default function PlantDetails(props: {
                     entity={props.entity}
                     addImageBase64={(arg: string) => {
                     }}
-                    showErrorDialog={showErrorDialog}
+                    printError={props.printError}
                 />
             </Box>
         </Drawer>

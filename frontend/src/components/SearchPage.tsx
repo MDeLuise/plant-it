@@ -14,7 +14,8 @@ function BotanicalEntity(props: {
     entity: botanicalInfo,
     requestor: AxiosInstance,
     addClick: (arg: botanicalInfo) => void,
-    addEntity: (arg: plant) => void;
+    addEntity: (arg: plant) => void,
+    printError: (err: any) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
@@ -24,6 +25,9 @@ function BotanicalEntity(props: {
             .then((res) => {
                 setImageLoaded(true);
                 setImgSrc(res);
+            })
+            .catch((err) => {
+                props.printError(err);
             });
     };
 
@@ -47,7 +51,11 @@ function BotanicalEntity(props: {
         >
             {
                 !imageLoaded &&
-                <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
+                <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    sx={{ width: "100%", height: "100%" }}
+                />
             }
 
             <Chip
@@ -151,7 +159,8 @@ function AddNewBotanicalInfo(props: {
 
 export default function SearchPage(props: {
     requestor: AxiosInstance,
-    plants: plant[];
+    plants: plant[],
+    printError: (err: any) => void;
 }) {
     const [scientificName, setScientificName] = useState<string>("");
     const [botanicalInfos, setBotanicalInfos] = useState<botanicalInfo[]>([]);
@@ -175,6 +184,9 @@ export default function SearchPage(props: {
                 });
                 setBotanicalInfos(newBotanicalInfos);
             }))
+            .catch((err) => {
+                props.printError(err);
+            })
             .finally(() => setLoading(false));
     };
 
@@ -191,6 +203,7 @@ export default function SearchPage(props: {
                 entity={selectedBotanicalInfo}
                 plants={props.plants}
                 name={scientificName}
+                printError={props.printError}
             />
 
             <OutlinedInput
@@ -225,8 +238,16 @@ export default function SearchPage(props: {
                 {
                     loading &&
                     <>
-                        <Skeleton variant="rounded" animation="wave" sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }} />
-                        <Skeleton variant="rounded" animation="wave" sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }} />
+                        <Skeleton
+                            variant="rounded"
+                            animation="wave"
+                            sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }}
+                        />
+                        <Skeleton
+                            variant="rounded"
+                            animation="wave"
+                            sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }}
+                        />
                     </>
                 }
                 {botanicalInfos.map(botanicalInfo => {
@@ -238,9 +259,11 @@ export default function SearchPage(props: {
                             setAddPlantOpen(true);
                         }}
                         addEntity={(en: plant) => props.plants.push(en)}
+                        key={botanicalInfo.id}
+                        printError={props.printError}
                     />;
                 })}
-                < AddNewBotanicalInfo addClick={() => {
+                <AddNewBotanicalInfo addClick={() => {
                     setSelectedBotanicalInfo(undefined);
                     setAddPlantOpen(true);
                 }}
