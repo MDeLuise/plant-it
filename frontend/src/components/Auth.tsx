@@ -131,11 +131,11 @@ export default function (props: { requestor: AxiosInstance; }) {
         isBackendReachable(props.requestor)
             .then((res) => {
                 if (!res) {
-                    setErrorDialogText("Backend not reachable");
+                    setErrorDialogText("Cannot connect to the backend");
                     setErrorDialogShown(true);
                 }
             });
-    }, [username, password]);
+    }, []);
 
     return (
         <Box
