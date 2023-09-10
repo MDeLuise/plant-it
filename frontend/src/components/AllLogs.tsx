@@ -160,6 +160,7 @@ export default function AllLogs(props: {
     entries: diaryEntry[],
     plants: plant[],
     openEditEvent: (arg: diaryEntry) => void,
+    printError: (err: any) => void;
 }) {
     const pageSize = 5;
     const [entities, setEntities] = useState<diaryEntry[]>([]);
@@ -230,6 +231,9 @@ export default function AllLogs(props: {
                 } else {
                     setCircularProgressVisible(false);
                 }
+            })
+            .catch((err) => {
+                props.printError(err);
             });
     };
 

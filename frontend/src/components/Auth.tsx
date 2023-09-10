@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
 import Avatar from '@mui/material/Avatar';
@@ -20,7 +20,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
 import { FormHelperText } from "@mui/material";
 import ErrorDialog from "./ErrorDialog";
-import { isBackendReachable } from "../common";
+import { getErrMessage, isBackendReachable } from "../common";
 
 export default function (props: { requestor: AxiosInstance; }) {
     const navigate: NavigateFunction = useNavigate();
@@ -45,8 +45,8 @@ export default function (props: { requestor: AxiosInstance; }) {
                 getOrCreateApiKey(jwt);
                 secureLocalStorage.setItem("plant-it-username", username);
             })
-            .catch((err: AxiosError) => {
-                setErrorDialogText((err.response?.data as any).message);
+            .catch((err) => {
+                setErrorDialogText(getErrMessage(err));
                 setErrorDialogShown(true);
             });
     };
@@ -73,7 +73,7 @@ export default function (props: { requestor: AxiosInstance; }) {
                         navigate('/');
                     })
                     .catch((err) => {
-                        setErrorDialogText((err.response?.data as any).message);
+                        setErrorDialogText(getErrMessage(err));
                         setErrorDialogShown(true);
                     });
             });
@@ -85,11 +85,11 @@ export default function (props: { requestor: AxiosInstance; }) {
             username: username,
             password: password
         })
-            .then((_response) => {
+            .then((_res) => {
                 doLogin(event);
             })
-            .catch((err: AxiosError) => {
-                setErrorDialogText((err.response?.data as any).message);
+            .catch((err) => {
+                setErrorDialogText(getErrMessage(err));
                 setErrorDialogShown(true);
             });
     };

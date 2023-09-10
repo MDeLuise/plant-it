@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 export const isBigScreen = (): boolean => {
     return window.screen.width > 768;
@@ -13,7 +13,8 @@ const readImage = (requestor: AxiosInstance, imageUrl: string): Promise<string> 
         requestor.get(`image/content${imageUrl}`)
             .then((res) => {
                 resolve(`data:application/octet-stream;base64,${res.data}`);
-            });
+            })
+            .catch((err) => reject(err));
     });
 };
 
@@ -37,4 +38,15 @@ export const isBackendReachable = (requestor: AxiosInstance): Promise<boolean> =
             .then((_res) => resolve(true))
             .catch((_err) => resolve(false));
     });
+};
+
+export const getErrMessage = (err: any): string => {
+    console.error(err);
+    if (err.response != undefined) {
+        return err.response.data.message;
+    }
+    if (axios.isAxiosError(err)) {
+        return (err as AxiosError).message;
+    }
+    return "Some error occurred";
 };

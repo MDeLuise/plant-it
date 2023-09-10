@@ -8,7 +8,8 @@ export default function UserPlant(props: {
     entity: plant,
     style?: {},
     requestor: AxiosInstance,
-    onClick: () => void;
+    onClick: () => void,
+    printError: (err: any) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
@@ -18,12 +19,22 @@ export default function UserPlant(props: {
             .then((res) => {
                 setImageLoaded(true);
                 setImgSrc(res);
+            })
+            .catch((err) => {
+                props.printError(err);
+                getBotanicalInfoImg(props.requestor, undefined)
+                    .then((res) => {
+                        setImageLoaded(true);
+                        setImgSrc(res);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        props.printError("Cannot load image for plant " + props.entity.personalName);
+                    });
             });
     };
 
     useEffect(() => {
-        setImageSrc();
-    }, [props.entity]);
 
     return (
         <Box
