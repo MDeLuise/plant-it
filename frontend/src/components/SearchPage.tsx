@@ -113,8 +113,16 @@ function AddNewBotanicalInfo(props: {
         }}
         onClick={() => props.addClick()}
     >
-        {!imageLoaded &&
-            <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%" }} />
+        {
+            !imageLoaded &&
+            <Skeleton
+                variant="rounded"
+                animation="wave"
+                sx={{
+                    width: "100%",
+                    height: "100%"
+                }}
+            />
         }
 
         <Box sx={{
@@ -250,19 +258,21 @@ export default function SearchPage(props: {
                         />
                     </>
                 }
-                {botanicalInfos.map(botanicalInfo => {
-                    return <BotanicalEntity
-                        entity={botanicalInfo}
-                        requestor={props.requestor}
-                        addClick={(arg: botanicalInfo) => {
-                            setSelectedBotanicalInfo(arg);
-                            setAddPlantOpen(true);
-                        }}
-                        addEntity={(en: plant) => props.plants.push(en)}
-                        key={botanicalInfo.id}
-                        printError={props.printError}
-                    />;
-                })}
+                {
+                    botanicalInfos.map((botanicalInfo, index) => {
+                        return <BotanicalEntity
+                            entity={botanicalInfo}
+                            requestor={props.requestor}
+                            addClick={(arg: botanicalInfo) => {
+                                setSelectedBotanicalInfo(arg);
+                                setAddPlantOpen(true);
+                            }}
+                            addEntity={(en: plant) => props.plants.push(en)}
+                            key={index}
+                            printError={props.printError}
+                        />;
+                    })
+                }
                 <AddNewBotanicalInfo addClick={() => {
                     setSelectedBotanicalInfo(undefined);
                     setAddPlantOpen(true);

@@ -225,7 +225,14 @@ function PlantHeader(props: {
         }}>
             {
                 !imageLoaded && !checkedImages &&
-                <Skeleton variant="rounded" animation="wave" sx={{ width: "100%", height: "100%", }} />
+                <Skeleton
+                    variant="rounded"
+                    animation="wave"
+                    sx={{
+                        width: "100%",
+                        height: "100%",
+                    }}
+                />
             }
             {
                 imageIds.length === 0 && checkedImages &&
