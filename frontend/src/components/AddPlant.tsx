@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Drawer, Switch, TextField } from "@mui/material";
+import { Box, Button, Divider, Drawer, Skeleton, Switch, TextField } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { botanicalInfo, plant } from "../interfaces";
 import { useEffect, useState } from "react";
@@ -16,16 +16,17 @@ export default function AddPlant(props: {
     name?: string,
     printError: (err: any) => void;
 }) {
-    const [plantName, setPlantName] = useState<string>();
+    const [plantName, setPlantName] = useState<string>("");
     const [plantNameError, setPlantNameError] = useState<string>();
-    const [family, setFamily] = useState<string>();
-    const [genus, setGenus] = useState<string>();
-    const [species, setSpecies] = useState<string>();
-    const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
+    const [family, setFamily] = useState<string>("");
+    const [genus, setGenus] = useState<string>("");
+    const [species, setSpecies] = useState<string>("");
+    const [date, setDate] = useState<Dayjs>(dayjs(new Date()));
     const [useDate, setUseDate] = useState<boolean>(true);
     const [selectedImage, setSelectedImage] = useState<File>();
     const [downloadedImg, setDownloadedImg] = useState<string>();
     const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
+    const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
     const readImage = (imageUrl: string): void => {
         props.requestor.get(`image/content${imageUrl}`)
@@ -47,6 +48,9 @@ export default function AddPlant(props: {
     };
 
     const setImageSrc = (): string => {
+        if (!props.open) {
+            return "";
+        }
         return imageDownloaded ? `data:application/octet-stream;base64,${downloadedImg}` :
             setAbsoluteImageUrl(props.entity?.imageUrl, process.env.PUBLIC_URL);
     };
@@ -152,7 +156,7 @@ export default function AddPlant(props: {
             scientificName: plantName,
             family: family,
             genus: genus,
-            species: species != undefined ? species : plantName,
+            species: species != "" ? species : plantName,
             isSystemWide: false,
         };
         let plantToAdd = {
@@ -213,10 +217,12 @@ export default function AddPlant(props: {
     };
 
     const cleanup = (): void => {
+        setImageLoaded(false);
         setSelectedImage(undefined);
         setDownloadedImg(undefined);
-        setFamily(undefined);
-        setGenus(undefined);
+        setImageDownloaded(false);
+        setFamily("");
+        setGenus("");
         setPlantName("");
         setUseDate(true);
         setDate(dayjs(new Date()));
@@ -230,7 +236,7 @@ export default function AddPlant(props: {
 
     useEffect(() => {
         setImageDownloaded(false);
-        setImageSrc();
+        props.open && setImageSrc();
         setName();
     }, [props.entity, props.name, props.open]);
 
@@ -279,7 +285,18 @@ export default function AddPlant(props: {
                         position: "relative",
                     }}>
                         {
-                            props.entity != undefined &&
+                            !imageLoaded && props.entity !== undefined &&
+                            <Skeleton
+                                variant="rounded"
+                                animation="wave"
+                                sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            />
+                        }
+                        {
+                            props.entity != undefined && props.open &&
                             <img
                                 src={imgSrc}
                                 style={{
@@ -287,10 +304,11 @@ export default function AddPlant(props: {
                                     width: "100%",
                                     objectFit: "cover"
                                 }}
+                                onLoad={() => setImageLoaded(true)}
                             />
                         }
                         {
-                            selectedImage != undefined &&
+                            selectedImage != undefined && props.open &&
                             <>
                                 <Box
                                     style={{
@@ -312,19 +330,22 @@ export default function AddPlant(props: {
                                 </Box>
                             </>
                         }
-                        <Box sx={{
-                            backgroundColor: "primary.main",
-                            width: "100%",
-                            height: "100%",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            display: selectedImage == undefined ? "flex" : "none",
-                        }}
-                            onClick={() => {
-                                document.getElementById("upload-image")?.click();
-                            }}>
-                            <AddPhotoAlternateOutlinedIcon fontSize="large" />
-                        </Box>
+                        {
+                            props.entity == undefined &&
+                            <Box sx={{
+                                backgroundColor: "primary.main",
+                                width: "100%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                display: selectedImage == undefined ? "flex" : "none",
+                            }}
+                                onClick={() => {
+                                    document.getElementById("upload-image")?.click();
+                                }}>
+                                <AddPhotoAlternateOutlinedIcon fontSize="large" />
+                            </Box>
+                        }
 
                     </Box>
                     <TextField
@@ -353,7 +374,7 @@ export default function AddPlant(props: {
                             label="Date of purchase"
                             value={date}
                             disabled={!useDate}
-                            onChange={(newValue) => setDate(newValue)}
+                            onChange={(newValue) => setDate(newValue != undefined ? newValue : dayjs(new Date()))}
                             sx={{
                                 flexGrow: 1
                             }}
@@ -366,7 +387,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     label="Family"
                     fullWidth
-                    value={props.entity?.family}
+                    value={props.entity?.family != undefined ? props.entity?.family : ""}
                     onChange={(event) => setFamily(event.target.value)}
                 />
                 <TextField
@@ -374,7 +395,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     fullWidth
                     label="Genus"
-                    value={props.entity?.genus}
+                    value={props.entity?.genus != undefined ? props.entity?.genus : ""}
                     onChange={(event) => setGenus(event.target.value)}
                 />
                 <TextField
@@ -382,7 +403,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     fullWidth
                     label="Species"
-                    value={props.entity?.species}
+                    value={props.entity?.species != undefined ? props.entity?.species : ""}
                     onChange={(event) => setSpecies(event.target.value)}
                 />
 

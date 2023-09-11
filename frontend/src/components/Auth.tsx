@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AxiosError, AxiosInstance } from 'axios';
+import { AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
 import Avatar from '@mui/material/Avatar';

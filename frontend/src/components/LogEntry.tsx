@@ -6,6 +6,10 @@ import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
 import QuestionMarkOutlinedIcon from '@mui/icons-material/QuestionMarkOutlined';
 import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
 import BatterySaverOutlinedIcon from '@mui/icons-material/BatterySaverOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import ShowerOutlinedIcon from '@mui/icons-material/ShowerOutlined';
+import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
+import WavesOutlinedIcon from '@mui/icons-material/WavesOutlined';
 import { MutableRefObject, ReactElement } from "react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { alpha } from "@mui/material";
@@ -23,6 +27,10 @@ export default function LogEntry(props: {
             case "transplanting": return <AutorenewOutlinedIcon />;
             case "fertilizing": return <LunchDiningOutlinedIcon />;
             case "biostimulating": return <BatterySaverOutlinedIcon />;
+            case "observation": return <VisibilityOutlinedIcon />;
+            case "misting": return <ShowerOutlinedIcon />;
+            case "treatment": return <ScienceOutlinedIcon />;
+            case "water_changing": return <WavesOutlinedIcon />;
             default: return <QuestionMarkOutlinedIcon />;
         }
     };
@@ -34,6 +42,10 @@ export default function LogEntry(props: {
             case "transplanting": return "rgb(121, 72, 36)";
             case "fertilizing": return "rgb(234, 94, 7)";
             case "biostimulating": return "rgb(234, 147, 7)";
+            case "treatment": return "rgb(123, 152, 60)";
+            case "observation": return "rgb(92, 93, 94)";
+            case "misting": return "rgb(4, 34, 77)";
+            case "water_changing": return "rgb(149, 187, 241)";
             default: return "rgb(226, 233, 243)";
         }
     };

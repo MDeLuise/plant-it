@@ -135,7 +135,7 @@ The application was developed with being used with Docker in mind, thus this met
 1. Run the following command in the terminal inside the `frontend` folder
   `npm start`
 
-Then, the frontend of the system will be available at `http://localhost:3000`, and the backend at `http://localhost:8085/api`.
+Then, the frontend of the system will be available at `http://localhost:3000`, and the backend at `http://localhost:8080/api`.
 
 
 #### Change port binding
@@ -212,8 +212,8 @@ To fix a bug or create a feature, follow these steps:
 * Commits should follow the [semantic commit](https://www.conventionalcommits.org/en/v1.0.0/) specification, although not mandatory.
 
 #### Local environment
-If you want to make some changes in the project, you can use the following commands:
-* in order to run the frontend: `cd frontend`, then `npm run dev`.
-* in order to run the backend: `cd backend`, then `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev -DcopyFiles`. This enables the `dev` profile, which uses an embedded h2 database instead of one external mysql instance, and creates a user with username `user` and password `user` with a predefined plant's collection. Also a dummy user uploaded image is copied under `/tmp/plant-it/` directory.
+If you want to test some changes in the project, you can use the following commands:
+* in order to run the frontend: `cd frontend`, then `npm run dev` (available at `localhost:3000` by default).
+* in order to run the backend: `cd backend`, then `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev -DcopyFiles` (available at `localhost:8085` by default). This enables the `dev` profile, which uses an embedded h2 database instead of one external mysql instance, and creates a user with username `user` and password `user` with a predefined plant's collection. Also a dummy user uploaded image is copied under `/tmp/plant-it/` directory.
 
 Consider that this environment speed up the developing process, but the app should be tested (at least for new big features) even without the `dev` backend profile and with a local docker deployment.
