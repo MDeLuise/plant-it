@@ -160,7 +160,8 @@ export default function AllLogs(props: {
     entries: diaryEntry[],
     plants: plant[],
     openEditEvent: (arg: diaryEntry) => void,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    active: boolean;
 }) {
     const pageSize = 5;
     const [entities, setEntities] = useState<diaryEntry[]>([]);
@@ -169,6 +170,8 @@ export default function AllLogs(props: {
     const [fetchNew, setFetchNew] = useState<boolean>(true);
     const [filteredPlantId, setFilteredPlantId] = useState<number[]>([]);
     const [filteredEventType, setFilteredEventType] = useState<string[]>([]);
+    const [wasAlreadyRendered, setWasAlreadyRendered] = useState<boolean>(false);
+
 
     const observerCallback = (entries: IntersectionObserverEntry[], _observer: IntersectionObserver) => {
         const entry = entries[0];
@@ -177,10 +180,12 @@ export default function AllLogs(props: {
         }
     };
 
+
     const observer = new IntersectionObserver(observerCallback, {
         rootMargin: '0px',
         threshold: 1.0,
     });
+
 
     useEffect(() => {
         if (pageNo === -1) {
@@ -191,11 +196,25 @@ export default function AllLogs(props: {
         }
     }, [pageNo, entities, fetchNew]);
 
+
     useEffect(() => {
         setPageNo(0);
         setEntities([]);
         setFetchNew(true);
     }, [filteredPlantId, filteredEventType, props.entries]);
+
+
+    useEffect(() => {
+        if (!wasAlreadyRendered && props.active) {
+            setTimeout(() => {
+                if (myRef.current !== undefined) {
+                    observer.observe(myRef.current as Element);
+                }
+            }, 700);
+            setWasAlreadyRendered(true);
+        }
+    }, [props.active]);
+
 
     const getPage = () => {
         if (myRef.current !== undefined && myRef.current !== null) {
@@ -239,11 +258,6 @@ export default function AllLogs(props: {
 
     useEffect(() => {
         setPageNo(0);
-        setTimeout(() => {
-            if (myRef.current !== undefined) {
-                observer.observe(myRef.current as Element);
-            }
-        }, 700);
     }, []);
 
     const myRef = useRef<Element>();
@@ -273,7 +287,7 @@ export default function AllLogs(props: {
                         return <LogEntry
                             entity={entity}
                             last={index == entities.length - 1}
-                            key={entity.id}
+                            key={index}
                             lastRef={myRef}
                             editEvent={() => props.openEditEvent(entity)}
                         />;
