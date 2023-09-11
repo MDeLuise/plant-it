@@ -10,12 +10,10 @@ import {
 import { FaUser } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import "../style/BottomBar.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { AxiosInstance } from "axios";
-import AddLogEntry from "./AddLogEntry";
-import { diaryEntry, plant } from "../interfaces";
 
 function BottomBarSection(props: {
     iconDisabled: IconType,
@@ -37,7 +35,7 @@ function BottomBarSection(props: {
             }}
             onClick={() => {
                 if (props.active) {
-                    window.scrollTo({top: 0, left: 0, behavior: "auto"});
+                    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
                     setToggle(false);
                     setTimeout(() => {
                         setToggle(true);
@@ -61,13 +59,8 @@ export default function BottomBar(props: {
     activeTab: number,
     setActiveTab: (arg: number) => void,
     requestor: AxiosInstance,
-    eventTypes: string[],
-    plants: plant[],
-    updateLogEntries: (arg: diaryEntry) => void,
-}
-) {
-    const [addDiaryLogOpen, setAddDiaryLogOpen] = useState<boolean>(false);
-
+    openAddLogEntry: () => void,
+}) {
     return (
         <Box
             boxShadow={.5}
@@ -84,19 +77,10 @@ export default function BottomBar(props: {
                 color: "primary.main",
                 alignItems: "center",
                 padding: "10px",
-                borderRadius: "50px", //"20px 20px 0 0",
+                borderRadius: "50px",
                 zIndex: 10,
             }}
         >
-
-            <AddLogEntry
-                requestor={props.requestor}
-                eventTypes={props.eventTypes}
-                plants={props.plants}
-                open={addDiaryLogOpen}
-                setOpen={setAddDiaryLogOpen}
-                updateLog={props.updateLogEntries}
-            />
 
             <BottomBarSection
                 setActive={() => props.setActiveTab(0)}
@@ -117,7 +101,7 @@ export default function BottomBar(props: {
                     position: "relative",
                     top: "-10px"
                 }}
-                onClick={() => setAddDiaryLogOpen(true)}
+                onClick={props.openAddLogEntry}
             >
                 <AddIcon />
             </Fab>

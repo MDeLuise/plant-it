@@ -14,7 +14,8 @@ function Filters(props: {
     plants: plant[],
     setFilteredPlantIds: (ids: number[]) => void,
     eventTypes: string[],
-    setFilteredEventType: (types: string[]) => void;
+    setFilteredEventType: (types: string[]) => void,
+    plantFiltered: boolean;
 }) {
     const [selectedFilteredEntitiyNames, setSelectedFilteredEntitiyNames] = useState<string[]>([]);
     const [selectedFilteredEventTypes, setSelectedFilteredEventTypes] = useState<string[]>([]);
@@ -57,57 +58,68 @@ function Filters(props: {
                             visibility: selectedFilteredEntitiyNames.length > 0 || selectedFilteredEventTypes.length > 0 ? "visible" : "hidden",
                         }}
                         onClick={() => {
-                            setSelectedFilteredEntitiyNames([]);
-                            props.setFilteredPlantIds([]);
                             setSelectedFilteredEventTypes([]);
                             props.setFilteredEventType([]);
+                            if (!props.plantFiltered) {
+                                setSelectedFilteredEntitiyNames([]);
+                                props.setFilteredPlantIds([]);
+                            }
                         }}
                     />
                 </Box>
             </AccordionSummary>
-            <AccordionDetails sx={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-                <FormControl fullWidth>
-                    <Autocomplete
-                        disableCloseOnSelect
-                        disablePortal
-                        multiple
-                        options={props.plants.map(pl => pl.personalName)}
-                        value={selectedFilteredEntitiyNames}
-                        onChange={(_event: any, newValue: readonly string[]) => {
-                            let selectedIds = props.plants.filter(pl => newValue.includes(pl.personalName)).map(pl => pl.id);
-                            props.setFilteredPlantIds(selectedIds);
-                            setSelectedFilteredEntitiyNames(Array.from(newValue));
-                        }}
-                        renderTags={(selected) => {
-                            let renderedValues = selected.join(", ");
-                            return (
-                                <Typography
-                                    noWrap={true}
-                                    color="textPrimary"
-                                >
-                                    {renderedValues}
-                                </Typography>
-                            );
-                        }}
-                        sx={{
-                            ".MuiAutocomplete-inputRoot": {
-                                flexWrap: "nowrap !important",
-                            }
-                        }}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                    style={{ marginRight: 8 }}
-                                    checked={selected}
-                                />
-                                {titleCase(option)}
-                            </li>
-                        )}
-                        renderInput={(params) => <TextField {...params} label="Plant" fullWidth />}
-                    />
-                </FormControl>
+            <AccordionDetails
+                sx={{
+                    display: "flex",
+                    gap: "10px",
+                    justifyContent: "center"
+                }}
+            >
+                {
+                    !props.plantFiltered &&
+                    <FormControl fullWidth>
+                        <Autocomplete
+                            disableCloseOnSelect
+                            disablePortal
+                            multiple
+                            options={props.plants.map(pl => pl.personalName)}
+                            value={selectedFilteredEntitiyNames}
+                            onChange={(_event: any, newValue: readonly string[]) => {
+                                let selectedIds = props.plants.filter(pl => newValue.includes(pl.personalName)).map(pl => pl.id);
+                                props.setFilteredPlantIds(selectedIds);
+                                setSelectedFilteredEntitiyNames(Array.from(newValue));
+                            }}
+                            renderTags={(selected) => {
+                                let renderedValues = selected.join(", ");
+                                return (
+                                    <Typography
+                                        noWrap={true}
+                                        color="textPrimary"
+                                    >
+                                        {renderedValues}
+                                    </Typography>
+                                );
+                            }}
+                            sx={{
+                                ".MuiAutocomplete-inputRoot": {
+                                    flexWrap: "nowrap !important",
+                                }
+                            }}
+                            renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                    <Checkbox
+                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                        style={{ marginRight: 8 }}
+                                        checked={selected}
+                                    />
+                                    {titleCase(option)}
+                                </li>
+                            )}
+                            renderInput={(params) => <TextField {...params} label="Plant" fullWidth />}
+                        />
+                    </FormControl>
+                }
                 <FormControl fullWidth>
                     <Autocomplete
                         disableCloseOnSelect
@@ -161,7 +173,8 @@ export default function AllLogs(props: {
     plants: plant[],
     openEditEvent: (arg: diaryEntry) => void,
     printError: (err: any) => void,
-    active: boolean;
+    active: boolean,
+    filterByPlant?: plant;
 }) {
     const pageSize = 5;
     const [entities, setEntities] = useState<diaryEntry[]>([]);
@@ -258,6 +271,9 @@ export default function AllLogs(props: {
 
     useEffect(() => {
         setPageNo(0);
+        if (props.filterByPlant != undefined) {
+            setFilteredPlantId([props.filterByPlant.id]);
+        }
     }, []);
 
     const myRef = useRef<Element>();
@@ -275,6 +291,7 @@ export default function AllLogs(props: {
                     setFilteredPlantIds={setFilteredPlantId}
                     eventTypes={props.eventTypes}
                     setFilteredEventType={setFilteredEventType}
+                    plantFiltered={props.filterByPlant !== undefined}
                 />
 
                 {/*
