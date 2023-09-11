@@ -5,7 +5,7 @@ import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import Link from '@mui/material/Link';
 import { useEffect, useState } from "react";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { alpha } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Virtual, FreeMode } from "swiper";
@@ -14,7 +14,6 @@ import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
 import { getBotanicalInfoImg } from "../common";
-import ErrorDialog from "./ErrorDialog";
 
 function AllPlantLog(props: {
     requestor: AxiosInstance,
@@ -82,33 +81,20 @@ function Bottombar(props: {
     requestor: AxiosInstance,
     visible: boolean,
     entity?: plant,
-    addImageBase64: (arg: string) => void,
+    addUploadedImgs: (arg: number) => void,
     printError: (err: any) => void;
 }) {
     const addEntityImage = (toUpload: File): void => {
         let formData = new FormData();
         formData.append('image', toUpload);
         props.requestor.post(`/image/entity/${props.entity?.id}`, formData)
-            .then((_res) => {
-                fileToBase64(toUpload).then((base64: string) => {
-                    props.addImageBase64(base64);
-                });
+            .then((res) => {
+                props.addUploadedImgs(res.data);
             })
             .catch((err) => {
                 props.printError(err);
             });
     };
-
-    const fileToBase64 = (file: File | Blob): Promise<string> =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                resolve(reader.result as string);
-            };
-
-            reader.readAsDataURL(file);
-            reader.onerror = reject;
-        });
 
     return (
         <>
@@ -148,7 +134,7 @@ function Bottombar(props: {
                     sx={{
                         width: "45%",
                         borderRadius: "15px",
-                        backgroundColor: alpha("#efefef", .9),
+                        backgroundColor: alpha("#efefef", .9) + " !important",
                         padding: "15px",
                     }}
                     onClick={() => {
@@ -188,7 +174,8 @@ function ReadMoreReadLess(props: {
 function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    bufferUploadedImgsIds: number[],
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [checkedImages, setCheckedImages] = useState<boolean>(false);
@@ -261,12 +248,25 @@ function PlantHeader(props: {
                     onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
                 >
                     {
-                        imageIds.map((imgId, index) => {
+                        props.bufferUploadedImgsIds.map((imgId, index) => {
                             return <SwiperSlide key={`slide_${index}`}>
                                 <PlantImage
                                     imgId={imgId}
                                     key={index.toString()}
                                     active={index === activeIndex}
+                                    requestor={props.requestor}
+                                    printError={props.printError}
+                                />
+                            </SwiperSlide>;
+                        })
+                    }
+                    {
+                        imageIds.map((imgId, index) => {
+                            return <SwiperSlide key={`slide_${(index + props.bufferUploadedImgsIds.length)}`}>
+                                <PlantImage
+                                    imgId={imgId}
+                                    key={(index + props.bufferUploadedImgsIds.length).toString()}
+                                    active={(index + props.bufferUploadedImgsIds.length) === activeIndex}
                                     requestor={props.requestor}
                                     printError={props.printError}
                                 />
@@ -348,6 +348,11 @@ export default function PlantDetails(props: {
     printError: (err: any) => void;
 }) {
     const [selectedTab, setSelectedTab] = useState<number>(0);
+    const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<number[]>([]);
+
+    useEffect(() => {
+        setBufferedUploadedImgsIds([]);
+    }, [props.open]);
 
     return (
         <Drawer
@@ -379,6 +384,7 @@ export default function PlantDetails(props: {
                     requestor={props.requestor}
                     entity={props.entity}
                     printError={props.printError}
+                    bufferUploadedImgsIds={bufferUploadedImgsIds}
                 />
 
                 <Box sx={{
@@ -387,7 +393,11 @@ export default function PlantDetails(props: {
                     padding: "10px 0 70px 0",
                 }}>
 
-                    <Typography variant="h5" fontWeight={"bold"}>{props.entity?.personalName}</Typography>
+                    <Typography
+                        variant="h5"
+                        fontWeight={"bold"}>
+                        {props.entity?.personalName}
+                    </Typography>
 
                     <Tabs
                         value={selectedTab}
@@ -426,7 +436,8 @@ export default function PlantDetails(props: {
                     requestor={props.requestor}
                     visible={selectedTab === 0}
                     entity={props.entity}
-                    addImageBase64={(arg: string) => {
+                    addUploadedImgs={(arg: number) => {
+                        setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
                     }}
                     printError={props.printError}
                 />

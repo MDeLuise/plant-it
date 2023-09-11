@@ -14,7 +14,7 @@ import {
     TextField,
     alpha,
 } from "@mui/material";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import React, { useEffect, useState } from "react";
 import { diaryEntry, plant } from "../interfaces";
 import { titleCase } from "../common";
@@ -26,7 +26,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import ErrorDialog from "./ErrorDialog";
 
 
 function ConfirmDialog(props: {
