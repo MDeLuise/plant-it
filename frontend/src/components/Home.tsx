@@ -334,6 +334,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                             setEditEventVisible(true);
                         }}
                         printError={printError}
+                        active={activeTab == 1}
                     />
                 </Box>
 
@@ -350,7 +351,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         requestor={props.requestor}
                         visibility={activeTab === 3}
                         printError={printError}
-                    />
+                        />
                 </Box>
             </Box>
 
