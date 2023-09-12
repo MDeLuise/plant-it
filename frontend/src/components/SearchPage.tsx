@@ -27,7 +27,16 @@ function BotanicalEntity(props: {
                 setImgSrc(res);
             })
             .catch((err) => {
-                props.printError(err);
+                getBotanicalInfoImg(props.requestor, undefined)
+                    .then((res) => {
+                        console.error(err);
+                        setImageLoaded(true);
+                        setImgSrc(res);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        props.printError(`Cannot load image for botanical info "${props.entity.scientificName}"`);
+                    });
             });
     };
 
