@@ -53,3 +53,18 @@ export const getErrMessage = (err: any): string => {
     }
     return "Some error occurred";
 };
+
+
+export const imgToBase64 = (url: string, callback: (arg: string) => void): void => {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            callback((reader.result as string).replace("data:image/png;base64,", ""));
+        };
+        reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+};
