@@ -120,7 +120,7 @@ export default function EditEvent(props: {
         setSelectedPlantName(props.toEdit?.diaryTargetPersonalName);
         setSelectedEventType(props.toEdit?.type);
         setDate(dayjs(props.toEdit?.date));
-        setNote(props.toEdit?.note);
+        setNote(props.toEdit?.note !== null ? props.toEdit?.note : "");
         setEdit(false);
         setConfirmDialogCallback(() => deleteEvent);
     }, [props.toEdit]);
@@ -222,8 +222,8 @@ export default function EditEvent(props: {
                     </Box>
 
                     <Box sx={{ width: "100%" }}>
+                    <InputLabel>Note</InputLabel>
                         <TextField
-                            label="Note"
                             multiline
                             rows={4}
                             onChange={(event) => setNote(event.target.value)}
