@@ -14,26 +14,60 @@ import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
 import { getBotanicalInfoImg } from "../common";
+import { BsPersonPlus } from "react-icons/bs";
 
 function PlantImage(props: {
     imgId: string,
-    key: string,
     active: boolean,
     requestor: AxiosInstance,
+    imgKey: string,
     printError: (err: any) => void;
 }) {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [imgBase64, setImgBase64] = useState<string>();
 
-    useEffect(() => {
+    const imgToBase64 = (url: string, callback: (arg: any) => void): void => {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                callback(reader.result);
+            };
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    };
+
+    const getImgBase64 = (): void => {
         props.requestor.get(`/image/content/${props.imgId}`)
             .then((res) => {
                 setImgBase64(res.data);
+                setLoaded(true);
             })
             .catch((err) => {
                 props.printError(err);
+                getBotanicalInfoImg(props.requestor, undefined)
+                    .then((res) => {
+                        console.debug(res);
+                        imgToBase64(res, (arg: string) => {
+                            setImgBase64(arg.replace("data:image/png;base64,", ""));
+                            setLoaded(true);
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        props.printError(`Cannot load image with id ${props.imgId}`);
+                    });
             });
-    }, [props.imgId]);
+    };
+
+    useEffect(() => {
+        if (props.active) {
+            getImgBase64();
+        }
+    }, [props.active]);
 
     return (
         <>
@@ -50,16 +84,17 @@ function PlantImage(props: {
                 />
             }
             {
-                props.active && imgBase64 != undefined &&
+                props.active &&
                 <img
-                    key={props.key}
                     src={`data:image/png;base64,${imgBase64}`}
                     style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
+                        zIndex: "200",
                     }}
                     onLoad={() => { setLoaded(true); }}
+                    key={props.imgKey}
                     loading="lazy"
                 />
             }
@@ -173,6 +208,7 @@ function PlantHeader(props: {
     const [imageIds, setImageIds] = useState<string[]>([]);
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [imageSrc, setImageSrc] = useState<string>();
+    const [swiperInstance, setSwiperInstance] = useState<any>();
 
     useEffect(() => {
         props.requestor.get(`/image/entity/all/${props.entity?.id}`)
@@ -183,8 +219,18 @@ function PlantHeader(props: {
                             setImageSrc(res);
                             setCheckedImages(true);
                         })
-                        .catch((err) => {
-                            props.printError(err);
+                        .catch(err => {
+                            getBotanicalInfoImg(props.requestor, undefined)
+                                .then(res => {
+                                    console.error(err);
+                                    setImageSrc(res);
+                                    setCheckedImages(true);
+                                    props.printError(`Cannot load image for botanical info "${props.entity?.botanicalInfo.scientificName}"`);
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    props.printError("Cannot load default image");
+                                });
                         });
                     return;
                 }
@@ -195,6 +241,13 @@ function PlantHeader(props: {
                 props.printError(err);
             });
     }, [props.entity]);
+
+    useEffect(() => {
+        setActiveIndex(0);
+        if (swiperInstance != null && props.bufferUploadedImgsIds.length > 1) {
+            swiperInstance.slideTo(0);
+        }
+    }, [props.bufferUploadedImgsIds]);
 
     return (
         <Box sx={{
@@ -237,13 +290,14 @@ function PlantHeader(props: {
                         height: "100%",
                     }}
                     onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                    onSwiper={setSwiperInstance}
                 >
                     {
                         props.bufferUploadedImgsIds.map((imgId, index) => {
-                            return <SwiperSlide key={`slide_${index}`}>
+                            return <SwiperSlide key={`slide_${imgId}`}>
                                 <PlantImage
                                     imgId={imgId}
-                                    key={index.toString()}
+                                    imgKey={imgId}
                                     active={index === activeIndex}
                                     requestor={props.requestor}
                                     printError={props.printError}
@@ -253,10 +307,10 @@ function PlantHeader(props: {
                     }
                     {
                         imageIds.map((imgId, index) => {
-                            return <SwiperSlide key={`slide_${(index + props.bufferUploadedImgsIds.length)}`}>
+                            return <SwiperSlide key={`slide_${imgId}`}>
                                 <PlantImage
                                     imgId={imgId}
-                                    key={(index + props.bufferUploadedImgsIds.length).toString()}
+                                    imgKey={imgId}
                                     active={(index + props.bufferUploadedImgsIds.length) === activeIndex}
                                     requestor={props.requestor}
                                     printError={props.printError}

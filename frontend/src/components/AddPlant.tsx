@@ -240,6 +240,13 @@ export default function AddPlant(props: {
         setName();
     }, [props.entity, props.name, props.open]);
 
+    useEffect(() => {
+        setFamily(props.entity?.family != undefined ? props.entity?.family : "");
+        setFamily(props.entity?.genus != undefined ? props.entity?.genus : "");
+        setFamily(props.entity?.species != undefined ? props.entity?.species : "");
+
+    }, [props.entity]);
+
     return (
         <Drawer
             anchor={"bottom"}
@@ -387,7 +394,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     label="Family"
                     fullWidth
-                    value={props.entity?.family != undefined ? props.entity?.family : ""}
+                    value={family}
                     onChange={(event) => setFamily(event.target.value)}
                 />
                 <TextField
@@ -395,7 +402,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     fullWidth
                     label="Genus"
-                    value={props.entity?.genus != undefined ? props.entity?.genus : ""}
+                    value={genus}
                     onChange={(event) => setGenus(event.target.value)}
                 />
                 <TextField
@@ -403,7 +410,7 @@ export default function AddPlant(props: {
                     disabled={props.entity != undefined}
                     fullWidth
                     label="Species"
-                    value={props.entity?.species != undefined ? props.entity?.species : ""}
+                    value={species}
                     onChange={(event) => setSpecies(event.target.value)}
                 />
 
