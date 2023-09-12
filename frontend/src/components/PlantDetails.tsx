@@ -13,8 +13,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
-import { getBotanicalInfoImg } from "../common";
-import { BsPersonPlus } from "react-icons/bs";
+import { getBotanicalInfoImg, imgToBase64 } from "../common";
 
 function PlantImage(props: {
     imgId: string,
@@ -26,20 +25,6 @@ function PlantImage(props: {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [imgBase64, setImgBase64] = useState<string>();
 
-    const imgToBase64 = (url: string, callback: (arg: any) => void): void => {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            var reader = new FileReader();
-            reader.onloadend = function () {
-                callback(reader.result);
-            };
-            reader.readAsDataURL(xhr.response);
-        };
-        xhr.open('GET', url);
-        xhr.responseType = 'blob';
-        xhr.send();
-    };
-
     const getImgBase64 = (): void => {
         props.requestor.get(`/image/content/${props.imgId}`)
             .then((res) => {
@@ -50,9 +35,8 @@ function PlantImage(props: {
                 props.printError(err);
                 getBotanicalInfoImg(props.requestor, undefined)
                     .then((res) => {
-                        console.debug(res);
                         imgToBase64(res, (arg: string) => {
-                            setImgBase64(arg.replace("data:image/png;base64,", ""));
+                            setImgBase64(arg);
                             setLoaded(true);
                         });
                     })

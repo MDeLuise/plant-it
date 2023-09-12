@@ -6,6 +6,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import { getBotanicalInfoImg, imgToBase64 } from "../common";
 
 export default function AddPlant(props: {
     requestor: AxiosInstance,
@@ -34,7 +35,20 @@ export default function AddPlant(props: {
                 setDownloadedImg(res.data);
                 setImageDownloaded(true);
             })
-            .catch((err) => props.printError(err));
+            .catch((err) => {
+                getBotanicalInfoImg(props.requestor, undefined)
+                    .then((res) => {
+                        console.error(err);
+                        imgToBase64(res, (arg: string) => {
+                            setDownloadedImg(arg);
+                        });
+                        setImageDownloaded(true);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        props.printError(`Cannot load image with id ${props.entity?.imageId}`);
+                    });
+            });
     };
 
     const setAbsoluteImageUrl = (imageUrl: string | undefined, publicUrl: string): string => {
