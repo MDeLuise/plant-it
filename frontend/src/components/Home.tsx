@@ -1,7 +1,7 @@
 import { AxiosError, AxiosInstance } from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { Avatar, Box, InputAdornment, Link, OutlinedInput, Typography } from "@mui/material";
+import { Avatar, Box, InputAdornment, OutlinedInput, Typography } from "@mui/material";
 import { diaryEntry, plant } from "../interfaces";
 import UserPlant from "./UserPlant";
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
@@ -23,6 +23,7 @@ import EditEvent from "./EditEvent";
 import PlantDetails from "./PlantDetails";
 import { getErrMessage, isBackendReachable } from "../common";
 import ErrorDialog from "./ErrorDialog";
+import AddLogEntry from "./AddLogEntry";
 
 
 function UserTopBar(props: {}) {
@@ -153,13 +154,15 @@ function DiaryEntriesList(props: {
                 flexDirection: "column",
                 gap: "20px",
             }}>
-                {props.logEntries.slice(0, 5).map((entity) => {
-                    return <LogEntry
-                        entity={entity}
-                        key={entity.id}
-                        editEvent={() => props.editEvent(entity)}
-                    />;
-                })}
+                {
+                    props.logEntries.slice(0, 5).map((entity) => {
+                        return <LogEntry
+                            entity={entity}
+                            key={entity.id}
+                            editEvent={() => props.editEvent(entity)}
+                        />;
+                    })
+                }
             </Box>
         </Box>
     );
@@ -177,6 +180,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
     const [plantDetailsOpen, setPlantDetailsOpen] = useState<boolean>(false);
     const [plantDetails, setPlantDetails] = useState<plant>();
+    const [addDiaryLogOpen, setAddDiaryLogOpen] = useState<boolean>(false);
+    const [addDiaryForPlant, setAddDiaryForPlant] = useState<plant>();
+    const [filterEventLogByPlant, setFilterEventLogByPlant] = useState<plant>();
     const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
     const [errorDialogText, setErrorDialogText] = useState<string>();
 
@@ -267,6 +273,33 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         return <></>;
     }
 
+    const allLogsComponent: React.JSX.Element = <AllLogs
+        requestor={props.requestor}
+        entries={logEntries}
+        eventTypes={allEventTypes}
+        plants={plants}
+        openEditEvent={(arg: diaryEntry) => {
+            setEventToEdit(arg);
+            setEditEventVisible(true);
+        }}
+        printError={printError}
+        active={activeTab == 1}
+        filterByPlant={filterEventLogByPlant}
+    />;
+
+    const addLogEntryComponent: React.JSX.Element = <AddLogEntry
+        requestor={props.requestor}
+        eventTypes={allEventTypes}
+        plants={plants}
+        open={addDiaryLogOpen}
+        setOpen={setAddDiaryLogOpen}
+        updateLog={(arg: diaryEntry) => {
+            // https://www.digitalocean.com/community/tutorials/react-getting-atomic-updates-with-setstate
+            setLogEntries((prevState) => ([arg, ...prevState]));
+        }}
+        addForPlant={addDiaryForPlant}
+    />;
+
     return (
         <>
             <ErrorDialog
@@ -274,6 +307,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 open={errorDialogShown}
                 close={() => setErrorDialogShown(false)}
             />
+
+            {addLogEntryComponent}
 
             <EditEvent
                 requestor={props.requestor}
@@ -298,6 +333,12 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 entity={plantDetails}
                 requestor={props.requestor}
                 printError={printError}
+                allLogsComponent={allLogsComponent}
+                filterByPlant={(arg?: plant) => {
+                    setFilterEventLogByPlant(arg);
+                    setAddDiaryForPlant(arg);
+                }}
+                openAddLogEntry={() => setAddDiaryLogOpen(true)}
             />
 
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
@@ -320,22 +361,12 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         editEvent={(arg: diaryEntry) => {
                             setEditEventVisible(true);
                             setEventToEdit(arg);
-                        }} />
+                        }}
+                    />
                 </Box>
 
                 <Box sx={{ display: activeTab === 1 ? "visible" : "none" }}>
-                    <AllLogs
-                        requestor={props.requestor}
-                        entries={logEntries}
-                        eventTypes={allEventTypes}
-                        plants={plants}
-                        openEditEvent={(arg: diaryEntry) => {
-                            setEventToEdit(arg);
-                            setEditEventVisible(true);
-                        }}
-                        printError={printError}
-                        active={activeTab == 1}
-                    />
+                    {allLogsComponent}
                 </Box>
 
                 <Box sx={{ display: activeTab === 2 ? "visible" : "none" }}>
@@ -351,7 +382,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         requestor={props.requestor}
                         visibility={activeTab === 3}
                         printError={printError}
-                        />
+                    />
                 </Box>
             </Box>
 
@@ -359,13 +390,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 requestor={props.requestor}
-                plants={plants}
-                eventTypes={allEventTypes}
-                updateLogEntries={(arg: diaryEntry) => {
-                    // https://www.digitalocean.com/community/tutorials/react-getting-atomic-updates-with-setstate
-                    setLogEntries((prevState) => ([arg, ...prevState]));
-                }}
-            ></BottomBar>
+                openAddLogEntry={() => setAddDiaryLogOpen(true)}
+            />
         </>
     );
 }

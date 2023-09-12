@@ -4,7 +4,7 @@ import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutl
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import Link from '@mui/material/Link';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { alpha } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,17 +14,6 @@ import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
 import { getBotanicalInfoImg } from "../common";
-
-function AllPlantLog(props: {
-    requestor: AxiosInstance,
-
-}) {
-    return (
-        <>
-        </>
-    );
-};
-
 
 function PlantImage(props: {
     imgId: number,
@@ -82,7 +71,8 @@ function Bottombar(props: {
     visible: boolean,
     entity?: plant,
     addUploadedImgs: (arg: number) => void,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    openAddLogEntry: () => void;
 }) {
     const addEntityImage = (toUpload: File): void => {
         let formData = new FormData();
@@ -127,6 +117,7 @@ function Bottombar(props: {
                         padding: "15px",
                     }}
                     startIcon={<EventOutlinedIcon />}
+                    onClick={props.openAddLogEntry}
                 >
                     Add event
                 </Button>
@@ -275,8 +266,6 @@ function PlantHeader(props: {
                     }
                 </Swiper>
             }
-
-
         </Box>
     );
 }
@@ -285,11 +274,11 @@ function PlantOverview(props: {
     entity?: plant,
     visible: boolean;
 }) {
+
     return (
         <Box
             sx={{
-                visibility: props.visible ? "visible" : "hidden",
-                display: "flex",
+                display: props.visible ? "flex" : "none",
                 flexDirection: "column",
                 gap: "20px",
                 marginTop: "20px",
@@ -345,20 +334,29 @@ export default function PlantDetails(props: {
     close: () => void;
     entity?: plant,
     requestor: AxiosInstance,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    allLogsComponent: React.JSX.Element,
+    filterByPlant: (arg?: plant) => void;
+    openAddLogEntry: () => void,
 }) {
     const [selectedTab, setSelectedTab] = useState<number>(0);
     const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<number[]>([]);
 
     useEffect(() => {
         setBufferedUploadedImgsIds([]);
+        if (props.open) {
+            props.filterByPlant(props.entity);
+        }
     }, [props.open]);
 
     return (
         <Drawer
             anchor={"bottom"}
             open={props.open}
-            onClose={props.close}
+            onClose={() => {
+                props.filterByPlant(undefined);
+                props.close();
+            }}
         >
 
             <Box
@@ -372,7 +370,10 @@ export default function PlantDetails(props: {
                     zIndex: 2,
                     padding: "5px",
                 }}
-                onClick={props.close}
+                onClick={() => {
+                    props.filterByPlant(undefined);
+                    props.close();
+                }}
             >
                 <ArrowBackIosNewOutlinedIcon />
             </Box>
@@ -430,7 +431,21 @@ export default function PlantDetails(props: {
                         <Tab label="Events" />
                     </Tabs>
 
-                    <PlantOverview entity={props.entity} visible={selectedTab === 0} />
+                    <PlantOverview
+                        entity={props.entity}
+                        visible={selectedTab === 0}
+                    />
+
+                    <Box sx={{
+                        display: selectedTab === 1 ? "initial" : "none",
+                    }}>
+                        {
+                            React.cloneElement(props.allLogsComponent, {
+                                filterByPlant: props.entity,
+                                active: selectedTab === 1,
+                            })
+                        }
+                    </Box>
                 </Box>
                 <Bottombar
                     requestor={props.requestor}
@@ -440,6 +455,7 @@ export default function PlantDetails(props: {
                         setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
                     }}
                     printError={props.printError}
+                    openAddLogEntry={props.openAddLogEntry}
                 />
             </Box>
         </Drawer>

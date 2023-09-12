@@ -10,7 +10,7 @@ import {
     useTheme,
 } from "@mui/material";
 import { AxiosError, AxiosInstance } from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { diaryEntry, plant } from "../interfaces";
 import { GrClose } from "react-icons/gr";
 import { titleCase } from "../common";
@@ -29,6 +29,7 @@ export default function AddLogEntry(props: {
     open: boolean,
     setOpen: (arg: boolean) => void,
     updateLog: (arg: diaryEntry) => void,
+    addForPlant?: plant;
 }) {
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
@@ -114,6 +115,15 @@ export default function AddLogEntry(props: {
         props.setOpen(false);
     };
 
+
+    useEffect(() => {
+        if (props.addForPlant != undefined) {
+            setSelectedPlantName([props.addForPlant?.personalName]);
+        } else {
+            setSelectedPlantName([]);
+        }
+    }, [props.addForPlant, props.open]);
+
     return (
         <Drawer
             anchor={"bottom"}
@@ -154,6 +164,7 @@ export default function AddLogEntry(props: {
                         disablePortal
                         multiple
                         options={props.plants.map(pl => pl.personalName)}
+                        disabled={props.addForPlant != undefined}
                         value={selectedPlantName}
                         onChange={(_event: any, newValue: readonly string[]) => changePlantName(newValue)}
                         fullWidth
@@ -162,7 +173,7 @@ export default function AddLogEntry(props: {
                             return (
                                 <Typography
                                     noWrap={true}
-                                    color="textPrimary"
+                                    color={props.addForPlant === undefined ? "textPrimary" : "text.disabled"}
                                 >
                                     {renderedValues}
                                 </Typography>
