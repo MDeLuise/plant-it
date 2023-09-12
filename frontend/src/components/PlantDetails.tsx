@@ -16,7 +16,7 @@ import "swiper/css/free-mode";
 import { getBotanicalInfoImg } from "../common";
 
 function PlantImage(props: {
-    imgId: number,
+    imgId: string,
     key: string,
     active: boolean,
     requestor: AxiosInstance,
@@ -70,7 +70,7 @@ function Bottombar(props: {
     requestor: AxiosInstance,
     visible: boolean,
     entity?: plant,
-    addUploadedImgs: (arg: number) => void,
+    addUploadedImgs: (arg: string) => void,
     printError: (err: any) => void,
     openAddLogEntry: () => void;
 }) {
@@ -166,11 +166,11 @@ function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
     printError: (err: any) => void,
-    bufferUploadedImgsIds: number[],
+    bufferUploadedImgsIds: string[],
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [checkedImages, setCheckedImages] = useState<boolean>(false);
-    const [imageIds, setImageIds] = useState<number[]>([]);
+    const [imageIds, setImageIds] = useState<string[]>([]);
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [imageSrc, setImageSrc] = useState<string>();
 
@@ -213,7 +213,7 @@ function PlantHeader(props: {
                 />
             }
             {
-                imageIds.length === 0 && checkedImages &&
+                (imageIds.length + props.bufferUploadedImgsIds.length) === 0 && checkedImages &&
                 <img
                     src={imageSrc}
                     style={{
@@ -340,7 +340,7 @@ export default function PlantDetails(props: {
     openAddLogEntry: () => void,
 }) {
     const [selectedTab, setSelectedTab] = useState<number>(0);
-    const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<number[]>([]);
+    const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<string[]>([]);
 
     useEffect(() => {
         setBufferedUploadedImgsIds([]);
@@ -451,7 +451,7 @@ export default function PlantDetails(props: {
                     requestor={props.requestor}
                     visible={selectedTab === 0}
                     entity={props.entity}
-                    addUploadedImgs={(arg: number) => {
+                    addUploadedImgs={(arg: string) => {
                         setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
                     }}
                     printError={props.printError}
