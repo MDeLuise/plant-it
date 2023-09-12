@@ -4,12 +4,6 @@ Before you create a new PR, please consider:
 Thanks.
 -->
 
+This PR ...
+
 Fixes issue # (if relevant)
-
-Changes in this pull request:
-
-- 
-- 
-- 
-
-

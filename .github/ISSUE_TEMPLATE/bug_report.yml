@@ -33,6 +33,12 @@ body:
         3. ...
     validations:
       required: false
+  
+  - type: textarea
+    attributes:
+      label: Local environment
+      description: Please provide additional information related to the environment you are using.
+      placeholder: Are you using docker deployment or not? Which version (images versions / last commit)? etc...
 
   - type: textarea
     attributes:
