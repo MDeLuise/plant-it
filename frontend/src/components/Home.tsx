@@ -239,7 +239,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const getDiaryEvents = (): void => {
         props.requestor.get("diary/entry/type")
             .then((res) => {
-                setAllEventTypes(res.data);
+                setAllEventTypes(res.data.sort());
             })
             .catch((err) => {
                 printError(err);
