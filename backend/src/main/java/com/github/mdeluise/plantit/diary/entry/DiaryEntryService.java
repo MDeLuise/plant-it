@@ -1,5 +1,8 @@
 package com.github.mdeluise.plantit.diary.entry;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.diary.DiaryService;
@@ -10,9 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class DiaryEntryService {
@@ -35,7 +35,7 @@ public class DiaryEntryService {
             return diaryEntryRepository.findAllByDiaryOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
         }
 
-        final Pageable pageableToUse = PageRequest.of(0, count().intValue(), pageable.getSort());
+        final Pageable pageableToUse = PageRequest.of(0, Math.max(1, count().intValue()), pageable.getSort());
         final List<DiaryEntry> filteredResult =
             diaryEntryRepository.findAllByDiaryOwner(
                 authenticatedUserService.getAuthenticatedUser(), pageableToUse).stream()
