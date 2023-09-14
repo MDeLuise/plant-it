@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
+    <!-- updated in v1-0-0.xml file -->
     <changeSet id="createUserTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -210,6 +211,5 @@
             </column>
         </createTable>
     </changeSet>
-
 
 </databaseChangeLog>

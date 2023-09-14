@@ -1,5 +1,10 @@
 package com.github.mdeluise.plantit.authentication;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
@@ -15,12 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import org.hibernate.validator.constraints.Length;
 
 @Entity(name = "user")
 @Table(name = "application_users")
@@ -30,10 +30,10 @@ public class User implements Serializable {
     private Long id;
     @Column(unique = true)
     @NotEmpty
-    @Size(min = 3, max = 20)
+    @Length(min = 3, max = 20)
     private String username;
     @NotEmpty
-    @Size(min = 8, max = 120)
+    @Length(min = 8, max = 120)
     @JsonProperty
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

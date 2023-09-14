@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="addMissingUsernameUniqueConstraint" author="MDeLuise">
+        <addUniqueConstraint
+                columnNames="username"
+                constraintName="username_unique"
+                tableName="application_users"
+        />
+    </changeSet>
+
+    <changeSet id="updateUsernameAndPasswordColumnsLengths" author="MDeLuise">
+        <modifyDataType
+                tableName="application_users"
+                columnName="username"
+                newDataType="varchar(20)"
+        />
+        <modifyDataType
+                tableName="application_users"
+                columnName="password"
+                newDataType="varchar(120)"
+        />
+    </changeSet>
+
+</databaseChangeLog>
