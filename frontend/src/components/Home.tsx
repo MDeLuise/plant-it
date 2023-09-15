@@ -138,17 +138,14 @@ function DiaryEntriesList(props: {
 
     return (
         <Box sx={{ marginTop: "20px" }}>
-            <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                margin: "10px 0"
-            }}>
-                <Typography variant="body1" style={{ fontWeight: 600 }}>Your diary</Typography>
-                {/* <Box sx={{ flexGrow: 1 }}></Box>
-                <Typography variant="body1" mx={.5}><Link href="#">All</Link></Typography>
-                <Typography variant="body1" mx={.5}><Link href="#">Add</Link></Typography> */}
-            </Box>
-
+            <Typography
+                variant="body1"
+                style={{
+                    fontWeight: 600,
+                    marginBottom: "10px"
+                }}>
+                Your diary
+            </Typography>
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -171,15 +168,14 @@ function DiaryEntriesList(props: {
 
 export default function Home(props: { isLoggedIn: () => boolean, requestor: AxiosInstance; }) {
     let navigate: NavigateFunction = useNavigate();
-    const [plants, setplants] = useState<plant[]>([]);
+    const [plants, setPlants] = useState<plant[]>([]);
     const [logEntries, setLogEntries] = useState<diaryEntry[]>([]);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [allEventTypes, setAllEventTypes] = useState<string[]>([]);
     const logPageSize = 5;
     const [editEventVisible, setEditEventVisible] = useState<boolean>(false);
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
-    const [plantDetailsOpen, setPlantDetailsOpen] = useState<boolean>(false);
-    const [plantDetails, setPlantDetails] = useState<plant>();
+    const [plantDetails, setPlantDetails] = useState<{ plant?: plant, open: boolean; }>({ open: false });
     const [addDiaryLogOpen, setAddDiaryLogOpen] = useState<boolean>(false);
     const [addDiaryForPlant, setAddDiaryForPlant] = useState<plant>();
     const [filterEventLogByPlant, setFilterEventLogByPlant] = useState<plant>();
@@ -204,7 +200,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 res.data.content.forEach((en: plant) => {
                     newEntities.push(en);
                 });
-                setplants(newEntities);
+                setPlants(newEntities);
             })
             .catch((err) => {
                 printError(err);
@@ -250,6 +246,46 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const printError = (err: any) => {
         setErrorDialogText(getErrMessage(err));
         setErrorDialogShown(true);
+    };
+
+
+    const updatePlantFetchedCopy = (updated: plant) => {
+        const indexToUpdate: number = plants.map(pl => pl.id).indexOf(updated.id);
+        //plants[indexToUpdate] = updated;
+        const updatedPlants = [...plants];
+        updatedPlants[indexToUpdate] = updated;
+        setPlants(updatedPlants);
+    };
+
+
+    const deletePlantFetchedCopy = (deleted?: plant) => {
+        if (deleted === undefined) {
+            return;
+        }
+        const indexToRemove: number = plants.map(pl => pl.id).indexOf(deleted.id);
+        const updatedPlants = [...plants];
+        updatedPlants.splice(indexToRemove, 1);
+        setPlants(updatedPlants);
+    };
+
+
+    const updateEventFetchedCopy = (updatedPlant: plant) => {
+        const newLogEntries: diaryEntry[] = [...logEntries];
+        newLogEntries.forEach(event => {
+            if (event.diaryTargetId === updatedPlant.id) {
+                event.diaryTargetPersonalName = updatedPlant.personalName;
+            }
+        });
+        setLogEntries(newLogEntries);
+    };
+
+
+    const deleteEventFetchedCopy = (deletedPlant?: plant) => {
+        if (deletedPlant === undefined) {
+            return;
+        }
+        const newLogEntries: diaryEntry[] = logEntries.filter((ev) => ev.diaryTargetId !== deletedPlant.id);
+        setLogEntries(newLogEntries);
     };
 
     useEffect(() => {
@@ -328,9 +364,9 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             />
 
             <PlantDetails
-                open={plantDetailsOpen}
-                close={() => setPlantDetailsOpen(false)}
-                entity={plantDetails}
+                open={plantDetails.open}
+                close={() => setPlantDetails({ plant: undefined, open: false })}
+                entity={plantDetails.plant}
                 requestor={props.requestor}
                 printError={printError}
                 allLogsComponent={allLogsComponent}
@@ -339,6 +375,14 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     setAddDiaryForPlant(arg);
                 }}
                 openAddLogEntry={() => setAddDiaryLogOpen(true)}
+                updatePlant={updated => {
+                    updatePlantFetchedCopy(updated);
+                    updateEventFetchedCopy(updated);
+                }}
+                onDelete={deleted => {
+                    deletePlantFetchedCopy(deleted);
+                    deleteEventFetchedCopy(deleted);
+                }}
             />
 
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
@@ -350,8 +394,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         requestor={props.requestor}
                         plants={plants}
                         gotoDetails={(arg: plant) => {
-                            setPlantDetails(arg);
-                            setPlantDetailsOpen(true);
+                            setPlantDetails({ plant: arg, open: true });
                         }}
                         printError={printError}
                     />

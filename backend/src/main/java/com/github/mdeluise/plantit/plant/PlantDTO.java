@@ -1,9 +1,9 @@
 package com.github.mdeluise.plantit.plant;
 
+import java.util.Date;
+
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.Date;
 
 public class PlantDTO {
     @Schema(description = "ID of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -20,16 +20,12 @@ public class PlantDTO {
     private String note;
     @Schema(description = "Owner ID of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long ownerId;
-    @Schema(description = "Type of the plant.")
-    private String type;
     @Schema(description = "ID of the plant's thumbnail.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long thumbnailImageId;
     @Schema(description = "ID of the plant's diary.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryId;
     @Schema(description = "Botanical info ID of the plant.")
     private BotanicalInfoDTO botanicalInfo;
-    @Schema(description = "Arrangement ID of the plant.")
-    private Long arrangementId;
 
 
     public PlantDTO() {
@@ -106,16 +102,6 @@ public class PlantDTO {
     }
 
 
-    public String getType() {
-        return type;
-    }
-
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-
     public Long getThumbnailImageId() {
         return thumbnailImageId;
     }
@@ -143,15 +129,5 @@ public class PlantDTO {
 
     public void setBotanicalInfo(BotanicalInfoDTO botanicalInfo) {
         this.botanicalInfo = botanicalInfo;
-    }
-
-
-    public Long getArrangementId() {
-        return arrangementId;
-    }
-
-
-    public void setArrangementId(Long arrangementId) {
-        this.arrangementId = arrangementId;
     }
 }

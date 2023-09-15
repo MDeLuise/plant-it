@@ -10,7 +10,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 @DiscriminatorValue("1")
 public class BotanicalInfoImage extends EntityImageImpl {
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "botanical_info_entity_id")
     private BotanicalInfo target;
 

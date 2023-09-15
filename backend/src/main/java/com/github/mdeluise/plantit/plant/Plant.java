@@ -1,5 +1,10 @@
 package com.github.mdeluise.plantit.plant;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.diary.Diary;
@@ -20,11 +25,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "plants")
@@ -48,11 +48,11 @@ public class Plant implements Serializable, ImageTarget {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "botanical_name_id", nullable = false)
     private BotanicalInfo botanicalInfo;
     @NotNull
-    @OneToMany(mappedBy = "target")
+    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
     private Set<PlantImage> images = new HashSet<>();
 
 

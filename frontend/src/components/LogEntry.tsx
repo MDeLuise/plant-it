@@ -66,23 +66,31 @@ export default function LogEntry(props: {
             onClick={props.editEvent}
         >
             <Box sx={{
-
                 width: "fit-content",
                 height: "fit-content",
                 borderRadius: "50%",
                 padding: "10px",
                 color: "white"
             }}>
-                {getTypeIcon(props.entity.type)}
+                {
+                    getTypeIcon(props.entity.type)
+                }
             </Box>
             <Box>
-                <Typography>{new Date(props.entity.date).toLocaleString()}</Typography>
-                <Typography style={{ fontWeight: 500 }}>{props.entity.diaryTargetPersonalName}</Typography>
+                <Typography>
+                    {
+                        new Date(props.entity.date).toLocaleString()
+                    }
+                </Typography>
+                <Typography style={{ fontWeight: 500 }}>
+                    {
+                        props.entity.diaryTargetPersonalName
+                    }
+                </Typography>
             </Box>
             <Box sx={{ flexGrow: 1, textAlign: "end" }}>
                 <KeyboardArrowRightIcon />
             </Box>
-
         </Box>
     );
 }

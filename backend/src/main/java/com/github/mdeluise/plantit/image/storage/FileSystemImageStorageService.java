@@ -1,5 +1,13 @@
 package com.github.mdeluise.plantit.image.storage;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collection;
+
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -18,14 +26,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
 
 @Service
 @SuppressWarnings("ClassDataAbstractionCoupling") // FIXME
@@ -124,12 +124,14 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Override
     public void remove(String id) {
         final String entityImagePath = get(id).getPath();
-        final File toRemove = new File(entityImagePath);
-        if (!toRemove.exists() || !toRemove.canRead()) {
-            throw new StorageFileNotFoundException("Could not read image with id: " + id);
-        }
-        if (!toRemove.delete()) {
-            throw new StorageException("Could not remove image with id " + id);
+        if (entityImagePath != null) {
+            final File toRemove = new File(entityImagePath);
+            if (!toRemove.exists() || !toRemove.canRead()) {
+                throw new StorageFileNotFoundException("Could not read image with id: " + id);
+            }
+            if (!toRemove.delete()) {
+                throw new StorageException("Could not remove image with id " + id);
+            }
         }
         imageRepository.deleteById(id);
     }

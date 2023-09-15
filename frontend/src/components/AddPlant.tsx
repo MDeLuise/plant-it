@@ -45,7 +45,7 @@ export default function AddPlant(props: {
                         setImageDownloaded(true);
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                         props.printError(`Cannot load image with id ${props.entity?.imageId}`);
                     });
             });
@@ -145,14 +145,14 @@ export default function AddPlant(props: {
             botanicalInfo: props.entity!,
             personalName: plantName!,
             state: "ALIVE",
-            startDate: useDate ? date : undefined,
+            startDate: useDate ? date : null,
         })
             .then((res) => {
                 props.setOpen(false);
                 let insertHere = props.plants.findIndex((pl) => {
                     return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
                 });
-                insertHere = Math.max(0, insertHere);
+                insertHere = insertHere === -1 ? props.plants.length : insertHere;
                 props.plants.splice(insertHere, 0, res);
                 props.entity!.id = res.botanicalInfo.id;
                 setName();
@@ -165,7 +165,7 @@ export default function AddPlant(props: {
 
     const addPlantNewBotanicalInfo = (): void => {
         let botanicalInfoToUse = {
-            scientificName: plantName,
+            scientificName: species != "" ? species : plantName,
             family: family,
             genus: genus,
             species: species != "" ? species : plantName,
@@ -175,7 +175,7 @@ export default function AddPlant(props: {
             botanicalInfo: botanicalInfoToUse,
             personalName: plantName,
             state: "ALIVE",
-            startDate: useDate ? date : undefined,
+            startDate: useDate ? date : null,
         };
         addNewPlant(plantToAdd)
             .then((res) => {
@@ -189,7 +189,7 @@ export default function AddPlant(props: {
                             let insertHere = props.plants.findIndex((pl) => {
                                 return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
                             });
-                            insertHere = Math.max(0, insertHere);
+                            insertHere = insertHere === -1 ? props.plants.length : insertHere;
                             props.plants.splice(insertHere, 0, res);
                             setName();
                             cleanup();
@@ -202,7 +202,7 @@ export default function AddPlant(props: {
                     let insertHere = props.plants.findIndex((pl) => {
                         return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
                     });
-                    insertHere = Math.max(0, insertHere);
+                    insertHere = insertHere === -1 ? props.plants.length : insertHere;
                     props.plants.splice(insertHere, 0, res);
                     setName();
                     cleanup();

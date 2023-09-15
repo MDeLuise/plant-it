@@ -294,17 +294,12 @@ export default function AllLogs(props: {
                     plantFiltered={props.filterByPlant !== undefined}
                 />
 
-                {/*
-                  * FIXME: If page refresh and immediately click on "calendar icon",
-                  * then mess with diary log entries order
-                */}
-
                 {
                     entities.map((entity, index) => {
                         return <LogEntry
                             entity={entity}
                             last={index == entities.length - 1}
-                            key={index}
+                            key={entity.id}
                             lastRef={myRef}
                             editEvent={() => props.openEditEvent(entity)}
                         />;

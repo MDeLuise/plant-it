@@ -201,7 +201,7 @@ export default function SearchPage(props: {
                 });
                 setBotanicalInfos(newBotanicalInfos);
             }))
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             })
             .finally(() => setLoading(false));
@@ -209,7 +209,7 @@ export default function SearchPage(props: {
 
     useEffect(() => {
         retrieveBotanicalInfos();
-    }, [scientificName]);
+    }, [scientificName, props.plants]);
 
     return (
         <Box>

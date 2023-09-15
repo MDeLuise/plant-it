@@ -3,7 +3,7 @@ export interface botanicalInfo {
     scientificName: string,
     family: string,
     genus: string,
-    species?: string,
+    species: string,
     imageUrl?: string,
     imageId?: string,
     systemWide: boolean,
