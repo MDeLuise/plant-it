@@ -18,6 +18,8 @@ services:
     image: mysql:8.0
     restart: always
     env_file: backend.env
+    volumes:
+      - "./db:/var/lib/mysql"
 
   cache:
     image: redis:7.2.1
