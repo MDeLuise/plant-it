@@ -138,16 +138,14 @@ export default function AddPlant(props: {
             .catch((err) => {
                 props.printError(err);
             });
-
     };
 
     const addPlantOldBotanicalInfo = (): void => {
         addNewPlant({
             botanicalInfo: props.entity!,
             personalName: plantName!,
-            type: "PLANT",
-            state: "PURCHASED",
-            startDate: date!,
+            state: "ALIVE",
+            startDate: useDate ? date : undefined,
         })
             .then((res) => {
                 props.setOpen(false);
@@ -176,9 +174,8 @@ export default function AddPlant(props: {
         let plantToAdd = {
             botanicalInfo: botanicalInfoToUse,
             personalName: plantName,
-            type: "PLANT",
-            state: "PURCHASED",
-            startDate: date,
+            state: "ALIVE",
+            startDate: useDate ? date : undefined,
         };
         addNewPlant(plantToAdd)
             .then((res) => {
@@ -256,9 +253,8 @@ export default function AddPlant(props: {
 
     useEffect(() => {
         setFamily(props.entity?.family != undefined ? props.entity?.family : "");
-        setFamily(props.entity?.genus != undefined ? props.entity?.genus : "");
-        setFamily(props.entity?.species != undefined ? props.entity?.species : "");
-
+        setGenus(props.entity?.genus != undefined ? props.entity?.genus : "");
+        setSpecies(props.entity?.species != undefined ? props.entity?.species : "");
     }, [props.entity]);
 
     return (
