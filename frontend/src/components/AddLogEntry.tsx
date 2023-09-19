@@ -74,6 +74,7 @@ export default function AddLogEntry(props: {
                 })
                     .then((res) => {
                         res.data.diaryTargetPersonalName = plantId; // TODO should not be necessary but backend problem
+                        res.data.diaryTargetId = props.plants.filter((en) => en.personalName === plantId)[0].id;
                         props.updateLog(res.data);
                         closeDrawer();
                     })

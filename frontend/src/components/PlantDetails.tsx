@@ -3,6 +3,7 @@ import { plant } from "../interfaces";
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import Link from '@mui/material/Link';
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
@@ -14,6 +15,7 @@ import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
 import { getBotanicalInfoImg, imgToBase64 } from "../common";
+import EditPlant from "./EditPlant";
 
 function PlantImage(props: {
     imgId: string,
@@ -41,7 +43,7 @@ function PlantImage(props: {
                         });
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                         props.printError(`Cannot load image with id ${props.imgId}`);
                     });
             });
@@ -185,7 +187,7 @@ function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
     printError: (err: any) => void,
-    bufferUploadedImgsIds: string[],
+    bufferUploadedImgsIds: string[];
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [checkedImages, setCheckedImages] = useState<boolean>(false);
@@ -195,6 +197,10 @@ function PlantHeader(props: {
     const [swiperInstance, setSwiperInstance] = useState<any>();
 
     useEffect(() => {
+        if (props.entity === undefined) {
+            return;
+        }
+
         props.requestor.get(`/image/entity/all/${props.entity?.id}`)
             .then((res) => {
                 if (res.data.length === 0) {
@@ -250,7 +256,8 @@ function PlantHeader(props: {
                 />
             }
             {
-                (imageIds.length + props.bufferUploadedImgsIds.length) === 0 && checkedImages &&
+                (imageIds.length + props.bufferUploadedImgsIds.length) === 0 &&
+                checkedImages &&
                 <img
                     src={imageSrc}
                     style={{
@@ -333,7 +340,7 @@ function PlantOverview(props: {
                     <Typography variant="body1" fontWeight={"bold"}>Family</Typography>
                     <Typography variant="body2">
                         {props.entity?.botanicalInfo.family != undefined ?
-                            props.entity?.botanicalInfo.family : "-"}
+                            props.entity.botanicalInfo.family : "-"}
                     </Typography>
                 </Box>
                 <Box sx={{ borderRight: "1px solid grey" }} />
@@ -341,7 +348,7 @@ function PlantOverview(props: {
                     <Typography variant="body1" fontWeight={"bold"}>Genus</Typography>
                     <Typography variant="body2">
                         {props.entity?.botanicalInfo.genus != undefined ?
-                            props.entity?.botanicalInfo.genus : "-"}
+                            props.entity.botanicalInfo.genus : "-"}
                     </Typography>
                 </Box>
                 <Box sx={{ borderRight: "1px solid grey" }} />
@@ -359,7 +366,7 @@ function PlantOverview(props: {
                     Note
                 </Typography>
                 <ReadMoreReadLess
-                    text={props.entity?.note != undefined ? props.entity?.note : "-"}
+                    text={props.entity?.note != undefined ? props.entity.note : "-"}
                     size={150}
                 />
             </Box>
@@ -369,16 +376,30 @@ function PlantOverview(props: {
 
 export default function PlantDetails(props: {
     open: boolean,
-    close: () => void;
+    close: () => void,
     entity?: plant,
     requestor: AxiosInstance,
     printError: (err: any) => void,
     allLogsComponent: React.JSX.Element,
-    filterByPlant: (arg?: plant) => void;
+    filterByPlant: (arg?: plant) => void,
     openAddLogEntry: () => void,
+    updatePlant: (arg: plant) => void,
+    onDelete: (arg?: plant) => void;
 }) {
     const [selectedTab, setSelectedTab] = useState<number>(0);
     const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<string[]>([]);
+    const [editPlantOpen, setEditPlantOpen] = useState<boolean>(false);
+    const [updatedEntity, setUpdatedEntity] = useState<plant>();
+    const [entityToRender, setEntityToRender] = useState<plant>();
+
+    useEffect(() => {
+        if (updatedEntity === undefined) {
+            setEntityToRender(props.entity);
+            return;
+        }
+        setEntityToRender(updatedEntity?.id === props.entity?.id ? updatedEntity : props.entity);
+    }, [props.entity, updatedEntity]);
+
 
     useEffect(() => {
         setBufferedUploadedImgsIds([]);
@@ -386,6 +407,7 @@ export default function PlantDetails(props: {
             props.filterByPlant(props.entity);
         }
     }, [props.open]);
+
 
     return (
         <Drawer
@@ -397,23 +419,62 @@ export default function PlantDetails(props: {
             }}
         >
 
+            <EditPlant
+                open={editPlantOpen}
+                close={() => setEditPlantOpen(false)}
+                requestor={props.requestor}
+                plant={props.entity}
+                printError={props.printError}
+                updatePlant={(arg: plant) => {
+                    props.updatePlant(arg);
+                    setUpdatedEntity(arg);
+                }}
+                onDelete={(arg?: plant) => {
+                    props.onDelete(arg);
+                    props.close();
+                }}
+            />
+
             <Box
                 sx={{
                     position: "fixed",
                     top: "10px",
-                    left: "10px",
-                    backdropFilter: "blur(10px)",
-                    color: "white",
-                    borderRadius: "50%",
+                    left: "0",
                     zIndex: 2,
-                    padding: "5px",
-                }}
-                onClick={() => {
-                    props.filterByPlant(undefined);
-                    props.close();
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0 15px",
                 }}
             >
-                <ArrowBackIosNewOutlinedIcon />
+                <ArrowBackIosNewOutlinedIcon
+                    sx={{
+                        backdropFilter: "blur(50px)",
+                        color: "white",
+                        borderRadius: "10px",
+                        padding: "5px",
+                        backgroundColor: "rgba(32, 32, 32, .5)",
+                    }}
+                    fontSize="large"
+                    onClick={() => {
+                        props.filterByPlant(undefined);
+                        props.close();
+                    }}
+                />
+                <EditIcon
+                    sx={{
+                        backdropFilter: "blur(50px)",
+                        color: "white",
+                        borderRadius: "10px",
+                        padding: "5px",
+                        backgroundColor: "rgba(32, 32, 32, .5)",
+                    }}
+                    fontSize="large"
+                    onClick={() => {
+                        setEditPlantOpen(true);
+                    }}
+                />
             </Box>
 
             <Box sx={{
@@ -421,7 +482,7 @@ export default function PlantDetails(props: {
             }}>
                 <PlantHeader
                     requestor={props.requestor}
-                    entity={props.entity}
+                    entity={entityToRender}
                     printError={props.printError}
                     bufferUploadedImgsIds={bufferUploadedImgsIds}
                 />
@@ -435,7 +496,9 @@ export default function PlantDetails(props: {
                     <Typography
                         variant="h5"
                         fontWeight={"bold"}>
-                        {props.entity?.personalName}
+                        {
+                            entityToRender?.personalName
+                        }
                     </Typography>
 
                     <Tabs
@@ -470,7 +533,7 @@ export default function PlantDetails(props: {
                     </Tabs>
 
                     <PlantOverview
-                        entity={props.entity}
+                        entity={entityToRender}
                         visible={selectedTab === 0}
                     />
 

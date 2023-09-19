@@ -30,23 +30,24 @@ export default function UserPlant(props: {
                         setImgSrc(res);
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                         props.printError("Cannot load image for plant " + props.entity.personalName);
                     });
             });
     };
 
     useEffect(() => {
-        if (props.active && !wasRenderedOnce) {
+        if (props.active) {
+            setWasRenderedOnce(true);
+        }
+        if (!wasRenderedOnce) {
             setImageSrc();
         }
     }, [props.active]);
 
     useEffect(() => {
-        if (props.active) {
-            setWasRenderedOnce(true);
-        }
-    }, [props.active]);
+        setImageSrc();
+    }, [props.entity])
 
     return (
         <Box

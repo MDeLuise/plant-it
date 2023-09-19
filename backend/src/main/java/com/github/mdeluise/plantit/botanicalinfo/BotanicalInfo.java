@@ -1,5 +1,10 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.plant.Plant;
@@ -17,11 +22,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
 @Entity(name = "botanical_infos")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
@@ -31,6 +31,7 @@ public class BotanicalInfo implements Serializable, ImageTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    // https://landscapeplants.oregonstate.edu/scientific-plant-names-binomial-nomenclature
     @NotBlank
     private String scientificName;
     private String family;
@@ -118,16 +119,36 @@ public class BotanicalInfo implements Serializable, ImageTarget {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BotanicalInfo)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         final BotanicalInfo that = (BotanicalInfo) o;
-        return Objects.equals(id, that.id) || Objects.equals(species, that.species);
+        return fieldEquals(that);
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(species);
+        return Objects.hash(id, scientificName, family, genus, species);
+    }
+
+
+    public boolean equalsExceptForConcreteClass(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        final BotanicalInfo that = (BotanicalInfo) o;
+        return fieldEquals(that);
+    }
+
+
+    @SuppressWarnings("BooleanExpressionComplexity") //FIXME
+    private boolean fieldEquals(BotanicalInfo that) {
+        return Objects.equals(id, that.id) && Objects.equals(scientificName, that.scientificName) &&
+                   Objects.equals(family, that.family) && Objects.equals(genus, that.genus) &&
+                   Objects.equals(species, that.species);
     }
 }

@@ -1,29 +1,34 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
-import com.github.mdeluise.plantit.authentication.User;
-import com.github.mdeluise.plantit.common.AuthenticatedUserService;
-import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.github.mdeluise.plantit.authentication.User;
+import com.github.mdeluise.plantit.common.AuthenticatedUserService;
+import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.image.storage.ImageStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BotanicalInfoService {
     private final AuthenticatedUserService authenticatedUserService;
     private final BotanicalInfoRepository botanicalInfoRepository;
+    private final ImageStorageService imageStorageService;
 
 
     @Autowired
     public BotanicalInfoService(AuthenticatedUserService authenticatedUserService,
-                                BotanicalInfoRepository botanicalInfoRepository) {
+                                BotanicalInfoRepository botanicalInfoRepository,
+                                ImageStorageService imageStorageService) {
         this.authenticatedUserService = authenticatedUserService;
         this.botanicalInfoRepository = botanicalInfoRepository;
+        this.imageStorageService = imageStorageService;
     }
 
 
@@ -72,7 +77,7 @@ public class BotanicalInfoService {
         if (toSave instanceof UserCreatedBotanicalInfo u) {
             u.setCreator(authenticatedUserService.getAuthenticatedUser());
         }
-        if (toSave.getImage().getId() == null) {
+        if (toSave.getImage() != null && toSave.getImage().getId() == null) {
             toSave.getImage().setId(UUID.randomUUID().toString());
         }
         return botanicalInfoRepository.save(toSave);
@@ -81,5 +86,18 @@ public class BotanicalInfoService {
 
     public BotanicalInfo get(Long id) {
         return botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+
+    public void delete(Long id) {
+        final BotanicalInfo toDelete = get(id);
+        imageStorageService.remove(toDelete.getImage().getId());
+        botanicalInfoRepository.deleteById(id);
+    }
+
+
+    public Optional<BotanicalInfo> get(String scientificName, String family, String genus, String species) {
+        return botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(
+            scientificName, family, genus, species);
     }
 }
