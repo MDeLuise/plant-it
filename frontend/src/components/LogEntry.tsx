@@ -1,3 +1,4 @@
+import { MutableRefObject } from "react";
 import { Box, Typography } from "@mui/material";
 import { diaryEntry } from "../interfaces";
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
@@ -10,11 +11,11 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ShowerOutlinedIcon from '@mui/icons-material/ShowerOutlined';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import WavesOutlinedIcon from '@mui/icons-material/WavesOutlined';
-import { MutableRefObject, ReactElement } from "react";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { ReactElement } from "react";
 import { alpha } from "@mui/material";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-export default function LogEntry(props: {
+export default function NewLogEntry(props: {
     entity: diaryEntry,
     last?: boolean,
     lastRef?: MutableRefObject<any>,
@@ -42,10 +43,10 @@ export default function LogEntry(props: {
             case "transplanting": return "rgb(121, 72, 36)";
             case "fertilizing": return "rgb(234, 94, 7)";
             case "biostimulating": return "rgb(234, 147, 7)";
-            case "treatment": return "rgb(123, 152, 60)";
+            case "treatment": return "rgb(152, 60, 65)";
             case "observation": return "rgb(92, 93, 94)";
             case "misting": return "rgb(4, 34, 77)";
-            case "water_changing": return "rgb(149, 187, 241)";
+            case "water_changing": return "rgb(120, 154, 201)";
             default: return "rgb(226, 233, 243)";
         }
     };
@@ -54,14 +55,15 @@ export default function LogEntry(props: {
         <Box
             key={props.entity.id}
             ref={props.last ? props.lastRef : undefined}
-            boxShadow={1}
+            boxShadow={5}
             sx={{
                 display: "flex",
                 gap: "20px",
-                backgroundColor: alpha(getTypeIconBackground(props.entity.type), 0.5),
+                backgroundColor: alpha(getTypeIconBackground(props.entity.type), .7),
                 borderRadius: "10px",
                 padding: "10px",
                 alignItems: "center",
+                //border: "1px solid white"
             }}
             onClick={props.editEvent}
         >
@@ -79,7 +81,8 @@ export default function LogEntry(props: {
             <Box>
                 <Typography>
                     {
-                        new Date(props.entity.date).toLocaleString()
+                        `${new Date(props.entity.date).toLocaleDateString()},
+                         ${Math.floor(((new Date()).getTime() - new Date(props.entity.date).getTime()) / (1000 * 3600 * 24))} days ago`
                     }
                 </Typography>
                 <Typography style={{ fontWeight: 500 }}>

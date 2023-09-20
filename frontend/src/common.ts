@@ -48,7 +48,7 @@ export const getErrMessage = (err: any): string => {
     if (axios.isAxiosError(err)) {
         return (err as AxiosError).message;
     }
-    if (typeof(err) === "string") {
+    if (typeof (err) === "string") {
         return err.toString();
     }
     return "Some error occurred";

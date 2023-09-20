@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Avatar, Box, InputAdornment, OutlinedInput, Typography } from "@mui/material";
 import { diaryEntry, plant } from "../interfaces";
-import UserPlant from "./UserPlant";
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
@@ -16,14 +15,15 @@ import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
 import AllLogs from "./AllLogs";
-import LogEntry from "./LogEntry";
 import Settings from "./Settings";
 import secureLocalStorage from "react-secure-storage";
 import EditEvent from "./EditEvent";
-import PlantDetails from "./PlantDetails";
 import { getErrMessage, isBackendReachable } from "../common";
 import ErrorDialog from "./ErrorDialog";
 import AddLogEntry from "./AddLogEntry";
+import PlantDetails from "./PlantDetails";
+import NewUserPlant from "./UserPlant";
+import NewLogEntry from "./LogEntry";
 
 
 function UserTopBar(props: {}) {
@@ -46,7 +46,7 @@ function UserTopBar(props: {}) {
                     <Typography variant="body1" style={{ fontWeight: 600 }}>{username} 👋</Typography>
                 </Box>
             </Box>
-            <NotificationsOutlinedIcon />
+            {/* <NotificationsOutlinedIcon /> */}
         </Box>
     );
 }
@@ -67,9 +67,6 @@ function UserPlantsList(props: {
                 alignItems: "center",
             }}>
                 <Typography variant="body1" style={{ fontWeight: 600 }}>Your plants</Typography>
-                {/* <Box sx={{ flexGrow: 1 }}></Box>
-                <Typography variant="body1" mx={.5}><Link href="#">All</Link></Typography>
-                <Typography variant="body1" mx={.5}><Link href="#" onClick={() => setAddPlantOpen(true)}>Add</Link></Typography> */}
             </Box>
             <OutlinedInput
                 fullWidth
@@ -114,7 +111,7 @@ function UserPlantsList(props: {
                                 style={{ width: "45vw" }}
                                 virtualIndex={index}
                             >
-                                <UserPlant
+                                <NewUserPlant
                                     entity={entity}
                                     key={entity.id}
                                     requestor={props.requestor}
@@ -126,7 +123,7 @@ function UserPlantsList(props: {
                         })
                 }
             </Swiper>
-        </Box >
+        </Box>
     );
 }
 
@@ -137,7 +134,7 @@ function DiaryEntriesList(props: {
 }) {
 
     return (
-        <Box sx={{ marginTop: "20px" }}>
+        <Box sx={{ marginTop: "10px" }}>
             <Typography
                 variant="body1"
                 style={{
@@ -153,7 +150,7 @@ function DiaryEntriesList(props: {
             }}>
                 {
                     props.logEntries.slice(0, 5).map((entity) => {
-                        return <LogEntry
+                        return <NewLogEntry
                             entity={entity}
                             key={entity.id}
                             editEvent={() => props.editEvent(entity)}
@@ -177,8 +174,6 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
     const [plantDetails, setPlantDetails] = useState<{ plant?: plant, open: boolean; }>({ open: false });
     const [addDiaryLogOpen, setAddDiaryLogOpen] = useState<boolean>(false);
-    const [addDiaryForPlant, setAddDiaryForPlant] = useState<plant>();
-    const [filterEventLogByPlant, setFilterEventLogByPlant] = useState<plant>();
     const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
     const [errorDialogText, setErrorDialogText] = useState<string>();
 
@@ -320,7 +315,6 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         }}
         printError={printError}
         active={activeTab == 1}
-        filterByPlant={filterEventLogByPlant}
     />;
 
     const addLogEntryComponent: React.JSX.Element = <AddLogEntry
@@ -333,7 +327,12 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             // https://www.digitalocean.com/community/tutorials/react-getting-atomic-updates-with-setstate
             setLogEntries((prevState) => ([arg, ...prevState]));
         }}
-        addForPlant={addDiaryForPlant}
+        addForPlant={plantDetails.plant}
+        onClose={() => {
+            if (plantDetails.plant !== undefined) {
+                setPlantDetails({ ...plantDetails, plant: { ...plantDetails.plant } });
+            }
+        }} // just to live update the plant info section in Plant Details
     />;
 
     return (
@@ -366,16 +365,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             <PlantDetails
                 open={plantDetails.open}
                 close={() => setPlantDetails({ plant: undefined, open: false })}
-                entity={plantDetails.plant}
+                plant={plantDetails.plant}
                 requestor={props.requestor}
                 printError={printError}
-                allLogsComponent={allLogsComponent}
-                filterByPlant={(arg?: plant) => {
-                    setFilterEventLogByPlant(arg);
-                    setAddDiaryForPlant(arg);
-                }}
                 openAddLogEntry={() => setAddDiaryLogOpen(true)}
-                updatePlant={updated => {
+                onUpdate={updated => {
                     updatePlantFetchedCopy(updated);
                     updateEventFetchedCopy(updated);
                 }}

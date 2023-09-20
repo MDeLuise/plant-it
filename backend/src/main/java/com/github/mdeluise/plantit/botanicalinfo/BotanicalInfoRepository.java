@@ -13,4 +13,6 @@ public interface BotanicalInfoRepository extends JpaRepository<BotanicalInfo, Lo
 
     Optional<BotanicalInfo> findByScientificNameAndFamilyAndGenusAndSpecies(String scientificName, String family,
                                                                             String genus, String species);
+
+    List<BotanicalInfo> findAllBySpecies(String species);
 }

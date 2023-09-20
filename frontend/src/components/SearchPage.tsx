@@ -1,14 +1,12 @@
-import { Box, Chip, InputAdornment, OutlinedInput, Skeleton, Typography } from "@mui/material";
+import { Box, InputAdornment, OutlinedInput, Skeleton, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useEffect, useState } from "react";
 import { botanicalInfo, plant } from "../interfaces";
 import { getBotanicalInfoImg, isBigScreen } from "../common";
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddPlant from "./AddPlant";
-import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { alpha } from "@mui/material";
+import { Ribbon } from "react-ribbons";
 
 function BotanicalEntity(props: {
     entity: botanicalInfo,
@@ -47,58 +45,77 @@ function BotanicalEntity(props: {
 
     return (
         <Box
+            boxShadow={5}
             key={props.entity.id}
             sx={{
                 width: isBigScreen() ? "20vw" : "43vw",
-                borderRadius: "5px",
+                borderRadius: "15px",
                 overflow: "hidden",
                 aspectRatio: ".65",
                 flexShrink: 0,
                 position: "relative",
+                backgroundImage: `url(${imgSrc})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: "flex",
+                flexDirection: "column",
+                //border: "1px solid white",
+                margin: "0 0 30px 0",
             }}
             onClick={() => props.addClick(props.entity)}
         >
+            {
+                props.entity.systemWide ||
+                <Box sx={{ zIndex: 1, }}>
+                    <Ribbon
+                        side="right"
+                        type="corner"
+                        size="normal"
+                        backgroundColor="#02634a"
+                        color="white"
+                        withStripes={false}
+                        fontFamily="Raleway"
+                    >
+                        Custom
+                    </Ribbon>
+                </Box>
+            }
             {
                 !imageLoaded &&
                 <Skeleton
                     variant="rounded"
                     animation="wave"
-                    sx={{ width: "100%", height: "100%" }}
+                    sx={{ width: "100%", height: "100%", zIndex: 1, }}
                 />
             }
-
-            <Chip
-                sx={{
-                    position: "absolute",
-                    bottom: "65px",
-                    right: "5px",
-                    backgroundColor: alpha("#3a5e49", .7),
-                    padding: "5px",
-                    zIndex: 1,
-                    color: "white",
-                    display: props.entity.systemWide ? "none" : "inherit"
-                }}
-                icon={<FaceOutlinedIcon color="inherit" />} label="Custom"
-            />
-
             <img
                 src={imgSrc}
-                onLoad={() => setImageLoaded(true)}
                 style={{
+                    position: "absolute",
                     width: "100%",
-                    height: "80%",
+                    height: "100%",
                     objectFit: "cover",
-                    borderRadius: "10px",
-                    visibility: imageLoaded ? "initial" : "hidden",
-                    marginBottom: "5px",
+                    objectPosition: "center",
                 }}
             />
-            <Typography noWrap variant="body1" style={{ fontWeight: 600, textOverflow: "hidden" }} >
-                {props.entity.scientificName}
-            </Typography>
-            <Typography variant="body1">
-                {props.entity.family}
-            </Typography>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                }}
+            />
+            <Box sx={{
+                height: "25%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                backgroundColor: props.entity.imageId !== undefined ? "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
+                backdropFilter: "blur(3px)",
+            }}>
+                <Typography variant="h6" sx={{ color: "white" }}>
+                    {props.entity.scientificName}
+                </Typography>
+            </Box>
         </Box>
     );
 }
@@ -111,66 +128,46 @@ function AddNewBotanicalInfo(props: {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
     return <Box
-        key={"new"}
+        boxShadow={5}
+        key={"botanical-info-custom"}
         sx={{
             width: isBigScreen() ? "20vw" : "43vw",
-            borderRadius: "5px",
+            borderRadius: "15px",
             overflow: "hidden",
             aspectRatio: ".65",
             flexShrink: 0,
             position: "relative",
+            backgroundImage: `url(${process.env.PUBLIC_URL}add-custom.jpg)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            display: "flex",
+            flexDirection: "column",
+            //border: "1px solid white",
+            margin: "0 0 30px 0",
         }}
-        onClick={() => props.addClick()}
+        onClick={props.addClick}
     >
-        {
-            !imageLoaded &&
-            <Skeleton
-                variant="rounded"
-                animation="wave"
-                sx={{
-                    width: "100%",
-                    height: "100%"
-                }}
-            />
-        }
-
+        {/* {
+        !imageLoaded &&
+        <Skeleton
+            variant="rounded"
+            animation="wave"
+            sx={{ width: "100%", height: "100%" }}
+        />
+    } */}
         <Box sx={{
-            position: "absolute",
-            bottom: "65px",
-            right: "10px",
-            backgroundColor: "primary.light",
-            borderRadius: "50%",
-            padding: "5px",
-            zIndex: 1,
-            color: "white",
-            visibility: imageLoaded ? "initial" : "hidden",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            backgroundColor: "rgba(255, 255, 255, .1)",
+            backdropFilter: "blur(3px)",
         }}>
-            <AddOutlinedIcon />
+            <Typography variant="h6" sx={{ color: "white" }}>
+                Custom
+            </Typography>
         </Box>
-
-        <Box sx={{
-            overflow: "hidden",
-            borderRadius: "10px",
-            width: "100%",
-            height: "80%",
-            marginBottom: "5px",
-            visibility: imageLoaded ? "initial" : "hidden",
-        }}>
-            <img
-                src={"https://www.gardeningknowhow.com/wp-content/uploads/2018/12/Perle-von-Nurnberg.jpg"}
-                onLoad={() => setImageLoaded(true)}
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                    filter: "blur(7px)",
-                }}
-            />
-        </Box>
-        <Typography noWrap variant="body1" style={{ fontWeight: 600, textOverflow: "hidden" }} >
-            Custom
-        </Typography>
     </Box>;
 }
 
@@ -216,8 +213,8 @@ export default function SearchPage(props: {
             <AddPlant
                 requestor={props.requestor}
                 open={addPlantOpen}
-                setOpen={setAddPlantOpen}
-                entity={selectedBotanicalInfo}
+                close={() => setAddPlantOpen(false)}
+                botanicalInfo={selectedBotanicalInfo}
                 plants={props.plants}
                 name={scientificName}
                 printError={props.printError}
@@ -258,12 +255,12 @@ export default function SearchPage(props: {
                         <Skeleton
                             variant="rounded"
                             animation="wave"
-                            sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }}
+                            sx={{ width: isBigScreen() ? "30vw" : "48%", height: "250px" }}
                         />
                         <Skeleton
                             variant="rounded"
                             animation="wave"
-                            sx={{ width: isBigScreen() ? "30vw" : "100%", height: "180px" }}
+                            sx={{ width: isBigScreen() ? "30vw" : "48%", height: "250px" }}
                         />
                     </>
                 }

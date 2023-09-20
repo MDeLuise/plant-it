@@ -1,10 +1,10 @@
 import { Box, Skeleton, Typography } from "@mui/material";
-import { plant } from "../interfaces";
-import { getBotanicalInfoImg, isBigScreen } from "../common";
-import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
+import { useState, useEffect } from "react";
+import { getBotanicalInfoImg, isBigScreen } from "../common";
+import { plant } from "../interfaces";
 
-export default function UserPlant(props: {
+export default function NewUserPlant(props: {
     entity: plant,
     style?: {},
     requestor: AxiosInstance,
@@ -47,53 +47,76 @@ export default function UserPlant(props: {
 
     useEffect(() => {
         setImageSrc();
-    }, [props.entity])
+    }, [props.entity]);
 
     return (
         <Box
             onClick={props.onClick}
-            boxShadow={.5}
+            boxShadow={5}
             sx={{
                 width: isBigScreen() ? "20vw" : "45vw",
-                borderRadius: "10px",
+                borderRadius: "15px",
                 overflow: "hidden",
-                aspectRatio: ".7",
+                aspectRatio: ".65",
                 flexShrink: 0,
                 position: "relative",
+                // backgroundImage: `url(${imgSrc})`,
+                // backgroundSize: "cover",
+                // backgroundPosition: "center",
+                display: "flex",
+                flexDirection: "column",
+                //border: "1px solid white",
+                margin: "0 0 30px 0",
             }}
-            style={props.style}>
+        >
             {
                 (!imageLoaded || !wasRenderedOnce) &&
                 <Skeleton
                     variant="rounded"
                     animation="wave"
                     sx={{ width: "100%", height: "80%" }}
+                    style={{
+                        height: "100%",
+                        width: "100%",
+                        objectFit: "cover"
+                    }}
                 />
             }
             {
                 imageLoaded && wasRenderedOnce &&
                 <img
                     src={imgSrc}
-                    onLoad={() => setImageLoaded(true)}
                     style={{
+                        position: "absolute",
+                        height: "100%",
                         width: "100%",
-                        height: "80%",
                         objectFit: "cover",
-                        borderRadius: "10px",
-                        visibility: imageLoaded ? "initial" : "hidden",
-                        marginBottom: "5px",
+                        objectPosition: "center",
                     }}
-                    loading="lazy"
+                    onLoad={() => setImageLoaded(true)}
                 />
             }
-            <Typography
-                noWrap
-                variant="body1"
-                style={{ fontWeight: 600 }}
-                boxShadow={.5}
-            >
-                {props.entity.personalName}
-            </Typography>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                }}
+            />
+            {
+                imageLoaded && wasRenderedOnce &&
+                <Box sx={{
+                    height: "25%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    backgroundColor: props.entity.botanicalInfo.imageId !== undefined ? "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
+                    backdropFilter: "blur(3px)",
+                }}>
+                    <Typography variant="h6" sx={{ color: "white" }}>
+                        {props.entity.personalName}
+                    </Typography>
+                </Box>
+            }
         </Box >
     );
 }

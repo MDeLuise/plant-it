@@ -71,6 +71,8 @@ services:
     image: mysql:8.0
     restart: always
     env_file: backend.env
+    volumes:
+      - "./db:/var/lib/mysql"
 
   cache:
     image: redis:7.2.1
@@ -161,7 +163,7 @@ There are 2 configuration file available:
   JWT_SECRET=putTheSecretHere
   JWT_EXP=1
   
-  USERS_LIMIT=-1 # including the admin account, so <= 0 if undefined, >= 2 if defined
+  USERS_LIMIT=-1 # less then 0 means no limit
   UPLOAD_DIR=/upload-dir # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
   API_PORT=8080
   

@@ -1,9 +1,13 @@
 package com.github.mdeluise.plantit.diary;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.github.mdeluise.plantit.diary.entry.DiaryEntry;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryDTO;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryDTOConverter;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryService;
+import com.github.mdeluise.plantit.diary.entry.DiaryEntryStats;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/diary")
@@ -104,5 +105,18 @@ public class DiaryController {
     @GetMapping("/entry/_count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(diaryEntryService.count());
+    }
+
+
+    @GetMapping("/entry/{plantId}/_count")
+    public ResponseEntity<Long> countByPlant(@PathVariable Long plantId) {
+        return ResponseEntity.ok(diaryEntryService.count(plantId));
+    }
+
+
+    @GetMapping("/entry/{plantId}/stats")
+    public ResponseEntity<Collection<DiaryEntryStats>> getStats(@PathVariable Long plantId) {
+        final Collection<DiaryEntryStats> result = diaryEntryService.getStats(plantId);
+        return ResponseEntity.ok(result);
     }
 }

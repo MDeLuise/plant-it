@@ -1,21 +1,47 @@
-import { Box, Button, Drawer, Skeleton, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Drawer, Link, Skeleton, Switch, TextField, Typography, useTheme } from "@mui/material";
 import { plant } from "../interfaces";
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
-import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
-import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import Link from '@mui/material/Link';
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
-import { alpha } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Virtual, FreeMode } from "swiper";
+import { Virtual, FreeMode } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
-import { getBotanicalInfoImg, imgToBase64 } from "../common";
-import EditPlant from "./EditPlant";
+import "../style/PlantDetails.scss";
+import { getBotanicalInfoImg, imgToBase64, titleCase } from "../common";
+import EditIcon from '@mui/icons-material/Edit';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import EventOutlinedIcon from '@mui/icons-material/Event';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+
+
+function ConfirmDeleteDialog(props: {
+    open: boolean,
+    close: () => void,
+    printError: (msg: any) => void,
+    confirmCallBack: () => void;
+}) {
+    return <Dialog open={props.open} onClose={props.close}>
+        <DialogContent>
+            <DialogContentText>
+                Are you sure you want to delete the plant? This action can not be undone.
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={props.close}>Cancel</Button>
+            <Button onClick={props.confirmCallBack}>Confirm</Button>
+        </DialogActions>
+    </Dialog>;
+}
+
 
 function PlantImage(props: {
     imgId: string,
@@ -87,107 +113,14 @@ function PlantImage(props: {
         </>);
 }
 
-function Bottombar(props: {
-    requestor: AxiosInstance,
-    visible: boolean,
-    entity?: plant,
-    addUploadedImgs: (arg: string) => void,
-    printError: (err: any) => void,
-    openAddLogEntry: () => void;
-}) {
-    const addEntityImage = (toUpload: File): void => {
-        let formData = new FormData();
-        formData.append('image', toUpload);
-        props.requestor.post(`/image/entity/${props.entity?.id}`, formData)
-            .then((res) => {
-                props.addUploadedImgs(res.data);
-            })
-            .catch((err) => {
-                props.printError(err);
-            });
-    };
-
-    return (
-        <>
-            <input
-                id="upload-image"
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={(event) => {
-                    if (event.target.files != undefined) {
-                        addEntityImage(event.target.files[0]);
-                    }
-                }}
-            />
-            <Box sx={{
-                width: "100vw",
-                flexGrow: 1,
-                display: props.visible ? "flex" : "none",
-                justifyContent: "space-evenly",
-                alignItems: "flex-end",
-                position: "fixed",
-                bottom: "10px",
-                padding: "15px",
-            }}>
-                <Button
-                    sx={{
-                        width: "45%",
-                        borderRadius: "15px",
-                        backgroundColor: alpha("#efefef", .9),
-                        padding: "15px",
-                    }}
-                    startIcon={<EventOutlinedIcon />}
-                    onClick={props.openAddLogEntry}
-                >
-                    Add event
-                </Button>
-                <Button
-                    sx={{
-                        width: "45%",
-                        borderRadius: "15px",
-                        backgroundColor: alpha("#efefef", .9) + " !important",
-                        padding: "15px",
-                    }}
-                    onClick={() => {
-                        document.getElementById("upload-image")?.click();
-                    }}
-                    startIcon={<AddAPhotoOutlinedIcon />}
-                >
-                    Add photo
-                </Button>
-            </Box>
-        </>
-    );
-};
-
-function ReadMoreReadLess(props: {
-    text: string,
-    size: number;
-}) {
-    const [expanded, setExpanded] = useState<boolean>(false);
-
-    return (
-        <>
-            {
-                props.text.length > props.size && !expanded &&
-                props.text.substring(0, props.size) + "…" ||
-                props.text + " "
-            }
-            {
-                props.text.length > props.size && " " &&
-                <Link onClick={() => { setExpanded(!expanded); }}>
-                    {expanded ? "Read less" : "Read more"}
-                </Link>
-            }
-        </>);
-}
-
 function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
     printError: (err: any) => void,
-    bufferUploadedImgsIds: string[];
+    bufferUploadedImgsIds: string[],
+    toggleEditPlantMode: () => void,
+    closePlantDetails: () => void,
+    setImagesCount: (arg: number) => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [checkedImages, setCheckedImages] = useState<boolean>(false);
@@ -203,6 +136,7 @@ function PlantHeader(props: {
 
         props.requestor.get(`/image/entity/all/${props.entity?.id}`)
             .then((res) => {
+                props.setImagesCount(res.data.length);
                 if (res.data.length === 0) {
                     getBotanicalInfoImg(props.requestor, props.entity?.botanicalInfo.imageUrl)
                         .then(res => {
@@ -240,10 +174,50 @@ function PlantHeader(props: {
     }, [props.bufferUploadedImgsIds]);
 
     return (
-        <Box sx={{
-            height: "45%",
-            overflow: "hidden",
-        }}>
+        <Box
+            sx={{
+                height: "70vh",
+                overflow: "hidden",
+                transition: ".5s height"
+            }}
+            id="plant-header"
+        >
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: "10px",
+                    left: "0",
+                    zIndex: 2,
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0 15px",
+                }}
+            >
+                <ArrowBackOutlinedIcon
+                    sx={{
+                        backdropFilter: "blur(10px)",
+                        color: "white",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        backgroundColor: "rgba(32, 32, 32, .1)",
+                    }}
+                    fontSize="large"
+                    onClick={props.closePlantDetails}
+                />
+                <EditIcon
+                    sx={{
+                        backdropFilter: "blur(10px)",
+                        color: "white",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        backgroundColor: "rgba(32, 32, 32, .1)",
+                    }}
+                    fontSize="large"
+                    onClick={props.toggleEditPlantMode}
+                />
+            </Box>
             {
                 !imageLoaded && !checkedImages &&
                 <Skeleton
@@ -272,11 +246,7 @@ function PlantHeader(props: {
                     slidesPerView={1}
                     spaceBetween={0}
                     centeredSlides={true}
-                    pagination={{
-                        clickable: true,
-                        dynamicBullets: true,
-                    }}
-                    modules={[Pagination, Virtual, FreeMode]}
+                    modules={[Virtual, FreeMode]}
                     style={{
                         height: "100%",
                     }}
@@ -315,250 +285,683 @@ function PlantHeader(props: {
     );
 }
 
-function PlantOverview(props: {
-    entity?: plant,
-    visible: boolean;
+
+function EditableTextField(props: {
+    editable: boolean,
+    text?: string;
+    onChange?: (arg: string) => void,
+    variant?: "body1" | "h6",
+    style?: {};
 }) {
+    const [value, setValue] = useState<string>(props.text || "");
+
+    useEffect(() => {
+        setValue(props.text || "");
+    }, [props.text]);
+
+    return props.editable ?
+        <TextField
+            variant="standard"
+            InputProps={{ disableUnderline: props.editable ? false : true }}
+            disabled={!props.editable}
+            onChange={(e) => {
+                setValue(e.target.value);
+                if (props.onChange != undefined) {
+                    props.onChange(e.target.value);
+                }
+            }}
+            value={value}
+            sx={{
+                ...props.style,
+                color: "black",
+            }}
+        />
+        :
+        <Typography sx={{ ...props.style }} variant={props.variant}>
+            {props.text}
+        </Typography>;
+}
+
+
+
+
+function ReadMoreReadLess(props: {
+    text: string,
+    size: number;
+}) {
+    const [expanded, setExpanded] = useState<boolean>(false);
 
     return (
+        <Box sx={{ width: "100%", }}>
+            {
+                <Typography
+                    sx={{
+                        border: "1px solid #b4b4b4",
+                        borderRadius: "10px",
+                        padding: "16.5px 14px",
+                        whiteSpace: "pre-line",
+                    }}
+                >
+                    {
+                        props.text.length > props.size && !expanded &&
+                        props.text.substring(0, props.size) + "…" ||
+                        props.text + " "
+                    }
+                    {
+                        props.text.length > props.size && " " &&
+                        <Link onClick={() => { setExpanded(!expanded); }}>
+                            {expanded ? "Read less" : "Read more"}
+                        </Link>
+                    }
+                </Typography>
+            }
+        </Box>);
+}
+
+
+function PlantInfo(props: {
+    requestor: AxiosInstance,
+    plant?: plant,
+    editModeEnabled: boolean,
+    printError: (arg: any) => void,
+    imagesCount: number,
+    setFamily: (arg: string) => void,
+    setGenus: (arg: string) => void,
+    setSpecies: (arg: string) => void,
+    setPersonalName: (arg: string) => void,
+    setNote: (arg: string) => void,
+    setDate: (arg: Date) => void,
+    setUseDate: (arg: boolean) => void;
+}) {
+    const [diaryEntryStats, setDiaryEntryStats] = useState<any[]>([]);
+    const [plantStats, setPlantStats] = useState<{
+        photos?: number,
+        events?: number;
+    }>({});
+    const [useDate, setUseDate] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (props.plant === undefined) {
+            return;
+        }
+
+        setUseDate(props.plant.startDate !== undefined);
+        props.requestor.get(`diary/entry/${props.plant?.id}/stats`)
+            .then(res => {
+                setDiaryEntryStats(res.data);
+            })
+            .catch(err => {
+                props.printError(err);
+            });
+        fetchAndSetPlantStats();
+    }, [props.plant]);
+
+
+    const fetchAndSetPlantStats = (): void => {
+        props.requestor.get(`diary/entry/${props.plant?.id}/_count`)
+            .then(res => {
+                setPlantStats({ ...plantStats, events: res.data });
+            })
+            .catch(err => props.printError(err));
+    };
+
+    return <Box
+        sx={{
+            position: "relative",
+            top: "-30px",
+            backgroundColor: "background.default",
+            borderRadius: "35px",
+            padding: "30px 30px 100px 30px",
+            minHeight: "100vh",
+            zIndex: 1,
+        }}
+    >
+        <Box sx={{
+            width: "30px",
+            height: "3px",
+            backgroundColor: "accent.secondary",
+            opacity: .5,
+            borderRadius: "20px",
+            position: "absolute",
+            left: "calc(50% - 15px)",
+            top: "5px",
+        }}
+        />
         <Box
             sx={{
-                display: props.visible ? "flex" : "none",
-                flexDirection: "column",
-                gap: "20px",
-                marginTop: "20px",
-            }} >
-            <Typography variant="body1" fontWeight={"bold"}>
-                Botanical info
-            </Typography>
-            <Box sx={{
                 display: "flex",
-                justifyContent: "center",
-                gap: "20px",
-            }}>
-                <Box>
-                    <Typography variant="body1" fontWeight={"bold"}>Family</Typography>
-                    <Typography variant="body2">
-                        {props.entity?.botanicalInfo.family != undefined ?
-                            props.entity.botanicalInfo.family : "-"}
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "50px",
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
+                <EditableTextField
+                    editable={props.editModeEnabled}
+                    text={props.plant?.personalName}
+                    variant="h6"
+                    style={{ fontWeight: "bold" }}
+                    onChange={props.setPersonalName}
+                />
+                {
+                    props.editModeEnabled ||
+                    <Typography>
+                        {props.plant?.botanicalInfo.species}
                     </Typography>
-                </Box>
-                <Box sx={{ borderRight: "1px solid grey" }} />
-                <Box>
-                    <Typography variant="body1" fontWeight={"bold"}>Genus</Typography>
-                    <Typography variant="body2">
-                        {props.entity?.botanicalInfo.genus != undefined ?
-                            props.entity.botanicalInfo.genus : "-"}
-                    </Typography>
-                </Box>
-                <Box sx={{ borderRight: "1px solid grey" }} />
-                <Box>
-                    <Typography variant="body1" fontWeight={"bold"}>Species</Typography>
-                    <Typography variant="body2">
-                        {props.entity?.botanicalInfo.species != undefined ?
-                            props.entity?.botanicalInfo.species : "-"}
-                    </Typography>
-                </Box>
+                }
             </Box>
 
-            <Box>
-                <Typography variant="body1" fontWeight={"bold"}>
-                    Note
+            {/* <FavoriteBorderOutlinedIcon /> */}
+        </Box>
+
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Scientific classification
+            </Typography>
+
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Family
                 </Typography>
-                <ReadMoreReadLess
-                    text={props.entity?.note != undefined ? props.entity.note : "-"}
-                    size={150}
+                <EditableTextField
+                    text={props.plant?.botanicalInfo.family}
+                    editable={props.editModeEnabled}
+                    onChange={props.setFamily}
                 />
             </Box>
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Genus
+                </Typography>
+                <EditableTextField
+                    text={props.plant?.botanicalInfo.genus}
+                    editable={props.editModeEnabled}
+                    onChange={props.setGenus}
+                />
+            </Box>
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Species
+                </Typography>
+                <EditableTextField
+                    text={props.plant?.botanicalInfo.species}
+                    editable={props.editModeEnabled}
+                    onChange={props.setSpecies}
+                />
+            </Box>
+            {/* <Box className="plant-detail-entry">
+                <Typography>
+                    Thumbnail
+                </Typography>
+                <EditableThumbnail
+                    editable={props.editModeEnabled}
+                    text={props.plant?.botanicalInfo.imageUrl}
+                />
+            </Box> */}
         </Box>
-    );
+
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Plant info
+            </Typography>
+
+            <Box className="plant-detail-entry" >
+                <Typography>
+                    Use date
+                </Typography>
+                <Switch
+                    checked={useDate}
+                    disabled={!props.editModeEnabled}
+                    onChange={event => {
+                        setUseDate(event.target.checked);
+                        props.setUseDate(event.target.checked);
+                    }}
+                />
+            </Box>
+
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Date
+                </Typography>
+                {
+                    props.editModeEnabled || (props.plant?.startDate !== null) ?
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                value={dayjs(props.plant?.startDate || new Date())}
+                                readOnly={!props.editModeEnabled}
+                                disabled={!useDate}
+                                onChange={newValue => props.setDate(newValue != undefined ? newValue.toDate() : new Date())}
+                                slotProps={{ textField: { variant: 'standard', } }}
+                            />
+                        </LocalizationProvider>
+                        :
+                        <Typography>-</Typography>
+                }
+            </Box>
+            <Box className="plant-detail-entry" style={{ flexDirection: "column" }}>
+                <Typography>
+                    Note
+                </Typography>
+                {
+                    props.editModeEnabled ?
+                        <TextField
+                            fullWidth
+                            multiline
+                            defaultValue={props.plant?.note}
+                            rows={4}
+                            onChange={e => props.setNote(e.currentTarget.value)}
+                        />
+                        :
+                        <ReadMoreReadLess
+                            text={props.plant?.note || ""}
+                            size={50}
+                        />
+                }
+            </Box>
+            {/* <Box className="plant-detail-entry">
+                <Typography>
+                    Thumbnail
+                </Typography>
+                <EditableThumbnail
+                    editable={props.editModeEnabled}
+                    text={props.plant?.botanicalInfo.imageUrl}
+                />
+            </Box> */}
+        </Box>
+
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Plant stats
+            </Typography>
+
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Photos
+                </Typography>
+                <Typography>
+                    {props.imagesCount}
+                </Typography>
+            </Box>
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Events
+                </Typography>
+                <Typography>
+                    {plantStats.events}
+                </Typography>
+            </Box>
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Age (days)
+                </Typography>
+                <Typography>
+                    {
+                        props.plant?.startDate &&
+                        Math.floor(((new Date()).getTime() - new Date(props.plant?.startDate).getTime()) / (1000 * 3600 * 24))
+                        || "-"
+                    }
+                </Typography>
+            </Box>
+        </Box>
+
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Events stats
+            </Typography>
+            {
+                diaryEntryStats.map((value: { type: string, date: Date; }) => {
+                    return <Box style={{
+                        display: "flex",
+                        alignItems: "baseline",
+                        gap: "5px",
+                        justifyContent: "space-between",
+                    }}>
+                        <Typography>
+                            Last {titleCase(value.type).toLowerCase()}
+                        </Typography>
+                        <Typography>
+                            {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
+                        </Typography>
+                    </Box>;
+                })
+            }
+        </Box>
+    </Box>;
+}
+
+function BottomBar(props: {
+    requestor: AxiosInstance,
+    openAddLog: () => void,
+    plant?: plant,
+    addUploadedImgs: (arg: string) => void,
+    printError: (err: any) => void,
+    editModeEnabled: boolean,
+    toggleEditPlantMode: () => void,
+    updatedPlant?: plant,
+    onUpdate: (arg: plant) => void,
+    onDelete: (arg: plant) => void;
+    close: () => void;
+}) {
+    const [openConformDialog, setOpenConfirmDialog] = useState<boolean>(false);
+
+    const updatePlant = (): void => {
+        props.requestor.put("/plant", props.updatedPlant)
+            .then(res => {
+                props.onUpdate(res.data);
+                props.close();
+            })
+            .catch(err => {
+                props.printError(err);
+            });
+    };
+
+    const deletePlant = (): void => {
+        props.requestor.delete(`plant/${props.plant?.id}`)
+            .then((_res) => {
+                props.onDelete(props.plant!);
+                props.close();
+            })
+            .catch((err) => {
+                props.printError(err);
+            });
+    };
+
+    const addEntityImage = (toUpload: File): void => {
+        let formData = new FormData();
+        formData.append('image', toUpload);
+        props.requestor.post(`/image/entity/${props.plant?.id}`, formData)
+            .then(res => {
+                props.addUploadedImgs(res.data);
+            })
+            .catch(err => {
+                props.printError(err);
+            });
+    };
+
+    return <Box
+        sx={{
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            padding: "20px",
+            backgroundColor: "white",
+            borderRadius: "35px 35px 0 0",
+            zIndex: 2,
+            display: "flex",
+            justifyContent: "space-around",
+        }}>
+
+        <ConfirmDeleteDialog
+            open={openConformDialog}
+            close={() => setOpenConfirmDialog(false)}
+            printError={props.printError}
+            confirmCallBack={deletePlant}
+        />
+
+        {
+            props.editModeEnabled ?
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        width: "100%",
+                        gap: "7px",
+                    }}
+                >
+                    <Button
+                        sx={{
+                            backgroundColor: "accent.secondary",
+                            padding: "20px 0",
+                            color: "white",
+                            width: "20%",
+                            "&:hover": { backgroundColor: "accent.secondary" },
+                        }}
+                        onClick={props.toggleEditPlantMode}
+                    >
+                        <CloseOutlinedIcon fontSize="medium" />
+                    </Button>
+                    <Button
+                        sx={{
+                            width: "20%",
+                            backgroundColor: "error.main",
+                            padding: "20px 0",
+                            color: "white",
+                            "&:hover": { backgroundColor: "error.main" },
+                        }}
+                        onClick={() => setOpenConfirmDialog(true)}
+                    >
+                        <DeleteOutlineOutlinedIcon fontSize="medium" />
+                    </Button>
+                    <Button
+                        sx={{
+                            width: "70%",
+                            backgroundColor: "primary.main",
+                            padding: "20px 0",
+                            color: "white",
+                            "&:hover": { backgroundColor: "primary.main" },
+                        }}
+                        onClick={updatePlant}
+                    >
+                        <SaveAsOutlinedIcon fontSize="medium" />
+                    </Button>
+                </Box>
+                :
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        width: "100%",
+                    }}>
+                    <input
+                        id="upload-image"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={event => {
+                            if (event.target.files != undefined) {
+                                addEntityImage(event.target.files[0]);
+                            }
+                        }}
+                    />
+
+                    <Button
+                        sx={{
+                            backgroundColor: "accent.secondary",
+                            padding: "20px 0",
+                            color: "white",
+                            "&:hover": { backgroundColor: "accent.secondary" },
+                        }}
+                        onClick={props.openAddLog}
+                    >
+                        <EventOutlinedIcon fontSize="medium" />
+                    </Button>
+                    <Button
+                        sx={{
+                            width: "70%",
+                            backgroundColor: "primary.main",
+                            padding: "20px 0",
+                            color: "white",
+                            "&:hover": { backgroundColor: "primary.main" },
+                        }}
+                        onClick={() => {
+                            document.getElementById("upload-image")?.click();
+                        }}
+                    >
+                        <AddPhotoAlternateIcon fontSize="medium" />
+                    </Button>
+                </Box>
+        }
+    </Box>;
 }
 
 export default function PlantDetails(props: {
     open: boolean,
     close: () => void,
-    entity?: plant,
+    plant?: plant,
     requestor: AxiosInstance,
     printError: (err: any) => void,
-    allLogsComponent: React.JSX.Element,
-    filterByPlant: (arg?: plant) => void,
     openAddLogEntry: () => void,
-    updatePlant: (arg: plant) => void,
-    onDelete: (arg?: plant) => void;
+    onUpdate: (arg: plant) => void,
+    onDelete: (arg: plant) => void;
 }) {
-    const [selectedTab, setSelectedTab] = useState<number>(0);
     const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<string[]>([]);
-    const [editPlantOpen, setEditPlantOpen] = useState<boolean>(false);
+    const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [updatedEntity, setUpdatedEntity] = useState<plant>();
-    const [entityToRender, setEntityToRender] = useState<plant>();
+    const [imagesCount, setImagesCount] = useState<number>(0);
 
-    useEffect(() => {
+    const setFamily = (arg: string): void => {
         if (updatedEntity === undefined) {
-            setEntityToRender(props.entity);
             return;
         }
-        setEntityToRender(updatedEntity?.id === props.entity?.id ? updatedEntity : props.entity);
-    }, [props.entity, updatedEntity]);
+        updatedEntity.botanicalInfo.family = arg;
+    };
 
+    const setGenus = (arg: string): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.botanicalInfo.genus = arg;
+    };
+
+    const setSpecies = (arg: string): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.botanicalInfo.species = arg;
+        updatedEntity.botanicalInfo.scientificName = arg;
+    };
+
+    const setPersonalName = (arg: string): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.personalName = arg;
+    };
+
+    const setNote = (arg: string): void => {
+        console.debug(arg);
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.note = arg;
+    };
+
+    const setDate = (arg: Date): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.startDate = arg;
+    };
+
+    const setUseDate = (arg: boolean): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        if (!arg) {
+            updatedEntity.startDate = undefined;
+        }
+    };
+
+    useEffect(() => {
+        if (props.plant !== undefined) {
+            setUpdatedEntity({ ...props.plant });
+        } else {
+            setUpdatedEntity(undefined);
+        }
+    }, [props.plant]);
 
     useEffect(() => {
         setBufferedUploadedImgsIds([]);
-        if (props.open) {
-            props.filterByPlant(props.entity);
+        if (!props.open) {
+            setEditModeEnabled(false);
+            setUpdatedEntity(undefined);
         }
     }, [props.open]);
 
+    return <Drawer
+        anchor={"bottom"}
+        open={props.open}
+        onClose={props.close}
+        SlideProps={{
+            onScroll: (event: any) => {
+                let currentScroll = event.target.scrollTop;
+                //console.debug(currentScroll)
+                if (currentScroll < 50) {
+                    document.getElementById("plant-header")!.style.height = "70vh";
+                } else {
+                    document.getElementById("plant-header")!.style.height = "40vh";
+                }
+            }
+        }}
+    >
 
-    return (
-        <Drawer
-            anchor={"bottom"}
-            open={props.open}
-            onClose={() => {
-                props.filterByPlant(undefined);
-                props.close();
-            }}
-        >
-
-            <EditPlant
-                open={editPlantOpen}
-                close={() => setEditPlantOpen(false)}
+        <Box>
+            <PlantHeader
                 requestor={props.requestor}
-                plant={props.entity}
+                entity={updatedEntity}
                 printError={props.printError}
-                updatePlant={(arg: plant) => {
-                    props.updatePlant(arg);
-                    setUpdatedEntity(arg);
+                bufferUploadedImgsIds={bufferUploadedImgsIds}
+                closePlantDetails={props.close}
+                toggleEditPlantMode={() => {
+                    let currentEditModeEnabled = editModeEnabled;
+                    setEditModeEnabled(!editModeEnabled);
+
+                    if (!currentEditModeEnabled) {
+                        document.getElementById("plant-header")!.style.height = "40vh";
+                    } else {
+                        document.getElementById("plant-header")!.style.height = "70vh";
+                    }
                 }}
-                onDelete={(arg?: plant) => {
-                    props.onDelete(arg);
-                    props.close();
-                }}
+                setImagesCount={setImagesCount}
             />
-
-            <Box
-                sx={{
-                    position: "fixed",
-                    top: "10px",
-                    left: "0",
-                    zIndex: 2,
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "0 15px",
+            <PlantInfo
+                plant={updatedEntity}
+                editModeEnabled={editModeEnabled}
+                printError={props.printError}
+                requestor={props.requestor}
+                imagesCount={imagesCount}
+                setFamily={setFamily}
+                setGenus={setGenus}
+                setSpecies={setSpecies}
+                setPersonalName={setPersonalName}
+                setNote={setNote}
+                setDate={setDate}
+                setUseDate={setUseDate}
+            />
+            <BottomBar
+                openAddLog={props.openAddLogEntry}
+                requestor={props.requestor}
+                plant={props.plant}
+                addUploadedImgs={(arg: string) => {
+                    setImagesCount(imagesCount + 1);
+                    setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
                 }}
-            >
-                <ArrowBackIosNewOutlinedIcon
-                    sx={{
-                        backdropFilter: "blur(50px)",
-                        color: "white",
-                        borderRadius: "10px",
-                        padding: "5px",
-                        backgroundColor: "rgba(32, 32, 32, .5)",
-                    }}
-                    fontSize="large"
-                    onClick={() => {
-                        props.filterByPlant(undefined);
-                        props.close();
-                    }}
-                />
-                <EditIcon
-                    sx={{
-                        backdropFilter: "blur(50px)",
-                        color: "white",
-                        borderRadius: "10px",
-                        padding: "5px",
-                        backgroundColor: "rgba(32, 32, 32, .5)",
-                    }}
-                    fontSize="large"
-                    onClick={() => {
-                        setEditPlantOpen(true);
-                    }}
-                />
-            </Box>
+                printError={props.printError}
+                editModeEnabled={editModeEnabled}
+                updatedPlant={updatedEntity}
+                toggleEditPlantMode={() => {
+                    let currentEditModeEnabled = editModeEnabled;
+                    setEditModeEnabled(!editModeEnabled);
 
-            <Box sx={{
-                height: "100vh",
-            }}>
-                <PlantHeader
-                    requestor={props.requestor}
-                    entity={entityToRender}
-                    printError={props.printError}
-                    bufferUploadedImgsIds={bufferUploadedImgsIds}
-                />
-
-                <Box sx={{
-                    width: "90vw",
-                    margin: "0 auto",
-                    padding: "10px 0 70px 0",
-                }}>
-
-                    <Typography
-                        variant="h5"
-                        fontWeight={"bold"}>
-                        {
-                            entityToRender?.personalName
-                        }
-                    </Typography>
-
-                    <Tabs
-                        value={selectedTab}
-                        onChange={(_e, newValue) => setSelectedTab(newValue)}
-                        centered
-                        variant="fullWidth"
-                        sx={{
-                            marginTop: "10px",
-                            backgroundColor: "background.default",
-                            borderRadius: "15px",
-                            padding: "8px",
-                            '& .MuiTab-root': {
-                                borderRadius: "10px",
-                            },
-                            '& .MuiTabs-indicator': {
-                                height: "100%",
-                                width: "100%",
-                                backgroundColor: "background.paper",
-                                color: "red",
-                                borderRadius: "10px",
-                                zIndex: 1,
-                            },
-                            '& .Mui-selected': {
-                                color: "primary.main",
-                                zIndex: 2,
-                                fontWeight: "bold",
-                            },
-                        }}>
-                        <Tab label="Overview" />
-                        <Tab label="Events" />
-                    </Tabs>
-
-                    <PlantOverview
-                        entity={entityToRender}
-                        visible={selectedTab === 0}
-                    />
-
-                    <Box sx={{
-                        display: selectedTab === 1 ? "initial" : "none",
-                    }}>
-                        {
-                            React.cloneElement(props.allLogsComponent, {
-                                filterByPlant: props.entity,
-                                active: selectedTab === 1,
-                            })
-                        }
-                    </Box>
-                </Box>
-                <Bottombar
-                    requestor={props.requestor}
-                    visible={selectedTab === 0}
-                    entity={props.entity}
-                    addUploadedImgs={(arg: string) => {
-                        setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
-                    }}
-                    printError={props.printError}
-                    openAddLogEntry={props.openAddLogEntry}
-                />
-            </Box>
-        </Drawer>
-    );
+                    if (!currentEditModeEnabled) {
+                        document.getElementById("plant-header")!.style.height = "40vh";
+                    } else {
+                        document.getElementById("plant-header")!.style.height = "70vh";
+                    }
+                }}
+                onUpdate={props.onUpdate}
+                onDelete={props.onDelete}
+                close={props.close}
+            />
+        </Box>
+    </Drawer>;
 }

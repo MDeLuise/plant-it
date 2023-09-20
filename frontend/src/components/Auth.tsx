@@ -2,14 +2,10 @@ import { useEffect, useState } from "react";
 import { AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,41 +14,34 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
-import { FormHelperText } from "@mui/material";
+import { FormHelperText, useTheme } from "@mui/material";
 import ErrorDialog from "./ErrorDialog";
 import { getErrMessage, isBackendReachable } from "../common";
 
 export default function (props: { requestor: AxiosInstance; }) {
     const navigate: NavigateFunction = useNavigate();
-    const [authMode, setAuthMode] = useState<string>("signin");
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [usernameError, setUsernameError] = useState<string>();
-    const [passwordError, setPasswordError] = useState<string>();
+    const [authMode, setAuthMode] = useState<"register" | "login" | undefined>();
+    const [credentials, setCredentials] = useState<{ username: string, password: string; }>();
+    const [errors, setErrors] = useState<{ username?: string, password?: string; }>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
-    const [errorDialogText, setErrorDialogText] = useState<string>();
+    const [errorDialog, setErrorDialog] = useState<{ text: string, shown: boolean; }>();
 
     const doLogin = (event: React.SyntheticEvent) => {
         event.preventDefault();
         props.requestor.defaults.headers.common['Key'] = undefined;
-        props.requestor.post("authentication/login", {
-            username: username,
-            password: password
-        })
-            .then((response) => {
-                let jwt = response.data["jwt"]["value"];
+        props.requestor.post("authentication/login", credentials)
+            .then(res => {
+                let jwt = res.data["jwt"]["value"];
                 getOrCreateApiKey(jwt);
-                secureLocalStorage.setItem("plant-it-username", username);
+                secureLocalStorage.setItem("plant-it-username", credentials?.username || "");
             })
-            .catch((err) => {
-                setErrorDialogText(getErrMessage(err));
-                setErrorDialogShown(true);
+            .catch(err => {
+                setErrorDialog({ text: getErrMessage(err), shown: true });
             });
     };
 
     const getOrCreateApiKey = (jwt: string) => {
-        const apiKeyName: string = "frontend-app_" + username;
+        const apiKeyName: string = "frontend-app_" + credentials?.username;
         props.requestor.get("api-key/name/" + apiKeyName, {
             headers: {
                 "Authorization": 'Bearer ' + jwt
@@ -68,71 +57,73 @@ export default function (props: { requestor: AxiosInstance; }) {
                         "Authorization": 'Bearer ' + jwt
                     }
                 })
-                    .then((response) => {
-                        secureLocalStorage.setItem("plant-it-key", response.data);
+                    .then(res => {
+                        secureLocalStorage.setItem("plant-it-key", res.data);
                         navigate('/');
                     })
-                    .catch((err) => {
-                        setErrorDialogText(getErrMessage(err));
-                        setErrorDialogShown(true);
+                    .catch(err => {
+                        setErrorDialog({ text: getErrMessage(err), shown: true });
                     });
             });
     };
 
     const signUp = (event: React.SyntheticEvent) => {
         event.preventDefault();
-        props.requestor.post("authentication/signup", {
-            username: username,
-            password: password
-        })
-            .then((_res) => {
-                doLogin(event);
-            })
-            .catch((err) => {
-                setErrorDialogText(getErrMessage(err));
-                setErrorDialogShown(true);
+        props.requestor.post("authentication/signup", credentials)
+            .then(_res => doLogin(event))
+            .catch(err => {
+                setErrorDialog({ text: getErrMessage(err), shown: true });
             });
     };
 
     const changeAuthMode = () => {
-        setAuthMode(authMode === "signin" ? "signup" : "signin");
-        setUsernameError(undefined);
-        setPasswordError(undefined);
+        let newAuthMode: "register" | "login" = authMode === "login" ? "register" : "login";
+        setAuthMode(newAuthMode);
+        // below just to recheck possible errors and enable/disable submit button
+        if (newAuthMode === "login") {
+            setErrors(undefined);
+        } else {
+            if (credentials?.username !== undefined) {
+                changeUsername(credentials?.username, true);
+            }
+            if (credentials?.password !== undefined) {
+                changePassword(credentials.password, true);
+            }
+        }
     };
 
 
-    const changeUsername = (value: string): void => {
-        if (authMode == "signup" && (value.length > 20 || value.length < 3)) {
-            setUsernameError("username length must be between 3 and 20");
+    const changeUsername = (value: string, validate?: boolean): void => {
+        if (authMode == "register" && (value.length > 20 || value.length < 3) || validate) {
+            setErrors({ ...errors, username: "username length must be between 3 and 20" });
         } else {
-            setUsernameError(undefined);
+            setErrors({ ...errors, username: undefined });
         }
-        setUsername(value);
+        setCredentials({ username: value, password: credentials?.password || "" });
     };
 
 
-    const changePassword = (value: string): void => {
-        if (authMode == "signup" && (value.length > 20 || value.length < 8)) {
-            setPasswordError("password length must be between 8 and 20");
+    const changePassword = (value: string, validate?: boolean): void => {
+        if (authMode == "register" && (value.length > 20 || value.length < 8) || validate) {
+            setErrors({ ...errors, password: "password length must be between 8 and 20" });
         } else {
-            setPasswordError(undefined);
+            setErrors({ ...errors, password: undefined });
         }
-        setPassword(value);
+        setCredentials({ password: value, username: credentials?.username || "" });
     };
 
 
     const isSubmitButtonEnabled = (): boolean => {
-        return (usernameError === undefined && passwordError === undefined) &&
-            username.length > 0 && password.length > 0;
+        return credentials !== undefined &&
+            credentials.username.length > 0 && credentials.password.length > 0;
     };
 
 
     useEffect(() => {
         isBackendReachable(props.requestor)
-            .then((res) => {
+            .then(res => {
                 if (!res) {
-                    setErrorDialogText("Cannot connect to the backend");
-                    setErrorDialogShown(true);
+                    setErrorDialog({ text: "Cannot connect to the backend", shown: true });
                 }
             });
     }, []);
@@ -140,33 +131,130 @@ export default function (props: { requestor: AxiosInstance; }) {
     return (
         <Box
             display="flex"
-            justifyContent="center"
+            flexDirection="column"
+            justifyContent="space-evenly"
             alignItems="center"
             minHeight="100vh"
         >
 
             <ErrorDialog
-                text={errorDialogText}
-                open={errorDialogShown}
-                close={() => setErrorDialogShown(false)}
+                text={errorDialog?.text}
+                open={errorDialog?.shown || false}
+                close={() => setErrorDialog({ text: "", shown: false })}
             />
 
             <Box
                 sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width: "90vw"
-                }}
-            >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    {authMode == "signin" ? <LockOutlinedIcon /> : <PersonAddAltOutlinedIcon />}
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    {authMode == "signin" ? "Sign In" : "Sign Up"}
-                </Typography>
-                <Box component="form" onSubmit={authMode === "signin" ? doLogin : signUp} noValidate sx={{ mt: 1 }}>
+                    content: `""`,
+                    background: `url(${process.env.PUBLIC_URL}/login-background.jpg)`,
+                    backgroundSize: "cover",
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    opacity: 0.7,
+                    backgroundColor: "rgb(0 0 0 / 60%)",
+                    backgroundBlendMode: "multiply",
+                    zIndex: -1,
+                }} />
+
+            {
+                authMode === undefined &&
+                <>
+                    <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column",
+                    }}>
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                color: "black",
+                                fontWeight: 800,
+                            }}
+                        >
+                            Plant-it
+                        </Typography>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: "white",
+                            }}
+                        >
+                            Your gardening companion app 🪴
+                        </Typography>
+                    </Box>
+
+
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "20px",
+                        zIndex: 2,
+                    }}>
+                        <Button
+                            sx={{
+                                backgroundColor: "white",
+                                color: "black",
+                                padding: "15px 50px",
+                                "&:hover": { backgroundColor: "white" },
+                            }}
+                            onClick={() => setAuthMode("login")}
+                        >
+                            Login
+                        </Button>
+
+                        <Button
+                            sx={{
+                                backgroundColor: "primary.main",
+                                color: "white",
+                                padding: "15px 50px",
+                                "&:hover": { backgroundColor: "primary.main" },
+                            }}
+                            onClick={() => setAuthMode("register")}
+                        >
+                            Create an Account
+                        </Button>
+                    </Box>
+                </>
+            }
+            {
+                authMode != undefined &&
+                <Box
+                    component="form"
+                    onSubmit={authMode === "login" ? doLogin : signUp}
+                    noValidate
+                    sx={{
+                        mt: 1,
+                        backgroundColor: "white",
+                        width: "90%",
+                        borderRadius: "20px",
+                        padding: "20px",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            marginBottom: "20px",
+                        }}>
+                        <Typography
+                            variant="h4"
+                            fontWeight={600}
+                        >
+                            {authMode === "login" ? "Login to" : "Register to"}
+                        </Typography>
+                        <Typography
+                            variant="h4"
+                            fontWeight={600}
+                            sx={{
+                                color: "primary.main"
+                            }}>
+                            Plant-it
+                        </Typography>
+                    </Box>
                     <TextField
                         margin="normal"
                         required
@@ -177,8 +265,8 @@ export default function (props: { requestor: AxiosInstance; }) {
                         autoComplete="username"
                         autoFocus
                         onChange={(e) => changeUsername(e.target.value)}
-                        error={usernameError != undefined}
-                        helperText={usernameError}
+                        error={errors?.username !== undefined}
+                        helperText={errors?.username}
                     />
                     <FormControl fullWidth margin="normal" variant="outlined" required>
                         <InputLabel htmlFor="password-input">Password</InputLabel>
@@ -198,15 +286,16 @@ export default function (props: { requestor: AxiosInstance; }) {
                                 </InputAdornment>
                             }
                             label="Password"
-                            error={passwordError != undefined}
+                            error={errors?.password != undefined}
                         />
                         {
-                            passwordError != undefined &&
+                            errors?.password != undefined &&
                             <FormHelperText error>
-                                {passwordError}
+                                {errors.password}
                             </FormHelperText>
                         }
                     </FormControl>
+
                     <Button
                         type="submit"
                         fullWidth
@@ -214,15 +303,20 @@ export default function (props: { requestor: AxiosInstance; }) {
                         sx={{ mt: 3, mb: 2 }}
                         disabled={!isSubmitButtonEnabled()}
                     >
-                        {authMode == "signin" ? "Login" : "Register"}
+                        {authMode == "login" ? "Login" : "Register"}
                     </Button>
-                    <Grid container style={{ justifyContent: "center", }}>
-                        <Link href="#" variant="body2" onClick={changeAuthMode}>
-                            {authMode == "signin" ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
-                        </Link>
-                    </Grid>
+                    <Link
+                        href="#"
+                        variant="body2"
+                        onClick={changeAuthMode}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        {authMode == "login" ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+                    </Link>
                 </Box>
-            </Box>
-        </Box>
+            }
+        </Box >
     );
 }
