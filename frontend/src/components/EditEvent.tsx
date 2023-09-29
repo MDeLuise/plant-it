@@ -91,26 +91,26 @@ export default function EditEvent(props: {
             date: date,
             diaryId: newTarget.diaryId,
         })
-            .then((res) => {
+            .then(res => {
                 props.removeFromLog(props.toEdit?.id!);
                 props.updateLog(res.data);
                 props.setOpen(false);
                 setEdit(false);
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             });
     };
 
     const deleteEvent = (): void => {
         props.requestor.delete(`/diary/entry/${props.toEdit?.id}`)
-            .then((_res) => {
+            .then(_res => {
                 props.removeFromLog(props.toEdit?.id!);
                 props.setOpen(false);
                 setEdit(false);
                 setConfirmDialogOpen(false);
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             });
     };
