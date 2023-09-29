@@ -29,7 +29,8 @@ export default function AddLogEntry(props: {
     open: boolean,
     setOpen: (arg: boolean) => void,
     updateLog: (arg: diaryEntry) => void,
-    addForPlant?: plant;
+    addForPlant?: plant,
+    onClose: () => void;
 }) {
     const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
     const [selectedPlantName, setSelectedPlantName] = useState<string[]>([]);
@@ -114,6 +115,7 @@ export default function AddLogEntry(props: {
         setEventTypeError(undefined);
         setPlantNameError(undefined);
         props.setOpen(false);
+        props.onClose();
     };
 
 

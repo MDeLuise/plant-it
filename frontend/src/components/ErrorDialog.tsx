@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, styled } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, styled } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -16,7 +16,11 @@ export default function ErrorDialog(props: {
     open: boolean,
     close: () => void;
 }) {
-    return <div>
+    return <Box
+        sx={{
+            position: "absolute",
+        }}
+    >
         <BootstrapDialog
             onClose={props.close}
             open={props.open}
@@ -53,5 +57,5 @@ export default function ErrorDialog(props: {
                 </Button>
             </DialogActions>
         </BootstrapDialog>
-    </div>;
+    </Box>;
 }

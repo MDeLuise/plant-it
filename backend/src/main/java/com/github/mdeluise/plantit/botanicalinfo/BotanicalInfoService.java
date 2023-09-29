@@ -91,13 +91,31 @@ public class BotanicalInfoService {
 
     public void delete(Long id) {
         final BotanicalInfo toDelete = get(id);
-        imageStorageService.remove(toDelete.getImage().getId());
+        if (toDelete.getImage() != null) {
+            imageStorageService.remove(toDelete.getImage().getId());
+        }
         botanicalInfoRepository.deleteById(id);
+    }
+
+
+    public BotanicalInfo update(BotanicalInfo updatedBotanicalInfo) {
+        if (!botanicalInfoRepository.existsById(updatedBotanicalInfo.getId())) {
+            throw new ResourceNotFoundException(updatedBotanicalInfo.getId());
+        }
+        return botanicalInfoRepository.save(updatedBotanicalInfo);
     }
 
 
     public Optional<BotanicalInfo> get(String scientificName, String family, String genus, String species) {
         return botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(
             scientificName, family, genus, species);
+    }
+
+
+    public boolean existsSpecies(String species) {
+        return botanicalInfoRepository.findAllBySpecies(species).stream().anyMatch(
+            botanicalInfo -> botanicalInfo instanceof GlobalBotanicalInfo ||
+                                 ((UserCreatedBotanicalInfo) botanicalInfo).getCreator().equals(
+                                     authenticatedUserService.getAuthenticatedUser()));
     }
 }

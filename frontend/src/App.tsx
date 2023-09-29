@@ -65,15 +65,22 @@ export default function AppWithColorMode() {
             ? {
               // palette values for light mode
               primary: {
-                main: '#3a5e49',
-                light: "#7dc996",
+                main: '#02634a',
+                light: '#FFF7F8',
               },
               secondary: {
-                main: '#e64a19',
+                main: '#192A51',
+              },
+              error: {
+                main: '#A8201A',
               },
               background: {
-                default: '#efefef',
+                default: 'rgb(235, 235, 235)',
               },
+              accent: {
+                main: "#192A51",
+                secondary: "#7C898B",
+              }
             }
             : {
               // palette values for dark mode
@@ -90,7 +97,7 @@ export default function AppWithColorMode() {
             }),
         },
         typography: {
-          fontFamily: "Raleway",//"Quicksand",
+          fontFamily: "Raleway",
           body1: {
             lineHeight: 1.5,
           },

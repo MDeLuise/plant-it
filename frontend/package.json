@@ -30,6 +30,7 @@
     "react-icons": "^4.9.0",
     "react-markdown": "^8.0.5",
     "react-responsive": "^9.0.2",
+    "react-ribbons": "^1.1.7",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-secure-storage": "^1.2.0",

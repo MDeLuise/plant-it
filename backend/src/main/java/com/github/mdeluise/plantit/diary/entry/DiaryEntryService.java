@@ -1,8 +1,11 @@
 package com.github.mdeluise.plantit.diary.entry;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
+import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.diary.DiaryService;
@@ -92,4 +95,26 @@ public class DiaryEntryService {
     public Long count() {
         return diaryEntryRepository.countByDiaryOwner(authenticatedUserService.getAuthenticatedUser());
     }
+
+
+    public Long count(Long plantId) {
+        return diaryEntryRepository.countByDiaryOwnerAndDiaryTargetId(
+            authenticatedUserService.getAuthenticatedUser(), plantId);
+    }
+
+
+    public Collection<DiaryEntryStats> getStats(Long plantId) {
+        Collection<DiaryEntryStats> result = new HashSet<>();
+        final User authenticatedUser = authenticatedUserService.getAuthenticatedUser();
+        for (DiaryEntryType type : getAllTypes()) {
+            final Optional<DiaryEntry> lastEvent =
+                diaryEntryRepository.findFirstByDiaryOwnerAndDiaryTargetIdAndTypeOrderByDateDesc(authenticatedUser, plantId,
+                                                                                                 type
+                );
+            lastEvent.ifPresent(
+                diaryEntry -> result.add(new DiaryEntryStats(diaryEntry.getType(), diaryEntry.getDate())));
+        }
+        return result;
+    }
+
 }

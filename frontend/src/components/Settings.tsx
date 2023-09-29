@@ -285,21 +285,34 @@ function Stats(props: {
     const [totalPlants, setTotalPlants] = useState<number>(0);
     const [totalBotanicalInfo, setTotalBotanicalInfo] = useState<number>(0);
     const [totalPhotos, setTotalPhotos] = useState<number>(0);
+    const [erorr, setError] = useState<boolean>(false);
 
     useEffect(() => {
-        if (props.visibility) {
+        if (props.visibility && !erorr) {
             props.requestor.get("diary/entry/_count")
-                .then((res) => setTotalEvents(res.data))
-                .catch((err) => props.printError(err));
+                .then(res => setTotalEvents(res.data))
+                .catch(err => {
+                    setError(true);
+                    props.printError(err);
+                });
             props.requestor.get("plant/_count")
-                .then((res) => setTotalPlants(res.data))
-                .catch((err) => props.printError(err));
+                .then(res => setTotalPlants(res.data))
+                .catch(err => {
+                    setError(true);
+                    props.printError(err);
+                });
             props.requestor.get("plant/_countBotanicalInfo")
-                .then((res) => setTotalBotanicalInfo(res.data))
-                .catch((err) => props.printError(err));
+                .then(res => setTotalBotanicalInfo(res.data))
+                .catch(err => {
+                    setError(true);
+                    props.printError(err);
+                });
             props.requestor.get("image/entity/_count")
-                .then((res) => setTotalPhotos(res.data))
-                .catch((err) => props.printError(err));
+                .then(res => setTotalPhotos(res.data))
+                .catch(err => {
+                    setError(true);
+                    props.printError(err);
+                });
         }
     });
 

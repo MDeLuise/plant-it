@@ -9,6 +9,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
+import com.github.mdeluise.plantit.exception.DuplicatedSpeciesException;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
@@ -105,8 +106,7 @@ public class PlantService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = "plants", allEntries = true),
-            @CacheEvict(value = "botanical-info", allEntries = true)
+            @CacheEvict(value = "plants", allEntries = true), @CacheEvict(value = "botanical-info", allEntries = true)
         }
     )
     @Transactional
@@ -132,8 +132,7 @@ public class PlantService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = "plants", allEntries = true),
-            @CacheEvict(value = "botanical-info", allEntries = true)
+            @CacheEvict(value = "plants", allEntries = true), @CacheEvict(value = "botanical-info", allEntries = true)
         }
     )
     public Plant update(Plant updated) {
@@ -146,33 +145,44 @@ public class PlantService {
         toUpdate.setNote(updated.getNote());
         toUpdate.setStartDate(updated.getStartDate());
 
-        final boolean isThisTheOnlyPlantForTheBotanicalInfo =
-            botanicalInfoService.countPlants(toUpdate.getBotanicalInfo().getId()) == 1;
-        final BotanicalInfo toUpdateBotanicalInfo = toUpdate.getBotanicalInfo();
-        final BotanicalInfo updatedBotanicalInfo = getOrCreateUpdatedBotanicalInfo(toUpdate, updated);
-        toUpdate.setBotanicalInfo(updatedBotanicalInfo);
-        if (!toUpdateBotanicalInfo.equals(updatedBotanicalInfo) && isThisTheOnlyPlantForTheBotanicalInfo) {
-            botanicalInfoService.delete(toUpdateBotanicalInfo.getId());
-        }
-
-        return plantRepository.save(toUpdate);
+        return handleBotanicalInfoUpdateAndSavePlant(updated, toUpdate);
     }
 
 
-    private BotanicalInfo getOrCreateUpdatedBotanicalInfo(Plant toUpdate, Plant updated) {
-        final BotanicalInfo botanicalInfoToUpdate = toUpdate.getBotanicalInfo();
-        final BotanicalInfo botanicalInfoUpdated = updated.getBotanicalInfo();
-        if (botanicalInfoToUpdate.equalsExceptForConcreteClass(botanicalInfoUpdated)) {
-            return botanicalInfoToUpdate;
+    private Plant handleBotanicalInfoUpdateAndSavePlant(Plant updated, Plant toUpdate) {
+        if (toUpdate.getBotanicalInfo().equalsExceptForConcreteClass(updated.getBotanicalInfo())) {
+            return save(toUpdate);
         }
+        final boolean isThisTheOnlyPlantForTheBotanicalInfo =
+            botanicalInfoService.countPlants(toUpdate.getBotanicalInfo().getId()) == 1;
+        final BotanicalInfo updatedBotanicalInfo = updated.getBotanicalInfo();
+        final BotanicalInfo toUpdateBotanicalInfo = toUpdate.getBotanicalInfo();
+
         final Optional<BotanicalInfo> savedMatchingBotanicalInfo =
-            botanicalInfoService.get(botanicalInfoUpdated.getScientificName(), botanicalInfoUpdated.getFamily(),
-                                     botanicalInfoUpdated.getGenus(), botanicalInfoUpdated.getSpecies()
+            botanicalInfoService.get(updatedBotanicalInfo.getScientificName(), updatedBotanicalInfo.getFamily(),
+                                     updatedBotanicalInfo.getGenus(), updatedBotanicalInfo.getSpecies()
             );
         if (savedMatchingBotanicalInfo.isPresent()) {
-            return savedMatchingBotanicalInfo.get();
+            toUpdate.setBotanicalInfo(savedMatchingBotanicalInfo.get());
+        } else {
+            if (botanicalInfoService.existsSpecies(updatedBotanicalInfo.getSpecies()) &&
+                    !isThisTheOnlyPlantForTheBotanicalInfo) {
+                throw new DuplicatedSpeciesException(updatedBotanicalInfo.getSpecies());
+            }
+            ((UserCreatedBotanicalInfo) updatedBotanicalInfo).setCreator(
+                authenticatedUserService.getAuthenticatedUser());
+
+            if (!isThisTheOnlyPlantForTheBotanicalInfo) {
+                updatedBotanicalInfo.setId(null);
+            }
+            final BotanicalInfo saved = botanicalInfoService.save(updatedBotanicalInfo);
+
+            toUpdate.setBotanicalInfo(saved);
         }
-        botanicalInfoUpdated.setId(null);
-        return botanicalInfoService.save(botanicalInfoUpdated);
+        final Plant result = save(toUpdate);
+        if (isThisTheOnlyPlantForTheBotanicalInfo) {
+            botanicalInfoService.delete(toUpdateBotanicalInfo.getId());
+        }
+        return result;
     }
 }
