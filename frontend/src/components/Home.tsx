@@ -352,7 +352,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 open={editEventVisible}
                 setOpen={(arg: boolean) => setEditEventVisible(arg)}
                 updateLog={(arg: diaryEntry) => {
-                    setLogEntries([arg, ...logEntries]);
+                    let newLogEntry = [arg, ...logEntries.filter((a) => a.id !== arg.id)];
+                    newLogEntry.sort((a, b) => {
+                        return new Date(b.date).getTime() - new Date(a.date).getTime();
+                    });
+                    setLogEntries(newLogEntry);
                 }}
                 removeFromLog={(diaryEntryId: number) => {
                     let newLogEntries = [...logEntries].filter((en) => en.id !== diaryEntryId);
