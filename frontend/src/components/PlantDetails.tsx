@@ -21,6 +21,8 @@ import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 
 
 function ConfirmDeleteDialog(props: {
@@ -332,28 +334,26 @@ function ReadMoreReadLess(props: {
     const [expanded, setExpanded] = useState<boolean>(false);
 
     return (
-        <Box sx={{ width: "100%", }}>
+        <Box sx={{
+            width: "100%",
+            border: "1px solid #b4b4b4",
+            borderRadius: "10px",
+            padding: "16.5px 14px",
+            whiteSpace: "pre-line",
+        }}>
+            <Markdown remarkPlugins={[[remarkGfm, {singleTilde: false}]]}>
+                {
+                    props.text.length > props.size && !expanded &&
+                    props.text.substring(0, props.size) + "…" ||
+                    props.text + " "
+                }
+
+            </Markdown>
             {
-                <Typography
-                    sx={{
-                        border: "1px solid #b4b4b4",
-                        borderRadius: "10px",
-                        padding: "16.5px 14px",
-                        whiteSpace: "pre-line",
-                    }}
-                >
-                    {
-                        props.text.length > props.size && !expanded &&
-                        props.text.substring(0, props.size) + "…" ||
-                        props.text + " "
-                    }
-                    {
-                        props.text.length > props.size && " " &&
-                        <Link onClick={() => { setExpanded(!expanded); }}>
-                            {expanded ? "Read less" : "Read more"}
-                        </Link>
-                    }
-                </Typography>
+                props.text.length > props.size && " " &&
+                <Link onClick={() => { setExpanded(!expanded) }}>
+                    {expanded ? "Read less" : "Read more"}
+                </Link>
             }
         </Box>);
 }
