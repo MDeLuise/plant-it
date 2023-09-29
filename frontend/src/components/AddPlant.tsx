@@ -142,7 +142,8 @@ function AddPlantHeader(props: {
 
 function AddPlantInfo(props: {
     requestor: AxiosInstance,
-    botanicalInfo?: botanicalInfo,
+    botanicalInfoToAdd?: botanicalInfo,
+    botanicalInfos: botanicalInfo[],
     name?: string,
     plants: plant[],
     open: boolean,
@@ -162,7 +163,7 @@ function AddPlantInfo(props: {
 
     const setName = (): Promise<string> => {
         return new Promise((resolve, reject) => {
-            if (props.botanicalInfo === undefined) {
+            if (props.botanicalInfoToAdd === undefined) {
                 if (props.name === undefined) {
                     setPlantName("");
                     return resolve("");
@@ -171,13 +172,13 @@ function AddPlantInfo(props: {
                     return resolve(props.name);
                 }
             }
-            if (props.botanicalInfo.id === null) {
-                setPlantName(props.botanicalInfo.scientificName);
-                return resolve(props.botanicalInfo.scientificName);
+            if (props.botanicalInfoToAdd.id === null) {
+                setPlantName(props.botanicalInfoToAdd.scientificName);
+                return resolve(props.botanicalInfoToAdd.scientificName);
             }
-            props.requestor.get(`/botanical-info/${props.botanicalInfo.id}/_count`)
+            props.requestor.get(`/botanical-info/${props.botanicalInfoToAdd.id}/_count`)
                 .then((res) => {
-                    let incrementalName = props.botanicalInfo!.scientificName;
+                    let incrementalName = props.botanicalInfoToAdd!.scientificName;
                     if (res.data > 0) {
                         incrementalName += ` ${res.data}`;
                     }
@@ -213,42 +214,42 @@ function AddPlantInfo(props: {
             return;
         }
         isNameAvailable(plantName)
-            .then((res) => {
+            .then(res => {
                 if (!res) {
                     setPlantNameError("Duplicated plant name");
                     return;
                 }
-                if (props.botanicalInfo != undefined) {
+                if (props.botanicalInfoToAdd != undefined) {
                     addPlantOldBotanicalInfo();
                 } else {
                     addPlantNewBotanicalInfo();
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             });
     };
 
     const addPlantOldBotanicalInfo = (): void => {
         addNewPlant({
-            botanicalInfo: props.botanicalInfo!,
+            botanicalInfo: props.botanicalInfoToAdd!,
             personalName: plantName!,
             state: "ALIVE",
             startDate: useDate ? date : null,
             note: note,
         })
-            .then((res) => {
+            .then(res => {
                 props.close();
                 let insertHere = props.plants.findIndex((pl) => {
                     return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
                 });
                 insertHere = insertHere === -1 ? props.plants.length : insertHere;
                 props.plants.splice(insertHere, 0, res);
-                props.botanicalInfo!.id = res.botanicalInfo.id;
+                props.botanicalInfoToAdd!.id = res.botanicalInfo.id;
                 setName();
                 cleanup();
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             });
     };
@@ -269,7 +270,7 @@ function AddPlantInfo(props: {
             note: note,
         };
         addNewPlant(plantToAdd)
-            .then((res) => {
+            .then(res => {
                 if (props.selectedImage != undefined) {
                     let formData = new FormData();
                     formData.append('image', props.selectedImage!);
@@ -277,12 +278,15 @@ function AddPlantInfo(props: {
                         .then(imgRes => {
                             props.close();
                             res.botanicalInfo.imageUrl = "/" + imgRes.data.id;
-                            let insertHere = props.plants.findIndex((pl) => {
+                            let insertHere = props.plants.findIndex(pl => {
                                 return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
                             });
                             insertHere = insertHere === -1 ? props.plants.length : insertHere;
                             props.plants.splice(insertHere, 0, res);
                             setName();
+
+                            props.botanicalInfos.push(res.botanicalInfo);
+                            
                             cleanup();
                         })
                         .catch(err => {
@@ -299,7 +303,7 @@ function AddPlantInfo(props: {
                     cleanup();
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
             });
     };
@@ -381,8 +385,8 @@ function AddPlantInfo(props: {
                     Family
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfo?.family || family}
-                    editable={props.botanicalInfo === undefined}
+                    text={props.botanicalInfoToAdd?.family || family}
+                    editable={props.botanicalInfoToAdd === undefined}
                     onChange={setFamily}
                 />
             </Box>
@@ -391,8 +395,8 @@ function AddPlantInfo(props: {
                     Genus
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfo?.genus || genus}
-                    editable={props.botanicalInfo === undefined}
+                    text={props.botanicalInfoToAdd?.genus || genus}
+                    editable={props.botanicalInfoToAdd === undefined}
                     onChange={setGenus}
                 />
             </Box>
@@ -401,13 +405,13 @@ function AddPlantInfo(props: {
                     Species
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfo?.species || species}
-                    editable={props.botanicalInfo === undefined}
+                    text={props.botanicalInfoToAdd?.species || species}
+                    editable={props.botanicalInfoToAdd === undefined}
                     onChange={setSpecies}
                 />
             </Box>
             {
-                props.botanicalInfo === undefined &&
+                props.botanicalInfoToAdd === undefined &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Thumbnail
@@ -527,7 +531,8 @@ export default function AddPlant(props: {
     requestor: AxiosInstance,
     open: boolean,
     close: () => void,
-    botanicalInfo?: botanicalInfo,
+    botanicalInfoToAdd?: botanicalInfo,
+    botanicalInfos: botanicalInfo[],
     plants: plant[],
     name?: string,
     printError: (err: any) => void;
@@ -568,7 +573,7 @@ export default function AddPlant(props: {
                     requestor={props.requestor}
                     open={props.open}
                     close={props.close}
-                    botanicalInfo={props.botanicalInfo}
+                    botanicalInfo={props.botanicalInfoToAdd}
                     printError={props.printError}
                     image={selectedImage}
                 />
@@ -577,7 +582,8 @@ export default function AddPlant(props: {
                     plants={props.plants}
                     open={props.open}
                     close={props.close}
-                    botanicalInfo={props.botanicalInfo}
+                    botanicalInfoToAdd={props.botanicalInfoToAdd}
+                    botanicalInfos={props.botanicalInfos}
                     printError={props.printError}
                     setSelectedImage={setSelectedImage}
                     selectedImage={selectedImage}

@@ -184,7 +184,7 @@ export default function SearchPage(props: {
 
     const retrieveBotanicalInfos = (): void => {
         let backendUrl: string;
-        if (scientificName == "") {
+        if (scientificName === "") {
             backendUrl = "botanical-info";
         } else {
             backendUrl = `botanical-info/partial/${scientificName}`;
@@ -214,7 +214,8 @@ export default function SearchPage(props: {
                 requestor={props.requestor}
                 open={addPlantOpen}
                 close={() => setAddPlantOpen(false)}
-                botanicalInfo={selectedBotanicalInfo}
+                botanicalInfoToAdd={selectedBotanicalInfo}
+                botanicalInfos={botanicalInfos}
                 plants={props.plants}
                 name={scientificName}
                 printError={props.printError}
@@ -265,7 +266,7 @@ export default function SearchPage(props: {
                     </>
                 }
                 {
-                    botanicalInfos.map((botanicalInfo, index) => {
+                    botanicalInfos.map(botanicalInfo => {
                         return <BotanicalEntity
                             entity={botanicalInfo}
                             requestor={props.requestor}
@@ -274,17 +275,19 @@ export default function SearchPage(props: {
                                 setAddPlantOpen(true);
                             }}
                             addEntity={(en: plant) => props.plants.push(en)}
-                            key={index}
+                            key={botanicalInfo.id}
                             printError={props.printError}
                         />;
                     })
                 }
-                <AddNewBotanicalInfo addClick={() => {
-                    setSelectedBotanicalInfo(undefined);
-                    setAddPlantOpen(true);
-                }}
+                <AddNewBotanicalInfo
+                    addClick={() => {
+                        setSelectedBotanicalInfo(undefined);
+                        setAddPlantOpen(true);
+                    }}
                     searchedTerm={scientificName}
-                    requestor={props.requestor} />
+                    requestor={props.requestor}
+                />
             </Box>
         </Box>
     );

@@ -165,11 +165,11 @@ function DiaryEntriesList(props: {
 
 export default function Home(props: { isLoggedIn: () => boolean, requestor: AxiosInstance; }) {
     let navigate: NavigateFunction = useNavigate();
+    const logPageSize = 5;
     const [plants, setPlants] = useState<plant[]>([]);
     const [logEntries, setLogEntries] = useState<diaryEntry[]>([]);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [allEventTypes, setAllEventTypes] = useState<string[]>([]);
-    const logPageSize = 5;
     const [editEventVisible, setEditEventVisible] = useState<boolean>(false);
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
     const [plantDetails, setPlantDetails] = useState<{ plant?: plant, open: boolean; }>({ open: false });
