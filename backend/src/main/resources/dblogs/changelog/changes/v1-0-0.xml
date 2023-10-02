@@ -26,4 +26,30 @@
         />
     </changeSet>
 
+    <changeSet id="addPlantAvatar1" author="MDeLuise">
+        <addColumn tableName="plants">
+            <column name="avatar" type="varchar(255)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_plant_avatarId"
+                             references="entity_images(id)"
+                />
+            </column>
+            <column name="avatar_mode" type="varchar(50)" defaultValue="NONE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="entity_images">
+            <column name="avatar_of" type="bigint">
+                <constraints nullable="true"
+                             foreignKeyName="fk_avatar_plantId"
+                             references="plants(id)"
+                />
+            </column>
+        </addColumn>
+        <!--        <update tableName="plants">-->
+        <!--            <column name="avatar_mode" value='NONE' type="varchar(50)"/>-->
+        <!--            <where>avatar_mode IS NULL</where>-->
+        <!--        </update>-->
+    </changeSet>
+
 </databaseChangeLog>

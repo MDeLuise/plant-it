@@ -236,7 +236,7 @@ export default function AllLogs(props: {
                 plantIds: filteredPlantId.join(","),
             }
         })
-            .then((res) => {
+            .then(res => {
                 let newEntitites: diaryEntry[] = [];
                 entities.forEach((en: diaryEntry) => {
                     newEntitites.push(en);
@@ -257,9 +257,7 @@ export default function AllLogs(props: {
                     setCircularProgressVisible(false);
                 }
             })
-            .catch((err) => {
-                props.printError(err);
-            });
+            .catch(props.printError);
     };
 
     useEffect(() => {

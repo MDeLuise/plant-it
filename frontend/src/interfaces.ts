@@ -4,7 +4,7 @@ export interface botanicalInfo {
     family: string,
     genus: string,
     species: string,
-    imageUrl?: string,
+    imageUrl: string,
     imageId?: string,
     systemWide: boolean,
 }
@@ -14,11 +14,14 @@ export interface plant {
     startDate?: Date,
     endDate?: Date,
     personalName: string,
-    state: string,
+    state: "PURCHASED" | "PLANTED" | "ALIVE" | "GIFTED" | "DEAD",
     ownerId: number,
     botanicalInfo: botanicalInfo,
     diaryId: number,
-    note?: string
+    note?: string,
+    avatarMode: "NONE" | "RANDOM" | "LAST" | "SPECIFIED",
+    avatarImageId?: string,
+    avatarImageUrl?: string; 
 }
 
 export interface diaryEntry {

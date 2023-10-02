@@ -1,10 +1,10 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { useState, useEffect } from "react";
-import { getBotanicalInfoImg, isBigScreen } from "../common";
+import { getPlantAvatarImgSrc, isBigScreen } from "../common";
 import { plant } from "../interfaces";
 
-export default function NewUserPlant(props: {
+export default function UserPlant(props: {
     entity: plant,
     style?: {},
     requestor: AxiosInstance,
@@ -12,28 +12,20 @@ export default function NewUserPlant(props: {
     active: boolean,
     printError: (err: any) => void;
 }) {
-    const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+    const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
     const [wasRenderedOnce, setWasRenderedOnce] = useState<boolean>(false);
 
     const setImageSrc = (): void => {
-        getBotanicalInfoImg(props.requestor, props.entity.botanicalInfo.imageUrl)
-            .then((res) => {
-                setImageLoaded(true);
+        getPlantAvatarImgSrc(props.requestor, props.entity)
+            .then(res => {
                 setImgSrc(res);
+                setImageDownloaded(true);
             })
-            .catch((err) => {
-                props.printError(err);
-                getBotanicalInfoImg(props.requestor, undefined)
-                    .then((res) => {
-                        setImageLoaded(true);
-                        setImgSrc(res);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        props.printError("Cannot load image for plant " + props.entity.personalName);
-                    });
-            });
+            .catch(err => {
+                console.error(err);
+                props.printError("Cannot load plant's avatar image");
+            })
     };
 
     useEffect(() => {
@@ -60,17 +52,13 @@ export default function NewUserPlant(props: {
                 aspectRatio: ".65",
                 flexShrink: 0,
                 position: "relative",
-                // backgroundImage: `url(${imgSrc})`,
-                // backgroundSize: "cover",
-                // backgroundPosition: "center",
                 display: "flex",
                 flexDirection: "column",
-                //border: "1px solid white",
                 margin: "0 0 30px 0",
             }}
         >
             {
-                (!imageLoaded || !wasRenderedOnce) &&
+                (!imageDownloaded || !wasRenderedOnce) &&
                 <Skeleton
                     variant="rounded"
                     animation="wave"
@@ -83,7 +71,7 @@ export default function NewUserPlant(props: {
                 />
             }
             {
-                imageLoaded && wasRenderedOnce &&
+                imageDownloaded && wasRenderedOnce &&
                 <img
                     src={imgSrc}
                     style={{
@@ -93,7 +81,7 @@ export default function NewUserPlant(props: {
                         objectFit: "cover",
                         objectPosition: "center",
                     }}
-                    onLoad={() => setImageLoaded(true)}
+                    onLoad={() => setImageDownloaded(true)}
                 />
             }
             <Box
@@ -102,7 +90,7 @@ export default function NewUserPlant(props: {
                 }}
             />
             {
-                imageLoaded && wasRenderedOnce &&
+                imageDownloaded && wasRenderedOnce &&
                 <Box sx={{
                     height: "25%",
                     display: "flex",

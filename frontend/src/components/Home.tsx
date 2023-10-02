@@ -22,7 +22,7 @@ import { getErrMessage, isBackendReachable } from "../common";
 import ErrorDialog from "./ErrorDialog";
 import AddLogEntry from "./AddLogEntry";
 import PlantDetails from "./PlantDetails";
-import NewUserPlant from "./UserPlant";
+import UserPlant from "./UserPlant";
 import NewLogEntry from "./LogEntry";
 
 
@@ -111,7 +111,7 @@ function UserPlantsList(props: {
                                 style={{ width: "45vw" }}
                                 virtualIndex={index}
                             >
-                                <NewUserPlant
+                                <UserPlant
                                     entity={entity}
                                     key={entity.id}
                                     requestor={props.requestor}
@@ -179,32 +179,28 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
     const getAllEntities = (): void => {
         props.requestor.get("plant/_count")
-            .then((res) => {
+            .then(res => {
                 let entitiesSize = res.data > 0 ? res.data : 1;
                 getEntities(entitiesSize);
             })
-            .catch((err) => {
-                printError(err);
-            });
+            .catch(printError);
     };
 
     const getEntities = (count: number): void => {
         props.requestor.get(`plant?sortBy=personalName&sortDir=ASC&pageSize=${count}`)
-            .then((res) => {
+            .then(res => {
                 let newEntities: plant[] = [];
                 res.data.content.forEach((en: plant) => {
                     newEntities.push(en);
                 });
                 setPlants(newEntities);
             })
-            .catch((err) => {
-                printError(err);
-            });
+            .catch(printError);
     };
 
     const getLog = (): void => {
         props.requestor.get(`/diary/entry?pageSize=${logPageSize}`)
-            .then((res) => {
+            .then(res => {
                 setLogEntries(res.data.content);
                 // it should not be necessary, but if omitted the first time the edit event dialog is
                 // opened, the plantName and eventType are not loaded. Don't know why.
@@ -222,19 +218,15 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     } as diaryEntry);
                 }
             })
-            .catch((err) => {
-                printError(err);
-            });
+            .catch(printError);
     };
 
     const getDiaryEvents = (): void => {
         props.requestor.get("diary/entry/type")
-            .then((res) => {
+            .then(res => {
                 setAllEventTypes(res.data.sort());
             })
-            .catch((err) => {
-                printError(err);
-            });
+            .catch(printError);
     };
 
 
@@ -288,7 +280,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             navigate("/auth");
         } else {
             isBackendReachable(props.requestor)
-                .then((res) => {
+                .then(res => {
                     if (!res) {
                         setErrorDialogText("Cannot connect to the backend");
                         setErrorDialogShown(true);
