@@ -31,9 +31,8 @@ public class DiaryService {
 
 
     public Diary get(Long targetId) {
-        Plant plant = plantService.get(targetId);
-        return diaryRepository.findByOwnerAndTarget(
-                                  authenticatedUserService.getAuthenticatedUser(), plant)
+        final Plant plant = plantService.get(targetId);
+        return diaryRepository.findByOwnerAndTarget(authenticatedUserService.getAuthenticatedUser(), plant)
                               .orElseThrow(() -> new ResourceNotFoundException(targetId));
     }
 }

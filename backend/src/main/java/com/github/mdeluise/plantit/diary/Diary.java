@@ -1,5 +1,10 @@
 package com.github.mdeluise.plantit.diary;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntry;
 import com.github.mdeluise.plantit.plant.Plant;
@@ -14,11 +19,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "diaries")
@@ -92,6 +92,6 @@ public class Diary implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, target);
+        return Objects.hash(id);
     }
 }

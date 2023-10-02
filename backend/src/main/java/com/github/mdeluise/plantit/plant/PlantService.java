@@ -57,7 +57,11 @@ public class PlantService {
         value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}"
     )
     public Plant get(Long id) {
-        return plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        final Plant result = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        if (result.getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        }
+        return result;
     }
 
 
@@ -100,7 +104,8 @@ public class PlantService {
 
 
     public long getNumberOfDistinctBotanicalInfo() {
-        return getAll(Pageable.unpaged()).getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
+        return getAll(Pageable.unpaged()).getContent().stream()
+                                         .map(entity -> entity.getBotanicalInfo().getId())
                                          .collect(Collectors.toSet()).size();
     }
 
@@ -156,6 +161,7 @@ public class PlantService {
         toUpdate.setState(updated.getState());
         toUpdate.setNote(updated.getNote());
         toUpdate.setStartDate(updated.getStartDate());
+        toUpdate.setEndDate(updated.getEndDate());
 
         handleAvatar(updated, toUpdate);
 

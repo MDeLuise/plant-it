@@ -1,14 +1,8 @@
-package com.github.mdeluise.plantit.diary;
+package com.github.mdeluise.plantit.diary.entry;
 
 import java.util.Collection;
 import java.util.List;
 
-import com.github.mdeluise.plantit.diary.entry.DiaryEntry;
-import com.github.mdeluise.plantit.diary.entry.DiaryEntryDTO;
-import com.github.mdeluise.plantit.diary.entry.DiaryEntryDTOConverter;
-import com.github.mdeluise.plantit.diary.entry.DiaryEntryService;
-import com.github.mdeluise.plantit.diary.entry.DiaryEntryStats;
-import com.github.mdeluise.plantit.diary.entry.DiaryEntryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,21 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/diary")
-public class DiaryController {
+@RequestMapping("/diary/entry")
+public class DiaryEntryController {
     private final DiaryEntryService diaryEntryService;
     private final DiaryEntryDTOConverter diaryEntryDtoConverter;
 
 
     @Autowired
-    public DiaryController(DiaryEntryService diaryEntryService, DiaryEntryDTOConverter diaryEntryDtoConverter) {
+    public DiaryEntryController(DiaryEntryService diaryEntryService, DiaryEntryDTOConverter diaryEntryDtoConverter) {
         this.diaryEntryService = diaryEntryService;
         this.diaryEntryDtoConverter = diaryEntryDtoConverter;
     }
 
 
     @SuppressWarnings("ParameterNumber") // FIXME
-    @GetMapping("/entry")
+    @GetMapping
     public ResponseEntity<Page<DiaryEntryDTO>> getAllEntries(
         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
         @RequestParam(defaultValue = "25", required = false) Integer pageSize,
@@ -54,14 +48,14 @@ public class DiaryController {
     }
 
 
-    @GetMapping("/entry/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DiaryEntryDTO> get(@PathVariable Long id) {
         final DiaryEntry result = diaryEntryService.get(id);
         return ResponseEntity.ok(diaryEntryDtoConverter.convertToDTO(result));
     }
 
 
-    @GetMapping("/entry/all/{diaryId}")
+    @GetMapping("/all/{diaryId}")
     public ResponseEntity<Page<DiaryEntryDTO>> getEntries(
         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
         @RequestParam(defaultValue = "25", required = false) Integer pageSize,
@@ -74,47 +68,47 @@ public class DiaryController {
     }
 
 
-    @GetMapping("/entry/type")
+    @GetMapping("/type")
     public ResponseEntity<Collection<DiaryEntryType>> getEntryTypes() {
         final Collection<DiaryEntryType> result = diaryEntryService.getAllTypes();
         return ResponseEntity.ok(result);
     }
 
 
-    @PostMapping("/entry")
+    @PostMapping
     public ResponseEntity<DiaryEntryDTO> save(@RequestBody DiaryEntryDTO diaryEntryDTO) {
         final DiaryEntry result = diaryEntryService.save(diaryEntryDtoConverter.convertFromDTO(diaryEntryDTO));
         return ResponseEntity.ok(diaryEntryDtoConverter.convertToDTO(result));
     }
 
 
-    @PutMapping("/entry/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DiaryEntryDTO> save(@PathVariable Long id, @RequestBody DiaryEntryDTO diaryEntryDTO) {
         final DiaryEntry result = diaryEntryService.update(id, diaryEntryDtoConverter.convertFromDTO(diaryEntryDTO));
         return ResponseEntity.ok(diaryEntryDtoConverter.convertToDTO(result));
     }
 
 
-    @DeleteMapping("/entry/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         diaryEntryService.delete(id);
         return ResponseEntity.ok("Success");
     }
 
 
-    @GetMapping("/entry/_count")
+    @GetMapping("/_count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(diaryEntryService.count());
     }
 
 
-    @GetMapping("/entry/{plantId}/_count")
+    @GetMapping("/{plantId}/_count")
     public ResponseEntity<Long> countByPlant(@PathVariable Long plantId) {
         return ResponseEntity.ok(diaryEntryService.count(plantId));
     }
 
 
-    @GetMapping("/entry/{plantId}/stats")
+    @GetMapping("/{plantId}/stats")
     public ResponseEntity<Collection<DiaryEntryStats>> getStats(@PathVariable Long plantId) {
         final Collection<DiaryEntryStats> result = diaryEntryService.getStats(plantId);
         return ResponseEntity.ok(result);

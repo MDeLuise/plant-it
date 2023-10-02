@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,18 +53,18 @@ public class BotanicalInfoService {
 
 
     private boolean isBotanicalInfoAccessibleToUser(BotanicalInfo botanicalInfo, User user) {
-        return botanicalInfo instanceof GlobalBotanicalInfo ||
-                   botanicalInfo instanceof UserCreatedBotanicalInfo &&
-                       ((UserCreatedBotanicalInfo) botanicalInfo).getCreator().equals(user);
+        return botanicalInfo instanceof GlobalBotanicalInfo || botanicalInfo instanceof UserCreatedBotanicalInfo &&
+                                                                   ((UserCreatedBotanicalInfo) botanicalInfo).getCreator()
+                                                                                                             .equals(
+                                                                                                                 user);
     }
 
 
     public int countPlants(Long botanicalInfoId) {
         return botanicalInfoRepository.findById(botanicalInfoId)
                                       .orElseThrow(() -> new ResourceNotFoundException(botanicalInfoId)).getPlants()
-                                      .stream()
-                                      .filter(pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser()))
-                                      .collect(Collectors.toSet())
+                                      .stream().filter(
+                pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser())).collect(Collectors.toSet())
                                       .size();
     }
 
@@ -85,7 +86,13 @@ public class BotanicalInfoService {
 
 
     public BotanicalInfo get(Long id) {
-        return botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        final BotanicalInfo result =
+            botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        if (result instanceof UserCreatedBotanicalInfo u &&
+                u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        }
+        return result;
     }
 
 
@@ -101,14 +108,22 @@ public class BotanicalInfoService {
     public BotanicalInfo update(BotanicalInfo updatedBotanicalInfo) {
         if (!botanicalInfoRepository.existsById(updatedBotanicalInfo.getId())) {
             throw new ResourceNotFoundException(updatedBotanicalInfo.getId());
+        } else if (botanicalInfoRepository.findById(updatedBotanicalInfo.getId()).get()
+            instanceof UserCreatedBotanicalInfo u && u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
         }
         return botanicalInfoRepository.save(updatedBotanicalInfo);
     }
 
 
     public Optional<BotanicalInfo> get(String scientificName, String family, String genus, String species) {
-        return botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(
-            scientificName, family, genus, species);
+        final Optional<BotanicalInfo> result =
+            botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(scientificName, family, genus, species);
+        if (result.isPresent() && result.get() instanceof UserCreatedBotanicalInfo u &&
+                u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        }
+        return result;
     }
 
 

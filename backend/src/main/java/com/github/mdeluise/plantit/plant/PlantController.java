@@ -56,7 +56,7 @@ public class PlantController {
 
 
     @GetMapping("/_count")
-    @Operation(summary = "Count the plants.", description = "Count the plants.")
+    @Operation(summary = "Count the plants", description = "Count the plants.")
     public ResponseEntity<Long> count() {
         final long result = plantService.count();
         return ResponseEntity.ok(result);
@@ -73,6 +73,7 @@ public class PlantController {
 
 
     @PutMapping
+    @Operation(summary = "Update an existing plant", description = "Update an existing plant.")
     public ResponseEntity<PlantDTO> update(@RequestBody PlantDTO plantDTO) {
         final Plant result = plantService.update(plantDTOConverter.convertFromDTO(plantDTO));
         return ResponseEntity.ok(plantDTOConverter.convertToDTO(result));
@@ -80,6 +81,7 @@ public class PlantController {
 
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an existing plant", description = "Delete an existing plant.")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         plantService.delete(id);
         return ResponseEntity.ok("Success");

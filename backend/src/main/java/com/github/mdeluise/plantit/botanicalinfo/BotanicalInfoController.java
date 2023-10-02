@@ -1,5 +1,9 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/botanical-info")
@@ -76,7 +76,7 @@ public class BotanicalInfoController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a botanical info.", description = "Delete the botanical info with the specified `id`.")
     public ResponseEntity<String> remove(@PathVariable Long id) {
-        botanicalInfoService.remove(id);
+        botanicalInfoService.delete(id);
         return ResponseEntity.ok("success");
     }
 }

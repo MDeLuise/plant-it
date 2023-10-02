@@ -1,13 +1,17 @@
 package com.github.mdeluise.plantit.botanicalinfo.controller;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.TestEnvironment;
+import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoController;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTOConverter;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
 import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyFilter;
@@ -17,6 +21,7 @@ import com.github.mdeluise.plantit.security.jwt.JwtTokenFilter;
 import com.github.mdeluise.plantit.security.jwt.JwtTokenUtil;
 import com.github.mdeluise.plantit.security.jwt.JwtWebUtil;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +35,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Set;
-
 @WebMvcTest(BotanicalInfoController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @WithMockUser(username = "user")
 @Import(TestEnvironment.class)
-public class BotanicalInfoControllerTest {
+class BotanicalInfoControllerTest {
     @MockBean
     JwtTokenFilter jwtTokenFilter;
     @MockBean
@@ -63,7 +66,8 @@ public class BotanicalInfoControllerTest {
     MockMvc mockMvc;
 
     @Test
-    void whenGetBotanicalInfo_thenShouldReturnBotanicalInfo() throws Exception {
+    @DisplayName("Should be able to retrieve all botanical info")
+    void shouldGetAll() throws Exception {
         final BotanicalInfo botanicalInfo1 = new BotanicalInfo();
         botanicalInfo1.setId(1L);
         botanicalInfo1.setScientificName("scientific_name_1");
@@ -95,9 +99,10 @@ public class BotanicalInfoControllerTest {
 
 
     @Test
-    void whenDeleteBotanicalInfo_thenShouldReturnOk() throws Exception {
+    @DisplayName("Should be able to delete a specific botanical info")
+    void shouldDelete() throws Exception {
         final long idToRemove = 0;
-        Mockito.doNothing().when(botanicalInfoService).remove(idToRemove);
+        Mockito.doNothing().when(botanicalInfoService).delete(idToRemove);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/botanical-info/" + idToRemove))
                .andExpect(MockMvcResultMatchers.status().isOk());
@@ -105,9 +110,10 @@ public class BotanicalInfoControllerTest {
 
 
     @Test
-    void whenDeleteNonExistingBotanicalInfo_thenShouldError() throws Exception {
+    @DisplayName("Should return error if trying to delete a non existing botanical info")
+    void shouldReturnErrorWhenDeleteNonExisting() throws Exception {
         final long idToRemove = 0;
-        Mockito.doThrow(ResourceNotFoundException.class).when(botanicalInfoService).remove(idToRemove);
+        Mockito.doThrow(ResourceNotFoundException.class).when(botanicalInfoService).delete(idToRemove);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/botanical-info/0"))
                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -115,11 +121,28 @@ public class BotanicalInfoControllerTest {
 
 
     @Test
-    void whenCreateBotanicalInfo_thenShouldCreate() throws Exception {
-        BotanicalInfo toSave = new BotanicalInfo();
+    @DisplayName("Should return error when delete another user's botanical info")
+    void shouldReturnErrorWhenDeleteAnotherUser() throws Exception {
+        final User authenticatedUser = new User();
+        authenticatedUser.setId(1L);
+        final User owner = new User();
+        owner.setId(1L);
+        final long idToRemove = 0;
+
+        Mockito.doThrow(new UnauthorizedException()).when(botanicalInfoService).delete(idToRemove);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/botanical-info/" + idToRemove))
+               .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+    }
+
+
+    @Test
+    @DisplayName("Should save new botanical info and return it")
+    void shouldSave() throws Exception {
+        final BotanicalInfo toSave = new BotanicalInfo();
         toSave.setSpecies("species");
         toSave.setId(1L);
-        BotanicalInfoDTO toSaveDTO = new BotanicalInfoDTO();
+        final BotanicalInfoDTO toSaveDTO = new BotanicalInfoDTO();
         toSaveDTO.setSpecies("species");
         toSaveDTO.setId(1L);
 
