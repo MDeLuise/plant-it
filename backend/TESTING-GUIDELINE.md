@@ -94,3 +94,23 @@ Example:
 
 When you can not find a method with a specific exception, use the method
 `assertThatThrownBy()`.
+
+### Coverage
+
+#### Verify possible missing scenarios using PIT (pitest)
+
+Sometimes we can forget to test one or two scenarios, and it’s acceptable.
+PIT can help us to analyze the code and see the areas not covered by tests applying the mutation testing.
+
+After you finish writing your tests, ensure that the main scenario and corner cases (exception) are covered.
+Check it following these steps:
+
+1. Run `mvn clean test-compile -P pitest`
+1. Open the `index.html` file located at `target/pit-reports`
+1. In the report, click on `jakarta.data.repository` package link
+1. Implement new tests focusing on the not covered _Mutation Coverage_
+section
+   * Click in the class name to see the possible not covered code, marked in red
+1. Repeat this process until you have the `Mutation Coverage` covered
+
+NOTE: we don't seek 100% of coverage, but we must make sure the main scenario and all the corner cases have tests.
