@@ -181,19 +181,19 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         props.requestor.get("plant/_count")
             .then(res => {
                 let entitiesSize = res.data > 0 ? res.data : 1;
-                getEntities(entitiesSize);
+                getPlants(entitiesSize);
             })
             .catch(printError);
     };
 
-    const getEntities = (count: number): void => {
+    const getPlants = (count: number): void => {
         props.requestor.get(`plant?sortBy=personalName&sortDir=ASC&pageSize=${count}`)
             .then(res => {
-                let newEntities: plant[] = [];
+                let newPlants: plant[] = [];
                 res.data.content.forEach((en: plant) => {
-                    newEntities.push(en);
+                    newPlants.push(en);
                 });
-                setPlants(newEntities);
+                setPlants(newPlants);
             })
             .catch(printError);
     };
@@ -236,15 +236,6 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     };
 
 
-    const updatePlantFetchedCopy = (updated: plant) => {
-        const indexToUpdate: number = plants.map(pl => pl.id).indexOf(updated.id);
-        //plants[indexToUpdate] = updated;
-        const updatedPlants = [...plants];
-        updatedPlants[indexToUpdate] = updated;
-        setPlants(updatedPlants);
-    };
-
-
     const deletePlantFetchedCopy = (deleted?: plant) => {
         if (deleted === undefined) {
             return;
@@ -274,6 +265,21 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         const newLogEntries: diaryEntry[] = logEntries.filter((ev) => ev.diaryTargetId !== deletedPlant.id);
         setLogEntries(newLogEntries);
     };
+
+    const reloadPlant = (id: number) => {
+        props.requestor.get(`plant/${id}`)
+            .then(res => {
+                const newPlants = [...plants].map((pl => {
+                    if (pl.id !== id) {
+                        return pl;
+                    }
+                    return res.data;
+                }))
+                setPlants(newPlants);
+                setPlantDetails({...plantDetails, plant: res.data});
+            })
+            .catch(printError);
+    }
 
     useEffect(() => {
         if (!props.isLoggedIn()) {
@@ -366,8 +372,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 printError={printError}
                 openAddLogEntry={() => setAddDiaryLogOpen(true)}
                 onUpdate={updated => {
-                    updatePlantFetchedCopy(updated);
                     updateEventFetchedCopy(updated);
+                    reloadPlant(updated.id);
                 }}
                 onDelete={deleted => {
                     deletePlantFetchedCopy(deleted);

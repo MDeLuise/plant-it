@@ -46,8 +46,7 @@ public class PlantService {
 
 
     @Cacheable(
-        value = "plants",
-        key = "{#pageable, @authenticatedUserService.getAuthenticatedUser().id}"
+        value = "plants", key = "{#pageable, @authenticatedUserService.getAuthenticatedUser().id}"
     )
     public Page<Plant> getAll(Pageable pageable) {
         return plantRepository.findAllByOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
@@ -55,8 +54,7 @@ public class PlantService {
 
 
     @Cacheable(
-        value = "plants",
-        key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}"
+        value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}"
     )
     public Plant get(Long id) {
         return plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
@@ -72,8 +70,7 @@ public class PlantService {
         evict = {
             @CacheEvict(value = "plants", allEntries = true),
             @CacheEvict(
-                value = "botanical-info",
-                allEntries = true,
+                value = "botanical-info", allEntries = true,
                 condition = "#toSave.botanicalInfo instanceof T(com.github.mdeluise.plantit.botanicalinfo" +
                             ".UserCreatedBotanicalInfo)"
             )
@@ -103,10 +100,8 @@ public class PlantService {
 
 
     public long getNumberOfDistinctBotanicalInfo() {
-        return getAll(Pageable.unpaged()).getContent().stream()
-                                         .map(entity -> entity.getBotanicalInfo().getId())
-                                         .collect(Collectors.toSet())
-                                         .size();
+        return getAll(Pageable.unpaged()).getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
+                                         .collect(Collectors.toSet()).size();
     }
 
 
@@ -169,21 +164,33 @@ public class PlantService {
 
 
     private void handleAvatar(Plant updated, Plant toUpdate) {
+        final PlantImage toUpdateAvatarImage = toUpdate.getAvatarImage();
+        final PlantImage updatedAvatarImage = updated.getAvatarImage();
+        if (updatedAvatarImage == null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            throw new IllegalArgumentException(
+                "Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
+        }
         toUpdate.setAvatarMode(updated.getAvatarMode());
-        final PlantImage previousAvatarImage = toUpdate.getAvatarImage();
-        final String currentAvatarImageId = updated.getAvatarImage().getId();
-        final PlantImage newAvatarImage = plantImageRepository.findById(currentAvatarImageId).orElseThrow(
-            () -> new ResourceNotFoundException(currentAvatarImageId));
-        if (previousAvatarImage != null && previousAvatarImage.equals(newAvatarImage)) {
-            return;
+        if (toUpdateAvatarImage != null) {
+            final PlantImage savedAvatarImageToUpdate = plantImageRepository.findById(toUpdateAvatarImage.getId())
+                                                                            .orElseThrow(
+                                                                                () -> new ResourceNotFoundException(
+                                                                                    toUpdateAvatarImage.getId()));
+            savedAvatarImageToUpdate.setAvatarOf(null);
+            plantImageRepository.save(savedAvatarImageToUpdate);
         }
-        if (previousAvatarImage != null) {
-            previousAvatarImage.setAvatarOf(null);
-            plantImageRepository.save(previousAvatarImage);
+        if (updatedAvatarImage != null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            final String updatedAvatarImageId = updatedAvatarImage.getId();
+            final PlantImage newAvatarImage = plantImageRepository.findById(updatedAvatarImageId).orElseThrow(
+                () -> new ResourceNotFoundException(updatedAvatarImageId));
+            newAvatarImage.setAvatarOf(toUpdate);
+            plantImageRepository.save(newAvatarImage);
+            newAvatarImage.setAvatarOf(toUpdate);
+            plantImageRepository.save(newAvatarImage);
+            toUpdate.setAvatarImage(newAvatarImage);
+        } else {
+            toUpdate.setAvatarImage(null);
         }
-
-        newAvatarImage.setAvatarOf(toUpdate);
-        toUpdate.setAvatarImage(newAvatarImage);
     }
 
 

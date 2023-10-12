@@ -156,15 +156,15 @@ public class FileSystemImageStorageService implements ImageStorageService {
     // FIXME plantImageRepository and PlantImage should not be used,
     // maybe DeletePlantImageEntityAndFileCollaborator collaborator?
     public void remove(String id) {
-        final PlantImage entityToDelete = plantImageRepository.findById(id)
-                                                              .orElseThrow(() -> new ResourceNotFoundException(id));
-        if (entityToDelete.getAvatarOf() != null) {
-            final Plant toUpdate = entityToDelete.getAvatarOf();
+        final EntityImage entityToDelete = imageRepository.findById(id)
+                                                          .orElseThrow(() -> new ResourceNotFoundException(id));
+        if (entityToDelete instanceof PlantImage p && p.getAvatarOf() != null) {
+            final Plant toUpdate = p.getAvatarOf();
             toUpdate.setAvatarImage(null);
             toUpdate.setAvatarMode(PlantAvatarMode.NONE);
             plantRepository.save(toUpdate);
-            entityToDelete.setAvatarOf(null);
-            plantImageRepository.save(entityToDelete);
+            p.setAvatarOf(null);
+            plantImageRepository.save(p);
         }
         final String entityImagePath = get(id).getPath();
         if (entityImagePath != null) {

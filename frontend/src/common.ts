@@ -72,33 +72,33 @@ export const imgToBase64 = (url: string, callback: (arg: string) => void): void 
 };
 
 
-export const getPlantAvatarImgSrc = (requestor: AxiosInstance, plant: plant): Promise<string> => {
-    if (plant.avatarMode === "SPECIFIED") {
-        return getPlantImg(requestor, plant.avatarImageUrl);
-    } else if (plant.avatarMode === "NONE") {
-        return getPlantImg(requestor, plant.botanicalInfo.imageUrl);
-    } else {
-        return new Promise((resolve, reject) => {
-            requestor.get(`/image/entity/all/${plant.id}`)
-                .then(res => {
-                    if (res.data.length === 0) {
-                        return getPlantImg(requestor, plant.botanicalInfo.imageUrl)
-                            .then(resolve)
-                            .catch(reject)
-                    }
-                    if (plant.avatarMode === "LAST") {
-                        const lastIndex = res.data.length - 1;
-                        return getPlantImg(requestor, `/${res.data[lastIndex]}`)
-                            .then(resolve)
-                            .catch(reject)
-                    } else {
-                        const randomIndex = Math.floor(Math.random() * res.data.length);
-                        return getPlantImg(requestor, `/${res.data[randomIndex]}`)
-                            .then(resolve)
-                            .catch(reject)
-                    }
-                })
-                .catch(reject)
-        });
-    }
-}
+// export const getPlantAvatarImgSrc = (requestor: AxiosInstance, plant: plant): Promise<string> => {
+//     if (plant.avatarMode === "SPECIFIED") {
+//         return getPlantImg(requestor, plant.avatarImageUrl);
+//     } else if (plant.avatarMode === "NONE") {
+//         return getPlantImg(requestor, plant.botanicalInfo.imageUrl);
+//     } else {
+//         return new Promise((resolve, reject) => {
+//             requestor.get(`/image/entity/all/${plant.id}`)
+//                 .then(res => {
+//                     if (res.data.length === 0) {
+//                         return getPlantImg(requestor, plant.botanicalInfo.imageUrl)
+//                             .then(resolve)
+//                             .catch(reject)
+//                     }
+//                     if (plant.avatarMode === "LAST") {
+//                         const lastIndex = res.data.length - 1;
+//                         return getPlantImg(requestor, `/${res.data[lastIndex]}`)
+//                             .then(resolve)
+//                             .catch(reject)
+//                     } else {
+//                         const randomIndex = Math.floor(Math.random() * res.data.length);
+//                         return getPlantImg(requestor, `/${res.data[randomIndex]}`)
+//                             .then(resolve)
+//                             .catch(reject)
+//                     }
+//                 })
+//                 .catch(reject)
+//         });
+//     }
+// }

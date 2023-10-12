@@ -11,7 +11,7 @@ import "swiper/css/free-mode";
 import 'swiper/css/navigation';
 import 'swiper/css/zoom';
 import "../style/PlantDetails.scss";
-import { getPlantAvatarImgSrc, getPlantImg, imgToBase64, titleCase } from "../common";
+import { getPlantImg, imgToBase64, titleCase } from "../common";
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
@@ -85,7 +85,7 @@ function PlantImageFullSize(props: {
             .then(res => {
                 setImageMetadata({
                     description: res.data.description,
-                    createOn: res.data.createOn,
+                    createOn: res.data.savedAt,
                 })
             })
             .catch(props.printError);
@@ -377,7 +377,7 @@ function PlantHeader(props: {
         if (props.entity === undefined) {
             return;
         }
-        getPlantAvatarImgSrc(props.requestor, props.entity)
+        getPlantImg(props.requestor, props.entity.avatarImageUrl)
             .then(res => {
                 setImageSrc(res);
                 setImageDownloaded(true);
@@ -953,7 +953,7 @@ function BottomBar(props: {
         props.requestor.put("/plant", props.updatedPlant)
             .then(res => {
                 props.onUpdate(res.data);
-                props.close();
+                props.toggleEditPlantMode();
             })
             .catch(props.printError);
     };
@@ -1183,7 +1183,7 @@ export default function PlantDetails(props: {
             avatarImageUrl: `/${id}`,
         })
             .then(res => {
-                setUpdatedEntity(res.data);
+                props.onUpdate(res.data);
             })
             .catch(props.printError);
     };
@@ -1229,9 +1229,9 @@ export default function PlantDetails(props: {
             printError={props.printError}
             setAvatarImage={setAvatarImage}
             setImageIds={setImageIds}
-            avatarImageId={updatedEntity?.avatarImageId}
+            avatarImageId={updatedEntity?.avatarMode === "SPECIFIED" ? updatedEntity.avatarImageId : undefined}
             openConfirmDialog={(text: string, callback: () => void) => {
-                setConfirmDialogStatus({ text: text, confirmCallBack: callback, open: true })
+                setConfirmDialogStatus({ text: text, confirmCallBack: callback, open: true });
             }}
             onClose={() => {
                 setPlantImgFullSizeState({
@@ -1243,8 +1243,6 @@ export default function PlantDetails(props: {
                 if (props.plant === undefined || updatedEntity === undefined || imgId != updatedEntity.avatarImageId) {
                     return;
                 }
-                // just to live reload the Plant Avatar in the Header
-                setUpdatedEntity({ ...props.plant, avatarMode: "NONE", });
             }}
         />
 
@@ -1301,6 +1299,9 @@ export default function PlantDetails(props: {
                 plant={props.plant}
                 addUploadedImgs={(arg: string) => {
                     setImageIds([arg, ...imageIds]);
+                    if (props.plant !== undefined) {
+                        props.onUpdate(props.plant);
+                    }
                 }}
                 printError={props.printError}
                 editModeEnabled={editModeEnabled}

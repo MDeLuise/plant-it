@@ -1,7 +1,7 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { useState, useEffect } from "react";
-import { getPlantAvatarImgSrc, isBigScreen } from "../common";
+import { getPlantImg, isBigScreen } from "../common";
 import { plant } from "../interfaces";
 
 export default function UserPlant(props: {
@@ -17,7 +17,7 @@ export default function UserPlant(props: {
     const [wasRenderedOnce, setWasRenderedOnce] = useState<boolean>(false);
 
     const setImageSrc = (): void => {
-        getPlantAvatarImgSrc(props.requestor, props.entity)
+        getPlantImg(props.requestor, props.entity.avatarImageUrl)
             .then(res => {
                 setImgSrc(res);
                 setImageDownloaded(true);

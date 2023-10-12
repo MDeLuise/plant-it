@@ -144,7 +144,7 @@ function AddPlantInfo(props: {
     requestor: AxiosInstance,
     botanicalInfoToAdd?: botanicalInfo,
     botanicalInfos: botanicalInfo[],
-    name?: string,
+    searchedName?: string,
     plants: plant[],
     open: boolean,
     close: () => void,
@@ -164,12 +164,12 @@ function AddPlantInfo(props: {
     const setName = (): Promise<string> => {
         return new Promise((resolve, reject) => {
             if (props.botanicalInfoToAdd === undefined) {
-                if (props.name === undefined) {
+                if (props.searchedName === undefined) {
                     setPlantName("");
                     return resolve("");
                 } else {
-                    setPlantName(props.name);
-                    return resolve(props.name);
+                    setPlantName(props.searchedName);
+                    return resolve(props.searchedName);
                 }
             }
             if (props.botanicalInfoToAdd.id === null) {
@@ -589,6 +589,7 @@ export default function AddPlant(props: {
                     printError={props.printError}
                     setSelectedImage={setSelectedImage}
                     selectedImage={selectedImage}
+                    searchedName={props.name}
                 />
             </Box>
         </Drawer >
