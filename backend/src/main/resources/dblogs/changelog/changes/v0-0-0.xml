@@ -80,7 +80,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_userId" references="application_users(id)" />
+                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_userId"
+                             references="application_users(id)"/>
             </column>
         </createTable>
 
@@ -97,6 +98,7 @@
     </changeSet>
 
 
+    <!-- updated in v1-0-0.xml file -->
     <changeSet id="createPlantTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -135,6 +137,7 @@
     </changeSet>
 
 
+    <!-- updated in v1-0-0.xml file -->
     <changeSet id="createEntityImageTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -149,7 +152,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="botanical_info_entity_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_entityImage_botanicalInfoId" references="botanical_infos(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_entityImage_botanicalInfoId"
+                             references="botanical_infos(id)"/>
             </column>
             <column name="plant_entity_id" type="bigint">
                 <constraints nullable="true" foreignKeyName="fk_entityImage_plantId" references="plants(id)"/>

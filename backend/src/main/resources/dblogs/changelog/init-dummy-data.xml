@@ -50,6 +50,7 @@
             <column name="owner_id" value="99"/>
             <column name="botanical_name_id" value="99"/>
             <column name="personal_name" value="Sedum spectabile"/>
+            <column name="avatar_mode" value="NONE"/>
         </insert>
         <insert tableName="plants">
             <column name="id" value="98"/>
@@ -58,6 +59,7 @@
             <column name="plant_state" value="ALIVE"/>
             <column name="owner_id" value="99"/>
             <column name="botanical_name_id" value="98"/>
+            <column name="avatar_mode" value="NONE"/>
         </insert>
         <insert tableName="plants">
             <column name="id" value="97"/>
@@ -74,6 +76,7 @@
                             the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
                             and more recently with desktop publishing software like Aldus PageMaker
                             including versions of Lorem Ipsum."/>
+            <column name="avatar_mode" value="NONE"/>
         </insert>
     </changeSet>
 

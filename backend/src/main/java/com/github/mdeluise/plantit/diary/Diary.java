@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -73,5 +74,24 @@ public class Diary implements Serializable {
 
     public void setEntries(Set<DiaryEntry> entries) {
         this.entries = entries;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Diary diary = (Diary) o;
+        return Objects.equals(id, diary.id) || Objects.equals(target, diary.target);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, target);
     }
 }

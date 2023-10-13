@@ -1,6 +1,9 @@
 package com.github.mdeluise.plantit.diary.entry;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -114,7 +117,9 @@ public class DiaryEntryService {
             lastEvent.ifPresent(
                 diaryEntry -> result.add(new DiaryEntryStats(diaryEntry.getType(), diaryEntry.getDate())));
         }
-        return result;
+        final List<DiaryEntryStats> sortedResult = new ArrayList<>(result.stream().toList());
+        sortedResult.sort(Comparator.comparing(DiaryEntryStats::date));
+        Collections.reverse(sortedResult);
+        return sortedResult;
     }
-
 }

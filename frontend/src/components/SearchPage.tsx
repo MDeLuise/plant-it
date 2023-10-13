@@ -4,7 +4,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useEffect, useState } from "react";
 import { botanicalInfo, plant } from "../interfaces";
-import { getBotanicalInfoImg, isBigScreen } from "../common";
+import { getPlantImg, isBigScreen } from "../common";
 import AddPlant from "./AddPlant";
 import { Ribbon } from "react-ribbons";
 
@@ -19,19 +19,19 @@ function BotanicalEntity(props: {
     const [imgSrc, setImgSrc] = useState<string>();
 
     const setImageSrc = (): void => {
-        getBotanicalInfoImg(props.requestor, props.entity.imageUrl)
+        getPlantImg(props.requestor, props.entity.imageUrl)
             .then((res) => {
                 setImageLoaded(true);
                 setImgSrc(res);
             })
             .catch((err) => {
-                getBotanicalInfoImg(props.requestor, undefined)
-                    .then((res) => {
+                getPlantImg(props.requestor, undefined)
+                    .then(res => {
                         console.error(err);
                         setImageLoaded(true);
                         setImgSrc(res);
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.error(err);
                         props.printError(`Cannot load image for botanical info "${props.entity.scientificName}"`);
                     });
@@ -59,7 +59,6 @@ function BotanicalEntity(props: {
                 backgroundPosition: "center",
                 display: "flex",
                 flexDirection: "column",
-                //border: "1px solid white",
                 margin: "0 0 30px 0",
             }}
             onClick={() => props.addClick(props.entity)}
@@ -109,7 +108,8 @@ function BotanicalEntity(props: {
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
-                backgroundColor: props.entity.imageId !== undefined ? "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
+                backgroundColor: props.entity.imageId !== undefined ?
+                    "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
                 backdropFilter: "blur(3px)",
             }}>
                 <Typography variant="h6" sx={{ color: "white" }}>

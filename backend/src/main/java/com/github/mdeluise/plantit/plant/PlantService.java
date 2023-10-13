@@ -12,6 +12,8 @@ import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.exception.DuplicatedSpeciesException;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
+import com.github.mdeluise.plantit.image.PlantImage;
+import com.github.mdeluise.plantit.image.PlantImageRepository;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,18 @@ public class PlantService {
     private final PlantRepository plantRepository;
     private final BotanicalInfoService botanicalInfoService;
     private final ImageStorageService imageStorageService;
+    private final PlantImageRepository plantImageRepository;
 
 
     @Autowired
     public PlantService(AuthenticatedUserService authenticatedUserService, PlantRepository plantRepository,
-                        BotanicalInfoService botanicalInfoService, ImageStorageService imageStorageService) {
+                        BotanicalInfoService botanicalInfoService, ImageStorageService imageStorageService,
+                        PlantImageRepository plantImageRepository) {
         this.authenticatedUserService = authenticatedUserService;
         this.plantRepository = plantRepository;
         this.botanicalInfoService = botanicalInfoService;
         this.imageStorageService = imageStorageService;
+        this.plantImageRepository = plantImageRepository;
     }
 
 
@@ -63,11 +68,12 @@ public class PlantService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = "plants", allEntries = true), @CacheEvict(
-            value = "botanical-info", allEntries = true,
-            condition = "#toSave.botanicalInfo instanceof T(com.github.mdeluise.plantit.botanicalinfo" +
+            @CacheEvict(value = "plants", allEntries = true),
+            @CacheEvict(
+                value = "botanical-info", allEntries = true,
+                condition = "#toSave.botanicalInfo instanceof T(com.github.mdeluise.plantit.botanicalinfo" +
                             ".UserCreatedBotanicalInfo)"
-        )
+            )
         }
     )
     @Transactional
@@ -106,7 +112,8 @@ public class PlantService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = "plants", allEntries = true), @CacheEvict(value = "botanical-info", allEntries = true)
+            @CacheEvict(value = "plants", allEntries = true),
+            @CacheEvict(value = "botanical-info", allEntries = true)
         }
     )
     @Transactional
@@ -120,6 +127,9 @@ public class PlantService {
             botanicalInfoService.countPlants(toDelete.getBotanicalInfo().getId()) == 1;
         final Long deletedPlantBotanicalInfoId = toDelete.getBotanicalInfo().getId();
 
+        // FIXME
+        // this is not needed for the DB PlantImage entities (which are removed in cascade),
+        // but for the related files in the system
         toDelete.getImages().forEach(plantImage -> imageStorageService.remove(plantImage.getId()));
 
         plantRepository.delete(toDelete);
@@ -132,9 +142,11 @@ public class PlantService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = "plants", allEntries = true), @CacheEvict(value = "botanical-info", allEntries = true)
+            @CacheEvict(value = "plants", allEntries = true),
+            @CacheEvict(value = "botanical-info", allEntries = true)
         }
     )
+    @Transactional
     public Plant update(Plant updated) {
         final Plant toUpdate = get(updated.getId());
         if (!toUpdate.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
@@ -145,19 +157,51 @@ public class PlantService {
         toUpdate.setNote(updated.getNote());
         toUpdate.setStartDate(updated.getStartDate());
 
+        handleAvatar(updated, toUpdate);
+
         return handleBotanicalInfoUpdateAndSavePlant(updated, toUpdate);
     }
 
 
+    private void handleAvatar(Plant updated, Plant toUpdate) {
+        final PlantImage toUpdateAvatarImage = toUpdate.getAvatarImage();
+        final PlantImage updatedAvatarImage = updated.getAvatarImage();
+        if (updatedAvatarImage == null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            throw new IllegalArgumentException(
+                "Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
+        }
+        toUpdate.setAvatarMode(updated.getAvatarMode());
+        if (toUpdateAvatarImage != null) {
+            final PlantImage savedAvatarImageToUpdate = plantImageRepository.findById(toUpdateAvatarImage.getId())
+                                                                            .orElseThrow(
+                                                                                () -> new ResourceNotFoundException(
+                                                                                    toUpdateAvatarImage.getId()));
+            savedAvatarImageToUpdate.setAvatarOf(null);
+            plantImageRepository.save(savedAvatarImageToUpdate);
+        }
+        if (updatedAvatarImage != null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            final String updatedAvatarImageId = updatedAvatarImage.getId();
+            final PlantImage newAvatarImage = plantImageRepository.findById(updatedAvatarImageId).orElseThrow(
+                () -> new ResourceNotFoundException(updatedAvatarImageId));
+            newAvatarImage.setAvatarOf(toUpdate);
+            plantImageRepository.save(newAvatarImage);
+            newAvatarImage.setAvatarOf(toUpdate);
+            plantImageRepository.save(newAvatarImage);
+            toUpdate.setAvatarImage(newAvatarImage);
+        } else {
+            toUpdate.setAvatarImage(null);
+        }
+    }
+
+
     private Plant handleBotanicalInfoUpdateAndSavePlant(Plant updated, Plant toUpdate) {
-        if (toUpdate.getBotanicalInfo().equalsExceptForConcreteClass(updated.getBotanicalInfo())) {
+        final BotanicalInfo updatedBotanicalInfo = updated.getBotanicalInfo();
+        final BotanicalInfo toUpdateBotanicalInfo = toUpdate.getBotanicalInfo();
+        if (toUpdateBotanicalInfo.equalsExceptForConcreteClass(updatedBotanicalInfo)) {
             return save(toUpdate);
         }
         final boolean isThisTheOnlyPlantForTheBotanicalInfo =
             botanicalInfoService.countPlants(toUpdate.getBotanicalInfo().getId()) == 1;
-        final BotanicalInfo updatedBotanicalInfo = updated.getBotanicalInfo();
-        final BotanicalInfo toUpdateBotanicalInfo = toUpdate.getBotanicalInfo();
-
         final Optional<BotanicalInfo> savedMatchingBotanicalInfo =
             botanicalInfoService.get(updatedBotanicalInfo.getScientificName(), updatedBotanicalInfo.getFamily(),
                                      updatedBotanicalInfo.getGenus(), updatedBotanicalInfo.getSpecies()
