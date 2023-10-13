@@ -1,15 +1,17 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Drawer, Link, Skeleton, Switch, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Drawer, Link, MenuItem, Modal, Select, Skeleton, Switch, TextField, Typography } from "@mui/material";
 import { plant } from "../interfaces";
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Virtual, FreeMode } from "swiper";
+import { Pagination, Virtual, FreeMode, Navigation, Keyboard, Zoom } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/virtual';
 import "swiper/css/free-mode";
+import 'swiper/css/navigation';
+import 'swiper/css/zoom';
 import "../style/PlantDetails.scss";
-import { getBotanicalInfoImg, imgToBase64, titleCase } from "../common";
+import { getPlantImg, imgToBase64, titleCase } from "../common";
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
@@ -21,10 +23,13 @@ import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 function ConfirmDeleteDialog(props: {
     open: boolean,
+    text: string,
     close: () => void,
     printError: (msg: any) => void,
     confirmCallBack: () => void;
@@ -32,7 +37,7 @@ function ConfirmDeleteDialog(props: {
     return <Dialog open={props.open} onClose={props.close}>
         <DialogContent>
             <DialogContentText>
-                Are you sure you want to delete the plant? This action can not be undone.
+                {props.text}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -43,32 +48,276 @@ function ConfirmDeleteDialog(props: {
 }
 
 
+function PlantImageFullSize(props: {
+    imgIds: string[],
+    imgIndex: number,
+    requestor: AxiosInstance,
+    open: boolean,
+    printError: (err: any) => void,
+    onClose: () => void,
+    avatarImageId?: string,
+    setAvatarImage: (id: string) => void,
+    setImageIds: (arg: string[]) => void,
+    openConfirmDialog: (text: string, callback: () => void) => void,
+    onDelete: (arg: string) => void;
+}) {
+    const [indexToDisplay, setIndexToDisplay] = useState<number>(props.imgIndex);
+    const [swiperInstance, setSwiperInstance] = useState<any>();
+    const [imageMetadata, setImageMetadata] = useState<{
+        description?: string,
+        createOn: Date;
+    }>();
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: "95%",
+        height: "100%",
+    };
+
+    const fetchImageMetadata = (index: number) => {
+        if (props.imgIds[index] === undefined) {
+            return;
+        }
+        props.requestor.get(`image/${props.imgIds[index]}`)
+            .then(res => {
+                setImageMetadata({
+                    description: res.data.description,
+                    createOn: res.data.savedAt,
+                })
+            })
+            .catch(props.printError);
+    }
+
+    const deleteImage = () => {
+        props.openConfirmDialog(
+            "Are you sure you want to delete the image? This action can not be undone.",
+            () => {
+                const idToRemove = props.imgIds[indexToDisplay];
+                props.requestor.delete(`image/${idToRemove}`)
+                    .then(_res => {
+                        let newImageIds: string[] = [...props.imgIds].filter(id => id !== idToRemove);
+                        props.setImageIds(newImageIds);
+                        props.onDelete(idToRemove);
+                        if (newImageIds.length === 0) {
+                            props.onClose();
+                        }
+                    })
+                    .catch(props.printError)
+            });
+    };
+
+    useEffect(() => {
+        setIndexToDisplay(props.imgIndex);
+    }, [props.imgIndex]);
+
+    useEffect(() => {
+        fetchImageMetadata(indexToDisplay);
+    }, [indexToDisplay]);
+
+    useEffect(() => {
+        if (swiperInstance !== undefined && !swiperInstance.destroyed) {
+            swiperInstance.slideTo(props.imgIndex);
+        }
+    }, [swiperInstance])
+
+    return <Modal
+        open={props.open}
+        onClose={props.onClose}
+        sx={{
+            backdropFilter: "blur(2px)",
+            backgroundColor: 'rgba(0, 0, 30, .4)',
+            '& .swiper-button-disabled': {
+                display: "none",
+            }
+        }}
+    >
+        <Box sx={style}>
+            <CloseIcon
+                onClick={props.onClose}
+                style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "0",
+                    color: "white",
+                    fontWeight: 800,
+                    zIndex: 2,
+                }}
+            />
+
+            <DeleteIcon
+                onClick={deleteImage}
+                style={{
+                    position: "absolute",
+                    top: "20px",
+                    right: "0",
+                    color: "white",
+                    zIndex: 2,
+                }}
+            />
+
+            <Swiper
+                slidesPerView={1}
+                spaceBetween={1}
+                centeredSlides={true}
+                navigation={true}
+                grabCursor={true}
+                zoom={true}
+                keyboard={{
+                    enabled: true,
+                }}
+                modules={[Virtual, FreeMode, Navigation, Keyboard, Zoom]}
+                style={{
+                    height: "90%",
+                }}
+                onActiveIndexChange={swiper => setIndexToDisplay(swiper.activeIndex)}
+                onSwiper={setSwiperInstance}
+            >
+                {
+                    props.imgIds.map((imgId, index) => {
+                        return <SwiperSlide key={`full_slide_${imgId}`}>
+                            <Box className="swiper-zoom-container">
+                                <PlantImage
+                                    imgId={imgId}
+                                    imgKey={imgId}
+                                    active={Math.abs(index - indexToDisplay) < 2}
+                                    requestor={props.requestor}
+                                    printError={props.printError}
+                                    style={{
+                                        objectFit: "contain",
+                                    }}
+                                />
+                            </Box>
+                        </SwiperSlide>;
+                    })
+                }
+            </Swiper>
+
+            <Box sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "white",
+                padding: "0",
+            }}>
+                {
+                    imageMetadata?.description &&
+                    <Typography>{imageMetadata.description}</Typography>
+                }
+                <Typography>{new Date(imageMetadata?.createOn || new Date()).toDateString()}</Typography>
+                {
+                    props.avatarImageId !== props.imgIds[indexToDisplay] &&
+                    <Button
+                        onClick={() => props.setAvatarImage(props.imgIds[indexToDisplay])}
+                        sx={{
+                            backgroundColor: "primary.main",
+                            color: "white",
+                            padding: "10px 15px",
+                            "&:hover": { backgroundColor: "primary.main" },
+                        }}>
+                        Set as plant avatar
+                    </Button>
+                }
+            </Box>
+        </Box>
+    </Modal>
+}
+
+
+function PlantImageThumbnail(props: {
+    imgId: string,
+    active: boolean,
+    requestor: AxiosInstance,
+    imgKey: string,
+    printError: (err: any) => void,
+    onClick: () => void,
+    close: () => void;
+}) {
+    const [downloaded, setDownloaded] = useState<boolean>(false);
+    const [imgBase64, setImgBase64] = useState<string>();
+
+    const getImgBase64 = (): void => {
+        props.requestor.get(`image/thumbnail/${props.imgId}`)
+            .then(res => {
+                setImgBase64(res.data);
+                setDownloaded(true);
+            })
+            .catch(props.printError);
+    };
+
+    useEffect(() => {
+        getImgBase64();
+    }, [props.active]);
+
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "10px",
+                overflow: "hidden",
+            }}
+            onClick={downloaded ? props.onClick : undefined}
+        >
+            {
+                !downloaded &&
+                <Skeleton
+                    variant="rectangular"
+                    animation="wave"
+                    sx={{
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 1,
+                    }}
+                />
+            }
+            {
+                downloaded &&
+                <img
+                    src={`data:application/octet-stream;base64,${imgBase64}`}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        zIndex: 2,
+                    }}
+                    key={props.imgKey}
+                    loading="lazy"
+                />
+            }
+        </Box>);
+}
+
+
 function PlantImage(props: {
     imgId: string,
     active: boolean,
     requestor: AxiosInstance,
     imgKey: string,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    style?: {};
 }) {
-    const [loaded, setLoaded] = useState<boolean>(false);
+    const [downloaded, setDownloaded] = useState<boolean>(false);
     const [imgBase64, setImgBase64] = useState<string>();
 
     const getImgBase64 = (): void => {
         props.requestor.get(`/image/content/${props.imgId}`)
-            .then((res) => {
+            .then(res => {
                 setImgBase64(res.data);
-                setLoaded(true);
+                setDownloaded(true);
             })
-            .catch((err) => {
+            .catch(err => {
                 props.printError(err);
-                getBotanicalInfoImg(props.requestor, undefined)
-                    .then((res) => {
+                getPlantImg(props.requestor, undefined)
+                    .then(res => {
                         imgToBase64(res, (arg: string) => {
                             setImgBase64(arg);
-                            setLoaded(true);
+                            setDownloaded(true);
                         });
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.error(err);
                         props.printError(`Cannot load image with id ${props.imgId}`);
                     });
@@ -84,28 +333,29 @@ function PlantImage(props: {
     return (
         <>
             {
-                !loaded &&
+                !downloaded &&
                 <Skeleton
-                    variant="rounded"
+                    variant="rectangular"
                     animation="wave"
                     sx={{
                         width: "100%",
-                        height: "100%",
-                        zIndex: 1
+                        height: "50%",
+                        backgroundColor: "rgb(154 154 154 / 60%)",
+                        zIndex: 2,
                     }}
                 />
             }
             {
-                props.active &&
+                props.active && downloaded &&
                 <img
-                    src={`data:image/png;base64,${imgBase64}`}
+                    src={`data:application/octet-stream;base64,${imgBase64}`}
                     style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
-                        zIndex: "200",
+                        zIndex: 1,
+                        ...props.style,
                     }}
-                    onLoad={() => { setLoaded(true); }}
                     key={props.imgKey}
                     loading="lazy"
                 />
@@ -117,68 +367,33 @@ function PlantHeader(props: {
     requestor: AxiosInstance,
     entity?: plant,
     printError: (err: any) => void,
-    bufferUploadedImgsIds: string[],
     toggleEditPlantMode: () => void,
-    closePlantDetails: () => void,
-    setImagesCount: (arg: number) => void;
+    closePlantDetails: () => void;
 }) {
-    const [imageLoaded, setImageLoaded] = useState<boolean>(false);
-    const [checkedImages, setCheckedImages] = useState<boolean>(false);
-    const [imageIds, setImageIds] = useState<string[]>([]);
-    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
     const [imageSrc, setImageSrc] = useState<string>();
-    const [swiperInstance, setSwiperInstance] = useState<any>();
 
     useEffect(() => {
         if (props.entity === undefined) {
             return;
         }
-
-        props.requestor.get(`/image/entity/all/${props.entity?.id}`)
-            .then((res) => {
-                props.setImagesCount(res.data.length);
-                if (res.data.length === 0) {
-                    getBotanicalInfoImg(props.requestor, props.entity?.botanicalInfo.imageUrl)
-                        .then(res => {
-                            setImageSrc(res);
-                            setCheckedImages(true);
-                        })
-                        .catch(err => {
-                            getBotanicalInfoImg(props.requestor, undefined)
-                                .then(res => {
-                                    console.error(err);
-                                    setImageSrc(res);
-                                    setCheckedImages(true);
-                                    props.printError(`Cannot load image for botanical info "${props.entity?.botanicalInfo.scientificName}"`);
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    props.printError("Cannot load default image");
-                                });
-                        });
-                    return;
-                }
-                setImageIds(res.data.reverse());
-                setCheckedImages(true);
+        getPlantImg(props.requestor, props.entity.avatarImageUrl)
+            .then(res => {
+                setImageSrc(res);
+                setImageDownloaded(true);
             })
-            .catch((err) => {
-                props.printError(err);
-            });
+            .catch(err => {
+                console.error(err);
+                props.printError("Cannot load plant's avatar image");
+            })
     }, [props.entity]);
-
-    useEffect(() => {
-        setActiveIndex(0);
-        if (swiperInstance != null && props.bufferUploadedImgsIds.length > 1) {
-            swiperInstance.slideTo(0);
-        }
-    }, [props.bufferUploadedImgsIds]);
 
     return (
         <Box
             sx={{
                 height: "70vh",
                 overflow: "hidden",
-                transition: ".5s height"
+                transition: ".5s height",
             }}
             id="plant-header"
         >
@@ -219,9 +434,9 @@ function PlantHeader(props: {
                 />
             </Box>
             {
-                !imageLoaded && !checkedImages &&
+                !imageDownloaded &&
                 <Skeleton
-                    variant="rounded"
+                    variant="rectangular"
                     animation="wave"
                     sx={{
                         width: "100%",
@@ -230,8 +445,7 @@ function PlantHeader(props: {
                 />
             }
             {
-                (imageIds.length + props.bufferUploadedImgsIds.length) === 0 &&
-                checkedImages &&
+                imageDownloaded &&
                 <img
                     src={imageSrc}
                     style={{
@@ -239,47 +453,7 @@ function PlantHeader(props: {
                         width: "100%",
                         height: "100%",
                     }}
-                    onLoad={() => setImageLoaded(true)}
                 />
-                ||
-                <Swiper
-                    slidesPerView={1}
-                    spaceBetween={0}
-                    centeredSlides={true}
-                    modules={[Virtual, FreeMode]}
-                    style={{
-                        height: "100%",
-                    }}
-                    onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-                    onSwiper={setSwiperInstance}
-                >
-                    {
-                        props.bufferUploadedImgsIds.map((imgId, index) => {
-                            return <SwiperSlide key={`slide_${imgId}`}>
-                                <PlantImage
-                                    imgId={imgId}
-                                    imgKey={imgId}
-                                    active={index === activeIndex}
-                                    requestor={props.requestor}
-                                    printError={props.printError}
-                                />
-                            </SwiperSlide>;
-                        })
-                    }
-                    {
-                        imageIds.map((imgId, index) => {
-                            return <SwiperSlide key={`slide_${imgId}`}>
-                                <PlantImage
-                                    imgId={imgId}
-                                    imgKey={imgId}
-                                    active={(index + props.bufferUploadedImgsIds.length) === activeIndex}
-                                    requestor={props.requestor}
-                                    printError={props.printError}
-                                />
-                            </SwiperSlide>;
-                        })
-                    }
-                </Swiper>
             }
         </Box>
     );
@@ -323,8 +497,6 @@ function EditableTextField(props: {
 }
 
 
-
-
 function ReadMoreReadLess(props: {
     text: string,
     size: number;
@@ -363,15 +535,25 @@ function PlantInfo(props: {
     requestor: AxiosInstance,
     plant?: plant,
     editModeEnabled: boolean,
+    imageIds: string[],
+    setImageIds: (arg: string[]) => void,
     printError: (arg: any) => void,
-    imagesCount: number,
     setFamily: (arg: string) => void,
     setGenus: (arg: string) => void,
     setSpecies: (arg: string) => void,
     setPersonalName: (arg: string) => void,
     setNote: (arg: string) => void,
     setDate: (arg: Date) => void,
-    setUseDate: (arg: boolean) => void;
+    setUseDate: (arg: boolean) => void,
+    setAvatarMode: (arg: "NONE" | "RANDOM" | "LAST" | "SPECIFIED") => void,
+    plantImgFullSizeState?: {
+        imgIndex: number,
+        open: boolean;
+    },
+    setPlantImgFullSizeState: (arg: {
+        imgIndex: number,
+        open: boolean;
+    }) => void;
 }) {
     const [diaryEntryStats, setDiaryEntryStats] = useState<any[]>([]);
     const [plantStats, setPlantStats] = useState<{
@@ -379,22 +561,43 @@ function PlantInfo(props: {
         events?: number;
     }>({});
     const [useDate, setUseDate] = useState<boolean>(true);
+    const [selectedAvatarMode, setSelectedAvatarMode] = useState<string>("NONE");
+    const [initialAvatarMode, setInitialAvatarMode] = useState<string>("NONE");
+    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [swiperInstance, setSwiperInstance] = useState<any>();
+
+
+    const formatAvatarMode = (arg: string): string => {
+        switch (arg) {
+            case "NONE": return "species";
+            case "SPECIFIED": return "chosen";
+            default: return arg.toLocaleLowerCase();
+        }
+    };
 
     useEffect(() => {
         if (props.plant === undefined) {
             return;
         }
-
-        setUseDate(props.plant.startDate !== undefined);
+        props.requestor.get(`/image/entity/all/${props.plant?.id}`)
+            .then(res => props.setImageIds(res.data.reverse()))
+            .catch(props.printError);
+        setUseDate(props.plant.startDate !== undefined && props.plant.startDate !== null);
+        setSelectedAvatarMode(props.plant.avatarMode || "NONE");
+        setInitialAvatarMode(props.plant.avatarMode || "NONE");
         props.requestor.get(`diary/entry/${props.plant?.id}/stats`)
-            .then(res => {
-                setDiaryEntryStats(res.data);
-            })
-            .catch(err => {
-                props.printError(err);
-            });
+            .then(res => setDiaryEntryStats(res.data))
+            .catch(props.printError);
         fetchAndSetPlantStats();
     }, [props.plant]);
+
+
+    useEffect(() => {
+        setActiveIndex(0);
+        if (swiperInstance !== null && swiperInstance !== undefined && swiperInstance.destroyed !== true) {
+            swiperInstance.slideTo(0);
+        }
+    }, [props.imageIds]);
 
 
     const fetchAndSetPlantStats = (): void => {
@@ -416,6 +619,7 @@ function PlantInfo(props: {
             zIndex: 1,
         }}
     >
+
         <Box sx={{
             width: "30px",
             height: "3px",
@@ -439,13 +643,17 @@ function PlantInfo(props: {
                 sx={{
                     display: "flex",
                     flexDirection: "column",
+                    width: "100%",
                 }}
             >
                 <EditableTextField
                     editable={props.editModeEnabled}
                     text={props.plant?.personalName}
                     variant="h6"
-                    style={{ fontWeight: "bold" }}
+                    style={{
+                        fontWeight: "bold",
+                        flexGrow: props.editModeEnabled ? 1 : 0,
+                    }}
                     onChange={props.setPersonalName}
                 />
                 {
@@ -531,7 +739,7 @@ function PlantInfo(props: {
                     Date
                 </Typography>
                 {
-                    props.editModeEnabled || (props.plant?.startDate !== null) ?
+                    props.editModeEnabled ?
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 value={dayjs(props.plant?.startDate || new Date())}
@@ -539,10 +747,47 @@ function PlantInfo(props: {
                                 disabled={!useDate}
                                 onChange={newValue => props.setDate(newValue != undefined ? newValue.toDate() : new Date())}
                                 slotProps={{ textField: { variant: 'standard', } }}
+                                format="DD/MM/YYYY"
                             />
                         </LocalizationProvider>
                         :
-                        <Typography>-</Typography>
+                        <Typography>
+                            {
+                                props.plant?.startDate !== null ?
+                                    new Date(props.plant?.startDate || new Date()).toDateString()
+                                    :
+                                    "-"
+                            }
+                        </Typography>
+                }
+            </Box>
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Avatar
+                </Typography>
+                {
+                    props.editModeEnabled ?
+                        <Select
+                            variant="standard"
+                            value={selectedAvatarMode}
+                            onChange={ev => {
+                                let value = ev.target.value as "NONE" | "LAST" | "RANDOM" | "SPECIFIED";
+                                props.setAvatarMode(value);
+                                setSelectedAvatarMode(value);
+                            }}
+                            readOnly={!props.editModeEnabled}
+                            disableUnderline
+                        >
+                            {
+                                initialAvatarMode === "SPECIFIED" &&
+                                <MenuItem value="SPECIFIED">chosen</MenuItem>
+                            }
+                            <MenuItem value="NONE">species</MenuItem>
+                            <MenuItem value="LAST">last</MenuItem>
+                            <MenuItem value="RANDOM">random</MenuItem>
+                        </Select>
+                        :
+                        <Typography>{formatAvatarMode(selectedAvatarMode)}</Typography>
                 }
             </Box>
             <Box className="plant-detail-entry" style={{ flexDirection: "column" }}>
@@ -565,15 +810,6 @@ function PlantInfo(props: {
                         />
                 }
             </Box>
-            {/* <Box className="plant-detail-entry">
-                <Typography>
-                    Thumbnail
-                </Typography>
-                <EditableThumbnail
-                    editable={props.editModeEnabled}
-                    text={props.plant?.botanicalInfo.imageUrl}
-                />
-            </Box> */}
         </Box>
 
         <Box
@@ -587,7 +823,7 @@ function PlantInfo(props: {
                     Photos
                 </Typography>
                 <Typography>
-                    {props.imagesCount}
+                    {props.imageIds.length}
                 </Typography>
             </Box>
             <Box className="plant-detail-entry">
@@ -612,30 +848,90 @@ function PlantInfo(props: {
             </Box>
         </Box>
 
-        <Box
-            className="plant-detail-section">
-            <Typography variant="h6">
-                Events stats
-            </Typography>
-            {
-                diaryEntryStats.map((value: { type: string, date: Date; }) => {
-                    return <Box style={{
-                        display: "flex",
-                        alignItems: "baseline",
-                        gap: "5px",
-                        justifyContent: "space-between",
-                    }}>
-                        <Typography>
-                            Last {titleCase(value.type).toLowerCase()}
-                        </Typography>
-                        <Typography>
-                            {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
-                        </Typography>
-                    </Box>;
-                })
-            }
-        </Box>
-    </Box>;
+        {
+            diaryEntryStats.length > 0 &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Events stats
+                </Typography>
+                {
+                    diaryEntryStats.map((value: { type: string, date: Date; }) => {
+                        return <Box
+                            key={value.type}
+                            style={{
+                                display: "flex",
+                                alignItems: "baseline",
+                                gap: "5px",
+                                justifyContent: "space-between",
+                            }}>
+                            <Typography>
+                                Last {titleCase(value.type).toLowerCase()}
+                            </Typography>
+                            <Typography>
+                                {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
+                            </Typography>
+                        </Box>;
+                    })
+                }
+            </Box>
+        }
+        {
+            props.imageIds.length > 0 &&
+            <Box className="plant-detail-entry">
+                <Typography variant="h6" sx={{ marginBottom: "10px", }}>
+                    Gallery
+                </Typography>
+
+                <Swiper
+                    slidesPerView={3}
+                    spaceBetween={"10px"}
+                    onActiveIndexChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                    onSwiper={setSwiperInstance}
+                    modules={[Pagination, Virtual, FreeMode]}
+                    pagination={{
+                        dynamicBullets: true,
+                        clickable: true,
+                    }}
+                    style={{
+                        paddingBottom: "30px",
+                    }}
+                >
+                    {
+                        props.imageIds.map((imgId, index) => {
+                            return <SwiperSlide
+                                key={`slide_${imgId}`}
+                                style={{
+                                    width: "30%",
+                                    aspectRatio: 1,
+                                }}
+                            >
+                                <PlantImageThumbnail
+                                    imgId={imgId}
+                                    imgKey={imgId}
+                                    active={Math.abs(activeIndex - index) <= 2}
+                                    requestor={props.requestor}
+                                    printError={props.printError}
+                                    onClick={() => {
+                                        props.setPlantImgFullSizeState({
+                                            imgIndex: index,
+                                            open: true,
+                                        });
+                                    }}
+                                    close={() => {
+                                        props.setPlantImgFullSizeState({
+                                            imgIndex: props.plantImgFullSizeState?.imgIndex || 0,
+                                            open: false,
+                                        });
+                                    }}
+                                />
+                            </SwiperSlide>
+                        })
+                    }
+                </Swiper>
+            </Box>
+        }
+    </Box >;
 }
 
 function BottomBar(props: {
@@ -648,31 +944,27 @@ function BottomBar(props: {
     toggleEditPlantMode: () => void,
     updatedPlant?: plant,
     onUpdate: (arg: plant) => void,
-    onDelete: (arg: plant) => void;
+    onDelete: (arg: plant) => void,
+    openConfirmDialog: (text: string, callback: () => void) => void,
     close: () => void;
 }) {
-    const [openConformDialog, setOpenConfirmDialog] = useState<boolean>(false);
 
     const updatePlant = (): void => {
         props.requestor.put("/plant", props.updatedPlant)
             .then(res => {
                 props.onUpdate(res.data);
-                props.close();
+                props.toggleEditPlantMode();
             })
-            .catch(err => {
-                props.printError(err);
-            });
+            .catch(props.printError);
     };
 
     const deletePlant = (): void => {
         props.requestor.delete(`plant/${props.plant?.id}`)
-            .then((_res) => {
+            .then(_res => {
                 props.onDelete(props.plant!);
                 props.close();
             })
-            .catch((err) => {
-                props.printError(err);
-            });
+            .catch(props.printError);
     };
 
     const addEntityImage = (toUpload: File): void => {
@@ -682,9 +974,7 @@ function BottomBar(props: {
             .then(res => {
                 props.addUploadedImgs(res.data);
             })
-            .catch(err => {
-                props.printError(err);
-            });
+            .catch(props.printError);
     };
 
     return <Box
@@ -699,13 +989,6 @@ function BottomBar(props: {
             display: "flex",
             justifyContent: "space-around",
         }}>
-
-        <ConfirmDeleteDialog
-            open={openConformDialog}
-            close={() => setOpenConfirmDialog(false)}
-            printError={props.printError}
-            confirmCallBack={deletePlant}
-        />
 
         {
             props.editModeEnabled ?
@@ -737,7 +1020,10 @@ function BottomBar(props: {
                             color: "white",
                             "&:hover": { backgroundColor: "error.main" },
                         }}
-                        onClick={() => setOpenConfirmDialog(true)}
+                        onClick={() => props.openConfirmDialog(
+                            "Are you sure you want to delete the plant? This action can not be undone.",
+                            deletePlant)
+                        }
                     >
                         <DeleteOutlineOutlinedIcon fontSize="medium" />
                     </Button>
@@ -813,10 +1099,22 @@ export default function PlantDetails(props: {
     onUpdate: (arg: plant) => void,
     onDelete: (arg: plant) => void;
 }) {
-    const [bufferUploadedImgsIds, setBufferedUploadedImgsIds] = useState<string[]>([]);
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [updatedEntity, setUpdatedEntity] = useState<plant>();
-    const [imagesCount, setImagesCount] = useState<number>(0);
+    const [imageIds, setImageIds] = useState<string[]>([]);
+    const [plantImgFullSizeState, setPlantImgFullSizeState] = useState<{
+        imgIndex: number,
+        open: boolean,
+    }>({ imgIndex: 0, open: false });
+    const [confirmDialogStatus, setConfirmDialogStatus] = useState<{
+        text: string,
+        confirmCallBack: () => void,
+        open: boolean;
+    }>({
+        text: "",
+        confirmCallBack: () => { },
+        open: false,
+    });
 
     const setFamily = (arg: string): void => {
         if (updatedEntity === undefined) {
@@ -848,7 +1146,6 @@ export default function PlantDetails(props: {
     };
 
     const setNote = (arg: string): void => {
-        console.debug(arg);
         if (updatedEntity === undefined) {
             return;
         }
@@ -871,6 +1168,26 @@ export default function PlantDetails(props: {
         }
     };
 
+    const setAvatarMode = (arg: "LAST" | "RANDOM" | "SPECIFIED" | "NONE"): void => {
+        if (updatedEntity === undefined) {
+            return;
+        }
+        updatedEntity.avatarMode = arg;
+    };
+
+    const setAvatarImage = (id: string): void => {
+        props.requestor.put("/plant", {
+            ...props.plant,
+            avatarMode: "SPECIFIED",
+            avatarImageId: id,
+            avatarImageUrl: `/${id}`,
+        })
+            .then(res => {
+                props.onUpdate(res.data);
+            })
+            .catch(props.printError);
+    };
+
     useEffect(() => {
         if (props.plant !== undefined) {
             setUpdatedEntity({ ...props.plant });
@@ -880,8 +1197,8 @@ export default function PlantDetails(props: {
     }, [props.plant]);
 
     useEffect(() => {
-        setBufferedUploadedImgsIds([]);
         if (!props.open) {
+            setImageIds([]);
             setEditModeEnabled(false);
             setUpdatedEntity(undefined);
         }
@@ -904,12 +1221,47 @@ export default function PlantDetails(props: {
         }}
     >
 
+        <PlantImageFullSize
+            imgIds={imageIds}
+            imgIndex={plantImgFullSizeState?.imgIndex || 0}
+            requestor={props.requestor}
+            open={plantImgFullSizeState?.open || false}
+            printError={props.printError}
+            setAvatarImage={setAvatarImage}
+            setImageIds={setImageIds}
+            avatarImageId={updatedEntity?.avatarMode === "SPECIFIED" ? updatedEntity.avatarImageId : undefined}
+            openConfirmDialog={(text: string, callback: () => void) => {
+                setConfirmDialogStatus({ text: text, confirmCallBack: callback, open: true });
+            }}
+            onClose={() => {
+                setPlantImgFullSizeState({
+                    imgIndex: plantImgFullSizeState?.imgIndex || 0,
+                    open: false,
+                })
+            }}
+            onDelete={(imgId: string) => {
+                if (props.plant === undefined || updatedEntity === undefined || imgId != updatedEntity.avatarImageId) {
+                    return;
+                }
+            }}
+        />
+
+        <ConfirmDeleteDialog
+            open={confirmDialogStatus.open}
+            close={() => setConfirmDialogStatus({ ...confirmDialogStatus, open: false })}
+            printError={props.printError}
+            confirmCallBack={() => {
+                confirmDialogStatus.confirmCallBack();
+                setConfirmDialogStatus({ ...confirmDialogStatus, open: false });
+            }}
+            text={confirmDialogStatus.text}
+        />
+
         <Box>
             <PlantHeader
                 requestor={props.requestor}
                 entity={updatedEntity}
                 printError={props.printError}
-                bufferUploadedImgsIds={bufferUploadedImgsIds}
                 closePlantDetails={props.close}
                 toggleEditPlantMode={() => {
                     let currentEditModeEnabled = editModeEnabled;
@@ -921,14 +1273,13 @@ export default function PlantDetails(props: {
                         document.getElementById("plant-header")!.style.height = "70vh";
                     }
                 }}
-                setImagesCount={setImagesCount}
             />
+
             <PlantInfo
                 plant={updatedEntity}
                 editModeEnabled={editModeEnabled}
                 printError={props.printError}
                 requestor={props.requestor}
-                imagesCount={imagesCount}
                 setFamily={setFamily}
                 setGenus={setGenus}
                 setSpecies={setSpecies}
@@ -936,18 +1287,28 @@ export default function PlantDetails(props: {
                 setNote={setNote}
                 setDate={setDate}
                 setUseDate={setUseDate}
+                plantImgFullSizeState={plantImgFullSizeState}
+                setPlantImgFullSizeState={setPlantImgFullSizeState}
+                imageIds={imageIds}
+                setImageIds={setImageIds}
+                setAvatarMode={setAvatarMode}
             />
             <BottomBar
                 openAddLog={props.openAddLogEntry}
                 requestor={props.requestor}
                 plant={props.plant}
                 addUploadedImgs={(arg: string) => {
-                    setImagesCount(imagesCount + 1);
-                    setBufferedUploadedImgsIds([arg, ...bufferUploadedImgsIds]);
+                    setImageIds([arg, ...imageIds]);
+                    if (props.plant !== undefined) {
+                        props.onUpdate(props.plant);
+                    }
                 }}
                 printError={props.printError}
                 editModeEnabled={editModeEnabled}
                 updatedPlant={updatedEntity}
+                openConfirmDialog={(text: string, callback: () => void) => {
+                    setConfirmDialogStatus({ text: text, confirmCallBack: callback, open: true })
+                }}
                 toggleEditPlantMode={() => {
                     let currentEditModeEnabled = editModeEnabled;
                     setEditModeEnabled(!editModeEnabled);

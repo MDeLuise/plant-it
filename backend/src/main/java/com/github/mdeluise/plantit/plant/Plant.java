@@ -54,6 +54,10 @@ public class Plant implements Serializable, ImageTarget {
     @NotNull
     @OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
     private Set<PlantImage> images = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private PlantAvatarMode avatarMode;
+    @OneToOne(mappedBy = "avatarOf", cascade = CascadeType.ALL)
+    private PlantImage avatarImage;
 
 
     public Plant() {
@@ -164,5 +168,35 @@ public class Plant implements Serializable, ImageTarget {
 
     public void setImages(Set<PlantImage> images) {
         this.images = images;
+    }
+
+
+    public PlantState getPlantState() {
+        return plantState;
+    }
+
+
+    public void setPlantState(PlantState plantState) {
+        this.plantState = plantState;
+    }
+
+
+    public PlantAvatarMode getAvatarMode() {
+        return avatarMode;
+    }
+
+
+    public void setAvatarMode(PlantAvatarMode avatarMode) {
+        this.avatarMode = avatarMode;
+    }
+
+
+    public PlantImage getAvatarImage() {
+        return avatarImage;
+    }
+
+
+    public void setAvatarImage(PlantImage avatarImage) {
+        this.avatarImage = avatarImage;
     }
 }

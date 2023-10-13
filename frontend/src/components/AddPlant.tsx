@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { getBotanicalInfoImg, imgToBase64 } from "../common";
+import { getPlantImg, imgToBase64 } from "../common";
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
@@ -21,7 +21,7 @@ function AddPlantHeader(props: {
     const [imgSrc, setImgSrc] = useState<string>();
 
     const setFallbackImg = (err?: AxiosError) => {
-        getBotanicalInfoImg(props.requestor, undefined)
+        getPlantImg(props.requestor, undefined)
             .then(res => {
                 if (err !== undefined) {
                     console.error(err);
@@ -87,7 +87,7 @@ function AddPlantHeader(props: {
         }
     }, [props.image]);
 
-    return <Box height={"40vh"} id="add-plant-header" sx={{ transition: ".5s height" }}>
+    return <Box height={"40vh"} id="add-plant-header" sx={{ transition: ".5s height", }}>
         {
             !imageLoaded &&
             <Skeleton
@@ -106,7 +106,7 @@ function AddPlantHeader(props: {
                 style={{
                     height: "100%",
                     width: "100%",
-                    objectFit: "cover"
+                    objectFit: "cover",
                 }}
                 onLoad={() => setImageLoaded(true)}
             />
@@ -144,7 +144,7 @@ function AddPlantInfo(props: {
     requestor: AxiosInstance,
     botanicalInfoToAdd?: botanicalInfo,
     botanicalInfos: botanicalInfo[],
-    name?: string,
+    searchedName?: string,
     plants: plant[],
     open: boolean,
     close: () => void,
@@ -164,12 +164,12 @@ function AddPlantInfo(props: {
     const setName = (): Promise<string> => {
         return new Promise((resolve, reject) => {
             if (props.botanicalInfoToAdd === undefined) {
-                if (props.name === undefined) {
+                if (props.searchedName === undefined) {
                     setPlantName("");
                     return resolve("");
                 } else {
-                    setPlantName(props.name);
-                    return resolve(props.name);
+                    setPlantName(props.searchedName);
+                    return resolve(props.searchedName);
                 }
             }
             if (props.botanicalInfoToAdd.id === null) {
@@ -177,7 +177,7 @@ function AddPlantInfo(props: {
                 return resolve(props.botanicalInfoToAdd.scientificName);
             }
             props.requestor.get(`/botanical-info/${props.botanicalInfoToAdd.id}/_count`)
-                .then((res) => {
+                .then(res => {
                     let incrementalName = props.botanicalInfoToAdd!.scientificName;
                     if (res.data > 0) {
                         incrementalName += ` ${res.data}`;
@@ -185,7 +185,7 @@ function AddPlantInfo(props: {
                     setPlantName(incrementalName);
                     return resolve(incrementalName);
                 })
-                .catch((err) => {
+                .catch(err => {
                     return reject(err);
                 });
         });
@@ -237,6 +237,7 @@ function AddPlantInfo(props: {
             state: "ALIVE",
             startDate: useDate ? date : null,
             note: note,
+            avatarMode: "NONE",
         })
             .then(res => {
                 props.close();
@@ -268,6 +269,7 @@ function AddPlantInfo(props: {
             state: "ALIVE",
             startDate: useDate ? date : null,
             note: note,
+            avatarMode: "NONE",
         };
         addNewPlant(plantToAdd)
             .then(res => {
@@ -587,6 +589,7 @@ export default function AddPlant(props: {
                     printError={props.printError}
                     setSelectedImage={setSelectedImage}
                     selectedImage={selectedImage}
+                    searchedName={props.name}
                 />
             </Box>
         </Drawer >

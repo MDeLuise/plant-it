@@ -16,12 +16,16 @@ public class PlantDTO {
     private Date endDate;
     @Schema(description = "PlantState of the plant.")
     private PlantState plantState;
-    @Schema(description = "Note of the plant")
+    @Schema(description = "Note of the plant.")
     private String note;
     @Schema(description = "Owner ID of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long ownerId;
-    @Schema(description = "ID of the plant's thumbnail.", accessMode = Schema.AccessMode.READ_ONLY)
-    private Long thumbnailImageId;
+    @Schema(description = "ID of the plant's avatar.")
+    private String avatarImageId;
+    @Schema(description = "URL of the plant's avatar.")
+    private String avatarImageUrl;
+    @Schema(description = "Avatar mode of the plant.")
+    private String avatarMode;
     @Schema(description = "ID of the plant's diary.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryId;
     @Schema(description = "Botanical info ID of the plant.")
@@ -102,13 +106,33 @@ public class PlantDTO {
     }
 
 
-    public Long getThumbnailImageId() {
-        return thumbnailImageId;
+    public String getAvatarMode() {
+        return avatarMode;
     }
 
 
-    public void setThumbnailImageId(Long thumbnailImageId) {
-        this.thumbnailImageId = thumbnailImageId;
+    public void setAvatarMode(String avatarMode) {
+        this.avatarMode = avatarMode;
+    }
+
+
+    public String getAvatarImageId() {
+        return avatarImageId;
+    }
+
+
+    public void setAvatarImageId(String avatarImageId) {
+        this.avatarImageId = avatarImageId;
+    }
+
+
+    public String getAvatarImageUrl() {
+        return avatarImageUrl;
+    }
+
+
+    public void setAvatarImageUrl(String avatarImageUrl) {
+        this.avatarImageUrl = avatarImageUrl;
     }
 
 
