@@ -9,8 +9,10 @@ import java.nio.file.Path;
 import java.util.Collection;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
+import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.EntityImage;
 import com.github.mdeluise.plantit.image.EntityImageImpl;
@@ -102,7 +104,16 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Cacheable(value = "image", key = "{#id}")
     @Override
     public EntityImage get(String id) {
-        return imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        final EntityImageImpl result =
+            imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        if (result instanceof PlantImage p &&
+                p.getTarget().getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        } else if (result instanceof BotanicalInfoImage b && b.getTarget() instanceof UserCreatedBotanicalInfo u &&
+                       u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        }
+        return result;
     }
 
 

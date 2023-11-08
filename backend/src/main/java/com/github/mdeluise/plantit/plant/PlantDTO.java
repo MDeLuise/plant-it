@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.plant;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -153,5 +154,33 @@ public class PlantDTO {
 
     public void setBotanicalInfo(BotanicalInfoDTO botanicalInfo) {
         this.botanicalInfo = botanicalInfo;
+    }
+
+
+    @SuppressWarnings("BooleanExpressionComplexity") //FIXME
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PlantDTO plantDTO = (PlantDTO) o;
+        return Objects.equals(id, plantDTO.id) && Objects.equals(startDate, plantDTO.startDate) &&
+                   Objects.equals(personalName, plantDTO.personalName) && Objects.equals(endDate, plantDTO.endDate) &&
+                   plantState == plantDTO.plantState && Objects.equals(note, plantDTO.note) &&
+                   Objects.equals(ownerId, plantDTO.ownerId) && Objects.equals(avatarImageId, plantDTO.avatarImageId) &&
+                   Objects.equals(avatarImageUrl, plantDTO.avatarImageUrl) &&
+                   Objects.equals(avatarMode, plantDTO.avatarMode) && Objects.equals(diaryId, plantDTO.diaryId) &&
+                   Objects.equals(botanicalInfo, plantDTO.botanicalInfo);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startDate, personalName, endDate, plantState, note, ownerId, avatarImageId,
+                            avatarImageUrl, avatarMode, diaryId, botanicalInfo
+        );
     }
 }
