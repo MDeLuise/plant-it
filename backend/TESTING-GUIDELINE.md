@@ -107,7 +107,7 @@ Check it following these steps:
 
 1. Run `mvn clean test-compile -P pitest`
 1. Open the `index.html` file located at `target/pit-reports`
-1. In the report, click on `jakarta.data.repository` package link
+1. In the report, click on `com.github.mdeluise.plantit` package link
 1. Implement new tests focusing on the not covered _Mutation Coverage_
 section
    * Click in the class name to see the possible not covered code, marked in red
