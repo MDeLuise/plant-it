@@ -288,7 +288,7 @@ function AddPlantInfo(props: {
                             setName();
 
                             props.botanicalInfos.push(res.botanicalInfo);
-                            
+
                             cleanup();
                         })
                         .catch(err => {

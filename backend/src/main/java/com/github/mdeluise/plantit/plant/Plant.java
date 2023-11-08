@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.plant;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.github.mdeluise.plantit.authentication.User;
@@ -198,5 +199,32 @@ public class Plant implements Serializable, ImageTarget {
 
     public void setAvatarImage(PlantImage avatarImage) {
         this.avatarImage = avatarImage;
+    }
+
+
+    @SuppressWarnings("BooleanExpressionComplexity") //FIXME
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Plant plant = (Plant) o;
+        return Objects.equals(id, plant.id) && Objects.equals(startDate, plant.startDate) &&
+                   Objects.equals(personalName, plant.personalName) && Objects.equals(endDate, plant.endDate) &&
+                   plantState == plant.plantState && Objects.equals(note, plant.note) &&
+                   Objects.equals(diary, plant.diary) && Objects.equals(owner, plant.owner) &&
+                   Objects.equals(botanicalInfo, plant.botanicalInfo) && avatarMode == plant.avatarMode &&
+                   Objects.equals(avatarImage, plant.avatarImage);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startDate, personalName, endDate, plantState, note, diary, owner, botanicalInfo,
+                            avatarMode, avatarImage
+        );
     }
 }

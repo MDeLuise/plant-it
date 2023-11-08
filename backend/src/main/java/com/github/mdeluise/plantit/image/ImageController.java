@@ -101,7 +101,7 @@ public class ImageController {
     }
 
 
-    @GetMapping("/entity/_count")
+    @GetMapping("/entity/_count") // FIXME remove "entity"
     public ResponseEntity<Integer> countUserImage() {
         return ResponseEntity.ok(imageStorageService.count());
     }

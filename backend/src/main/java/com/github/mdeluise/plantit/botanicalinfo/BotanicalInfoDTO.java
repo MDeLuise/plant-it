@@ -2,6 +2,8 @@ package com.github.mdeluise.plantit.botanicalinfo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Objects;
+
 @Schema(name = "Botanical info", description = "Represents a plant's botanical name.")
 public class BotanicalInfoDTO {
     @Schema(description = "ID of the botanical info.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -90,5 +92,24 @@ public class BotanicalInfoDTO {
 
     public void setSystemWide(boolean systemWide) {
         isSystemWide = systemWide;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final BotanicalInfoDTO that = (BotanicalInfoDTO) o;
+        return Objects.equals(id, that.id) || Objects.equals(species, that.species);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, species);
     }
 }

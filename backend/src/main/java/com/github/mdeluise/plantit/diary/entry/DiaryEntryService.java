@@ -13,6 +13,8 @@ import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.diary.DiaryService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.exception.UnauthorizedException;
+import com.github.mdeluise.plantit.plant.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,18 +27,24 @@ public class DiaryEntryService {
     private final AuthenticatedUserService authenticatedUserService;
     private final DiaryEntryRepository diaryEntryRepository;
     private final DiaryService diaryService;
+    private final PlantService plantService;
 
 
     @Autowired
     public DiaryEntryService(AuthenticatedUserService authenticatedUserService,
-                             DiaryEntryRepository diaryEntryRepository, DiaryService diaryService) {
+                             DiaryEntryRepository diaryEntryRepository, DiaryService diaryService,
+                             PlantService plantService) {
         this.authenticatedUserService = authenticatedUserService;
         this.diaryEntryRepository = diaryEntryRepository;
         this.diaryService = diaryService;
+        this.plantService = plantService;
     }
 
 
     public Page<DiaryEntry> getAll(Pageable pageable, List<Long> plantIds, List<String> eventTypes) {
+        checkPlantExistenceAndVisibility(plantIds);
+        checkEventTypeExistence(eventTypes);
+
         if (plantIds.isEmpty() && eventTypes.isEmpty()) {
             return diaryEntryRepository.findAllByDiaryOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
         }
@@ -55,6 +63,16 @@ public class DiaryEntryService {
     }
 
 
+    private void checkEventTypeExistence(List<String> eventTypes) {
+        eventTypes.forEach(DiaryEntryType::valueOf);
+    }
+
+
+    private void checkPlantExistenceAndVisibility(List<Long> plantIds) {
+        plantIds.forEach(plantService::get);
+    }
+
+
     public Page<DiaryEntry> getAll(Long diaryId, Pageable pageable) {
         final Diary diary = diaryService.get(diaryId);
         return diaryEntryRepository.findAllByDiaryOwnerAndDiary(
@@ -69,26 +87,33 @@ public class DiaryEntryService {
 
 
     public DiaryEntry save(DiaryEntry diaryEntry) {
+        if (!diaryEntry.getDiary().getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            throw new UnauthorizedException();
+        }
         return diaryEntryRepository.save(diaryEntry);
     }
 
 
     public DiaryEntry get(Long id) {
-        return diaryEntryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        final DiaryEntry result =
+            diaryEntryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        if (!result.getDiary().getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            throw new UnauthorizedException();
+        }
+        return result;
     }
 
 
     public void delete(Long diaryEntryId) {
-        if (!diaryEntryRepository.existsById(diaryEntryId)) {
-            throw new ResourceNotFoundException(diaryEntryId);
-        }
-        diaryEntryRepository.deleteById(diaryEntryId);
+        final DiaryEntry toDelete = get(diaryEntryId);
+        diaryEntryRepository.delete(toDelete);
     }
 
 
     public DiaryEntry update(Long id, DiaryEntry updated) {
-        if (!diaryEntryRepository.existsById(id)) {
-            throw new ResourceNotFoundException(id);
+        get(id);
+        if (!updated.getDiary().getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            throw new UnauthorizedException();
         }
         updated.setId(id);
         return diaryEntryRepository.save(updated);
@@ -101,13 +126,18 @@ public class DiaryEntryService {
 
 
     public Long count(Long plantId) {
+        final Diary targetDiary = diaryService.get(plantId);
+        if (!targetDiary.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            throw new UnauthorizedException();
+        }
         return diaryEntryRepository.countByDiaryOwnerAndDiaryTargetId(
             authenticatedUserService.getAuthenticatedUser(), plantId);
     }
 
 
     public Collection<DiaryEntryStats> getStats(Long plantId) {
-        Collection<DiaryEntryStats> result = new HashSet<>();
+        diaryService.get(plantId);
+        final Collection<DiaryEntryStats> result = new HashSet<>();
         final User authenticatedUser = authenticatedUserService.getAuthenticatedUser();
         for (DiaryEntryType type : getAllTypes()) {
             final Optional<DiaryEntry> lastEvent =
