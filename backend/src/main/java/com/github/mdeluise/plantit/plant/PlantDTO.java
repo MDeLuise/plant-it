@@ -3,7 +3,6 @@ package com.github.mdeluise.plantit.plant;
 import java.util.Date;
 import java.util.Objects;
 
-import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class PlantDTO {
@@ -29,8 +28,8 @@ public class PlantDTO {
     private String avatarMode;
     @Schema(description = "ID of the plant's diary.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryId;
-    @Schema(description = "Botanical info ID of the plant.")
-    private BotanicalInfoDTO botanicalInfo;
+    @Schema(description = "Botanical info ID of the plant.", accessMode = Schema.AccessMode.WRITE_ONLY)
+    private Long botanicalInfoId;
 
 
     public PlantDTO() {
@@ -147,17 +146,16 @@ public class PlantDTO {
     }
 
 
-    public BotanicalInfoDTO getBotanicalInfo() {
-        return botanicalInfo;
+    public Long getBotanicalInfoId() {
+        return botanicalInfoId;
     }
 
 
-    public void setBotanicalInfo(BotanicalInfoDTO botanicalInfo) {
-        this.botanicalInfo = botanicalInfo;
+    public void setBotanicalInfoId(Long botanicalInfoId) {
+        this.botanicalInfoId = botanicalInfoId;
     }
 
 
-    @SuppressWarnings("BooleanExpressionComplexity") //FIXME
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -173,14 +171,14 @@ public class PlantDTO {
                    Objects.equals(ownerId, plantDTO.ownerId) && Objects.equals(avatarImageId, plantDTO.avatarImageId) &&
                    Objects.equals(avatarImageUrl, plantDTO.avatarImageUrl) &&
                    Objects.equals(avatarMode, plantDTO.avatarMode) && Objects.equals(diaryId, plantDTO.diaryId) &&
-                   Objects.equals(botanicalInfo, plantDTO.botanicalInfo);
+                   Objects.equals(botanicalInfoId, plantDTO.botanicalInfoId);
     }
 
 
     @Override
     public int hashCode() {
         return Objects.hash(id, startDate, personalName, endDate, plantState, note, ownerId, avatarImageId,
-                            avatarImageUrl, avatarMode, diaryId, botanicalInfo
+                            avatarImageUrl, avatarMode, diaryId, botanicalInfoId
         );
     }
 }

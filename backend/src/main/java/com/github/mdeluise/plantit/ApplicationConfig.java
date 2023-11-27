@@ -1,7 +1,5 @@
 package com.github.mdeluise.plantit;
 
-import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
-import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -13,7 +11,6 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.servers.ServerVariable;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.EnableCaching;
@@ -53,19 +50,11 @@ import redis.embedded.RedisServer;
 @EnableMethodSecurity
 @EnableCaching
 public class ApplicationConfig {
-    @Autowired
-    PlantInfoExtractorFactory plantInfoExtractorFactory;
 
 
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
-    }
-
-
-    @Bean
-    public AbstractPlantInfoExtractor plantInfoExtractor() {
-        return plantInfoExtractorFactory.getPlantInfoExtractor();
     }
 
 

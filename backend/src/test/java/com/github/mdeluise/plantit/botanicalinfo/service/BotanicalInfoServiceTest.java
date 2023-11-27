@@ -8,10 +8,9 @@ import java.util.Set;
 import com.github.mdeluise.plantit.TestEnvironment;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
+import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoRepository;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
-import com.github.mdeluise.plantit.botanicalinfo.GlobalBotanicalInfo;
-import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
@@ -47,9 +46,9 @@ class BotanicalInfoServiceTest {
     @DisplayName("Partial scientific name search should work")
     void shouldReturnWithPartialScientificNameSearch() {
         final String partialScientificName = "this is the partial scientific name";
-        final BotanicalInfo toReturn1 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn1 = new BotanicalInfo();
         toReturn1.setId(1L);
-        final BotanicalInfo toReturn2 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn2 = new BotanicalInfo();
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
@@ -65,9 +64,9 @@ class BotanicalInfoServiceTest {
     @DisplayName("Partial scientific name search with limit should work")
     void shouldReturnWithPartialScientificNameSearchWithLimit() {
         final String partialScientificName = "this is the partial scientific name";
-        final BotanicalInfo toReturn1 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn1 = new BotanicalInfo();
         toReturn1.setId(1L);
-        final BotanicalInfo toReturn2 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn2 = new BotanicalInfo();
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
@@ -82,9 +81,9 @@ class BotanicalInfoServiceTest {
     @Test
     @DisplayName("Should return all botanical info")
     void shouldGetAll() {
-        final BotanicalInfo toReturn1 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn1 = new BotanicalInfo();
         toReturn1.setId(1L);
-        final BotanicalInfo toReturn2 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn2 = new BotanicalInfo();
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
@@ -98,9 +97,9 @@ class BotanicalInfoServiceTest {
     @Test
     @DisplayName("Should return all botanical info up to limit")
     void shouldGetAllUpToLimit() {
-        final BotanicalInfo toReturn1 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn1 = new BotanicalInfo();
         toReturn1.setId(1L);
-        final BotanicalInfo toReturn2 = new GlobalBotanicalInfo();
+        final BotanicalInfo toReturn2 = new BotanicalInfo();
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
@@ -118,7 +117,7 @@ class BotanicalInfoServiceTest {
         authenticatedUser.setId(1L);
         final long botanicalInfoIdToCountPlants = 1;
         final int plantNumber = 3;
-        final BotanicalInfo botanicalInfo = new GlobalBotanicalInfo();
+        final BotanicalInfo botanicalInfo = new BotanicalInfo();
         botanicalInfo.setId(1L);
         final Set<Plant> botanicalInfoPlants = new HashSet<>();
         for (int i = 0; i < plantNumber; i++) {
@@ -143,7 +142,7 @@ class BotanicalInfoServiceTest {
         authenticatedUser.setId(1L);
         final long botanicalInfoIdToCountPlants = 1;
         final int plantNumber = 3;
-        final BotanicalInfo botanicalInfo = new GlobalBotanicalInfo();
+        final BotanicalInfo botanicalInfo = new BotanicalInfo();
         botanicalInfo.setId(1L);
         final Set<Plant> botanicalInfoPlants = new HashSet<>();
         for (int i = 0; i < plantNumber; i++) {
@@ -179,7 +178,7 @@ class BotanicalInfoServiceTest {
     @Test
     @DisplayName("Should save botanical info")
     void shouldSave() {
-        final BotanicalInfo toSave = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toSave = new BotanicalInfo();
         toSave.setId(1L);
         toSave.setSpecies("species");
 
@@ -195,14 +194,15 @@ class BotanicalInfoServiceTest {
         final User owner = new User();
         owner.setId(1L);
         owner.setUsername("user 1");
-        final BotanicalInfo toSave = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toSave = new BotanicalInfo();
         toSave.setId(1L);
         toSave.setSpecies("species");
+        toSave.setCreator(BotanicalInfoCreator.USER);
 
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(owner);
         Mockito.when(botanicalInfoRepository.save(toSave)).thenReturn(toSave);
 
-        Assertions.assertThat(((UserCreatedBotanicalInfo) botanicalInfoService.save(toSave)).getCreator())
+        Assertions.assertThat((botanicalInfoService.save(toSave)).getUserCreator())
                   .as("botanical info owner is correct").isEqualTo(owner);
     }
 
@@ -211,7 +211,7 @@ class BotanicalInfoServiceTest {
     @DisplayName("Should get botanical info")
     void shouldGet() {
         final long botanicalInfoId = 1;
-        final BotanicalInfo toGet = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toGet = new BotanicalInfo();
         toGet.setId(botanicalInfoId);
         toGet.setSpecies("species");
 
@@ -242,9 +242,10 @@ class BotanicalInfoServiceTest {
         final User creator = new User();
         creator.setId(2L);
         final long botanicalInfoId = 1;
-        final UserCreatedBotanicalInfo toGet = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toGet = new BotanicalInfo();
         toGet.setId(botanicalInfoId);
-        toGet.setCreator(creator);
+        toGet.setCreator(BotanicalInfoCreator.USER);
+        toGet.setUserCreator(creator);
 
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(toGet));
@@ -287,9 +288,10 @@ class BotanicalInfoServiceTest {
         final User creator = new User();
         creator.setId(2L);
         final long botanicalInfoId = 1;
-        final UserCreatedBotanicalInfo toGet = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toGet = new BotanicalInfo();
         toGet.setId(botanicalInfoId);
-        toGet.setCreator(creator);
+        toGet.setCreator(BotanicalInfoCreator.USER);
+        toGet.setUserCreator(creator);
 
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(toGet));
@@ -302,17 +304,22 @@ class BotanicalInfoServiceTest {
     @Test
     @DisplayName("Should update botanical info")
     void shouldUpdate() {
+        final User authenticatedUser = new User();
+        authenticatedUser.setId(1L);
         final long botanicalInfoId = 1;
+        final BotanicalInfo toUpdate = new BotanicalInfo();
+        toUpdate.setId(botanicalInfoId);
+        toUpdate.setUserCreator(authenticatedUser);
         final BotanicalInfo updated = new BotanicalInfo();
-        updated.setId(botanicalInfoId);
         updated.setSpecies("species");
         updated.setScientificName("this is the name");
 
+        Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+        Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(toUpdate));
         Mockito.when(botanicalInfoRepository.existsById(botanicalInfoId)).thenReturn(true);
-        Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(new BotanicalInfo()));
         Mockito.when(botanicalInfoRepository.save(updated)).thenReturn(updated);
 
-        Assertions.assertThat(botanicalInfoService.update(updated)).as("botanical info is correct")
+        Assertions.assertThat(botanicalInfoService.update(botanicalInfoId, updated)).as("botanical info is correct")
             .isEqualTo(updated);
     }
 
@@ -328,7 +335,7 @@ class BotanicalInfoServiceTest {
 
         Mockito.when(botanicalInfoRepository.findById(toUpdate)).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(() -> botanicalInfoService.update(updated))
+        Assertions.assertThatThrownBy(() -> botanicalInfoService.update(toUpdate, updated))
                   .as("Exception is correct").isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -341,9 +348,10 @@ class BotanicalInfoServiceTest {
         final User creator = new User();
         creator.setId(2L);
         final long botanicalInfoId = 1;
-        final UserCreatedBotanicalInfo toUpdate = new UserCreatedBotanicalInfo();
+        final BotanicalInfo toUpdate = new BotanicalInfo();
         toUpdate.setId(botanicalInfoId);
-        toUpdate.setCreator(creator);
+        toUpdate.setCreator(BotanicalInfoCreator.USER);
+        toUpdate.setUserCreator(creator);
         final BotanicalInfo updated = new BotanicalInfo();
         updated.setId(botanicalInfoId);
         updated.setSpecies("species");
@@ -353,49 +361,7 @@ class BotanicalInfoServiceTest {
         Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(toUpdate));
         Mockito.when(botanicalInfoRepository.existsById(botanicalInfoId)).thenReturn(true);
 
-        Assertions.assertThatThrownBy(() -> botanicalInfoService.update(toUpdate))
-                  .as("Exception is correct").isInstanceOf(UnauthorizedException.class);
-    }
-
-
-    @Test
-    @DisplayName("Should get botanical info from scientific classification")
-    void shouldGetFromScientificClassification() {
-        final String scientificName = "scientificName";
-        final String family = "family";
-        final String genus = "genus";
-        final String species = "species";
-        final BotanicalInfo toGet = new UserCreatedBotanicalInfo();
-        toGet.setId(1L);
-
-        Mockito.when(botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(scientificName, family, genus, species))
-               .thenReturn(Optional.of(toGet));
-
-        Assertions.assertThat(botanicalInfoService.get(scientificName, family, genus, species))
-                  .as("botanical info is correct").isPresent().contains(toGet);
-    }
-
-
-    @Test
-    @DisplayName("Should return error when botanical info of another user from scientific classification")
-    void shouldReturnErrorFromScientificClassificationOfAnotherUser() {
-        final User authenticatedUser = new User();
-        authenticatedUser.setId(1L);
-        final User creator = new User();
-        creator.setId(2L);
-        final String scientificName = "scientificName";
-        final String family = "family";
-        final String genus = "genus";
-        final String species = "species";
-        final UserCreatedBotanicalInfo toGet = new UserCreatedBotanicalInfo();
-        toGet.setId(1L);
-        toGet.setCreator(creator);
-
-        Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
-        Mockito.when(botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(scientificName, family, genus, species))
-               .thenReturn(Optional.of(toGet));
-
-        Assertions.assertThatThrownBy(() -> botanicalInfoService.get(scientificName, family, genus, species))
+        Assertions.assertThatThrownBy(() -> botanicalInfoService.update(botanicalInfoId,toUpdate))
                   .as("Exception is correct").isInstanceOf(UnauthorizedException.class);
     }
 
@@ -405,7 +371,7 @@ class BotanicalInfoServiceTest {
     void shouldCheckTrueFromSpecies() {
         final String existingSpecies = "species 1";
         final String notExistingSpecies = "species 2";
-        final BotanicalInfo toGet = new GlobalBotanicalInfo();
+        final BotanicalInfo toGet = new BotanicalInfo();
         toGet.setSpecies(existingSpecies);
         toGet.setId(1L);
 
@@ -427,8 +393,9 @@ class BotanicalInfoServiceTest {
         final User creator = new User();
         creator.setId(2L);
         final String species = "species";
-        final UserCreatedBotanicalInfo toGet = new UserCreatedBotanicalInfo();
-        toGet.setCreator(creator);
+        final BotanicalInfo toGet = new BotanicalInfo();
+        toGet.setCreator(BotanicalInfoCreator.USER);
+        toGet.setUserCreator(creator);
         toGet.setSpecies(species);
         toGet.setId(1L);
 

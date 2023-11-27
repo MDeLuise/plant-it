@@ -8,6 +8,7 @@ import java.util.Set;
 import com.github.mdeluise.plantit.TestEnvironment;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
+import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -136,12 +137,15 @@ class PlantServiceTest {
     @Test
     @DisplayName("Should save plant")
     void shouldSave() {
+        final long botanicalInfoId = 1;
         final BotanicalInfo botanicalInfo = new BotanicalInfo();
-        botanicalInfo.setId(1L);
+        botanicalInfo.setId(botanicalInfoId);
+        botanicalInfo.setCreator(BotanicalInfoCreator.TREFLE);
         final Plant toSave = new Plant();
         toSave.setId(1L);
         toSave.setBotanicalInfo(botanicalInfo);
 
+        Mockito.when(botanicalInfoService.get(botanicalInfoId)).thenReturn(botanicalInfo);
         Mockito.when(plantRepository.save(toSave)).thenReturn(toSave);
 
         Assertions.assertThat(plantService.save(toSave)).as("plant is correct").isEqualTo(toSave);
@@ -252,29 +256,6 @@ class PlantServiceTest {
 
 
     @Test
-    @DisplayName("Should delete botanical info on plant delete")
-    void shouldDeleteBotanicalInfo() {
-        final User authenticatedUser = new User();
-        authenticatedUser.setId(1L);
-        final long plantId = 1;
-        final BotanicalInfo botanicalInfo = new BotanicalInfo();
-        final long botanicalInfoId = 1;
-        botanicalInfo.setId(botanicalInfoId);
-        final Plant toDelete = new Plant();
-        toDelete.setId(plantId);
-        toDelete.setOwner(authenticatedUser);
-        toDelete.setBotanicalInfo(botanicalInfo);
-
-        Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
-        Mockito.when(botanicalInfoService.countPlants(botanicalInfoId)).thenReturn(1);
-        Mockito.when(plantRepository.findById(plantId)).thenReturn(Optional.of(toDelete));
-
-        Assertions.assertThatNoException().isThrownBy(() -> plantService.delete(plantId));
-        Mockito.verify(botanicalInfoService, Mockito.times(1)).delete(botanicalInfoId);
-    }
-
-
-    @Test
     @DisplayName("Should return error if delete non existing plant")
     void shouldReturnErrorWhenDeleteNonExisting() {
         final long plantId = 1;
@@ -312,7 +293,7 @@ class PlantServiceTest {
     //        final User authenticatedUser = new User();
     //        authenticatedUser.setId(1L);
     //        final long plantId = 1;
-    //        final BotanicalInfo botanicalInfo = new UserCreatedBotanicalInfo();
+    //        final BotanicalInfo botanicalInfo = new BotanicalInfo();
     //        final long botanicalInfoId = 1;
     //        botanicalInfo.setId(botanicalInfoId);
     //        final Plant toUpdate = new Plant();
@@ -344,10 +325,10 @@ class PlantServiceTest {
     //        final User authenticatedUser = new User();
     //        authenticatedUser.setId(1L);
     //        final long plantId = 1;
-    //        final BotanicalInfo botanicalInfo = new UserCreatedBotanicalInfo();
+    //        final BotanicalInfo botanicalInfo = new BotanicalInfo();
     //        final long botanicalInfoId = 1;
     //        botanicalInfo.setId(botanicalInfoId);
-    //        final BotanicalInfo updatedBotanicalInfo = new UserCreatedBotanicalInfo();
+    //        final BotanicalInfo updatedBotanicalInfo = new BotanicalInfo();
     //        updatedBotanicalInfo.setId(botanicalInfoId + 1);
     //        final Plant toUpdate = new Plant();
     //        toUpdate.setAvatarMode(PlantAvatarMode.NONE);
@@ -383,7 +364,7 @@ class PlantServiceTest {
 
         Mockito.when(plantRepository.findById(plantId)).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(() -> plantService.update(updated)).as("Exception is correct")
+        Assertions.assertThatThrownBy(() -> plantService.update(plantId, updated)).as("Exception is correct")
                   .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -396,7 +377,9 @@ class PlantServiceTest {
         final User creator = new User();
         creator.setId(2L);
         final long botanicalInfoId = 1;
+        final long plantId = 1;
         final Plant toUpdate = new Plant();
+        toUpdate.setId(plantId);
         toUpdate.setId(botanicalInfoId);
         toUpdate.setOwner(creator);
         final Plant updated = new Plant();
@@ -405,7 +388,7 @@ class PlantServiceTest {
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(plantRepository.findById(botanicalInfoId)).thenReturn(Optional.of(toUpdate));
 
-        Assertions.assertThatThrownBy(() -> plantService.update(updated)).as("Exception is correct")
+        Assertions.assertThatThrownBy(() -> plantService.update(plantId, updated)).as("Exception is correct")
                   .isInstanceOf(UnauthorizedException.class);
     }
 }

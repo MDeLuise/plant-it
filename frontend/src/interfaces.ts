@@ -6,8 +6,8 @@ export interface botanicalInfo {
     species: string,
     imageUrl: string,
     imageId?: string,
-    systemWide: boolean,
-}
+    creator: "USER" | "TREFLE",
+};
 
 export interface plant {
     id: number,
@@ -16,13 +16,13 @@ export interface plant {
     personalName: string,
     state: "PURCHASED" | "PLANTED" | "ALIVE" | "GIFTED" | "DEAD",
     ownerId: number,
-    botanicalInfo: botanicalInfo,
     diaryId: number,
     note?: string,
     avatarMode: "NONE" | "RANDOM" | "LAST" | "SPECIFIED",
     avatarImageId?: string,
-    avatarImageUrl?: string; 
-}
+    botanicalInfoId: number,
+    avatarImageUrl?: string;
+};
 
 export interface diaryEntry {
     id: number,
@@ -32,4 +32,4 @@ export interface diaryEntry {
     diaryId: number,
     diaryTargetId: number,
     diaryTargetPersonalName: string,
-}
+};

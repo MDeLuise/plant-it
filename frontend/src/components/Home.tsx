@@ -276,10 +276,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     return res.data;
                 }))
                 setPlants(newPlants);
-                setPlantDetails({...plantDetails, plant: res.data});
+                setPlantDetails({ ...plantDetails, plant: res.data });
             })
             .catch(printError);
     }
+
 
     useEffect(() => {
         if (!props.isLoggedIn()) {
@@ -371,11 +372,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 requestor={props.requestor}
                 printError={printError}
                 openAddLogEntry={() => setAddDiaryLogOpen(true)}
-                onUpdate={updated => {
+                onPlantUpdate={updated => {
                     updateEventFetchedCopy(updated);
                     reloadPlant(updated.id);
                 }}
-                onDelete={deleted => {
+                onPlantDelete={deleted => {
                     deletePlantFetchedCopy(deleted);
                     deleteEventFetchedCopy(deleted);
                 }}
@@ -413,6 +414,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                         requestor={props.requestor}
                         plants={plants}
                         printError={printError}
+                        refreshPlants={getAllEntities}
                     />
                 </Box>
 

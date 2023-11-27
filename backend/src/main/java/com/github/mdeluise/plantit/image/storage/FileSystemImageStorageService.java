@@ -4,12 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
-import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
@@ -48,7 +50,8 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @SuppressWarnings("ParameterNumber") //FIXME
     public FileSystemImageStorageService(@Value("${upload.location}") String rootLocation,
                                          ImageRepository imageRepository, PlantImageRepository plantImageRepository,
-                                         PlantRepository plantRepository, @Value("${image.max_origin_size}") int maxOriginImgSize,
+                                         PlantRepository plantRepository,
+                                         @Value("${image.max_origin_size}") int maxOriginImgSize,
                                          AuthenticatedUserService authenticatedUserService) {
         this.rootLocation = rootLocation;
         this.imageRepository = imageRepository;
@@ -101,6 +104,49 @@ public class FileSystemImageStorageService implements ImageStorageService {
     }
 
 
+    @Override
+    public EntityImage save(String url, ImageTarget linkedEntity) throws MalformedURLException {
+        if (!(linkedEntity instanceof BotanicalInfo)) {
+            throw new UnsupportedOperationException("URL images can be linked only to Botanical Info entities");
+        }
+        try {
+            new URL(url).toURI();
+        } catch (URISyntaxException e) {
+            throw new MalformedURLException(e.getMessage());
+        }
+        final BotanicalInfoImage entityImage = new BotanicalInfoImage();
+        entityImage.setTarget((BotanicalInfo) linkedEntity);
+        entityImage.setUrl(url);
+        return imageRepository.save(entityImage);
+    }
+
+
+    @Override
+    public EntityImage clone(String id, ImageTarget linkedEntity) {
+        final EntityImage toClone = get(id);
+        EntityImageImpl entityImage;
+        if (linkedEntity instanceof BotanicalInfo b) {
+            entityImage = new BotanicalInfoImage();
+            ((BotanicalInfoImage) entityImage).setTarget(b);
+        } else if (linkedEntity instanceof Plant p) {
+            entityImage = new PlantImage();
+            ((PlantImage) entityImage).setTarget(p);
+        } else {
+            throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
+        }
+        entityImage.setUrl(toClone.getUrl());
+        if (toClone.getPath() != null) {
+            final String resultPath = toClone.getPath().replace(toClone.getId(), entityImage.getId());
+            try {
+                Files.copy(Path.of(toClone.getPath()), Path.of(resultPath));
+            } catch (IOException e) {
+                throw new StorageException("Failed to save file.", e);
+            }
+        }
+        return imageRepository.save(entityImage);
+    }
+
+
     @Cacheable(value = "image", key = "{#id}")
     @Override
     public EntityImage get(String id) {
@@ -109,8 +155,8 @@ public class FileSystemImageStorageService implements ImageStorageService {
         if (result instanceof PlantImage p &&
                 p.getTarget().getOwner() != authenticatedUserService.getAuthenticatedUser()) {
             throw new UnauthorizedException();
-        } else if (result instanceof BotanicalInfoImage b && b.getTarget() instanceof UserCreatedBotanicalInfo u &&
-                       u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+        } else if (result instanceof BotanicalInfoImage b &&
+                       !b.getTarget().isAccessibleToUser(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
         return result;
@@ -120,8 +166,12 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Cacheable(value = "image-content", key = "{#id}")
     @Override
     public byte[] getContent(String id) {
+        final EntityImage getContentFrom = get(id);
+        if (getContentFrom.getPath() == null) {
+            throw new UnsupportedOperationException(String.format("Image with id %s has no content (only URL)", id));
+        }
         try {
-            final File entityImageFile = new File(get(id).getPath());
+            final File entityImageFile = new File(getContentFrom.getPath());
             if (!entityImageFile.exists() || !entityImageFile.canRead()) {
                 throw new StorageFileNotFoundException("Could not read image with id: " + id);
             }
@@ -135,8 +185,12 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Cacheable(value = "thumbnail", key = "{#id}")
     @Override
     public byte[] getThumbnail(String id) {
+        final EntityImage getContentFrom = get(id);
+        if (getContentFrom.getPath() == null) {
+            throw new UnsupportedOperationException(String.format("Image with id %s has no content (only URL)", id));
+        }
         try {
-            final File entityImageFile = new File(get(id).getPath());
+            final File entityImageFile = new File(getContentFrom.getPath());
             if (!entityImageFile.exists() || !entityImageFile.canRead()) {
                 throw new StorageFileNotFoundException("Could not read image with id: " + id);
             }
@@ -157,18 +211,19 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = {"image", "thumbnail", "image-content"}, key = "{#id}"),
-            @CacheEvict(value = "plants", allEntries = true, beforeInvocation = true,
-                condition = "@plantImageRepository.findById(#id).present and " +
-                                "@plantImageRepository.findById(#id).get().avatarOf != null")
+            @CacheEvict(value = {"image", "thumbnail", "image-content"}, key = "{#id}"), @CacheEvict(
+            value = "plants", allEntries = true, beforeInvocation = true,
+            condition = "@plantImageRepository.findById(#id).present and " +
+                            "@plantImageRepository.findById(#id).get().avatarOf != null"
+        )
         }
     )
     @Override
     // FIXME plantImageRepository and PlantImage should not be used,
     // maybe DeletePlantImageEntityAndFileCollaborator collaborator?
     public void remove(String id) {
-        final EntityImage entityToDelete = imageRepository.findById(id)
-                                                          .orElseThrow(() -> new ResourceNotFoundException(id));
+        final EntityImage entityToDelete =
+            imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         if (entityToDelete instanceof PlantImage p && p.getAvatarOf() != null) {
             final Plant toUpdate = p.getAvatarOf();
             toUpdate.setAvatarImage(null);

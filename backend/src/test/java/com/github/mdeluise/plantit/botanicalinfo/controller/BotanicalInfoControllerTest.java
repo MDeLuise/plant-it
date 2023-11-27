@@ -1,6 +1,6 @@
 package com.github.mdeluise.plantit.botanicalinfo.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.TestEnvironment;
@@ -12,8 +12,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTOConverter;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
-import com.github.mdeluise.plantit.plantinfo.AbstractPlantInfoExtractor;
-import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFactory;
+import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFacade;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyFilter;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyRepository;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyService;
@@ -53,9 +52,7 @@ class BotanicalInfoControllerTest {
     @MockBean
     ApiKeyRepository apiKeyRepository;
     @MockBean
-    PlantInfoExtractorFactory plantInfoExtractorFactory;
-    @MockBean
-    AbstractPlantInfoExtractor localPlantInfoExtractor;
+    PlantInfoExtractorFacade plantInfoExtractorFacade;
     @MockBean
     BotanicalInfoDTOConverter botanicalInfoDTOConverter;
     @MockBean
@@ -86,8 +83,7 @@ class BotanicalInfoControllerTest {
         botanicalInfo1.setSpecies("species_2");
         final int defaultSize = 5;
 
-        Mockito.when(plantInfoExtractorFactory.getPlantInfoExtractor()).thenReturn(localPlantInfoExtractor);
-        Mockito.when(botanicalInfoService.getAll(defaultSize)).thenReturn(Set.of(botanicalInfo1, botanicalInfo2));
+        Mockito.when(plantInfoExtractorFacade.getAll(defaultSize)).thenReturn(List.of(botanicalInfo1, botanicalInfo2));
         Mockito.when(botanicalInfoDTOConverter.convertToDTO(botanicalInfo1)).thenReturn(botanicalInfoDTO1);
         Mockito.when(botanicalInfoDTOConverter.convertToDTO(botanicalInfo2)).thenReturn(botanicalInfoDTO2);
 

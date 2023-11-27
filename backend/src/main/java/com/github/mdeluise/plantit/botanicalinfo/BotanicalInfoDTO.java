@@ -1,10 +1,10 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.Objects;
 
-@Schema(name = "Botanical info", description = "Represents a plant's botanical name.")
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "Botanical info", description = "Represents a plant's botanical info.")
 public class BotanicalInfoDTO {
     @Schema(description = "ID of the botanical info.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
@@ -16,13 +16,14 @@ public class BotanicalInfoDTO {
     private String genus;
     @Schema(description = "Species of the botanical info.")
     private String species;
+    @Schema(description = "ID of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
+    private String imageId;
     @Schema(description = "URL of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String imageUrl;
-    @Schema(
-        description = "True if botanical info is system wide, false if it's user created",
-        accessMode = Schema.AccessMode.READ_ONLY
-    )
-    private boolean isSystemWide;
+    @Schema(description = "Creator of the botanical info", accessMode = Schema.AccessMode.READ_ONLY)
+    private String creator;
+    @Schema(description = "ID of the botanical info in the creator service")
+    private String externalId;
 
 
     public Long getId() {
@@ -85,13 +86,33 @@ public class BotanicalInfoDTO {
     }
 
 
-    public boolean isSystemWide() {
-        return isSystemWide;
+    public String getImageId() {
+        return imageId;
     }
 
 
-    public void setSystemWide(boolean systemWide) {
-        isSystemWide = systemWide;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+
+    public String getCreator() {
+        return creator;
+    }
+
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
 

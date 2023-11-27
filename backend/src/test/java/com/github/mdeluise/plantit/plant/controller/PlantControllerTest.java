@@ -159,18 +159,19 @@ class PlantControllerTest {
     @DisplayName("Should update new plant and return it")
     void shouldUpdate() throws Exception {
         final String updatedPersonalName = "updated personal name";
+        final Long plantId = 1L;
         final Plant updated = new Plant();
-        updated.setId(1L);
+        updated.setId(plantId);
         updated.setPersonalName(updatedPersonalName);
         final PlantDTO updatedDTO = new PlantDTO();
         updatedDTO.setId(1L);
         updatedDTO.setPersonalName(updatedPersonalName);
 
-        Mockito.when(plantService.update(updated)).thenReturn(updated);
+        Mockito.when(plantService.update(plantId, updated)).thenReturn(updated);
         Mockito.when(plantDTOConverter.convertFromDTO(updatedDTO)).thenReturn(updated);
         Mockito.when(plantDTOConverter.convertToDTO(updated)).thenReturn(updatedDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/plant").content(
+        mockMvc.perform(MockMvcRequestBuilders.put("/plant/" + plantId).content(
                                                   objectMapper.writeValueAsString(plantDTOConverter.convertToDTO(updated)))
                                               .contentType(MediaType.APPLICATION_JSON))
                .andExpect(MockMvcResultMatchers.status().isOk())

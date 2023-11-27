@@ -87,7 +87,9 @@ public class DiaryEntryService {
 
 
     public DiaryEntry save(DiaryEntry diaryEntry) {
-        if (!diaryEntry.getDiary().getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+        final Diary diary = diaryService.get(diaryEntry.getDiary().getId());
+        final User diaryOwner = diary.getOwner();
+        if (!diaryOwner.equals(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
         return diaryEntryRepository.save(diaryEntry);

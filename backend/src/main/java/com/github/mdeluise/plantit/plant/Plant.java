@@ -172,16 +172,6 @@ public class Plant implements Serializable, ImageTarget {
     }
 
 
-    public PlantState getPlantState() {
-        return plantState;
-    }
-
-
-    public void setPlantState(PlantState plantState) {
-        this.plantState = plantState;
-    }
-
-
     public PlantAvatarMode getAvatarMode() {
         return avatarMode;
     }

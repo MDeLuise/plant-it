@@ -1,8 +1,8 @@
 import { Box, Skeleton, Typography } from "@mui/material";
 import { AxiosInstance } from "axios";
 import { useState, useEffect } from "react";
-import { getPlantImg, isBigScreen } from "../common";
-import { plant } from "../interfaces";
+import { fetchBotanicalInfo, getPlantImg, isBigScreen } from "../common";
+import { botanicalInfo, plant } from "../interfaces";
 
 export default function UserPlant(props: {
     entity: plant,
@@ -15,6 +15,7 @@ export default function UserPlant(props: {
     const [imageDownloaded, setImageDownloaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
     const [wasRenderedOnce, setWasRenderedOnce] = useState<boolean>(false);
+    const [botanicalInfo, setBotanicalInfo] = useState<botanicalInfo>();
 
     const setImageSrc = (): void => {
         getPlantImg(props.requestor, props.entity.avatarImageUrl)
@@ -39,6 +40,9 @@ export default function UserPlant(props: {
 
     useEffect(() => {
         setImageSrc();
+        fetchBotanicalInfo(props.requestor, props.entity)
+            .then(setBotanicalInfo)
+            .catch(props.printError);
     }, [props.entity]);
 
     return (
@@ -97,7 +101,7 @@ export default function UserPlant(props: {
                     alignItems: "center",
                     justifyContent: "center",
                     textAlign: "center",
-                    backgroundColor: props.entity.botanicalInfo.imageId !== undefined ? "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
+                    backgroundColor: botanicalInfo != undefined && botanicalInfo.imageId !== undefined ? "rgba(255, 255, 255, .1)" : "rgb(7 7 7 / 16%)",
                     backdropFilter: "blur(3px)",
                 }}>
                     <Typography variant="h6" sx={{ color: "white" }}>
