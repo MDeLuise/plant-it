@@ -171,7 +171,7 @@ There are 2 configuration file available:
   CACHE_HOST=cache
   CACHE_PORT=6379
   
-  TRAFLE_KEY= # put you key here, otherwise the "search" feature will include only user generated species
+  TREFLE_KEY= # put you key here, otherwise the "search" feature will include only user generated species
 
   ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
 
