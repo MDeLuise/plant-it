@@ -174,6 +174,8 @@ There are 2 configuration file available:
   TRAFLE_KEY= # put you key here, otherwise the "search" feature will include only user generated species
 
   ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
+
+  LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
   ```
   Change the properties values according to your system.
 

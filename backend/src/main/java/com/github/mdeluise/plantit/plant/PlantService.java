@@ -13,6 +13,8 @@ import com.github.mdeluise.plantit.image.PlantImage;
 import com.github.mdeluise.plantit.image.PlantImageRepository;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +29,7 @@ public class PlantService {
     private final BotanicalInfoService botanicalInfoService;
     private final ImageStorageService imageStorageService;
     private final PlantImageRepository plantImageRepository;
+    private final Logger logger = LoggerFactory.getLogger(PlantService.class);
 
 
     @Autowired
@@ -43,14 +46,17 @@ public class PlantService {
 
     @Cacheable(value = "plants", key = "{#pageable, @authenticatedUserService.getAuthenticatedUser().id}")
     public Page<Plant> getAll(Pageable pageable) {
+        logger.debug("Search for DB saved plants");
         return plantRepository.findAllByOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
     }
 
 
     @Cacheable(value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}")
     public Plant get(Long id) {
+        logger.debug("Search for DB plant " + id);
         final Plant result = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         if (result.getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+            logger.warn("User not authorized to operate on plant " + id);
             throw new UnauthorizedException();
         }
         return result;
@@ -95,6 +101,7 @@ public class PlantService {
     public void delete(Long plantId) {
         final Plant toDelete = get(plantId);
         if (!toDelete.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            logger.warn("User not authorized to operate on plant " + plantId);
             throw new UnauthorizedException();
         }
 
@@ -112,6 +119,7 @@ public class PlantService {
     public Plant update(Long id, Plant updated) {
         final Plant toUpdate = get(id);
         if (!toUpdate.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            logger.warn("User not authorized to operate on plant " + id);
             throw new UnauthorizedException();
         }
         final BotanicalInfo newBotanicalInfo = botanicalInfoService.get(updated.getBotanicalInfo().getId());
@@ -132,11 +140,13 @@ public class PlantService {
         final PlantImage toUpdateAvatarImage = toUpdate.getAvatarImage();
         final PlantImage updatedAvatarImage = updated.getAvatarImage();
         if (updatedAvatarImage == null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            logger.error("Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
             throw new IllegalArgumentException(
                 "Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
         }
         toUpdate.setAvatarMode(updated.getAvatarMode());
         if (toUpdateAvatarImage != null) {
+            logger.debug("De-link old plant avatar image...");
             final PlantImage savedAvatarImageToUpdate = plantImageRepository.findById(toUpdateAvatarImage.getId())
                                                                             .orElseThrow(
                                                                                 () -> new ResourceNotFoundException(
@@ -145,6 +155,7 @@ public class PlantService {
             plantImageRepository.save(savedAvatarImageToUpdate);
         }
         if (updatedAvatarImage != null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            logger.debug("Link new plant avatar image...");
             final String updatedAvatarImageId = updatedAvatarImage.getId();
             final PlantImage newAvatarImage = plantImageRepository.findById(updatedAvatarImageId).orElseThrow(
                 () -> new ResourceNotFoundException(updatedAvatarImageId));

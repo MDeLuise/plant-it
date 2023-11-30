@@ -15,6 +15,8 @@ import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class BotanicalInfoService {
     private final BotanicalInfoRepository botanicalInfoRepository;
     private final ImageStorageService imageStorageService;
     private final PlantRepository plantRepository;
+    private final Logger logger = LoggerFactory.getLogger(BotanicalInfoService.class);
 
 
     @Autowired
@@ -39,6 +42,8 @@ public class BotanicalInfoService {
 
 
     public Set<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
+        logger.debug(String.format("Search for DB saved botanical info matching '%s' scientific name (max size %s)",
+                                   partialScientificName, size));
         final List<BotanicalInfo> result =
             botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName).stream().filter(
                                        botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
@@ -48,6 +53,7 @@ public class BotanicalInfoService {
 
 
     public Set<BotanicalInfo> getAll(int size) {
+        logger.debug(String.format("Search for DB saved botanical info (max size %s)", size));
         final List<BotanicalInfo> result = botanicalInfoRepository.findAll().stream().filter(
                                                                       botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
                                                                   .limit(size).toList();
@@ -114,6 +120,7 @@ public class BotanicalInfoService {
         if (toUpdate.isUserCreated()) {
             return updateUserCreatedBotanicalInfo(updated, toUpdate);
         }
+        logger.info("Trying to update a NON custom botanical info. Creating custom copy...");
         final BotanicalInfo userCreatedCopy = createUserCreatedCopy(toUpdate);
         return updateUserCreatedBotanicalInfo(updated, userCreatedCopy);
     }
@@ -140,11 +147,13 @@ public class BotanicalInfoService {
         userCreatedCopy = save(userCreatedCopy);
 
         if (toCopy.getImage() != null) {
+            logger.debug("Copy botanical info thumbnail...");
             final EntityImage toClone = imageStorageService.get(toCopy.getImage().getId());
             final EntityImage clonedEntityImage = imageStorageService.clone(toClone.getId(), userCreatedCopy);
             userCreatedCopy.setImage((BotanicalInfoImage) clonedEntityImage);
         }
 
+        logger.debug("Move botanical info plants to the custom copy...");
         final BotanicalInfo finalUserCreatedCopy = userCreatedCopy;
         toCopy.getPlants().forEach(pl -> {
             if (pl.getOwner() != authenticatedUserService.getAuthenticatedUser()) {
