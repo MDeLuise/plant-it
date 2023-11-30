@@ -118,7 +118,7 @@ class PlantControllerTest {
         Mockito.when(plantService.get(toGetId)).thenThrow(new ResourceNotFoundException(toGetId));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/plant/" + toGetId))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -201,7 +201,7 @@ class PlantControllerTest {
         Mockito.doThrow(ResourceNotFoundException.class).when(plantService).delete(toDeleteId);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/plant/" + toDeleteId))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 

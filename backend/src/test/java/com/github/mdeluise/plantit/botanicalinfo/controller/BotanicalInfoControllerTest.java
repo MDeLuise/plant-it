@@ -114,7 +114,7 @@ class BotanicalInfoControllerTest {
         Mockito.doThrow(ResourceNotFoundException.class).when(botanicalInfoService).delete(idToRemove);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/botanical-info/0"))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -130,7 +130,7 @@ class BotanicalInfoControllerTest {
         Mockito.doThrow(new UnauthorizedException()).when(botanicalInfoService).delete(idToRemove);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/botanical-info/" + idToRemove))
-               .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+               .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
 
