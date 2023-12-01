@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit;
 
+import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.servers.ServerVariable;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.EnableCaching;
@@ -50,7 +53,7 @@ import redis.embedded.RedisServer;
 @EnableMethodSecurity
 @EnableCaching
 public class ApplicationConfig {
-
+    private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
     @Bean
     public ModelMapper modelMapper() {
@@ -64,6 +67,19 @@ public class ApplicationConfig {
         return args -> {
             RedisServer redisServer = new RedisServer(port);
             redisServer.start();
+        };
+    }
+
+
+    @Bean
+    public CommandLineRunner fillExternalIds(@Value("${trefle.key}") String trefleKey, TrefleMigrator trefleMigrator) {
+        return args -> {
+            if (trefleKey == null || trefleKey.isBlank()) {
+                logger.info("trefle key not provided. Skipping entities update.");
+                return;
+            }
+            logger.info("trefle key provided. Starting entities update...");
+            trefleMigrator.fillMissingExternalIds();
         };
     }
 }

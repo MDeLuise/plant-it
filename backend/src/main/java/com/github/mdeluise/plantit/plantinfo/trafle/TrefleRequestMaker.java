@@ -55,11 +55,11 @@ public class TrefleRequestMaker {
         final String url = String.format("%s/species/search?q=%s&limit=%s&page=%s&token=%s",
                                          baseEndpoint, encodedPartialName, pageable.getPageSize(),
                                          pageable.getPageNumber() + 1, token);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                                         .uri(URI.create(url))
-                                         .GET()
-                                         .build();
+        final HttpClient client = HttpClient.newHttpClient();
+        final HttpRequest request = HttpRequest.newBuilder()
+                                               .uri(URI.create(url))
+                                               .GET()
+                                               .build();
 
         HttpResponse<String> response;
         try {
@@ -68,7 +68,7 @@ public class TrefleRequestMaker {
             throw new InfoExtractionException(e);
         }
         final JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
-        List<BotanicalInfo> botanicalInfos = new ArrayList<>();
+        final List<BotanicalInfo> botanicalInfos = new ArrayList<>();
         responseJson.get("data").getAsJsonArray().forEach(plantResult -> {
             BotanicalInfo botanicalInfo = new BotanicalInfo();
             botanicalInfo.setCreator(BotanicalInfoCreator.TREFLE);
@@ -99,11 +99,11 @@ public class TrefleRequestMaker {
         logger.debug("Fetching all info from Trefle");
         final String url = String.format("%s/species/search?limit=%s&page=%s&token=%s&q=*",
                                          baseEndpoint, pageable.getPageSize(), pageable.getPageNumber() + 1, token);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                                         .uri(URI.create(url))
-                                         .GET()
-                                         .build();
+        final HttpClient client = HttpClient.newHttpClient();
+        final HttpRequest request = HttpRequest.newBuilder()
+                                               .uri(URI.create(url))
+                                               .GET()
+                                               .build();
 
         HttpResponse<String> response;
         try {
@@ -129,4 +129,30 @@ public class TrefleRequestMaker {
         botanicalInfo.setImage(abstractEntityImage);
     }
 
+
+    protected String getExternalId(String species) {
+        final String encodedSpecies = URLEncoder.encode(species, StandardCharsets.UTF_8);
+        final String url = String.format("%s/species/search?limit=1&page=1&token=%s&q=%s", baseEndpoint, token, encodedSpecies);
+        final HttpClient client = HttpClient.newHttpClient();
+        final HttpRequest request = HttpRequest.newBuilder()
+                                               .uri(URI.create(url))
+                                               .GET()
+                                               .build();
+
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new InfoExtractionException(e);
+        }
+        final JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
+
+        try {
+            final JsonElement data = responseJson.get("data").getAsJsonArray().get(0);
+            return data.getAsJsonObject().get("id").getAsString();
+        } catch (IndexOutOfBoundsException e) {
+            logger.error(String.format("Error while retrieving external_id of species %s from Trefle.", species));
+            return null;
+        }
+    }
 }
