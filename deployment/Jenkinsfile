@@ -112,7 +112,7 @@ pipeline {
                     script {
                         def title = "Build failed"
                         def tag = "rotating_light"
-                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108/jenkins -d 'Build result: ${currentBuild.result}'"
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
                     }
                 }
             }
@@ -207,7 +207,7 @@ pipeline {
                             title += "failed"
                             tag = "rotating_light"
                         }
-                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108/jenkins -d 'Build result: ${currentBuild.result}'"
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
                     }
                 }
             }

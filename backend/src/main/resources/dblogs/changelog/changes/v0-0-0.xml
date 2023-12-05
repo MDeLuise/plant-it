@@ -250,7 +250,7 @@
             <column name="creator" type="VARCHAR(20)"/>
         </addColumn>
         <renameColumn tableName="botanical_infos" oldColumnName="user_id"
-                      newColumnName="user_creator_id"/>
+                      newColumnName="user_creator_id" columnDataType="bigint"/>
         <addColumn tableName="botanical_infos">
             <column name="external_id" type="VARCHAR(255)"/>
         </addColumn>

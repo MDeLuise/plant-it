@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@DependsOn("plantInfoExtractorFactory")
 @RequestMapping("/botanical-info")
 @Tag(name = "Botanical Info", description = "Endpoints for operations on botanical info.")
 public class BotanicalInfoController {
