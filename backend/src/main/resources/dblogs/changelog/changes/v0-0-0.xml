@@ -241,4 +241,35 @@
         </createTable>
     </changeSet>
 
+    <!-- to remove after update to v0.1.0 -->
+    <changeSet id="updateTo0.1.0" author="MDeLuise">
+        <addColumn tableName="botanical_infos">
+            <column name="creator" type="VARCHAR(20)"/>
+        </addColumn>
+        <renameColumn tableName="botanical_infos" oldColumnName="user_id"
+                      newColumnName="user_creator_id"/>
+        <addColumn tableName="botanical_infos">
+            <column name="external_id" type="VARCHAR(255)"/>
+        </addColumn>
+        <dropIndex tableName="botanical_infos" indexName="botanical_info_species_unique"/>
+        <dropIndex tableName="botanical_infos" indexName="botanical_info_scientific_name_unique"/>
+        <addUniqueConstraint tableName="botanical_infos" columnNames="species,creator,user_creator_id"
+                             constraintName="botanical_info_species_unique"/>
+        <addUniqueConstraint tableName="botanical_infos"
+                             columnNames="scientific_name,creator,user_creator_id"
+                             constraintName="botanical_info_scientific_name_unique"/>
+
+        <update tableName="botanical_infos">
+            <column name="creator" value="USER"/>
+            <where>botanical_info_type = 2</where>
+        </update>
+
+        <update tableName="botanical_infos">
+            <column name="creator" value="TREFLE"/>
+            <where>botanical_info_type = 1</where>
+        </update>
+
+        <dropColumn tableName="botanical_infos" columnName="botanical_info_type"/>
+    </changeSet>
+
 </databaseChangeLog>
