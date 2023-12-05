@@ -109,7 +109,11 @@ pipeline {
             }
             post {
                 failure {
-                    httpRequest httpMode: 'POST', requestBody: "Build result: $BUILD_RESULT", url: "http://192.168.1.108:19492/jenkins"
+                    script {
+                        def title = "Build failed"
+                        def tag = "rotating_light"
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108/jenkins -d 'Build result: ${currentBuild.result}'"
+                    }
                 }
             }
         }
@@ -195,7 +199,15 @@ pipeline {
                                 rm -rf backend/target
                             """
                         }
-                        httpRequest httpMode: 'POST', requestBody: "Build result: $BUILD_RESULT", url: "http://192.168.1.108:19492/jenkins"
+                        def title = "Build "
+                        def tag = "tada"
+                        if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+                            title += "succeeded"
+                        } else {
+                            title += "failed"
+                            tag = "rotating_light"
+                        }
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108/jenkins -d 'Build result: ${currentBuild.result}'"
                     }
                 }
             }
