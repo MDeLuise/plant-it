@@ -243,6 +243,11 @@
 
     <!-- to remove after update to v0.1.0 -->
     <changeSet id="updateTo0.1.0" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="application_users" columnName="creator"/>
+            </not>
+        </preConditions>
         <addColumn tableName="botanical_infos">
             <column name="creator" type="VARCHAR(20)"/>
         </addColumn>

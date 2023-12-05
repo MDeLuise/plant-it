@@ -107,6 +107,11 @@ pipeline {
                     }
                 }     
             }
+            post {
+                failure {
+                    httpRequest httpMode: 'POST', requestBody: "Build result: $BUILD_RESULT", url: "http://192.168.1.108:19492/jenkins"
+                }
+            }
         }
         stage('Build and publish docker images of backend') {
             agent any
@@ -190,6 +195,7 @@ pipeline {
                                 rm -rf backend/target
                             """
                         }
+                        httpRequest httpMode: 'POST', requestBody: "Build result: $BUILD_RESULT", url: "http://192.168.1.108:19492/jenkins"
                     }
                 }
             }
