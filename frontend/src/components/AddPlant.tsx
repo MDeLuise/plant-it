@@ -1,72 +1,29 @@
 import { Box, Button, Drawer, Link, Skeleton, Switch, TextField, Typography } from "@mui/material";
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { botanicalInfo, plant } from "../interfaces";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { getPlantImg, imgToBase64 } from "../common";
+import { getPlantImg } from "../common";
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import EditIcon from '@mui/icons-material/Edit';
+import InsertOrUpload, { UploadedFile } from "./InsertOrUploadImg";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import ConfirmDeleteDialog from "./ConfirmDialog";
 
 function AddPlantHeader(props: {
     requestor: AxiosInstance,
-    botanicalInfo?: botanicalInfo,
+    imageUrl?: string,
     open: boolean,
     close: () => void,
     printError: (arg: any) => void,
-    image?: File | string;
+    toggleEditMode: () => void;
 }) {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const [imgSrc, setImgSrc] = useState<string>();
-
-    const setFallbackImg = (err?: AxiosError) => {
-        getPlantImg(props.requestor, undefined)
-            .then(res => {
-                if (err !== undefined) {
-                    console.error(err);
-                }
-                imgToBase64(res, (arg: string) => {
-                    setImgSrc(`data:application/octet-stream;base64,${arg}`);
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                props.printError(`Cannot load image with id ${props.botanicalInfo?.imageId}`);
-            });
-    };
-
-    const setImgSrcAsBase64 = (imageUrl: string): void => {
-        props.requestor.get(`image/content${imageUrl}`)
-            .then(res => {
-                setImgSrc(`data:application/octet-stream;base64,${res.data}`);
-            })
-            .catch(err => {
-                setFallbackImg(err);
-            });
-    };
-
-    const setAbsoluteImageUrl = (imageUrl: string | undefined): void => {
-        if (imageUrl === undefined || imageUrl === null) {
-            setFallbackImg();
-        } else if (imageUrl.startsWith("/")) {
-            setImgSrcAsBase64(imageUrl);
-        } else {
-            setImgSrc(imageUrl);
-        }
-    };
-
-    const fileToBase64 = (file: File, callback: (arg: string) => void) => {
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            callback(reader.result as string);
-        };
-        reader.onerror = err => {
-            console.error(err);
-            props.printError("Cannot upload image");
-        };
-    };
 
     useEffect(() => {
         if (!props.open) {
@@ -75,43 +32,19 @@ function AddPlantHeader(props: {
         }
     }, [props.open]);
 
+
     useEffect(() => {
-        if (props.image === undefined && props.botanicalInfo?.imageUrl === undefined) {
-            setFallbackImg();
-        } else if (props.botanicalInfo?.imageUrl !== undefined) {
-            setAbsoluteImageUrl(props.botanicalInfo?.imageUrl);
-        } else if (props.image instanceof File) {
-            fileToBase64(props.image, (arg: string) => setImgSrc(`data:${arg}`));
-        } else if (typeof (props.image) === "string") {
-            setAbsoluteImageUrl(props.image);
+        if (!props.open) {
+            setImageLoaded(false);
+            setImgSrc(undefined);
+        } else {
+            getPlantImg(props.requestor, props.imageUrl)
+                .then(setImgSrc)
+                .catch(props.printError);
         }
-    }, [props.image]);
+    }, [props.imageUrl]);
 
     return <Box height={"40vh"} id="add-plant-header" sx={{ transition: ".5s height", }}>
-        {
-            !imageLoaded &&
-            <Skeleton
-                variant="rectangular"
-                animation="wave"
-                sx={{
-                    width: "100%",
-                    height: "100%",
-                }}
-            />
-        }
-        {
-            props.open &&
-            <img
-                src={imgSrc}
-                style={{
-                    height: "100%",
-                    width: "100%",
-                    objectFit: "cover",
-                }}
-                onLoad={() => setImageLoaded(true)}
-            />
-        }
-
         <Box
             sx={{
                 position: "absolute",
@@ -136,9 +69,97 @@ function AddPlantHeader(props: {
                 fontSize="large"
                 onClick={props.close}
             />
+            {
+                props.imageUrl !== undefined &&
+                <EditIcon
+                    sx={{
+                        backdropFilter: "blur(10px)",
+                        color: "white",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        backgroundColor: "rgba(32, 32, 32, .1)",
+                    }}
+                    fontSize="large"
+                    onClick={props.toggleEditMode}
+                />
+            }
         </Box>
+        {
+            !imageLoaded &&
+            <Skeleton
+                variant="rectangular"
+                animation="wave"
+                sx={{
+                    width: "100%",
+                    height: "100%",
+                }}
+            />
+        }
+        {
+            props.open &&
+            <img
+                src={imgSrc}
+                style={{
+                    height: "100%",
+                    width: "100%",
+                    objectFit: "cover",
+                }}
+                onLoad={() => setImageLoaded(true)}
+            />
+        }
     </Box>;
 }
+
+
+function EditableThumbnail(props: {
+    editable: boolean,
+    text?: string,
+    maxLength?: number,
+    variant?: "body1" | "h6",
+    style?: {};
+    uploadAndSetCustomSpeciesImg: (arg: File) => void,
+    setCustomSpeciesImg: (arg: string) => void,
+}) {
+    const [value, setValue] = useState<string>();
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        setValue(props.text || "");
+    }, [props.text]);
+
+
+    const renderedText = (maxLength?: number, arg?: string) => {
+        if (arg === undefined) {
+            return arg;
+        }
+        if (maxLength !== undefined && arg.length > maxLength) {
+            return arg.substring(0, maxLength) + "...";
+        }
+        return arg;
+    };
+
+    return props.editable ?
+        <Box>
+            {
+                value &&
+                <Typography display="inline">({renderedText(15, value)}) </Typography>
+            }
+            <Link onClick={() => setDialogOpen(true)}>edit</Link>
+            <InsertOrUpload
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                title="Edit species thumbnail"
+                insert={props.setCustomSpeciesImg}
+                uploadFile={(arg: UploadedFile[]) => props.uploadAndSetCustomSpeciesImg(arg[0].original)}
+                maxFileCount={1}
+            />
+        </Box>
+        :
+        <Typography sx={{ ...props.style }} variant={props.variant}>
+            {renderedText(props.maxLength, value)}
+        </Typography>;
+}
+
 
 function AddPlantInfo(props: {
     requestor: AxiosInstance,
@@ -148,18 +169,31 @@ function AddPlantInfo(props: {
     plants: plant[],
     open: boolean,
     close: () => void,
-    selectedImage?: File,
-    setSelectedImage: (arg: File) => void,
-    printError: (arg: any) => void;
+    printError: (arg: any) => void,
+    editModeEnabled: boolean,
+    toggleEditMode: () => void,
+    refreshBotanicalInfosAndPlants: () => void,
+    setUpdatedImgUrl: (src: string) => void;
 }) {
     const [plantName, setPlantName] = useState<string>("");
+    const [updatedBotanicalInfo, setUpdatedBotanicalInfo] = useState<Partial<botanicalInfo>>();
     const [plantNameError, setPlantNameError] = useState<string>();
-    const [family, setFamily] = useState<string>("");
-    const [genus, setGenus] = useState<string>("");
-    const [species, setSpecies] = useState<string>("");
     const [note, setNote] = useState<string>("");
     const [date, setDate] = useState<Dayjs>(dayjs(new Date()));
     const [useDate, setUseDate] = useState<boolean>(true);
+    const [updatedBotanicalInfoThumbnail, setUpdatedBotanicalInfoThumbnail] = useState<{
+        url?: string,
+        file?: File,
+    }>({});
+    const [confirmDialogStatus, setConfirmDialogStatus] = useState<{
+        text: string,
+        confirmCallBack: () => void,
+        open: boolean;
+    }>({
+        text: "",
+        confirmCallBack: () => { },
+        open: false,
+    });
 
     const setName = (): Promise<string> => {
         return new Promise((resolve, reject) => {
@@ -176,7 +210,7 @@ function AddPlantInfo(props: {
                 setPlantName(props.botanicalInfoToAdd.scientificName);
                 return resolve(props.botanicalInfoToAdd.scientificName);
             }
-            props.requestor.get(`/botanical-info/${props.botanicalInfoToAdd.id}/_count`)
+            props.requestor.get(`botanical-info/${props.botanicalInfoToAdd.id}/_count`)
                 .then(res => {
                     let incrementalName = props.botanicalInfoToAdd!.scientificName;
                     if (res.data > 0) {
@@ -191,18 +225,17 @@ function AddPlantInfo(props: {
         });
     };
 
-
     const isNameAvailable = (name: string): Promise<boolean> => {
         return new Promise((resolve, reject) => {
             props.requestor.get(`/plant/${name}/_name-exists`)
-                .then((res) => {
+                .then(res => {
                     if (res.data) {
                         return resolve(false);
                     } else {
                         return resolve(true);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     return reject(err);
                 });
         });
@@ -219,95 +252,88 @@ function AddPlantInfo(props: {
                     setPlantNameError("Duplicated plant name");
                     return;
                 }
-                if (props.botanicalInfoToAdd != undefined) {
-                    addPlantOldBotanicalInfo();
-                } else {
-                    addPlantNewBotanicalInfo();
-                }
-            })
-            .catch(err => {
-                props.printError(err);
-            });
-    };
-
-    const addPlantOldBotanicalInfo = (): void => {
-        addNewPlant({
-            botanicalInfo: props.botanicalInfoToAdd!,
-            personalName: plantName!,
-            state: "ALIVE",
-            startDate: useDate ? date : null,
-            note: note,
-            avatarMode: "NONE",
-        })
-            .then(res => {
-                props.close();
-                let insertHere = props.plants.findIndex((pl) => {
-                    return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
-                });
-                insertHere = insertHere === -1 ? props.plants.length : insertHere;
-                props.plants.splice(insertHere, 0, res);
-                props.botanicalInfoToAdd!.id = res.botanicalInfo.id;
-                setName();
-                cleanup();
-            })
-            .catch(err => {
-                props.printError(err);
-            });
-    };
-
-    const addPlantNewBotanicalInfo = (): void => {
-        let botanicalInfoToUse = {
-            scientificName: species != "" ? species : plantName,
-            family: family,
-            genus: genus,
-            species: species != "" ? species : plantName,
-            isSystemWide: false,
-        };
-        let plantToAdd = {
-            botanicalInfo: botanicalInfoToUse,
-            personalName: plantName,
-            state: "ALIVE",
-            startDate: useDate ? date : null,
-            note: note,
-            avatarMode: "NONE",
-        };
-        addNewPlant(plantToAdd)
-            .then(res => {
-                if (props.selectedImage != undefined) {
-                    let formData = new FormData();
-                    formData.append('image', props.selectedImage!);
-                    props.requestor.post(`/image/botanical-info/${res.botanicalInfo.id}`, formData)
-                        .then(imgRes => {
-                            props.close();
-                            res.botanicalInfo.imageUrl = "/" + imgRes.data.id;
-                            let insertHere = props.plants.findIndex(pl => {
-                                return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
-                            });
-                            insertHere = insertHere === -1 ? props.plants.length : insertHere;
-                            props.plants.splice(insertHere, 0, res);
-                            setName();
-
-                            props.botanicalInfos.push(res.botanicalInfo);
-
-                            cleanup();
+                if (props.botanicalInfoToAdd === undefined || props.botanicalInfoToAdd.id === null) {
+                    const botanicalInfoToCreate = {
+                        ...updatedBotanicalInfo,
+                        creator: props.botanicalInfoToAdd === undefined ? "USER" : "TREFLE",
+                    } as botanicalInfo;
+                    const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url || updatedBotanicalInfo?.imageUrl;
+                    addNewBotanicalInfo(botanicalInfoToCreate, thumbnail)
+                        .then(addedBotanicalInfo => {
+                            setUpdatedBotanicalInfo(addedBotanicalInfo);
+                            const plantToCreate = {
+                                botanicalInfoId: addedBotanicalInfo.id,
+                                personalName: plantName!,
+                                state: "ALIVE",
+                                startDate: useDate ? date : null,
+                                note: note,
+                                avatarMode: "NONE",
+                            };
+                            addNewPlant(plantToCreate)
+                                .then(_addedPlant => {
+                                    props.close();
+                                    props.refreshBotanicalInfosAndPlants();
+                                })
+                                .catch(props.printError);
                         })
-                        .catch(err => {
-                            props.printError(err);
-                        });
                 } else {
-                    props.close();
-                    let insertHere = props.plants.findIndex((pl) => {
-                        return pl.personalName.toLowerCase() > res.personalName.toLowerCase();
-                    });
-                    insertHere = insertHere === -1 ? props.plants.length : insertHere;
-                    props.plants.splice(insertHere, 0, res);
-                    setName();
-                    cleanup();
+                    const plantToCreate = {
+                        botanicalInfoId: props.botanicalInfoToAdd.id,
+                        personalName: plantName!,
+                        state: "ALIVE",
+                        startDate: useDate ? date : null,
+                        note: note,
+                        avatarMode: "NONE",
+                    }
+                    addNewPlant(plantToCreate)
+                        .then(_addedPlant => {
+                            props.close();
+                            props.refreshBotanicalInfosAndPlants();
+                        })
+                        .catch(props.printError);
                 }
             })
-            .catch(err => {
-                props.printError(err);
-            });
+            .catch(props.printError);
+    };
+
+    const addNewBotanicalInfo = (toAdd: botanicalInfo, image?: string | File): Promise<botanicalInfo> => {
+        return new Promise<botanicalInfo>((accept, reject) => {
+            props.requestor.post("botanical-info", toAdd)
+                .then(newBotanicalInfoRes => {
+                    if (image === undefined) {
+                        accept(newBotanicalInfoRes.data)
+                        return;
+                    }
+                    if (typeof (image) === "string") {
+                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}/url/`, {
+                            url: image,
+                        })
+                            .then(imgRes => {
+                                props.setUpdatedImgUrl(imgRes.data.url);
+                                accept({
+                                    ...newBotanicalInfoRes.data,
+                                    imageId: imgRes.data.id,
+                                    imageUrl: imgRes.data.url,
+                                } as botanicalInfo);
+                            })
+                            .catch(reject);
+                    } else {
+                        let formData = new FormData();
+                        formData.append('image', image);
+                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}`, formData)
+                            .then(imgRes => {
+                                props.setUpdatedImgUrl(imgRes.data.url);
+                                accept({
+                                    ...newBotanicalInfoRes.data,
+                                    imageUrl: imgRes.data.url,
+                                    imageId: imgRes.data.id,
+                                })
+                            })
+                            .catch(reject)
+                    }
+                })
+                .catch(reject);
+        });
     };
 
     const addNewPlant = (plant: {}): Promise<plant> => {
@@ -320,7 +346,7 @@ function AddPlantInfo(props: {
                         reject(res.data);
                     }
                 })
-                .catch(err => reject(err));
+                .catch(reject);
         });
     };
 
@@ -330,18 +356,76 @@ function AddPlantInfo(props: {
     };
 
     const cleanup = (): void => {
-        setFamily("");
-        setGenus("");
+        setUpdatedBotanicalInfo(undefined);
         setPlantName("");
         setUseDate(true);
         setDate(dayjs(new Date()));
         setPlantNameError(undefined);
     };
 
+    const updateBotanicalInfo = (id: number, updated: {}, image?: string | File): Promise<botanicalInfo> => {
+        return new Promise<botanicalInfo>((accept, reject) => {
+            props.requestor.put(`botanical-info/${id}`, updated)
+                .then(newBotanicalInfoRes => {
+                    if (image === undefined) {
+                        accept(newBotanicalInfoRes.data);
+                        return;
+                    }
+                    if (typeof (image) === "string") {
+                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}/url/`, {
+                            url: image,
+                        })
+                            .then(imgRes => {
+                                props.setUpdatedImgUrl(imgRes.data.url);
+                                accept({
+                                    ...newBotanicalInfoRes.data,
+                                    imageId: imgRes.data.id,
+                                    imageUrl: imgRes.data.url,
+                                } as botanicalInfo);
+                            })
+                            .catch(reject);
+                    } else {
+                        let formData = new FormData();
+                        formData.append('image', image);
+                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}`, formData)
+                            .then(imgRes => {
+                                props.setUpdatedImgUrl(imgRes.data.url);
+                                accept({
+                                    ...newBotanicalInfoRes.data,
+                                    imageUrl: imgRes.data.url,
+                                    imageId: imgRes.data.id,
+                                })
+                            })
+                            .catch(reject)
+                    }
+                })
+                .catch(reject);
+        });
+    };
+
+    const deleteBotanicalInfo = (id: number) => {
+        props.requestor.delete(`botanical-info/${id}`)
+            .then(_res => {
+                props.close();
+                props.toggleEditMode();
+                props.refreshBotanicalInfosAndPlants();
+            })
+            .catch(props.printError);
+    };
+
     useEffect(() => {
-        props.open || cleanup();
-        setName();
+        props.open && setName() || cleanup();
     }, [props.open]);
+
+
+    useEffect(() => {
+        if (props.botanicalInfoToAdd !== undefined) {
+            setUpdatedBotanicalInfo(props.botanicalInfoToAdd);
+        } else {
+            setUpdatedBotanicalInfo({});
+        }
+    }, [props.botanicalInfoToAdd]);
+
 
     return <Box sx={{
         position: "relative",
@@ -358,11 +442,24 @@ function AddPlantInfo(props: {
             type="file"
             accept="image/*"
             hidden
-            onChange={(event) => {
-                if (event.target.files != undefined) {
-                    props.setSelectedImage(event.target.files[0]);
+            onChange={(e) => {
+                if (e.target.files != undefined) {
+                    setUpdatedBotanicalInfoThumbnail({
+                        file: e.target.files[0]
+                    });
                 }
             }}
+        />
+
+        <ConfirmDeleteDialog
+            open={confirmDialogStatus.open}
+            close={() => setConfirmDialogStatus({ ...confirmDialogStatus, open: false })}
+            printError={props.printError}
+            confirmCallBack={() => {
+                confirmDialogStatus.confirmCallBack();
+                setConfirmDialogStatus({ ...confirmDialogStatus, open: false });
+            }}
+            text={confirmDialogStatus.text}
         />
 
         <Box sx={{
@@ -387,9 +484,9 @@ function AddPlantInfo(props: {
                     Family
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfoToAdd?.family || family}
-                    editable={props.botanicalInfoToAdd === undefined}
-                    onChange={setFamily}
+                    text={updatedBotanicalInfo?.family}
+                    editable={props.botanicalInfoToAdd === undefined || props.editModeEnabled}
+                    onChange={(newVal) => updatedBotanicalInfo!.family = newVal}
                 />
             </Box>
             <Box className="plant-detail-entry" >
@@ -397,9 +494,9 @@ function AddPlantInfo(props: {
                     Genus
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfoToAdd?.genus || genus}
-                    editable={props.botanicalInfoToAdd === undefined}
-                    onChange={setGenus}
+                    text={updatedBotanicalInfo?.genus}
+                    editable={props.botanicalInfoToAdd === undefined || props.editModeEnabled}
+                    onChange={(newVal) => updatedBotanicalInfo!.genus = newVal}
                 />
             </Box>
             <Box className="plant-detail-entry" >
@@ -407,90 +504,203 @@ function AddPlantInfo(props: {
                     Species
                 </Typography>
                 <EditableTextField
-                    text={props.botanicalInfoToAdd?.species || species}
-                    editable={props.botanicalInfoToAdd === undefined}
-                    onChange={setSpecies}
+                    text={updatedBotanicalInfo?.species}
+                    editable={props.botanicalInfoToAdd === undefined || props.editModeEnabled}
+                    onChange={(newVal) => updatedBotanicalInfo!.species = newVal}
                 />
             </Box>
-            {
-                props.botanicalInfoToAdd === undefined &&
-                <Box className="plant-detail-entry">
-                    <Typography>
-                        Thumbnail
-                    </Typography>
-                    <Typography sx={{ display: "inline-block" }}>
-                        <Link onClick={() => {
-                            document.getElementById("upload-image")?.click();
-                        }}>upload</Link> new
-                    </Typography>
-                </Box>
-            }
+
+            <Box className="plant-detail-entry">
+                <Typography>
+                    Thumbnail
+                </Typography>
+                <EditableThumbnail
+                    text={((): string | undefined => {
+                        if (updatedBotanicalInfoThumbnail.file) {
+                            return updatedBotanicalInfoThumbnail.file?.name;
+                        } else if (updatedBotanicalInfoThumbnail.url) {
+                            return updatedBotanicalInfoThumbnail.url
+                        } else {
+                            return updatedBotanicalInfo?.imageUrl;
+                        }
+                    })()}
+                    maxLength={20}
+                    editable={props.botanicalInfoToAdd === undefined || props.editModeEnabled}
+                    uploadAndSetCustomSpeciesImg={(arg: File) => {
+                        setUpdatedBotanicalInfoThumbnail({
+                            file: arg
+                        });
+                    }}
+                    setCustomSpeciesImg={(arg: string) => {
+                        setUpdatedBotanicalInfoThumbnail({
+                            url: arg
+                        });
+                    }} />
+            </Box>
         </Box>
 
-        <Box
-            className="plant-detail-section">
-            <Typography variant="h6">
-                Plant
-            </Typography>
-            <Box style={{ display: "flex", alignItems: "baseline", gap: "5px", justifyContent: "space-between", }}>
-                <Typography>
-                    Name
+        {
+            props.editModeEnabled ||
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Plant
                 </Typography>
-                <TextField
-                    variant="standard"
-                    value={plantName}
-                    onChange={(e) => changePlantName(e.currentTarget.value)}
-                    error={plantNameError !== undefined}
-                    helperText={plantNameError}
-                />
-            </Box>
-            <Box className="plant-detail-entry" >
-                <Typography>
-                    Purchased date
-                </Typography>
-                <Switch
-                    checked={useDate}
-                    onChange={event => setUseDate(event.target.checked)}
-                />
-            </Box>
-            <Box className="plant-detail-entry" >
-                <Typography>
-                    Purchased on
-                </Typography>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        value={date}
-                        disabled={!useDate}
-                        onChange={(newValue) => setDate(newValue != undefined ? newValue : dayjs(new Date()))}
-                        slotProps={{ textField: { variant: 'standard', } }}
+                <Box style={{ display: "flex", alignItems: "baseline", gap: "5px", justifyContent: "space-between", }}>
+                    <Typography>
+                        Name
+                    </Typography>
+                    <TextField
+                        variant="standard"
+                        value={plantName}
+                        onChange={(e) => changePlantName(e.currentTarget.value)}
+                        error={plantNameError !== undefined}
+                        helperText={plantNameError}
                     />
-                </LocalizationProvider>
+                </Box>
+                <Box className="plant-detail-entry" >
+                    <Typography>
+                        Purchased date
+                    </Typography>
+                    <Switch
+                        checked={useDate}
+                        onChange={event => setUseDate(event.target.checked)}
+                    />
+                </Box>
+                <Box className="plant-detail-entry" >
+                    <Typography>
+                        Purchased on
+                    </Typography>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            value={date}
+                            disabled={!useDate}
+                            onChange={(newValue) => setDate(newValue != undefined ? newValue : dayjs(new Date()))}
+                            slotProps={{ textField: { variant: 'standard', } }}
+                        />
+                    </LocalizationProvider>
+                </Box>
+                <Box style={{ display: "flex", flexDirection: "column", alignItems: "baseline", gap: "5px", justifyContent: "space-between", }}>
+                    <Typography>
+                        Note
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        multiline
+                        value={note}
+                        rows={4}
+                        onChange={(e) => setNote(e.currentTarget.value)}
+                    >
+                    </TextField>
+                </Box>
             </Box>
-            <Box style={{ display: "flex", flexDirection: "column", alignItems: "baseline", gap: "5px", justifyContent: "space-between", }}>
-                <Typography>
-                    Note
-                </Typography>
-                <TextField
-                    fullWidth
-                    multiline
-                    value={note}
-                    rows={4}
-                    onChange={(e) => setNote(e.currentTarget.value)}
-                >
-                </TextField>
-            </Box>
-        </Box>
-        <Button
-            fullWidth
+        }
+
+        <Box
+            boxShadow={.5}
             sx={{
-                backgroundColor: "primary.main",
-                color: "white",
-                padding: "15px 50px",
-            }}
-            onClick={addPlant}
-        >
-            Save plant
-        </Button>
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                width: "100%",
+                padding: "20px",
+                backgroundColor: "white",
+                borderRadius: "35px 35px 0 0",
+                zIndex: 2,
+                display: "flex",
+                justifyContent: "space-around",
+            }}>
+            {
+                !props.editModeEnabled ?
+                    <Button
+                        fullWidth
+                        sx={{
+                            backgroundColor: "primary.main",
+                            color: "white",
+                            padding: "15px 50px",
+                            "&:hover": { backgroundColor: "primary.main" },
+                        }}
+                        onClick={addPlant}
+                    >
+                        Save plant
+                    </Button>
+                    :
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            width: "100%",
+                            gap: "7px",
+                        }}
+                    >
+                        <Button
+                            sx={{
+                                backgroundColor: "accent.secondary",
+                                padding: "20px 0",
+                                color: "white",
+                                width: "20%",
+                                "&:hover": { backgroundColor: "accent.secondary" },
+                            }}
+                            onClick={props.toggleEditMode}
+                        >
+                            <CloseOutlinedIcon fontSize="medium" />
+                        </Button>
+                        {
+                            props.botanicalInfoToAdd?.creator === "USER" &&
+                            <Button
+                                sx={{
+                                    width: "20%",
+                                    backgroundColor: "error.main",
+                                    padding: "20px 0",
+                                    color: "white",
+                                    "&:hover": { backgroundColor: "error.main" },
+                                }}
+                                onClick={() =>
+                                    setConfirmDialogStatus({
+                                        text: "Are you sure you want to delete the species and all the plant within it?" +
+                                            " This action can not be undone.",
+                                        confirmCallBack: () => deleteBotanicalInfo(props.botanicalInfoToAdd!.id),
+                                        open: true
+                                    })
+                                }
+                            >
+                                <DeleteOutlineOutlinedIcon fontSize="medium" />
+                            </Button>
+                        }
+                        <Button
+                            sx={{
+                                width: "70%",
+                                backgroundColor: "primary.main",
+                                padding: "20px 0",
+                                color: "white",
+                                "&:hover": { backgroundColor: "primary.main" },
+                            }}
+                            onClick={() => {
+                                const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url || updatedBotanicalInfo?.imageUrl;
+                                if (props.botanicalInfoToAdd === undefined || props.botanicalInfoToAdd.id === null) {
+                                    addNewBotanicalInfo(updatedBotanicalInfo as botanicalInfo, thumbnail)
+                                        .then(updatedBIRes => {
+                                            setUpdatedBotanicalInfo(updatedBIRes);
+                                            props.refreshBotanicalInfosAndPlants();
+                                            props.toggleEditMode();
+                                        })
+                                        .catch(props.printError);
+                                } else {
+                                    updateBotanicalInfo(props.botanicalInfoToAdd!.id!, updatedBotanicalInfo!, thumbnail)
+                                        .then(updatedBIRes => {
+                                            setUpdatedBotanicalInfo(updatedBIRes);
+                                            props.refreshBotanicalInfosAndPlants();
+                                            props.toggleEditMode();
+                                        })
+                                        .catch(props.printError);
+                                }
+                            }}
+                        >
+                            <SaveAsOutlinedIcon fontSize="medium" />
+                        </Button>
+                    </Box>
+            }
+        </Box>
     </Box>;
 }
 
@@ -504,7 +714,7 @@ function EditableTextField(props: {
 
     useEffect(() => {
         setValue(props.text || "");
-    });
+    }, [props.text]);
 
     return props.editable ?
         <TextField
@@ -537,15 +747,15 @@ export default function AddPlant(props: {
     botanicalInfos: botanicalInfo[],
     plants: plant[],
     name?: string,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    refreshBotanicalInfosAndPlants: () => void;
 }) {
-    const [selectedImage, setSelectedImage] = useState<File>();
+    const [updatedImageUrl, setUpdatedImageUrl] = useState<string>();
+    const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!props.open) {
-            setSelectedImage(undefined);
-        }
-    }, [props.open]);
+        setUpdatedImageUrl(undefined);
+    }, [props.botanicalInfoToAdd])
 
     return (
         <Drawer
@@ -555,11 +765,10 @@ export default function AddPlant(props: {
             SlideProps={{
                 onScroll: (event: any) => {
                     let currentScroll = event.target.scrollTop;
-                    //console.debug(currentScroll)
                     if (currentScroll < 50) {
                         document.getElementById("add-plant-header")!.style.height = "40vh";
                     } else {
-                        document.getElementById("add-plant-header")!.style.height = "5vh";
+                        document.getElementById("add-plant-header")!.style.height = "20vh";
                     }
                 }
             }}
@@ -574,10 +783,21 @@ export default function AddPlant(props: {
                 <AddPlantHeader
                     requestor={props.requestor}
                     open={props.open}
-                    close={props.close}
-                    botanicalInfo={props.botanicalInfoToAdd}
+                    close={() => {
+                        props.close();
+                        setEditModeEnabled(false);
+                    }}
+                    imageUrl={updatedImageUrl || props.botanicalInfoToAdd?.imageUrl}
                     printError={props.printError}
-                    image={selectedImage}
+                    toggleEditMode={() => {
+                        let currentEditModeEnabled = editModeEnabled;
+                        setEditModeEnabled(!editModeEnabled);
+                        if (!currentEditModeEnabled) {
+                            document.getElementById("add-plant-header")!.style.height = "20vh";
+                        } else {
+                            document.getElementById("add-plant-header")!.style.height = "40vh";
+                        }
+                    }}
                 />
                 <AddPlantInfo
                     requestor={props.requestor}
@@ -587,11 +807,21 @@ export default function AddPlant(props: {
                     botanicalInfoToAdd={props.botanicalInfoToAdd}
                     botanicalInfos={props.botanicalInfos}
                     printError={props.printError}
-                    setSelectedImage={setSelectedImage}
-                    selectedImage={selectedImage}
                     searchedName={props.name}
+                    editModeEnabled={editModeEnabled}
+                    toggleEditMode={() => {
+                        let currentEditModeEnabled = editModeEnabled;
+                        setEditModeEnabled(!editModeEnabled);
+                        if (!currentEditModeEnabled) {
+                            document.getElementById("add-plant-header")!.style.height = "20vh";
+                        } else {
+                            document.getElementById("add-plant-header")!.style.height = "40vh";
+                        }
+                    }}
+                    refreshBotanicalInfosAndPlants={props.refreshBotanicalInfosAndPlants}
+                    setUpdatedImgUrl={setUpdatedImageUrl}
                 />
             </Box>
-        </Drawer >
+        </Drawer>
     );
 };

@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <!-- updated in v1-0-0.xml file -->
+
     <changeSet id="createUserTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -16,13 +16,19 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="username" type="varchar(255)">
+            <column name="username" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="varchar(255)">
+            <column name="password" type="varchar(120)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint
+                columnNames="username"
+                constraintName="username_unique"
+                tableName="application_users"
+        />
     </changeSet>
 
 
@@ -76,29 +82,31 @@
             </column>
             <column name="species" type="varchar(40)">
             </column>
-            <column name="botanical_info_type" type="tinyint(1)" defaultValue="1">
+            <column name="user_creator_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_user"
+                             references="application_users(id)"/>
+            </column>
+            <column name="creator" type="varchar(20)" defaultValue="USER">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_userId"
-                             references="application_users(id)"/>
+            <column name="external_id" type="varchar(255)">
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
         <addUniqueConstraint
-                columnNames="species, user_id"
+                columnNames="species, creator, user_creator_id"
                 constraintName="botanical_info_species_unique"
                 tableName="botanical_infos"
         />
         <addUniqueConstraint
-                columnNames="scientific_name, user_id"
+                columnNames="scientific_name, creator, user_creator_id"
                 constraintName="botanical_info_scientific_name_unique"
                 tableName="botanical_infos"
         />
     </changeSet>
 
 
-    <!-- updated in v1-0-0.xml file -->
     <changeSet id="createPlantTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -127,6 +135,9 @@
             <column name="botanical_name_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_plant_botanicalName" references="botanical_infos(id)"/>
             </column>
+            <column name="avatar_mode" type="varchar(50)" defaultValue="NONE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addUniqueConstraint
@@ -137,7 +148,6 @@
     </changeSet>
 
 
-    <!-- updated in v1-0-0.xml file -->
     <changeSet id="createEntityImageTable" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -168,7 +178,22 @@
             </column>
             <column name="path" type="varchar(255)">
             </column>
+            <column name="avatar_of" type="bigint">
+                <constraints nullable="true"
+                             foreignKeyName="fk_avatar_plantId"
+                             references="plants(id)"
+                />
+            </column>
         </createTable>
+
+        <addColumn tableName="plants">
+            <column name="avatar" type="varchar(255)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_plant_avatarId"
+                             references="entity_images(id)"
+                />
+            </column>
+        </addColumn>
     </changeSet>
 
 
@@ -214,6 +239,40 @@
                 <constraints nullable="false" foreignKeyName="fk_diaryEntry_diary" references="diaries(id)"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <!-- to remove after update to v0.1.0 -->
+    <changeSet id="updateTo0.1.0" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="botanical_infos" columnName="botanical_info_type"/>
+        </preConditions>
+        <addColumn tableName="botanical_infos">
+            <column name="creator" type="VARCHAR(20)"/>
+        </addColumn>
+        <renameColumn tableName="botanical_infos" oldColumnName="user_id"
+                      newColumnName="user_creator_id" columnDataType="bigint"/>
+        <addColumn tableName="botanical_infos">
+            <column name="external_id" type="VARCHAR(255)"/>
+        </addColumn>
+        <dropIndex tableName="botanical_infos" indexName="botanical_info_species_unique"/>
+        <dropIndex tableName="botanical_infos" indexName="botanical_info_scientific_name_unique"/>
+        <addUniqueConstraint tableName="botanical_infos" columnNames="species,creator,user_creator_id"
+                             constraintName="botanical_info_species_unique"/>
+        <addUniqueConstraint tableName="botanical_infos"
+                             columnNames="scientific_name,creator,user_creator_id"
+                             constraintName="botanical_info_scientific_name_unique"/>
+
+        <update tableName="botanical_infos">
+            <column name="creator" value="USER"/>
+            <where>botanical_info_type = 2</where>
+        </update>
+
+        <update tableName="botanical_infos">
+            <column name="creator" value="TREFLE"/>
+            <where>botanical_info_type = 1</where>
+        </update>
+
+        <dropColumn tableName="botanical_infos" columnName="botanical_info_type"/>
     </changeSet>
 
 </databaseChangeLog>

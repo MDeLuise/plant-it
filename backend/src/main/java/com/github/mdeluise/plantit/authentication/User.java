@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
+import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.security.apikey.ApiKey;
@@ -43,7 +43,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Plant> plants = new HashSet<>();
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-    private Set<UserCreatedBotanicalInfo> abstractBotanicalInfos = new HashSet<>();
+    private Set<BotanicalInfo> botanicalInfos = new HashSet<>();
 
 
     public User(Long id, String username, String password) {
@@ -128,13 +128,13 @@ public class User implements Serializable {
     }
 
 
-    public Set<UserCreatedBotanicalInfo> getBotanicalInfos() {
-        return abstractBotanicalInfos;
+    public Set<BotanicalInfo> getBotanicalInfos() {
+        return botanicalInfos;
     }
 
 
-    public void setBotanicalInfos(Set<UserCreatedBotanicalInfo> abstractBotanicalInfos) {
-        this.abstractBotanicalInfos = abstractBotanicalInfos;
+    public void setBotanicalInfos(Set<BotanicalInfo> botanicalInfos) {
+        this.botanicalInfos = botanicalInfos;
     }
 
 

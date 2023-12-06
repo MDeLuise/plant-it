@@ -2,16 +2,21 @@ package com.github.mdeluise.plantit.botanicalinfo;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
+import com.github.mdeluise.plantit.image.BotanicalInfoImage;
+import com.github.mdeluise.plantit.image.EntityImage;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
+import com.github.mdeluise.plantit.plant.Plant;
+import com.github.mdeluise.plantit.plant.PlantRepository;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -21,42 +26,38 @@ public class BotanicalInfoService {
     private final AuthenticatedUserService authenticatedUserService;
     private final BotanicalInfoRepository botanicalInfoRepository;
     private final ImageStorageService imageStorageService;
+    private final PlantRepository plantRepository;
+    private final Logger logger = LoggerFactory.getLogger(BotanicalInfoService.class);
 
 
     @Autowired
     public BotanicalInfoService(AuthenticatedUserService authenticatedUserService,
                                 BotanicalInfoRepository botanicalInfoRepository,
-                                ImageStorageService imageStorageService) {
+                                ImageStorageService imageStorageService, PlantRepository plantRepository) {
         this.authenticatedUserService = authenticatedUserService;
         this.botanicalInfoRepository = botanicalInfoRepository;
         this.imageStorageService = imageStorageService;
+        this.plantRepository = plantRepository;
     }
 
 
     public Set<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
+        logger.debug(String.format("Search for DB saved botanical info matching '%s' scientific name (max size %s)",
+                                   partialScientificName, size));
         final List<BotanicalInfo> result =
             botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName).stream().filter(
-                botanicalInfo -> isBotanicalInfoAccessibleToUser(botanicalInfo,
-                                                                 authenticatedUserService.getAuthenticatedUser()
-                )).limit(size).toList();
+                                       botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
+                                   .limit(size).toList();
         return new HashSet<>(result.subList(0, Math.min(size, result.size())));
     }
 
 
     public Set<BotanicalInfo> getAll(int size) {
+        logger.debug(String.format("Search for DB saved botanical info (max size %s)", size));
         final List<BotanicalInfo> result = botanicalInfoRepository.findAll().stream().filter(
-            botanicalInfo -> isBotanicalInfoAccessibleToUser(botanicalInfo,
-                                                             authenticatedUserService.getAuthenticatedUser()
-            )).limit(size).toList();
+                                                                      botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
+                                                                  .limit(size).toList();
         return new HashSet<>(result);
-    }
-
-
-    private boolean isBotanicalInfoAccessibleToUser(BotanicalInfo botanicalInfo, User user) {
-        return botanicalInfo instanceof GlobalBotanicalInfo || botanicalInfo instanceof UserCreatedBotanicalInfo &&
-                                                                   ((UserCreatedBotanicalInfo) botanicalInfo).getCreator()
-                                                                                                             .equals(
-                                                                                                                 user);
     }
 
 
@@ -69,14 +70,10 @@ public class BotanicalInfoService {
     }
 
 
-    @CacheEvict(
-        cacheNames = "botanical-info",
-        condition = "#toSave instanceof T(com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo)",
-        allEntries = true
-    )
+    @CacheEvict(cacheNames = "botanical-info", allEntries = true)
     public BotanicalInfo save(BotanicalInfo toSave) {
-        if (toSave instanceof UserCreatedBotanicalInfo u) {
-            u.setCreator(authenticatedUserService.getAuthenticatedUser());
+        if (toSave.isUserCreated()) {
+            toSave.setUserCreator(authenticatedUserService.getAuthenticatedUser());
         }
         if (toSave.getImage() != null && toSave.getImage().getId() == null) {
             toSave.getImage().setId(UUID.randomUUID().toString());
@@ -88,49 +85,97 @@ public class BotanicalInfoService {
     public BotanicalInfo get(Long id) {
         final BotanicalInfo result =
             botanicalInfoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        if (result instanceof UserCreatedBotanicalInfo u &&
-                u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+        if (!result.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
         return result;
     }
 
 
+    @Transactional
+    @CacheEvict(cacheNames = {"botanical-info", "plants"}, allEntries = true)
     public void delete(Long id) {
         final BotanicalInfo toDelete = get(id);
         if (toDelete.getImage() != null) {
             imageStorageService.remove(toDelete.getImage().getId());
         }
+
+        // cascade will not remove plant images
+        toDelete.getPlants().forEach(pl -> {
+            pl.getImages().forEach(im -> imageStorageService.remove(im.getId()));
+            plantRepository.delete(pl);
+        });
+
         botanicalInfoRepository.deleteById(id);
     }
 
 
-    public BotanicalInfo update(BotanicalInfo updatedBotanicalInfo) {
-        if (!botanicalInfoRepository.existsById(updatedBotanicalInfo.getId())) {
-            throw new ResourceNotFoundException(updatedBotanicalInfo.getId());
-        } else if (botanicalInfoRepository.findById(updatedBotanicalInfo.getId()).get()
-            instanceof UserCreatedBotanicalInfo u && u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
+    @Transactional
+    @CacheEvict(cacheNames = {"botanical-info", "plants"}, allEntries = true)
+    public BotanicalInfo update(Long id, BotanicalInfo updated) {
+        final BotanicalInfo toUpdate = get(id);
+        if (!toUpdate.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
-        return botanicalInfoRepository.save(updatedBotanicalInfo);
+        if (toUpdate.isUserCreated()) {
+            return updateUserCreatedBotanicalInfo(updated, toUpdate);
+        }
+        logger.info("Trying to update a NON custom botanical info. Creating custom copy...");
+        final BotanicalInfo userCreatedCopy = createUserCreatedCopy(toUpdate);
+        return updateUserCreatedBotanicalInfo(updated, userCreatedCopy);
     }
 
 
-    public Optional<BotanicalInfo> get(String scientificName, String family, String genus, String species) {
-        final Optional<BotanicalInfo> result =
-            botanicalInfoRepository.findByScientificNameAndFamilyAndGenusAndSpecies(scientificName, family, genus, species);
-        if (result.isPresent() && result.get() instanceof UserCreatedBotanicalInfo u &&
-                u.getCreator() != authenticatedUserService.getAuthenticatedUser()) {
-            throw new UnauthorizedException();
+    private BotanicalInfo updateUserCreatedBotanicalInfo(BotanicalInfo updated, BotanicalInfo toUpdate) {
+        toUpdate.setUserCreator(authenticatedUserService.getAuthenticatedUser());
+        toUpdate.setFamily(updated.getFamily());
+        toUpdate.setGenus(updated.getGenus());
+        toUpdate.setSpecies(updated.getSpecies());
+        toUpdate.setScientificName(updated.getScientificName());
+        return botanicalInfoRepository.save(toUpdate);
+    }
+
+
+    private BotanicalInfo createUserCreatedCopy(BotanicalInfo toCopy) {
+        BotanicalInfo userCreatedCopy = new BotanicalInfo();
+        userCreatedCopy.setUserCreator(authenticatedUserService.getAuthenticatedUser());
+        userCreatedCopy.setFamily(toCopy.getFamily());
+        userCreatedCopy.setGenus(toCopy.getGenus());
+        userCreatedCopy.setSpecies(toCopy.getSpecies());
+        userCreatedCopy.setScientificName(toCopy.getScientificName());
+
+        userCreatedCopy = save(userCreatedCopy);
+
+        if (toCopy.getImage() != null) {
+            logger.debug("Copy botanical info thumbnail...");
+            final EntityImage toClone = imageStorageService.get(toCopy.getImage().getId());
+            final EntityImage clonedEntityImage = imageStorageService.clone(toClone.getId(), userCreatedCopy);
+            userCreatedCopy.setImage((BotanicalInfoImage) clonedEntityImage);
         }
-        return result;
+
+        logger.debug("Move botanical info plants to the custom copy...");
+        final BotanicalInfo finalUserCreatedCopy = userCreatedCopy;
+        toCopy.getPlants().forEach(pl -> {
+            if (pl.getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+                return;
+            }
+            final Plant toChangeBotanicalInfo =
+                plantRepository.findById(pl.getId()).orElseThrow(() -> new ResourceNotFoundException(pl.getId()));
+            toChangeBotanicalInfo.setBotanicalInfo(finalUserCreatedCopy);
+            plantRepository.save(toChangeBotanicalInfo);
+        });
+        return userCreatedCopy;
     }
 
 
     public boolean existsSpecies(String species) {
         return botanicalInfoRepository.findAllBySpecies(species).stream().anyMatch(
-            botanicalInfo -> botanicalInfo instanceof GlobalBotanicalInfo ||
-                                 ((UserCreatedBotanicalInfo) botanicalInfo).getCreator().equals(
-                                     authenticatedUserService.getAuthenticatedUser()));
+            botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()));
+    }
+
+
+    public boolean existsExternalId(BotanicalInfoCreator creator, String externalId) {
+        return botanicalInfoRepository.findAllByCreatorAndExternalId(creator, externalId).stream().anyMatch(
+            botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()));
     }
 }

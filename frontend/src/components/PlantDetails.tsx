@@ -1,5 +1,5 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Drawer, Link, MenuItem, Modal, Select, Skeleton, Switch, TextField, Typography } from "@mui/material";
-import { plant } from "../interfaces";
+import { Autocomplete, Box, Button, Drawer, Link, MenuItem, Modal, Select, Skeleton, Switch, TextField, Typography } from "@mui/material";
+import { botanicalInfo, plant } from "../interfaces";
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,7 +11,7 @@ import "swiper/css/free-mode";
 import 'swiper/css/navigation';
 import 'swiper/css/zoom';
 import "../style/PlantDetails.scss";
-import { getPlantImg, imgToBase64, titleCase } from "../common";
+import { fetchBotanicalInfo, getPlantImg, imgToBase64, titleCase } from "../common";
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
@@ -25,27 +25,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-
-function ConfirmDeleteDialog(props: {
-    open: boolean,
-    text: string,
-    close: () => void,
-    printError: (msg: any) => void,
-    confirmCallBack: () => void;
-}) {
-    return <Dialog open={props.open} onClose={props.close}>
-        <DialogContent>
-            <DialogContentText>
-                {props.text}
-            </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.close}>Cancel</Button>
-            <Button onClick={props.confirmCallBack}>Confirm</Button>
-        </DialogActions>
-    </Dialog>;
-}
+import ConfirmDeleteDialog from "./ConfirmDialog";
 
 
 function PlantImageFullSize(props: {
@@ -89,7 +69,7 @@ function PlantImageFullSize(props: {
                 })
             })
             .catch(props.printError);
-    }
+    };
 
     const deleteImage = () => {
         props.openConfirmDialog(
@@ -121,7 +101,7 @@ function PlantImageFullSize(props: {
         if (swiperInstance !== undefined && !swiperInstance.destroyed) {
             swiperInstance.slideTo(props.imgIndex);
         }
-    }, [swiperInstance])
+    }, [swiperInstance]);
 
     return <Modal
         open={props.open}
@@ -462,16 +442,28 @@ function PlantHeader(props: {
 
 function EditableTextField(props: {
     editable: boolean,
-    text?: string;
+    text?: string,
+    maxLength?: number,
     onChange?: (arg: string) => void,
     variant?: "body1" | "h6",
     style?: {};
 }) {
-    const [value, setValue] = useState<string>(props.text || "");
+    const [value, setValue] = useState<string>();
 
     useEffect(() => {
         setValue(props.text || "");
     }, [props.text]);
+
+
+    const renderedText = (arg?: string) => {
+        if (arg === undefined) {
+            return arg;
+        }
+        if (props.maxLength !== undefined && arg.length > props.maxLength) {
+            return arg.substring(0, props.maxLength) + "...";
+        }
+        return arg;
+    }
 
     return props.editable ?
         <TextField
@@ -492,7 +484,7 @@ function EditableTextField(props: {
         />
         :
         <Typography sx={{ ...props.style }} variant={props.variant}>
-            {props.text}
+            {renderedText(props.text)}
         </Typography>;
 }
 
@@ -534,17 +526,18 @@ function ReadMoreReadLess(props: {
 function PlantInfo(props: {
     requestor: AxiosInstance,
     plant?: plant,
+    botanicalInfo?: botanicalInfo,
     editModeEnabled: boolean,
     imageIds: string[],
     setImageIds: (arg: string[]) => void,
     printError: (arg: any) => void,
-    setFamily: (arg: string) => void,
-    setGenus: (arg: string) => void,
-    setSpecies: (arg: string) => void,
+    setBotanicalInfoId: (arg: number) => void,
     setPersonalName: (arg: string) => void,
     setNote: (arg: string) => void,
     setDate: (arg: Date) => void,
     setUseDate: (arg: boolean) => void,
+    setSpeciesThumbnail: (arg: string) => void,
+    uploadAndSetSpeciesThumbnail: (arg: File) => void,
     setAvatarMode: (arg: "NONE" | "RANDOM" | "LAST" | "SPECIFIED") => void,
     plantImgFullSizeState?: {
         imgIndex: number,
@@ -553,7 +546,8 @@ function PlantInfo(props: {
     setPlantImgFullSizeState: (arg: {
         imgIndex: number,
         open: boolean;
-    }) => void;
+    }) => void,
+    setNewBotanicalInfoToSave: (arg?: botanicalInfo) => void;
 }) {
     const [diaryEntryStats, setDiaryEntryStats] = useState<any[]>([]);
     const [plantStats, setPlantStats] = useState<{
@@ -565,7 +559,8 @@ function PlantInfo(props: {
     const [initialAvatarMode, setInitialAvatarMode] = useState<string>("NONE");
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [swiperInstance, setSwiperInstance] = useState<any>();
-
+    const [autoCompleteOptions, setAutoCompleteOptions] = useState<botanicalInfo[]>([]);
+    const [autoCompleteValue, setAutoCompleteValue] = useState<botanicalInfo>();
 
     const formatAvatarMode = (arg: string): string => {
         switch (arg) {
@@ -578,6 +573,9 @@ function PlantInfo(props: {
     useEffect(() => {
         if (props.plant === undefined) {
             return;
+        }
+        if (props.botanicalInfo !== undefined) {
+            setAutoCompleteOptions([props.botanicalInfo]);
         }
         props.requestor.get(`/image/entity/all/${props.plant?.id}`)
             .then(res => props.setImageIds(res.data.reverse()))
@@ -600,13 +598,50 @@ function PlantInfo(props: {
     }, [props.imageIds]);
 
 
+    useEffect(() => {
+        setAutoCompleteValue(props.botanicalInfo);
+    }, [props.botanicalInfo]);
+
+
+    useEffect(() => {
+        if (autoCompleteValue !== undefined) {
+            if (autoCompleteValue.id !== undefined && autoCompleteValue.id !== null) {
+                props.setBotanicalInfoId(autoCompleteValue.id);
+                props.setNewBotanicalInfoToSave(undefined);
+            } else {
+                props.setNewBotanicalInfoToSave(autoCompleteValue);
+            }
+        } else {
+            props.setNewBotanicalInfoToSave(undefined);
+        }
+    }, [autoCompleteValue]);
+
+
     const fetchAndSetPlantStats = (): void => {
         props.requestor.get(`diary/entry/${props.plant?.id}/_count`)
             .then(res => {
                 setPlantStats({ ...plantStats, events: res.data });
             })
-            .catch(err => props.printError(err));
+            .catch(props.printError);
     };
+
+
+    const fetchNewBotanicalInfoOptions = (partialScientificName: string) => {
+        if (partialScientificName === "") {
+            props.requestor.get("botanical-info")
+                .then(res => {
+                    setAutoCompleteOptions(res.data);
+                })
+                .catch(props.printError);
+        } else {
+            props.requestor.get(`botanical-info/partial/${partialScientificName}`)
+                .then(res => {
+                    setAutoCompleteOptions(res.data);
+                })
+                .catch(props.printError);
+        }
+    };
+
 
     return <Box
         sx={{
@@ -659,7 +694,7 @@ function PlantInfo(props: {
                 {
                     props.editModeEnabled ||
                     <Typography>
-                        {props.plant?.botanicalInfo.species}
+                        {props.botanicalInfo?.species}
                     </Typography>
                 }
             </Box>
@@ -673,45 +708,56 @@ function PlantInfo(props: {
                 Scientific classification
             </Typography>
 
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Family
-                </Typography>
-                <EditableTextField
-                    text={props.plant?.botanicalInfo.family}
-                    editable={props.editModeEnabled}
-                    onChange={props.setFamily}
-                />
-            </Box>
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Genus
-                </Typography>
-                <EditableTextField
-                    text={props.plant?.botanicalInfo.genus}
-                    editable={props.editModeEnabled}
-                    onChange={props.setGenus}
-                />
-            </Box>
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Species
-                </Typography>
-                <EditableTextField
-                    text={props.plant?.botanicalInfo.species}
-                    editable={props.editModeEnabled}
-                    onChange={props.setSpecies}
-                />
-            </Box>
-            {/* <Box className="plant-detail-entry">
-                <Typography>
-                    Thumbnail
-                </Typography>
-                <EditableThumbnail
-                    editable={props.editModeEnabled}
-                    text={props.plant?.botanicalInfo.imageUrl}
-                />
-            </Box> */}
+            {
+                props.editModeEnabled ?
+                    <Autocomplete
+                        onChange={(_e, v) => {
+                            if (v !== null) {
+                                setAutoCompleteValue(v);
+                            }
+                        }}
+                        onInputChange={(_e, v) => {
+                            fetchNewBotanicalInfoOptions(v);
+                        }}
+                        options={autoCompleteOptions}
+                        getOptionLabel={botInf => `${botInf.scientificName} (${botInf.creator.toLocaleLowerCase()})`}
+                        value={autoCompleteValue}
+                        isOptionEqualToValue={(op, val) => op.scientificName === val.scientificName}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                            />
+                        )}
+                    />
+                    :
+                    <>
+                        <Box className="plant-detail-entry">
+                            <Typography>
+                                Family
+                            </Typography>
+                            <Typography>
+                                {props.botanicalInfo?.family}
+                            </Typography>
+                        </Box>
+                        <Box className="plant-detail-entry">
+                            <Typography>
+                                Genus
+                            </Typography>
+                            <Typography>
+                                {props.botanicalInfo?.genus}
+                            </Typography>
+                        </Box>
+                        <Box className="plant-detail-entry">
+                            <Typography>
+                                Species
+                            </Typography>
+                            <Typography>
+                                {props.botanicalInfo?.species}
+                            </Typography>
+                        </Box>
+                    </>
+            }
         </Box>
 
         <Box
@@ -938,24 +984,49 @@ function BottomBar(props: {
     requestor: AxiosInstance,
     openAddLog: () => void,
     plant?: plant,
+    botanicalInfo?: botanicalInfo,
     addUploadedImgs: (arg: string) => void,
     printError: (err: any) => void,
     editModeEnabled: boolean,
     toggleEditPlantMode: () => void,
     updatedPlant?: plant,
+    newSpeciesThumbnailToUploadAndUse?: File,
     onUpdate: (arg: plant) => void,
     onDelete: (arg: plant) => void,
     openConfirmDialog: (text: string, callback: () => void) => void,
-    close: () => void;
+    close: () => void,
+    changedBotanicalInfo?: botanicalInfo;
 }) {
 
     const updatePlant = (): void => {
-        props.requestor.put("/plant", props.updatedPlant)
-            .then(res => {
-                props.onUpdate(res.data);
-                props.toggleEditPlantMode();
-            })
-            .catch(props.printError);
+        if (props.changedBotanicalInfo === undefined) {
+            props.requestor.put(`/plant/${props.plant?.id}`, props.updatedPlant)
+                .then(res => {
+                    props.onUpdate(res.data);
+                    props.toggleEditPlantMode();
+                })
+                .catch(props.printError);
+        } else {
+            props.requestor.post("botanical-info", props.changedBotanicalInfo)
+                .then(savedBotanicalInfoRes => {
+                    if (props.changedBotanicalInfo!.imageUrl !== undefined) {
+                        props.requestor.post(`image/botanical-info/${savedBotanicalInfoRes.data.id}/url/`, {
+                            url: props.changedBotanicalInfo!.imageUrl,
+                        })
+                            .catch(props.printError);
+                    }
+                    props.requestor.put(`/plant/${props.plant?.id}`, {
+                        ...props.updatedPlant,
+                        botanicalInfoId: savedBotanicalInfoRes.data.id,
+                    })
+                        .then(plantRes => {
+                            props.onUpdate(plantRes.data);
+                            props.toggleEditPlantMode();
+                        })
+                        .catch(props.printError);
+                })
+                .catch(props.printError);
+        }
     };
 
     const deletePlant = (): void => {
@@ -989,7 +1060,6 @@ function BottomBar(props: {
             display: "flex",
             justifyContent: "space-around",
         }}>
-
         {
             props.editModeEnabled ?
                 <Box
@@ -1096,9 +1166,10 @@ export default function PlantDetails(props: {
     requestor: AxiosInstance,
     printError: (err: any) => void,
     openAddLogEntry: () => void,
-    onUpdate: (arg: plant) => void,
-    onDelete: (arg: plant) => void;
+    onPlantUpdate: (arg: plant) => void,
+    onPlantDelete: (arg: plant) => void;
 }) {
+    const [botanicalInfo, setBotanicalInfo] = useState<botanicalInfo>();
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [updatedEntity, setUpdatedEntity] = useState<plant>();
     const [imageIds, setImageIds] = useState<string[]>([]);
@@ -1115,28 +1186,15 @@ export default function PlantDetails(props: {
         confirmCallBack: () => { },
         open: false,
     });
+    const [newSpeciesThumbnailToUploadAndUse, setNewSpeciesThumbnailToUploadAndUse] = useState<File>();
+    const [newBotanicalInfoToSave, setNewBotanicalInfoToSave] = useState<botanicalInfo>();
 
-    const setFamily = (arg: string): void => {
+    const setBotanicalInfoId = (arg: number): void => {
         if (updatedEntity === undefined) {
             return;
         }
-        updatedEntity.botanicalInfo.family = arg;
-    };
-
-    const setGenus = (arg: string): void => {
-        if (updatedEntity === undefined) {
-            return;
-        }
-        updatedEntity.botanicalInfo.genus = arg;
-    };
-
-    const setSpecies = (arg: string): void => {
-        if (updatedEntity === undefined) {
-            return;
-        }
-        updatedEntity.botanicalInfo.species = arg;
-        updatedEntity.botanicalInfo.scientificName = arg;
-    };
+        updatedEntity.botanicalInfoId = arg;
+    }
 
     const setPersonalName = (arg: string): void => {
         if (updatedEntity === undefined) {
@@ -1168,6 +1226,13 @@ export default function PlantDetails(props: {
         }
     };
 
+    const setCustomSpeciesThumbnail = (url: string) => {
+        if (botanicalInfo === undefined) {
+            return;
+        }
+        botanicalInfo.imageUrl = url;
+    }
+
     const setAvatarMode = (arg: "LAST" | "RANDOM" | "SPECIFIED" | "NONE"): void => {
         if (updatedEntity === undefined) {
             return;
@@ -1183,7 +1248,7 @@ export default function PlantDetails(props: {
             avatarImageUrl: `/${id}`,
         })
             .then(res => {
-                props.onUpdate(res.data);
+                props.onPlantUpdate(res.data);
             })
             .catch(props.printError);
     };
@@ -1191,6 +1256,9 @@ export default function PlantDetails(props: {
     useEffect(() => {
         if (props.plant !== undefined) {
             setUpdatedEntity({ ...props.plant });
+            fetchBotanicalInfo(props.requestor, props.plant)
+                .then(setBotanicalInfo)
+                .catch(props.printError);
         } else {
             setUpdatedEntity(undefined);
         }
@@ -1211,7 +1279,6 @@ export default function PlantDetails(props: {
         SlideProps={{
             onScroll: (event: any) => {
                 let currentScroll = event.target.scrollTop;
-                //console.debug(currentScroll)
                 if (currentScroll < 50) {
                     document.getElementById("plant-header")!.style.height = "70vh";
                 } else {
@@ -1266,7 +1333,6 @@ export default function PlantDetails(props: {
                 toggleEditPlantMode={() => {
                     let currentEditModeEnabled = editModeEnabled;
                     setEditModeEnabled(!editModeEnabled);
-
                     if (!currentEditModeEnabled) {
                         document.getElementById("plant-header")!.style.height = "40vh";
                     } else {
@@ -1280,9 +1346,7 @@ export default function PlantDetails(props: {
                 editModeEnabled={editModeEnabled}
                 printError={props.printError}
                 requestor={props.requestor}
-                setFamily={setFamily}
-                setGenus={setGenus}
-                setSpecies={setSpecies}
+                setBotanicalInfoId={setBotanicalInfoId}
                 setPersonalName={setPersonalName}
                 setNote={setNote}
                 setDate={setDate}
@@ -1292,6 +1356,10 @@ export default function PlantDetails(props: {
                 imageIds={imageIds}
                 setImageIds={setImageIds}
                 setAvatarMode={setAvatarMode}
+                setSpeciesThumbnail={setCustomSpeciesThumbnail}
+                uploadAndSetSpeciesThumbnail={setNewSpeciesThumbnailToUploadAndUse}
+                botanicalInfo={botanicalInfo}
+                setNewBotanicalInfoToSave={setNewBotanicalInfoToSave}
             />
             <BottomBar
                 openAddLog={props.openAddLogEntry}
@@ -1300,7 +1368,7 @@ export default function PlantDetails(props: {
                 addUploadedImgs={(arg: string) => {
                     setImageIds([arg, ...imageIds]);
                     if (props.plant !== undefined) {
-                        props.onUpdate(props.plant);
+                        props.onPlantUpdate(props.plant);
                     }
                 }}
                 printError={props.printError}
@@ -1312,16 +1380,18 @@ export default function PlantDetails(props: {
                 toggleEditPlantMode={() => {
                     let currentEditModeEnabled = editModeEnabled;
                     setEditModeEnabled(!editModeEnabled);
-
                     if (!currentEditModeEnabled) {
                         document.getElementById("plant-header")!.style.height = "40vh";
                     } else {
                         document.getElementById("plant-header")!.style.height = "70vh";
                     }
                 }}
-                onUpdate={props.onUpdate}
-                onDelete={props.onDelete}
+                onUpdate={props.onPlantUpdate}
+                onDelete={props.onPlantDelete}
                 close={props.close}
+                newSpeciesThumbnailToUploadAndUse={newSpeciesThumbnailToUploadAndUse}
+                botanicalInfo={botanicalInfo}
+                changedBotanicalInfo={newBotanicalInfoToSave}
             />
         </Box>
     </Drawer>;

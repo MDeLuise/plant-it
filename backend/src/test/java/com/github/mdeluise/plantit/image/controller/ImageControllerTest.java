@@ -95,7 +95,7 @@ class ImageControllerTest {
         Mockito.when(imageStorageService.get(idToGet)).thenThrow(new ResourceNotFoundException(idToGet));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/image/" + idToGet))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -122,7 +122,7 @@ class ImageControllerTest {
         Mockito.when(imageStorageService.getContent(idToGet)).thenThrow(new ResourceNotFoundException(idToGet));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/image/content/" + idToGet))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -149,7 +149,7 @@ class ImageControllerTest {
         Mockito.when(imageStorageService.getThumbnail(idToGet)).thenThrow(new ResourceNotFoundException(idToGet));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/image/thumbnail/" + idToGet))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -172,7 +172,7 @@ class ImageControllerTest {
         Mockito.doThrow(new ResourceNotFoundException(idToDelete)).when(imageStorageService).remove(idToDelete);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/image/" + idToDelete))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -202,7 +202,7 @@ class ImageControllerTest {
         Mockito.when(plantService.get(plantId)).thenThrow(new ResourceNotFoundException(plantId));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/image/entity/all/" + plantId))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 

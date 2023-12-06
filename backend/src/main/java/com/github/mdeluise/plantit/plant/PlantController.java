@@ -72,10 +72,10 @@ public class PlantController {
     }
 
 
-    @PutMapping
-    @Operation(summary = "Update an existing plant", description = "Update an existing plant.")
-    public ResponseEntity<PlantDTO> update(@RequestBody PlantDTO plantDTO) {
-        final Plant result = plantService.update(plantDTOConverter.convertFromDTO(plantDTO));
+    @PutMapping("/{id}")
+    @Operation(summary = "Update an existing plant", description = "Update the plant with the specified `id`.")
+    public ResponseEntity<PlantDTO> update(@PathVariable Long id, @RequestBody PlantDTO plantDTO) {
+        final Plant result = plantService.update(id, plantDTOConverter.convertFromDTO(plantDTO));
         return ResponseEntity.ok(plantDTOConverter.convertToDTO(result));
     }
 

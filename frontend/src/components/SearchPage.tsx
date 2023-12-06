@@ -24,7 +24,7 @@ function BotanicalEntity(props: {
                 setImageLoaded(true);
                 setImgSrc(res);
             })
-            .catch((err) => {
+            .catch(err => {
                 getPlantImg(props.requestor, undefined)
                     .then(res => {
                         console.error(err);
@@ -46,7 +46,7 @@ function BotanicalEntity(props: {
     return (
         <Box
             boxShadow={5}
-            key={props.entity.id}
+            key={`${props.entity.id}-${props.entity.scientificName}`}
             sx={{
                 width: isBigScreen() ? "20vw" : "43vw",
                 borderRadius: "15px",
@@ -64,7 +64,7 @@ function BotanicalEntity(props: {
             onClick={() => props.addClick(props.entity)}
         >
             {
-                props.entity.systemWide ||
+                props.entity.creator === "USER" &&
                 <Box sx={{ zIndex: 1, }}>
                     <Ribbon
                         side="right"
@@ -125,7 +125,7 @@ function AddNewBotanicalInfo(props: {
     requestor: AxiosInstance,
     searchedTerm: string;
 }) {
-    const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+    //const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
     return <Box
         boxShadow={5}
@@ -142,7 +142,6 @@ function AddNewBotanicalInfo(props: {
             backgroundPosition: "center",
             display: "flex",
             flexDirection: "column",
-            //border: "1px solid white",
             margin: "0 0 30px 0",
         }}
         onClick={props.addClick}
@@ -174,7 +173,8 @@ function AddNewBotanicalInfo(props: {
 export default function SearchPage(props: {
     requestor: AxiosInstance,
     plants: plant[],
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    refreshPlants: () => void;
 }) {
     const [scientificName, setScientificName] = useState<string>("");
     const [botanicalInfos, setBotanicalInfos] = useState<botanicalInfo[]>([]);
@@ -191,16 +191,14 @@ export default function SearchPage(props: {
         }
         setLoading(true);
         props.requestor.get(backendUrl)
-            .then((res => {
+            .then(res => {
                 let newBotanicalInfos: botanicalInfo[] = [];
                 res.data.forEach((botanicalInfo: botanicalInfo) => {
                     newBotanicalInfos.push(botanicalInfo);
                 });
                 setBotanicalInfos(newBotanicalInfos);
-            }))
-            .catch(err => {
-                props.printError(err);
             })
+            .catch(props.printError)
             .finally(() => setLoading(false));
     };
 
@@ -219,6 +217,10 @@ export default function SearchPage(props: {
                 plants={props.plants}
                 name={scientificName}
                 printError={props.printError}
+                refreshBotanicalInfosAndPlants={() => {
+                    retrieveBotanicalInfos();
+                    props.refreshPlants();
+                }}                
             />
 
             <OutlinedInput
@@ -275,7 +277,7 @@ export default function SearchPage(props: {
                                 setAddPlantOpen(true);
                             }}
                             addEntity={(en: plant) => props.plants.push(en)}
-                            key={botanicalInfo.id}
+                            key={`${botanicalInfo.id}-${botanicalInfo.scientificName}`}
                             printError={props.printError}
                         />;
                     })

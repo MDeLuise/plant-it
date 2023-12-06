@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { plant } from "./interfaces";
+import { botanicalInfo, plant } from "./interfaces";
 
 
 export const isBigScreen = (): boolean => {
@@ -72,33 +72,10 @@ export const imgToBase64 = (url: string, callback: (arg: string) => void): void 
 };
 
 
-// export const getPlantAvatarImgSrc = (requestor: AxiosInstance, plant: plant): Promise<string> => {
-//     if (plant.avatarMode === "SPECIFIED") {
-//         return getPlantImg(requestor, plant.avatarImageUrl);
-//     } else if (plant.avatarMode === "NONE") {
-//         return getPlantImg(requestor, plant.botanicalInfo.imageUrl);
-//     } else {
-//         return new Promise((resolve, reject) => {
-//             requestor.get(`/image/entity/all/${plant.id}`)
-//                 .then(res => {
-//                     if (res.data.length === 0) {
-//                         return getPlantImg(requestor, plant.botanicalInfo.imageUrl)
-//                             .then(resolve)
-//                             .catch(reject)
-//                     }
-//                     if (plant.avatarMode === "LAST") {
-//                         const lastIndex = res.data.length - 1;
-//                         return getPlantImg(requestor, `/${res.data[lastIndex]}`)
-//                             .then(resolve)
-//                             .catch(reject)
-//                     } else {
-//                         const randomIndex = Math.floor(Math.random() * res.data.length);
-//                         return getPlantImg(requestor, `/${res.data[randomIndex]}`)
-//                             .then(resolve)
-//                             .catch(reject)
-//                     }
-//                 })
-//                 .catch(reject)
-//         });
-//     }
-// }
+export const fetchBotanicalInfo = (requestor: AxiosInstance, plant: plant): Promise<botanicalInfo> => {
+    return new Promise<botanicalInfo>((accept, reject) => {
+        requestor.get(`botanical-info/${plant.botanicalInfoId}`)
+            .then(res => accept(res.data))
+            .catch(reject);
+    });
+}

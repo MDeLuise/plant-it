@@ -107,6 +107,15 @@ pipeline {
                     }
                 }     
             }
+            post {
+                failure {
+                    script {
+                        def title = "Build failed"
+                        def tag = "rotating_light"
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
+                    }
+                }
+            }
         }
         stage('Build and publish docker images of backend') {
             agent any
@@ -190,6 +199,15 @@ pipeline {
                                 rm -rf backend/target
                             """
                         }
+                        def title = "Build "
+                        def tag = "tada"
+                        if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+                            title += "succeeded"
+                        } else {
+                            title += "failed"
+                            tag = "rotating_light"
+                        }
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
                     }
                 }
             }

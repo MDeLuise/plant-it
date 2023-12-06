@@ -118,7 +118,7 @@ class PlantControllerTest {
         Mockito.when(plantService.get(toGetId)).thenThrow(new ResourceNotFoundException(toGetId));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/plant/" + toGetId))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 
@@ -159,18 +159,19 @@ class PlantControllerTest {
     @DisplayName("Should update new plant and return it")
     void shouldUpdate() throws Exception {
         final String updatedPersonalName = "updated personal name";
+        final Long plantId = 1L;
         final Plant updated = new Plant();
-        updated.setId(1L);
+        updated.setId(plantId);
         updated.setPersonalName(updatedPersonalName);
         final PlantDTO updatedDTO = new PlantDTO();
         updatedDTO.setId(1L);
         updatedDTO.setPersonalName(updatedPersonalName);
 
-        Mockito.when(plantService.update(updated)).thenReturn(updated);
+        Mockito.when(plantService.update(plantId, updated)).thenReturn(updated);
         Mockito.when(plantDTOConverter.convertFromDTO(updatedDTO)).thenReturn(updated);
         Mockito.when(plantDTOConverter.convertToDTO(updated)).thenReturn(updatedDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/plant").content(
+        mockMvc.perform(MockMvcRequestBuilders.put("/plant/" + plantId).content(
                                                   objectMapper.writeValueAsString(plantDTOConverter.convertToDTO(updated)))
                                               .contentType(MediaType.APPLICATION_JSON))
                .andExpect(MockMvcResultMatchers.status().isOk())
@@ -200,7 +201,7 @@ class PlantControllerTest {
         Mockito.doThrow(ResourceNotFoundException.class).when(plantService).delete(toDeleteId);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/plant/" + toDeleteId))
-               .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 

@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.image;
 
+import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.Collection;
 
@@ -8,6 +9,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,10 +45,38 @@ public class ImageController {
 
 
     @PostMapping("/botanical-info/{id}")
+    @Transactional
     public ResponseEntity<ImageDTO> saveBotanicalInfoImage(@RequestParam("image") MultipartFile file,
                                                            @PathVariable("id") Long id) {
         final BotanicalInfo linkedEntity = botanicalInfoService.get(id);
+        final BotanicalInfoImage toDelete = linkedEntity.getImage();
+        if (toDelete != null) {
+            linkedEntity.setImage(null);
+            botanicalInfoService.save(linkedEntity);
+            imageStorageService.remove(toDelete.getId());
+        }
         final EntityImage saved = imageStorageService.save(file, linkedEntity, null);
+        linkedEntity.setImage((BotanicalInfoImage) saved);
+        botanicalInfoService.save(linkedEntity);
+        return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
+    }
+
+
+    @PostMapping("/botanical-info/{id}/url/")
+    @Transactional
+    public ResponseEntity<ImageDTO> saveBotanicalInfoImage(@PathVariable("id") Long id,
+                                                           @RequestBody SaveImageUrlRequest saveImageUrlRequest)
+        throws MalformedURLException {
+        final BotanicalInfo linkedEntity = botanicalInfoService.get(id);
+        final BotanicalInfoImage toDelete = linkedEntity.getImage();
+        if (toDelete != null) {
+            linkedEntity.setImage(null);
+            botanicalInfoService.save(linkedEntity);
+            imageStorageService.remove(toDelete.getId());
+        }
+        final EntityImage saved = imageStorageService.save(saveImageUrlRequest.url(), linkedEntity);
+        linkedEntity.setImage((BotanicalInfoImage) saved);
+        botanicalInfoService.save(linkedEntity);
         return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
     }
 

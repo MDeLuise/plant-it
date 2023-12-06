@@ -314,12 +314,15 @@ class DiaryEntryServiceTest {
     @DisplayName("Should save")
     void shouldSave() {
         final User authenticatedUser = new User();
+        final long diaryId = 1;
         final Diary diary = new Diary();
+        diary.setId(diaryId);
         diary.setOwner(authenticatedUser);
         final DiaryEntry diaryEntry = new DiaryEntry();
         diaryEntry.setDiary(diary);
 
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+        Mockito.when(diaryService.get(diaryId)).thenReturn(diary);
         Mockito.when(diaryEntryRepository.save(diaryEntry)).thenReturn(diaryEntry);
 
         Assertions.assertThat(diaryEntryService.save(diaryEntry)).isEqualTo(diaryEntry);
@@ -333,11 +336,14 @@ class DiaryEntryServiceTest {
         authenticatedUser.setId(1L);
         final User owner = new User();
         owner.setId(2L);
+        final long diaryId = 1;
         final Diary diary = new Diary();
+        diary.setId(diaryId);
         diary.setOwner(owner);
         final DiaryEntry diaryEntry = new DiaryEntry();
         diaryEntry.setDiary(diary);
 
+        Mockito.when(diaryService.get(diaryId)).thenReturn(diary);
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
 
         Assertions.assertThatThrownBy(() -> diaryEntryService.save(diaryEntry)).as("exception is correct")

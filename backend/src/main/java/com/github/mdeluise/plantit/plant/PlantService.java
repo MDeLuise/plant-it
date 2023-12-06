@@ -1,25 +1,23 @@
 package com.github.mdeluise.plantit.plant;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
-import com.github.mdeluise.plantit.botanicalinfo.UserCreatedBotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.diary.Diary;
-import com.github.mdeluise.plantit.exception.DuplicatedSpeciesException;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.PlantImage;
 import com.github.mdeluise.plantit.image.PlantImageRepository;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +29,7 @@ public class PlantService {
     private final BotanicalInfoService botanicalInfoService;
     private final ImageStorageService imageStorageService;
     private final PlantImageRepository plantImageRepository;
+    private final Logger logger = LoggerFactory.getLogger(PlantService.class);
 
 
     @Autowired
@@ -45,20 +44,19 @@ public class PlantService {
     }
 
 
-    @Cacheable(
-        value = "plants", key = "{#pageable, @authenticatedUserService.getAuthenticatedUser().id}"
-    )
+    @Cacheable(value = "plants", key = "{#pageable, @authenticatedUserService.getAuthenticatedUser().id}")
     public Page<Plant> getAll(Pageable pageable) {
+        logger.debug("Search for DB saved plants");
         return plantRepository.findAllByOwner(authenticatedUserService.getAuthenticatedUser(), pageable);
     }
 
 
-    @Cacheable(
-        value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}"
-    )
+    @Cacheable(value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}")
     public Plant get(Long id) {
+        logger.debug("Search for DB plant " + id);
         final Plant result = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         if (result.getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+            logger.warn("User not authorized to operate on plant " + id);
             throw new UnauthorizedException();
         }
         return result;
@@ -70,16 +68,7 @@ public class PlantService {
     }
 
 
-    @Caching(
-        evict = {
-            @CacheEvict(value = "plants", allEntries = true),
-            @CacheEvict(
-                value = "botanical-info", allEntries = true,
-                condition = "#toSave.botanicalInfo instanceof T(com.github.mdeluise.plantit.botanicalinfo" +
-                            ".UserCreatedBotanicalInfo)"
-            )
-        }
-    )
+    @CacheEvict(value = "plants", allEntries = true)
     @Transactional
     // https://stackoverflow.com/questions/13370221/persistentobjectexception-detached-entity-passed-to-persist-thrown-by-jpa-and-h
     public Plant save(Plant toSave) {
@@ -91,21 +80,13 @@ public class PlantService {
             toSave.setDiary(diary);
             toSave.getDiary().setOwner(authenticatedUser);
         }
-        if (toSave.getBotanicalInfo().getId() != null) {
-            toSave.setBotanicalInfo(botanicalInfoService.get(toSave.getBotanicalInfo().getId()));
-        } else if (toSave.getBotanicalInfo().getImage() != null) {
-            toSave.getBotanicalInfo().getImage().setTarget(toSave.getBotanicalInfo());
-        }
-        if (toSave.getBotanicalInfo() instanceof UserCreatedBotanicalInfo u) {
-            u.setCreator(authenticatedUser);
-        }
+        toSave.setBotanicalInfo(botanicalInfoService.get(toSave.getBotanicalInfo().getId()));
         return plantRepository.save(toSave);
     }
 
 
     public long getNumberOfDistinctBotanicalInfo() {
-        return getAll(Pageable.unpaged()).getContent().stream()
-                                         .map(entity -> entity.getBotanicalInfo().getId())
+        return getAll(Pageable.unpaged()).getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
                                          .collect(Collectors.toSet()).size();
     }
 
@@ -115,22 +96,14 @@ public class PlantService {
     }
 
 
-    @Caching(
-        evict = {
-            @CacheEvict(value = "plants", allEntries = true),
-            @CacheEvict(value = "botanical-info", allEntries = true)
-        }
-    )
+    @CacheEvict(value = "plants", allEntries = true)
     @Transactional
     public void delete(Long plantId) {
         final Plant toDelete = get(plantId);
         if (!toDelete.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            logger.warn("User not authorized to operate on plant " + plantId);
             throw new UnauthorizedException();
         }
-
-        final boolean isBotanicalInfoToDelete =
-            botanicalInfoService.countPlants(toDelete.getBotanicalInfo().getId()) == 1;
-        final Long deletedPlantBotanicalInfoId = toDelete.getBotanicalInfo().getId();
 
         // FIXME
         // this is not needed for the DB PlantImage entities (which are removed in cascade),
@@ -138,26 +111,20 @@ public class PlantService {
         toDelete.getImages().forEach(plantImage -> imageStorageService.remove(plantImage.getId()));
 
         plantRepository.delete(toDelete);
-
-        if (isBotanicalInfoToDelete) {
-            botanicalInfoService.delete(deletedPlantBotanicalInfoId);
-        }
     }
 
 
-    @Caching(
-        evict = {
-            @CacheEvict(value = "plants", allEntries = true),
-            @CacheEvict(value = "botanical-info", allEntries = true)
-        }
-    )
+    @CacheEvict(value = "plants", allEntries = true)
     @Transactional
-    public Plant update(Plant updated) {
-        final Plant toUpdate = get(updated.getId());
+    public Plant update(Long id, Plant updated) {
+        final Plant toUpdate = get(id);
         if (!toUpdate.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
+            logger.warn("User not authorized to operate on plant " + id);
             throw new UnauthorizedException();
         }
+        final BotanicalInfo newBotanicalInfo = botanicalInfoService.get(updated.getBotanicalInfo().getId());
         toUpdate.setPersonalName(updated.getPersonalName());
+        toUpdate.setBotanicalInfo(newBotanicalInfo);
         toUpdate.setState(updated.getState());
         toUpdate.setNote(updated.getNote());
         toUpdate.setStartDate(updated.getStartDate());
@@ -165,7 +132,7 @@ public class PlantService {
 
         handleAvatar(updated, toUpdate);
 
-        return handleBotanicalInfoUpdateAndSavePlant(updated, toUpdate);
+        return plantRepository.save(toUpdate);
     }
 
 
@@ -173,11 +140,13 @@ public class PlantService {
         final PlantImage toUpdateAvatarImage = toUpdate.getAvatarImage();
         final PlantImage updatedAvatarImage = updated.getAvatarImage();
         if (updatedAvatarImage == null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            logger.error("Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
             throw new IllegalArgumentException(
                 "Updated plant's avatar mode is PlantAvatarMode.SPECIFIED, but no avatarImage provided");
         }
         toUpdate.setAvatarMode(updated.getAvatarMode());
         if (toUpdateAvatarImage != null) {
+            logger.debug("De-link old plant avatar image...");
             final PlantImage savedAvatarImageToUpdate = plantImageRepository.findById(toUpdateAvatarImage.getId())
                                                                             .orElseThrow(
                                                                                 () -> new ResourceNotFoundException(
@@ -186,6 +155,7 @@ public class PlantService {
             plantImageRepository.save(savedAvatarImageToUpdate);
         }
         if (updatedAvatarImage != null && updated.getAvatarMode().equals(PlantAvatarMode.SPECIFIED)) {
+            logger.debug("Link new plant avatar image...");
             final String updatedAvatarImageId = updatedAvatarImage.getId();
             final PlantImage newAvatarImage = plantImageRepository.findById(updatedAvatarImageId).orElseThrow(
                 () -> new ResourceNotFoundException(updatedAvatarImageId));
@@ -197,42 +167,5 @@ public class PlantService {
         } else {
             toUpdate.setAvatarImage(null);
         }
-    }
-
-
-    private Plant handleBotanicalInfoUpdateAndSavePlant(Plant updated, Plant toUpdate) {
-        final BotanicalInfo updatedBotanicalInfo = updated.getBotanicalInfo();
-        final BotanicalInfo toUpdateBotanicalInfo = toUpdate.getBotanicalInfo();
-        if (toUpdateBotanicalInfo.equalsExceptForConcreteClass(updatedBotanicalInfo)) {
-            return save(toUpdate);
-        }
-        final boolean isThisTheOnlyPlantForTheBotanicalInfo =
-            botanicalInfoService.countPlants(toUpdate.getBotanicalInfo().getId()) == 1;
-        final Optional<BotanicalInfo> savedMatchingBotanicalInfo =
-            botanicalInfoService.get(updatedBotanicalInfo.getScientificName(), updatedBotanicalInfo.getFamily(),
-                                     updatedBotanicalInfo.getGenus(), updatedBotanicalInfo.getSpecies()
-            );
-        if (savedMatchingBotanicalInfo.isPresent()) {
-            toUpdate.setBotanicalInfo(savedMatchingBotanicalInfo.get());
-        } else {
-            if (botanicalInfoService.existsSpecies(updatedBotanicalInfo.getSpecies()) &&
-                    !isThisTheOnlyPlantForTheBotanicalInfo) {
-                throw new DuplicatedSpeciesException(updatedBotanicalInfo.getSpecies());
-            }
-            ((UserCreatedBotanicalInfo) updatedBotanicalInfo).setCreator(
-                authenticatedUserService.getAuthenticatedUser());
-
-            if (!isThisTheOnlyPlantForTheBotanicalInfo) {
-                updatedBotanicalInfo.setId(null);
-            }
-            final BotanicalInfo saved = botanicalInfoService.save(updatedBotanicalInfo);
-
-            toUpdate.setBotanicalInfo(saved);
-        }
-        final Plant result = save(toUpdate);
-        if (isThisTheOnlyPlantForTheBotanicalInfo) {
-            botanicalInfoService.delete(toUpdateBotanicalInfo.getId());
-        }
-        return result;
     }
 }
