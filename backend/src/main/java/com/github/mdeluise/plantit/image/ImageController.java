@@ -8,6 +8,8 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
+import com.github.mdeluise.plantit.plant.PlantDTO;
+import com.github.mdeluise.plantit.plant.PlantDTOConverter;
 import com.github.mdeluise.plantit.plant.PlantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,18 @@ public class ImageController {
     private final BotanicalInfoService botanicalInfoService;
     private final PlantService plantService;
     private final ImageDTOConverter imageDtoConverter;
+    private final PlantDTOConverter plantDtoConverter;
 
 
     @Autowired
     public ImageController(ImageStorageService imageStorageService, BotanicalInfoService botanicalInfoService,
-                           PlantService plantService, ImageDTOConverter imageDtoConverter) {
+                           PlantService plantService, ImageDTOConverter imageDtoConverter,
+                           PlantDTOConverter plantDtoConverter) {
         this.imageStorageService = imageStorageService;
         this.botanicalInfoService = botanicalInfoService;
         this.plantService = plantService;
         this.imageDtoConverter = imageDtoConverter;
+        this.plantDtoConverter = plantDtoConverter;
     }
 
 
@@ -78,6 +83,17 @@ public class ImageController {
         linkedEntity.setImage((BotanicalInfoImage) saved);
         botanicalInfoService.save(linkedEntity);
         return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
+    }
+
+
+    @PostMapping("/plant/{plantId}/{imageId}")
+    @Transactional
+    public ResponseEntity<PlantDTO> savePlantImage(@PathVariable Long plantId, @PathVariable String imageId) {
+        final Plant linkedEntity = plantService.get(plantId);
+        final PlantImage newAvatarImage = (PlantImage) imageStorageService.get(imageId);
+        linkedEntity.setAvatarImage(newAvatarImage);
+        final Plant saved = plantService.update(linkedEntity.getId(), linkedEntity);
+        return ResponseEntity.ok(plantDtoConverter.convertToDTO(saved));
     }
 
 

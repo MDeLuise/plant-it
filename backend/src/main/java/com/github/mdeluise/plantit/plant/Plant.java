@@ -188,6 +188,9 @@ public class Plant implements Serializable, ImageTarget {
 
 
     public void setAvatarImage(PlantImage avatarImage) {
+        if (avatarImage != null) {
+            this.avatarMode = PlantAvatarMode.SPECIFIED;
+        }
         this.avatarImage = avatarImage;
     }
 
