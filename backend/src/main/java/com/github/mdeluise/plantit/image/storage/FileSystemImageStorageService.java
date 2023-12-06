@@ -220,7 +220,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
     }
 
 
-    @CacheEvict(value = {"image", "thumbnail", "image-content"}, allEntries = true)
+    @CacheEvict(cacheNames = {"image", "thumbnail", "image-content"}, allEntries = true)
     @Override
     public void removeAll() {
         FileSystemUtils.deleteRecursively(Path.of(rootLocation).toFile());
@@ -230,7 +230,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
     @Caching(
         evict = {
-            @CacheEvict(value = {"image", "thumbnail", "image-content"}, key = "{#id}"),
+            @CacheEvict(cacheNames = {"image", "thumbnail", "image-content"}, key = "{#id}"),
             @CacheEvict(
                 value = "plants",
                 allEntries = true,

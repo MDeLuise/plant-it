@@ -1241,12 +1241,7 @@ export default function PlantDetails(props: {
     };
 
     const setAvatarImage = (id: string): void => {
-        props.requestor.put("/plant", {
-            ...props.plant,
-            avatarMode: "SPECIFIED",
-            avatarImageId: id,
-            avatarImageUrl: `/${id}`,
-        })
+        props.requestor.post(`image/plant/${props.plant?.id}/${id}`)
             .then(res => {
                 props.onPlantUpdate(res.data);
             })

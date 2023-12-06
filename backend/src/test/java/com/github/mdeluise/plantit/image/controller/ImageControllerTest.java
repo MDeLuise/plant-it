@@ -15,6 +15,7 @@ import com.github.mdeluise.plantit.image.ImageDTO;
 import com.github.mdeluise.plantit.image.ImageDTOConverter;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
+import com.github.mdeluise.plantit.plant.PlantDTOConverter;
 import com.github.mdeluise.plantit.plant.PlantService;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyFilter;
 import com.github.mdeluise.plantit.security.apikey.ApiKeyRepository;
@@ -63,6 +64,8 @@ class ImageControllerTest {
     PlantService plantService;
     @MockBean
     ImageDTOConverter imageDTOConverter;
+    @MockBean
+    PlantDTOConverter plantDTOConverter;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired

@@ -51,7 +51,7 @@ public class PlantService {
     }
 
 
-    @Cacheable(value = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}")
+    @Cacheable(cacheNames = "plants", key = "{#id, @authenticatedUserService.getAuthenticatedUser().id}")
     public Plant get(Long id) {
         logger.debug("Search for DB plant " + id);
         final Plant result = plantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
@@ -68,7 +68,7 @@ public class PlantService {
     }
 
 
-    @CacheEvict(value = "plants", allEntries = true)
+    @CacheEvict(cacheNames = "plants", allEntries = true)
     @Transactional
     // https://stackoverflow.com/questions/13370221/persistentobjectexception-detached-entity-passed-to-persist-thrown-by-jpa-and-h
     public Plant save(Plant toSave) {
@@ -96,7 +96,7 @@ public class PlantService {
     }
 
 
-    @CacheEvict(value = "plants", allEntries = true)
+    @CacheEvict(cacheNames = "plants", allEntries = true)
     @Transactional
     public void delete(Long plantId) {
         final Plant toDelete = get(plantId);
@@ -114,7 +114,7 @@ public class PlantService {
     }
 
 
-    @CacheEvict(value = "plants", allEntries = true)
+    @CacheEvict(cacheNames = "plants", allEntries = true)
     @Transactional
     public Plant update(Long id, Plant updated) {
         final Plant toUpdate = get(id);
