@@ -143,38 +143,40 @@ pipeline {
                     parallel {
                         stage('Backend image') {
                             steps {
-                                dir("backend") {
-                                    unstash 'jarFiles'
-                                    script {
-                                        def images = "-t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION"
-                                        if (params.IMAGES_LATEST) {
-                                            images += " -t $DOCKER_ID/$SERVICE-backend:latest"
-                                        }
-                                        if (params.PUSH_IMAGES) {
-                                            sh """
-                                                docker buildx build --push --platform linux/amd64,linux/arm64 ${images} -f deployment/Dockerfile .
-                                            """
-                                            if (params.LINUX_ARM) {
-                                                def armImages = "-t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION-arm"
-                                                if (params.IMAGES_LATEST) {
-                                                    armImages += " -t $DOCKER_ID/$SERVICE-backend:latest-arm"
-                                                }
-                                                sh """
-                                                    docker buildx build --push --platform linux/arm/v7,linux/arm/v8 ${armImages} -f deployment/Dockerfile-arm .
-                                                """
+                                timeout(time: 30, unit: 'MINUTES') {
+                                    dir("backend") {
+                                        unstash 'jarFiles'
+                                        script {
+                                            def images = "-t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION"
+                                            if (params.IMAGES_LATEST) {
+                                                images += " -t $DOCKER_ID/$SERVICE-backend:latest"
                                             }
-                                        } else {
-                                            sh """
-                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
-                                            """
-                                            if (params.LINUX_ARM) {
-                                                def armImages = "-t $DOCKER_ID/$SERVICE-backend-arm:$params.IMAGES_VERSION"
-                                                if (params.IMAGES_LATEST) {
-                                                        armImages += " -t $DOCKER_ID/$SERVICE-backend-arm:latest"
-                                                }
+                                            if (params.PUSH_IMAGES) {
                                                 sh """
-                                                    docker buildx build --platform linux/arm/v7,linux/arm/v8 ${armImages} -f deployment/Dockerfile-arm .
+                                                    docker buildx build --push --platform linux/amd64,linux/arm64 ${images} -f deployment/Dockerfile .
                                                 """
+                                                if (params.LINUX_ARM) {
+                                                    def armImages = "-t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION-arm"
+                                                    if (params.IMAGES_LATEST) {
+                                                        armImages += " -t $DOCKER_ID/$SERVICE-backend:latest-arm"
+                                                    }
+                                                    sh """
+                                                        docker buildx build --push --platform linux/arm/v7,linux/arm/v8 ${armImages} -f deployment/Dockerfile-arm .
+                                                    """
+                                                }
+                                            } else {
+                                                sh """
+                                                    docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                                """
+                                                if (params.LINUX_ARM) {
+                                                    def armImages = "-t $DOCKER_ID/$SERVICE-backend-arm:$params.IMAGES_VERSION"
+                                                    if (params.IMAGES_LATEST) {
+                                                            armImages += " -t $DOCKER_ID/$SERVICE-backend-arm:latest"
+                                                    }
+                                                    sh """
+                                                        docker buildx build --platform linux/arm/v7,linux/arm/v8 ${armImages} -f deployment/Dockerfile-arm .
+                                                    """
+                                                }
                                             }
                                         }
                                     }
@@ -183,24 +185,26 @@ pipeline {
                         }
                         stage('Frontend image') {
                             steps {
-                                dir("frontend") {
-                                    script {
-                                        def platforms = "linux/amd64,linux/arm64"
-                                        if (params.LINUX_ARM) {
-                                            platforms += ",linux/arm/v7,linux/arm/v8"
-                                        }
-                                        def versions = "-t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION"
-                                        if (params.IMAGES_LATEST) {
-                                            versions += " -t $DOCKER_ID/$SERVICE-frontend:latest"
-                                        }
-                                        if (params.PUSH_IMAGES) {
-                                            sh """
-                                                docker buildx build --push --platform ${platforms} ${versions} -f deployment/Dockerfile .
-                                            """
-                                        } else {
-                                            sh """
-                                                docker buildx build --platform ${platforms} ${versions} -f deployment/Dockerfile .
-                                            """
+                                timeout(time: 30, unit: 'MINUTES') {
+                                    dir("frontend") {
+                                        script {
+                                            def platforms = "linux/amd64,linux/arm64"
+                                            if (params.LINUX_ARM) {
+                                                platforms += ",linux/arm/v7,linux/arm/v8"
+                                            }
+                                            def versions = "-t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION"
+                                            if (params.IMAGES_LATEST) {
+                                                versions += " -t $DOCKER_ID/$SERVICE-frontend:latest"
+                                            }
+                                            if (params.PUSH_IMAGES) {
+                                                sh """
+                                                    docker buildx build --push --platform ${platforms} ${versions} -f deployment/Dockerfile .
+                                                """
+                                            } else {
+                                                sh """
+                                                    docker buildx build --platform ${platforms} ${versions} -f deployment/Dockerfile .
+                                                """
+                                            }
                                         }
                                     }
                                 }
