@@ -1,1 +1,7 @@
 *.DS_Store
+
+documentation/public
+documentation/node_modules
+documentation/package-lock.json
+documentation/resources
+
