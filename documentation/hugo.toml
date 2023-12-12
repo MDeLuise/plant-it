@@ -1,78 +1,68 @@
-baseURL = '/'
-languageCode = 'en-us'
-title = 'Plant-it app'
-theme = 'hugoplate'
+######################## default configuration ####################
+# The base URL of your site (required). This will be prepended to all relative URLs.
+baseURL = "/"
+# Title of your website (required).
+title = "Hugoplate"
+# Your theme name
+theme = "hugoplate"
+# Default time zone for time stamps; use any valid tz database name: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+timeZone = "America/New_York"
+# post pagination
+paginate = 2 # see https://gohugo.io/extras/pagination/
+# post excerpt
+summaryLength = 10 # see https://gohugo.io/content-management/excerpts/
+# google analytics
+googleAnalytics = "G-MEASUREMENT_ID" # see https://gohugo.io/templates/internal/#configure-google-analytics
+# disqus short name
+disqusShortname = "themefisher-template" # we use disqus to show comments in blog posts . To install disqus please follow this tutorial https://portfolio.peter-baumgartner.net/2017/09/10/how-to-install-disqus-on-hugo/
+# disable language
+disableLanguages = [
+] # example: ["fr"] for disable french language. see https://gohugo.io/content-management/multilingual/
+hasCJKLanguage = false #  If hasCJKLanguage true, auto-detect Chinese/Japanese/Korean Languages in the content. see: https://gohugo.io/getting-started/configuration/#hascjklanguage
 
+
+########################## Permalinks ############################
+[permalinks.page]
+"pages" = "/:slugorfilename/"
+
+############################# Modules ############################
 [module]
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/accordion v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  #[[module.imports]]
-    #path = "github.com/gethugothemes/hugo-modules/adsense v0.0.0-20231128022238-01f05014fce9"
-    #disable = false
-  #[[module.imports]]
-    #path = "github.com/gethugothemes/hugo-modules/components/cookie-consent v0.0.0-20231128022238-01f05014fce9"
-    #disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/components/custom-script v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/components/preloader v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/components/render-link v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  #[[module.imports]]
-    #path = "github.com/gethugothemes/hugo-modules/components/social-share v0.0.0-20231128022238-01f05014fce9"
-    #disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/gallery-slider v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/gzip-caching v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/icons/font-awesome v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/images v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/modal v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/pwa v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  #[[module.imports]]
-    #path = "github.com/gethugothemes/hugo-modules/search v0.0.0-20231128022238-01f05014fce9"
-    #disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/seo-tools/basic-seo v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/seo-tools/google-tag-manager v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  #[[module.imports]]
-    #path = "github.com/gethugothemes/hugo-modules/seo-tools/site-verifications v0.0.0-20231128022238-01f05014fce9"
-    #disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/shortcodes/button v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/shortcodes/notice v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/tab v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/table-of-contents v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/gethugothemes/hugo-modules/videos v0.0.0-20231128022238-01f05014fce9"
-    disable = false
-  [[module.imports]]
-    path = "github.com/zeon-studio/hugoplate v0.0.0-20231125045751-12ca525a1589"
+[[module.mounts]]
+source = "assets"
+target = "assets"
 
+[[module.mounts]]
+source = "hugo_stats.json"
+target = "assets/watching/hugo_stats.json"
+
+############################# Build ##############################
+[build]
+noJSConfigInAssets = false
+useResourceCacheWhen = 'fallback'
+[build.buildStats]
+enable = true
+[[build.cachebusters]]
+source = 'assets/watching/hugo_stats\.json'
+target = 'style\.css'
+[[build.cachebusters]]
+source = '(postcss|tailwind)\.config\.js'
+target = 'css'
+[[build.cachebusters]]
+source = 'assets/.*\.(js|ts|jsx|tsx)'
+target = 'js'
+[[build.cachebusters]]
+source = 'assets/.*\.(css|scss|sass)'
+target = 'css'
+[[build.cachebusters]]
+source = 'data/.*\.(.*)$'
+target = 'css'
+[[build.cachebusters]]
+source = 'assets/.*\.(.*)$'
+target = '$1'
+
+############################# Outputs ############################
+[outputs]
+home = ["HTML", "RSS", "WebAppManifest", "SearchIndex"]
 
 ############################# Imaging ############################
 [imaging]
@@ -90,7 +80,6 @@ maxAge = "720h"
 [caches.assets]
 dir = ":resourceDir/_gen"
 maxAge = "720h"
-
 
 ############################ Markup ##############################
 [markup]

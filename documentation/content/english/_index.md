@@ -1,53 +1,47 @@
 ---
 # Banner
 banner:
-  title: "The Ultimate Starter Template You Need To Start Your Hugo Project"
-  content: "Hugoplate is a free starter template built with Hugo and TailwindCSS, providing everything you need to jumpstart your Hugo project and save valuable time."
+  title: "Plant-it"
+  content: "Greenery, Simplified. Introducing the self-hosted, open-source gardening app that redefines plant care. Stay on top of watering schedules, capture the beauty of your plants through image uploads, and let your garden thrive effortlessly." 
   image: "/images/banner.png"
   button:
     enable: true
     label: "Get Started For Free"
-    link: "https://github.com/zeon-studio/hugoplate"
+    link: "https://github.com/MDeLuise/plant-it"
 
 # Features
 features:
-  - title: "What's Included in Hugoplate"
+  - title: "What's Included in Plant-it"
     image: "/images/service-1.png"
-    content: "Hugoplate is a comprehensive starter template that includes everything you need to get started with your Hugo project. What's Included in Hugoplate"
+    content: "Plant-it is a comprehensive gardening companion app designed to simplify and enhance your plant care experience. Tailored for plant enthusiasts, this self-hosted solution provides a range of features to keep your greenery thriving. Here's what's included in Plant-it:" 
     bulletpoints:
-      - "10+ Pre-build pages"
-      - "95+ Google Pagespeed Score"
-      - "Build with Hugo and TailwindCSS for easy and customizable styling"
-      - "Fully responsive on all devices"
-      - "SEO-optimized for better search engine rankings"
-      - "**Open-source and free** for personal and commercial use"
+      - "PWA App"
+      - "REST API"
+      - "Self-Hosted Solution"
+      - "Search Existing Plants"
+      - "Upload Plant Photos"
+      - "Track Events on Plants"
+      - "Built with Spring Boot and ReactJS"
     button:
       enable: false
       label: "Get Started Now"
       link: "#"
 
-  - title: "Discover the Key Features Of Hugo"
+  - title: "Progressive Web App"
     image: "/images/service-2.png"
-    content: "Hugo is an all-in-one web framework for building fast, content-focused websites. It offers a range of exciting features for developers and website creators. Some of the key features are:"
+    content: "Plant-it's PWA functionality is designed to make your gardening journey more accessible, efficient, and enjoyable. Whether you're a casual gardener or a green-thumb enthusiast, the PWA features of Plant-it contribute to a seamless and personalized plant care experience across all your devices." 
     bulletpoints:
-      - "Zero JS, by default: No JavaScript runtime overhead to slow you down."
-      - "Customizable: Tailwind, MDX, and 100+ other integrations to choose from."
-      - "UI-agnostic: Supports React, Preact, Svelte, Vue, Solid, Lit and more."
-    button:
-      enable: true
-      label: "Get Started Now"
-      link: "https://github.com/zeon-studio/hugoplate"
+       - "Cross-Device Accessibility"
+       - "Offline Functionality"
+       - "Home Screen Integration"
+       - "Push Notifications"
 
-  - title: "The Top Reasons to Choose Hugo for Your Hugo Project"
+  - title: "The Top Reasons to Choose Plant-it"
     image: "/images/service-3.png"
-    content: "With Hugo, you can build modern and content-focused websites without sacrificing performance or ease of use."
+    content: "Plant-it takes your gardening experience to the next level:"
     bulletpoints:
-      - "Instantly load static sites for better user experience and SEO."
-      - "Intuitive syntax and support for popular frameworks make learning and using Hugo a breeze."
-      - "Use any front-end library or framework, or build custom components, for any project size."
-      - "Built on cutting-edge technology to keep your projects up-to-date with the latest web standards."
-    button:
-      enable: false
-      label: ""
-      link: ""
+      - "Personalized Care: Plant-it tailors plant care with event tracking, schedules, and notifications for optimal growth."
+      - "PWA Integration: Plant-it seamlessly adapts across devices with Progressive Web App technology, offering offline functionality."
+      - "Plant Database & Search: Plant-it's robust database and search feature swiftly provide detailed plant information for all levels of gardeners."
+      - "Self-Hosted Control: Plant-it gives users control and privacy with a self-hosted solution, ensuring data security and independent management."
 ---

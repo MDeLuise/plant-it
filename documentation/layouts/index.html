@@ -21,7 +21,7 @@
             {{ end }}
           </div>
           <div class="col-12">
-            {{ partial "image" (dict "Src" .image "Alt" "Banner image" "Loading" "eager" "Class" "mx-auto lg:!max-w-[800px]" ) }}
+            {{ partial "image" (dict "Src" .image "Alt" "Banner image" "Loading" "eager" "Class" "mx-auto lg:!max-w-[400px]" ) }}
           </div>
         </div>
       </div>
@@ -35,10 +35,10 @@
       <div class="container">
         <div class="row items-center justify-between">
           <div
-            class="mb:md-0 {{ if not (modBool $i 2) }}
+            class="flex justify-center mb:md-0 {{ if not (modBool $i 2) }}
               md:order-2
             {{ end }} md:col-5 mb-6">
-            {{ partial "image" (dict "Src" .image "Alt" "feature image") }}
+            {{ partial "image" (dict "Src" .image "Alt" "feature image" "Class" "max-h-[70vh] w-auto") }}
           </div>
           <div
             class="{{ if not (modBool $i 2) }}
