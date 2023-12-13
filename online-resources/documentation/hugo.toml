@@ -1,6 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
-title = 'Documentation about Plant-it app'
+title = 'Plant-it docs'
 theme = "learn"
 
 [params]
@@ -25,3 +25,13 @@ theme = "learn"
 
 [outputs]
     home = [ "HTML", "RSS", "JSON"]
+
+[[menu.shortcuts]] 
+    name = "<i class='fab fa-github'></i> Github repo"
+    identifier = "ds"
+    url = "https://github.com/MDeLuise/plant-it/"
+    weight = 10
+[[menu.shortcuts]] 
+    name = "<i class='fas fa-camera'></i> Screenshots"
+    url = "/screenshots"
+    weight = 11

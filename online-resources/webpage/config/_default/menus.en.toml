@@ -8,17 +8,17 @@ weight = 1
 
 [[main]]
 name = "Documentation"
-url = "documentation/"
+url = "https://docs.plant-it.org"
 weight = 2
 
 
 # footer menu
-[[main]]
+[[footer]]
 name = "Home"
 url = "/"
 weight = 1
 
-[[main]]
+[[footer]]
 name = "Documentation"
-url = "documentation/"
+url = "https://docs.plant-it.org"
 weight = 2
