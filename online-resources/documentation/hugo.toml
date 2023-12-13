@@ -1,0 +1,27 @@
+baseURL = '/'
+languageCode = 'en-us'
+title = 'Documentation about Plant-it app'
+theme = "learn"
+
+[params]
+    editURL = "https://github.com/MDeLuise/plant-it/online-resources/documentation"
+    author = "Massimiliano De Luise"
+    description = "Documentation site about the app Plant-it"
+    showVisitedLinks = true
+    disableSearch = false
+    disableAssetsBusting = false
+    disableInlineCopyToClipBoard = false
+    disableShortcutsTitle = false
+    disableLandingPageButton = false
+    disableLanguageSwitchingButton = false
+    disableBreadcrumb = false
+    disableMermaid = false
+    customMermaidURL = "https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"
+    disableNextPrev = false
+    ordersectionsby = "weight"
+    themeVariant = "green"
+    #custom_css = ["css/foo.css", "css/bar.css"]
+    titleSeparator = "-"
+
+[outputs]
+    home = [ "HTML", "RSS", "JSON"]

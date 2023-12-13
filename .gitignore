@@ -1,7 +1,7 @@
 *.DS_Store
 
-documentation/public
-documentation/node_modules
-documentation/package-lock.json
-documentation/resources
+online-resources/**/public
+online-resources/**/node_modules
+online-resources/**/package-lock.json
+online-resources/**/resources
 

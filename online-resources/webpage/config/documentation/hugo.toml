@@ -1,0 +1,11 @@
+baseURL = "/documentation/"
+languageCode = "en-us"
+title = "Plant-it app documentation"
+theme = "learn"
+contentDir = "content/documentation"
+publishDir = "public/documentation"
+staticDir = "static/documentation"
+
+# For search functionality
+[outputs]
+home = [ "HTML", "RSS", "JSON"]

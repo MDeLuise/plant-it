@@ -1,3 +1,6 @@
-[submodule "documentation/themes/hugoplate"]
-	path = documentation/themes/hugoplate
-	url = https://github.com/zeon-studio/hugoplate
+[submodule "online-resources/webpage/themes/hugoplate"]
+	path = online-resources/webpage/themes/hugoplate
+	url = https://github.com/matcornic/hugo-theme-learn
+[submodule "online-resources/documentation/themes/learn"]
+	path = online-resources/documentation/themes/learn
+	url = https://github.com/matcornic/hugo-theme-learn
