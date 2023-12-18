@@ -4,7 +4,7 @@ title = 'Plant-it docs'
 theme = "learn"
 
 [params]
-    editURL = "https://github.com/MDeLuise/plant-it/online-resources/documentation"
+    editURL = "https://github.com/MDeLuise/plant-it/tree/main/online-resources/documentation/content/"
     author = "Massimiliano De Luise"
     description = "Documentation site about the app Plant-it"
     showVisitedLinks = true
