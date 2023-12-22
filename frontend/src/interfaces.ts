@@ -7,7 +7,18 @@ export interface botanicalInfo {
     imageUrl: string,
     imageId?: string,
     creator: "USER" | "TREFLE",
+    plantCareInfo: plantCareInfo,
 };
+
+export interface plantCareInfo {
+    minTemp?: number,
+    maxTemp?: number,
+    phMin?: number,
+    phMax?: number,
+    light?: number,
+    humidity?: number,
+    allNull: boolean,
+}
 
 export interface plant {
     id: number,

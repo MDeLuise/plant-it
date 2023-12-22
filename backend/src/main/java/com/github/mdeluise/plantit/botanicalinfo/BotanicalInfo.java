@@ -6,10 +6,12 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.github.mdeluise.plantit.authentication.User;
+import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfo;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.plant.Plant;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,6 +38,8 @@ public class BotanicalInfo implements Serializable, ImageTarget {
     private String family;
     private String genus;
     private String species;
+    @Embedded
+    private PlantCareInfo plantCareInfo = new PlantCareInfo();
     @NotNull
     @OneToMany(mappedBy = "botanicalInfo")
     private Set<Plant> plants = new HashSet<>();
@@ -101,6 +105,17 @@ public class BotanicalInfo implements Serializable, ImageTarget {
     }
 
 
+    public PlantCareInfo getPlantCareInfo() {
+        // see https://coderanch.com/t/629485/databases/columns-Embedded-field-NULL-JPA
+        return plantCareInfo != null ? plantCareInfo : new PlantCareInfo();
+    }
+
+
+    public void setPlantCareInfo(PlantCareInfo plantCareInfo) {
+        this.plantCareInfo = plantCareInfo;
+    }
+
+
     public Set<Plant> getPlants() {
         return plants;
     }
@@ -162,6 +177,11 @@ public class BotanicalInfo implements Serializable, ImageTarget {
 
     public boolean isUserCreated() {
         return creator == BotanicalInfoCreator.USER;
+    }
+
+
+    public boolean isPlantCareEmpty() {
+        return plantCareInfo.isAllNull();
     }
 
 

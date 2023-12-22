@@ -1,5 +1,5 @@
 import { Autocomplete, Box, Button, Drawer, Link, MenuItem, Modal, Select, Skeleton, Switch, TextField, Typography } from "@mui/material";
-import { botanicalInfo, plant } from "../interfaces";
+import { botanicalInfo, plant, plantCareInfo } from "../interfaces";
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,7 +11,7 @@ import "swiper/css/free-mode";
 import 'swiper/css/navigation';
 import 'swiper/css/zoom';
 import "../style/PlantDetails.scss";
-import { fetchBotanicalInfo, getPlantImg, imgToBase64, titleCase } from "../common";
+import { fetchBotanicalInfo, formatHumidityRequirement, formatLightRequirement, formatPh, getPlantImg, imgToBase64, titleCase } from "../common";
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
@@ -760,6 +760,92 @@ function PlantInfo(props: {
             }
         </Box>
 
+        {
+            !props.editModeEnabled &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Care info
+                </Typography>
+                {
+                    (!props.editModeEnabled && props.botanicalInfo?.plantCareInfo.allNull) &&
+                    <Typography sx={{ fontStyle: 'italic' }}>not provided</Typography>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.light) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Light
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={formatLightRequirement(props.botanicalInfo?.plantCareInfo.light, false)}
+                        />
+                    </Box>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.humidity) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Soil humidity
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={formatHumidityRequirement(props.botanicalInfo?.plantCareInfo.humidity, false)}
+                        />
+                    </Box>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.maxTemp) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Maximum temperature
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={props.botanicalInfo?.plantCareInfo.maxTemp + " °C"}
+                        />
+                    </Box>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.minTemp) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Minimum temperature
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={props.botanicalInfo?.plantCareInfo.minTemp + " °C"}
+                        />
+                    </Box>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.phMax) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Maximum ph
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={formatPh(props.botanicalInfo?.plantCareInfo.phMax)}
+                        />
+                    </Box>
+                }
+                {
+                    (props.botanicalInfo?.plantCareInfo.phMin) &&
+                    <Box className="plant-detail-entry">
+                        <Typography>
+                            Minimum ph
+                        </Typography>
+                        <EditableTextField
+                            editable={props.editModeEnabled}
+                            text={formatPh(props.botanicalInfo?.plantCareInfo.phMin)}
+                        />
+                    </Box>
+                }
+            </Box>
+        }
+
         <Box
             className="plant-detail-section">
             <Typography variant="h6">
@@ -894,34 +980,35 @@ function PlantInfo(props: {
             </Box>
         </Box>
 
-        {
-            diaryEntryStats.length > 0 &&
-            <Box
-                className="plant-detail-section">
-                <Typography variant="h6">
-                    Events stats
-                </Typography>
-                {
-                    diaryEntryStats.map((value: { type: string, date: Date; }) => {
-                        return <Box
-                            key={value.type}
-                            style={{
-                                display: "flex",
-                                alignItems: "baseline",
-                                gap: "5px",
-                                justifyContent: "space-between",
-                            }}>
-                            <Typography>
-                                Last {titleCase(value.type).toLowerCase()}
-                            </Typography>
-                            <Typography>
-                                {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
-                            </Typography>
-                        </Box>;
-                    })
-                }
-            </Box>
-        }
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Events stats
+            </Typography>
+            {
+                diaryEntryStats.length == 0 &&
+                <Typography sx={{ fontStyle: 'italic' }}>no event present</Typography>
+            }
+            {
+                diaryEntryStats.map((value: { type: string, date: Date; }) => {
+                    return <Box
+                        key={value.type}
+                        style={{
+                            display: "flex",
+                            alignItems: "baseline",
+                            gap: "5px",
+                            justifyContent: "space-between",
+                        }}>
+                        <Typography>
+                            Last {titleCase(value.type).toLowerCase()}
+                        </Typography>
+                        <Typography>
+                            {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
+                        </Typography>
+                    </Box>;
+                })
+            }
+        </Box>
         {
             props.imageIds.length > 0 &&
             <Box className="plant-detail-entry">

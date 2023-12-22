@@ -82,6 +82,24 @@
             </column>
             <column name="species" type="varchar(40)">
             </column>
+            <column name="light" type="int" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="humidity" type="int" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="min_temp" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="max_temp" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ph_min" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ph_max" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
             <column name="user_creator_id" type="bigint">
                 <constraints nullable="true" foreignKeyName="fk_botanicalInfo_user"
                              references="application_users(id)"/>
@@ -241,7 +259,7 @@
         </createTable>
     </changeSet>
 
-    <!-- to remove after update to v0.1.0 -->
+    <!-- can be removed after update to v0.1.0 -->
     <changeSet id="updateTo0.1.0" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="botanical_infos" columnName="botanical_info_type"/>
@@ -273,6 +291,36 @@
         </update>
 
         <dropColumn tableName="botanical_infos" columnName="botanical_info_type"/>
+    </changeSet>
+
+
+    <!-- can be removed after update to v0.1.1 -->
+    <changeSet id="updateTo0.1.1" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="botanical_infos" columnName="light"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="botanical_infos">
+            <column name="light" type="int" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="humidity" type="int" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="min_temp" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="max_temp" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ph_min" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ph_max" type="double" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

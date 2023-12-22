@@ -12,7 +12,7 @@
 <p align="center"><i><b>[Still under "initial" development, some features may be unstable or change in the future, although database schemas should be stable. A first release version is planned to be packed soon].</b></i></p>
 <p align="center">Plant-it is a <b>self-hosted gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
-<p align="center"><a href="https://docs.plant-it.org">Explore the documentation</1>
+<p align="center"><a href="https://docs.plant-it.org">Explore the documentation</a></p>
 
 <p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#getting-started">Getting started</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
 
@@ -37,7 +37,6 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
-* 🔜 Share plants with other users
 * 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 * 🔜 Dark/Light mode
 
@@ -124,4 +123,4 @@ You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=fr.yml).
 
 ### How to contribute
-If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation </a>.
+If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.

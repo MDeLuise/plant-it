@@ -132,6 +132,7 @@ public class BotanicalInfoService {
         toUpdate.setGenus(updated.getGenus());
         toUpdate.setSpecies(updated.getSpecies());
         toUpdate.setScientificName(updated.getScientificName());
+        toUpdate.setPlantCareInfo(updated.getPlantCareInfo());
         return botanicalInfoRepository.save(toUpdate);
     }
 
@@ -143,6 +144,7 @@ public class BotanicalInfoService {
         userCreatedCopy.setGenus(toCopy.getGenus());
         userCreatedCopy.setSpecies(toCopy.getSpecies());
         userCreatedCopy.setScientificName(toCopy.getScientificName());
+        userCreatedCopy.setPlantCareInfo(toCopy.getPlantCareInfo());
 
         userCreatedCopy = save(userCreatedCopy);
 

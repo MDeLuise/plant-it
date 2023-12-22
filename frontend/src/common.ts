@@ -79,3 +79,40 @@ export const fetchBotanicalInfo = (requestor: AxiosInstance, plant: plant): Prom
             .catch(reject);
     });
 }
+
+
+export const formatLightRequirement = (value: number | undefined, editMode: boolean): string => {
+    let toReturn = "";
+    if (value === undefined || value === null) {
+        return "";
+    } else if (value < 2) {
+        toReturn = "very low";
+    } else if (value < 4) {
+        toReturn = "low";
+    } else if (value < 6) {
+        toReturn = "normal";
+    } else if (value < 9) {
+        toReturn = "high";
+    } else {
+        toReturn = "very high";
+    }
+    return editMode ? String(value) : `${value} (${toReturn})`;
+}
+
+export const formatHumidityRequirement = (value: number | undefined, editMode: boolean): string => {
+    return formatLightRequirement(value, editMode);
+}
+
+export const formatTemperatureRequirement = (value: number | undefined, editMode: boolean): string => {
+    if (value === undefined || value === null) {
+        return "";
+    }
+    return editMode ? String(value) : value + " °C";
+}
+
+export const formatPh = (value: number | undefined) : string => {
+    if (value === undefined || value === null) {
+        return "";
+    }
+    return String(value);
+}
