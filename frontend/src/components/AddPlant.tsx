@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { getPlantImg } from "../common";
+import { formatHumidityRequirement, formatLightRequirement, formatPh, formatTemperatureRequirement, getPlantImg } from "../common";
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import InsertOrUpload, { UploadedFile } from "./InsertOrUploadImg";
@@ -413,6 +413,10 @@ function AddPlantInfo(props: {
             .catch(props.printError);
     };
 
+    const getNumberValueOrUndefined = (value: string | undefined): number | undefined => {
+        return value ? Number(value) : undefined;
+    }
+
     useEffect(() => {
         props.open && setName() || cleanup();
     }, [props.open]);
@@ -537,6 +541,92 @@ function AddPlantInfo(props: {
                         });
                     }} />
             </Box>
+        </Box>
+
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Care info
+            </Typography>
+
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.light) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Light
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatLightRequirement(updatedBotanicalInfo?.plantCareInfo?.light, props.editModeEnabled)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, light: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.humidity) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Soil humidity
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatHumidityRequirement(updatedBotanicalInfo?.plantCareInfo?.humidity, props.editModeEnabled)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, humidity: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.maxTemp) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Maximum temperature
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatTemperatureRequirement(updatedBotanicalInfo?.plantCareInfo?.maxTemp, props.editModeEnabled)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, maxTemp: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.minTemp) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Minimum temperature
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatTemperatureRequirement(updatedBotanicalInfo?.plantCareInfo?.minTemp, props.editModeEnabled)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, minTemp: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.phMax) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Maximum ph
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatPh(updatedBotanicalInfo?.plantCareInfo?.phMax)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, phMax: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
+            {
+                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.phMin) &&
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Minimum ph
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={formatPh(updatedBotanicalInfo?.plantCareInfo?.phMin)}
+                        onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, phMin: getNumberValueOrUndefined(newVal) }}
+                    />
+                </Box>
+            }
         </Box>
 
         {

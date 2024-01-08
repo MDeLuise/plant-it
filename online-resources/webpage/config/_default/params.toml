@@ -22,7 +22,7 @@ mainSections = ["blog"]
 # custom script on header, example: custom_script= "<script>console.log(\"Hello World\")</script>"
 custom_script = ""
 # copyright
-copyright = "Designed & Developed by [Massimiliano De Luise](https:massimilianodeluise.com)"
+copyright = "Designed & Developed by [Massimiliano De Luise](https://massimilianodeluise.com)"
 
 # Preloader
 # preloader module: https://github.com/gethugothemes/hugo-modules/tree/master/components/preloader

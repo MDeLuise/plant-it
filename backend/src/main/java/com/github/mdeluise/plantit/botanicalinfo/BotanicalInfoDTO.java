@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.botanicalinfo;
 
 import java.util.Objects;
 
+import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Botanical info", description = "Represents a plant's botanical info.")
@@ -16,6 +17,8 @@ public class BotanicalInfoDTO {
     private String genus;
     @Schema(description = "Species of the botanical info.")
     private String species;
+    @Schema(description = "Care information of the botanical info")
+    private PlantCareInfoDTO plantCareInfo;
     @Schema(description = "ID of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String imageId;
     @Schema(description = "URL of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -73,6 +76,16 @@ public class BotanicalInfoDTO {
 
     public void setSpecies(String species) {
         this.species = species;
+    }
+
+
+    public PlantCareInfoDTO getPlantCareInfo() {
+        return plantCareInfo;
+    }
+
+
+    public void setPlantCareInfo(PlantCareInfoDTO plantCareInfo) {
+        this.plantCareInfo = plantCareInfo;
     }
 
 

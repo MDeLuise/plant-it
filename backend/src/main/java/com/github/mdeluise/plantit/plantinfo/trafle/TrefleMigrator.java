@@ -3,16 +3,16 @@ package com.github.mdeluise.plantit.plantinfo.trafle;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoRepository;
+import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * This class is used only in the version 0.1.0 of the system, and can be removed after that.
- * Botanical Info object from the version 0.1.0 has a new `external_id` field. This field is the
- * `id` of the species in the Trefle REST API.
- * This class is used to fill that field in the already saved species.
+ * This class is used to add new info in the existing species on system version update.
+ * v0.1.0: Botanical Info object has new `external_id` field.
+ * v0.1.1: Botanical Info object has new `PlantCareInfo` field.
  */
 @Service
 public class TrefleMigrator {
@@ -28,32 +28,49 @@ public class TrefleMigrator {
     }
 
 
-    public void fillMissingExternalIds() {
+    public void fillMissingExternalInfo() {
         botanicalInfoRepository.findAll().forEach(botanicalInfo -> {
-            if (botanicalInfo.getCreator() != BotanicalInfoCreator.TREFLE || botanicalInfo.getExternalId() != null) {
-                logger.info(String.format("Species %s (id: %s) already updated (creator: %s, external_id: %s)",
-                                          botanicalInfo.getSpecies(), botanicalInfo.getId(), botanicalInfo.getCreator(),
-                                          botanicalInfo.getExternalId()));
-                return;
-            }
-            logger.info(String.format("Species %s (id: %s) to update (creator: %s, external_id: %s)",
+            logger.info(String.format("Checking update for species %s (id %s, creator: %s, external_id: %s)...",
                                       botanicalInfo.getSpecies(), botanicalInfo.getId(), botanicalInfo.getCreator(),
                                       botanicalInfo.getExternalId()
             ));
-            fillMissingExternalId(botanicalInfo);
+            if (botanicalInfo.getCreator() != BotanicalInfoCreator.TREFLE) {
+                logger.info("Species already updated since it's a user created one.");
+                return;
+            }
+            if (botanicalInfo.getExternalId() == null) {
+                logger.info("external_id field not present, updating it...");
+                fillMissingExternalId(botanicalInfo);
+            }
+            if (botanicalInfo.getExternalId() != null && botanicalInfo.isPlantCareEmpty()) {
+                logger.info("external_id field found, updating care info...");
+                fillMissingExternalCareInfo(botanicalInfo);
+            } else if (botanicalInfo.getExternalId() == null) {
+                logger.info("external_id field not found.");
+            } else {
+                logger.info("external_id field found, care info already updated.");
+            }
+            botanicalInfoRepository.save(botanicalInfo);
         });
     }
 
 
-    private void fillMissingExternalId(BotanicalInfo botanicalInfo) {
-        final String externalId = trefleRequestMaker.getExternalId(botanicalInfo.getSpecies());
+    private void fillMissingExternalId(BotanicalInfo toUpdate) {
+        final String externalId = trefleRequestMaker.getExternalId(toUpdate.getSpecies());
         if (externalId == null) {
             return;
         }
         logger.info(String.format("Found external_id %s for species %s (id: %s). Update...", externalId,
-                                  botanicalInfo.getSpecies(), botanicalInfo.getId()
+                                  toUpdate.getSpecies(), toUpdate.getId()
         ));
-        botanicalInfo.setExternalId(externalId);
-        botanicalInfoRepository.save(botanicalInfo);
+        toUpdate.setExternalId(externalId);
+    }
+
+    private void fillMissingExternalCareInfo(BotanicalInfo toUpdate) {
+        if (toUpdate.getExternalId() == null) {
+            return;
+        }
+        final PlantCareInfo plantCareInfo = trefleRequestMaker.getPlantCare(toUpdate);
+        toUpdate.setPlantCareInfo(plantCareInfo);
     }
 }

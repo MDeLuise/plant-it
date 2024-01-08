@@ -55,6 +55,7 @@ import redis.embedded.RedisServer;
 public class ApplicationConfig {
     private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
@@ -65,21 +66,28 @@ public class ApplicationConfig {
     @Profile(value = "dev")
     public CommandLineRunner initEmbeddedCache(@Value("${spring.data.redis.port}") int port) {
         return args -> {
-            RedisServer redisServer = new RedisServer(port);
+            final RedisServer redisServer = new RedisServer(port);
             redisServer.start();
         };
     }
 
 
     @Bean
-    public CommandLineRunner fillExternalIds(@Value("${trefle.key}") String trefleKey, TrefleMigrator trefleMigrator) {
+    public CommandLineRunner fillExternalInfo(@Value("${update_existing}") boolean update,
+                                              @Value("${trefle.key}") String trefleKey, TrefleMigrator trefleMigrator) {
         return args -> {
-            if (trefleKey == null || trefleKey.isBlank()) {
-                logger.info("trefle key not provided. Skipping entities update.");
+            if (!update) {
+                logger.info("UPDATE_EXISTING flag set to false. Skipping update of existing species.");
                 return;
             }
-            logger.info("trefle key provided. Starting entities update...");
-            trefleMigrator.fillMissingExternalIds();
+            if (trefleKey == null || trefleKey.isBlank()) {
+                logger.info(
+                    "UPDATE_EXISTING flag set to true but trefle key not provided. Skipping update of existing " +
+                        "species.");
+                return;
+            }
+            logger.info("trefle key provided. Starting update of existing species...");
+            trefleMigrator.fillMissingExternalInfo();
         };
     }
 }
