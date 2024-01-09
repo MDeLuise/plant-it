@@ -13,6 +13,9 @@ public class PlantCareInfoDTOConverter extends AbstractDTOConverter<PlantCareInf
 
     @Override
     public PlantCareInfo convertFromDTO(PlantCareInfoDTO dto) {
+        if (dto == null) {
+            return new PlantCareInfo();
+        }
         return modelMapper.map(dto, PlantCareInfo.class);
     }
 

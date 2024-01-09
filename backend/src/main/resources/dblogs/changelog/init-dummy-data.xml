@@ -15,10 +15,10 @@
         <insert tableName="botanical_infos">
             <column name="id" value="99"/>
             <column name="external_id" value="355135" />
-            <column name="scientific_name" value="Sedum spectabile"/>
+            <column name="scientific_name" value="Hylotelephium spectabile"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Hylotelephium"/>
-            <column name="species" value="Sedum spectabile"/>
+            <column name="species" value="Hylotelephium spectabile"/>
             <column name="creator" value="TREFLE"/>
         </insert>
         <insert tableName="botanical_infos">
@@ -43,6 +43,41 @@
             <column name="creator" value="USER"/>
             <column name="user_creator_id" value="99"/>
             <column name="light" value="7" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="insertBotanicalInfoSynonyms" author="MDeLuise">
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="98"/>
+            <column name="synonym_value" value="Sedum compressum"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="98"/>
+            <column name="synonym_value" value="Sedum palmeri subsp. rubromarginatum"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="98"/>
+            <column name="synonym_value" value="Sedum palmeri subsp. emarginatum"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="99"/>
+            <column name="synonym_value" value="Anacampseros spectabilis"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="99"/>
+            <column name="synonym_value" value="Sedum spectabile"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="99"/>
+            <column name="synonym_value" value="Iceplant"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="97"/>
+            <column name="synonym_value" value="Foo"/>
+        </insert>
+        <insert tableName="synonyms">
+            <column name="botanical_info_id" value="97"/>
+            <column name="synonym_value" value="Bar"/>
         </insert>
     </changeSet>
 

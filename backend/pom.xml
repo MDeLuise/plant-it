@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.mdeluise</groupId>
     <artifactId>plant-it</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>Plant it</name>
     <description>Gardening companion app</description>
     <properties>

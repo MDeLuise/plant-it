@@ -220,7 +220,7 @@ export default function SearchPage(props: {
                 refreshBotanicalInfosAndPlants={() => {
                     retrieveBotanicalInfos();
                     props.refreshPlants();
-                }}                
+                }}
             />
 
             <OutlinedInput

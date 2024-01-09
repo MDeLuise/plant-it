@@ -45,9 +45,10 @@ public class BotanicalInfoService {
         logger.debug(String.format("Search for DB saved botanical info matching '%s' scientific name (max size %s)",
                                    partialScientificName, size));
         final List<BotanicalInfo> result =
-            botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName).stream().filter(
-                                       botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
-                                   .limit(size).toList();
+            botanicalInfoRepository.getByScientificNameOrSynonym(partialScientificName).stream().filter(
+                botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
+                                   .limit(size)
+                                   .toList();
         return new HashSet<>(result.subList(0, Math.min(size, result.size())));
     }
 
@@ -133,6 +134,7 @@ public class BotanicalInfoService {
         toUpdate.setSpecies(updated.getSpecies());
         toUpdate.setScientificName(updated.getScientificName());
         toUpdate.setPlantCareInfo(updated.getPlantCareInfo());
+        toUpdate.setSynonyms(updated.getSynonyms());
         return botanicalInfoRepository.save(toUpdate);
     }
 
@@ -145,6 +147,7 @@ public class BotanicalInfoService {
         userCreatedCopy.setSpecies(toCopy.getSpecies());
         userCreatedCopy.setScientificName(toCopy.getScientificName());
         userCreatedCopy.setPlantCareInfo(toCopy.getPlantCareInfo());
+        userCreatedCopy.setSynonyms(new HashSet<>(toCopy.getSynonyms()));
 
         userCreatedCopy = save(userCreatedCopy);
 

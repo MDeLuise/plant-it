@@ -30,6 +30,7 @@ There are 2 configuration files available:
     ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
 
     LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
+    UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
     ```
 * `frontend.env`: file containing the configuration for the frontend. An example of content is the following:
     ```properties

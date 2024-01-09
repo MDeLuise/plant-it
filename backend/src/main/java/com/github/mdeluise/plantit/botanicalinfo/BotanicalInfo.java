@@ -11,10 +11,14 @@ import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.plant.Plant;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +39,10 @@ public class BotanicalInfo implements Serializable, ImageTarget {
     // https://landscapeplants.oregonstate.edu/scientific-plant-names-binomial-nomenclature
     @NotBlank
     private String scientificName;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "synonyms")
+    @Column(name = "synonym_value")
+    private Set<String> synonyms = new HashSet<>();
     private String family;
     private String genus;
     private String species;
@@ -71,6 +79,16 @@ public class BotanicalInfo implements Serializable, ImageTarget {
 
     public void setScientificName(String scientificName) {
         this.scientificName = scientificName;
+    }
+
+
+    public Set<String> getSynonyms() {
+        return synonyms;
+    }
+
+
+    public void setSynonyms(Set<String> synonyms) {
+        this.synonyms = synonyms;
     }
 
 
@@ -181,7 +199,7 @@ public class BotanicalInfo implements Serializable, ImageTarget {
 
 
     public boolean isPlantCareEmpty() {
-        return plantCareInfo.isAllNull();
+        return getPlantCareInfo().isAllNull();
     }
 
 

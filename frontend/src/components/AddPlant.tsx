@@ -13,6 +13,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import ConfirmDeleteDialog from "./ConfirmDialog";
+import { EditableTextField } from "./EditableTextField";
 
 function AddPlantHeader(props: {
     requestor: AxiosInstance,
@@ -256,6 +257,8 @@ function AddPlantInfo(props: {
                     const botanicalInfoToCreate = {
                         ...updatedBotanicalInfo,
                         creator: props.botanicalInfoToAdd === undefined ? "USER" : "TREFLE",
+                        synonyms: updatedBotanicalInfo!.synonyms,
+                        plantCareInfo: updatedBotanicalInfo?.plantCareInfo ? updatedBotanicalInfo.plantCareInfo : {},
                     } as botanicalInfo;
                     const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url || updatedBotanicalInfo?.imageUrl;
                     addNewBotanicalInfo(botanicalInfoToCreate, thumbnail)
@@ -543,6 +546,28 @@ function AddPlantInfo(props: {
             </Box>
         </Box>
 
+        {
+            (props.editModeEnabled || !props.botanicalInfoToAdd || (updatedBotanicalInfo?.synonyms && updatedBotanicalInfo!.synonyms.length > 0)) &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Species info
+                </Typography>
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Synonyms
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
+                        text={updatedBotanicalInfo?.synonyms?.join("; ") || ""}
+                        rows={updatedBotanicalInfo?.synonyms?.length}
+                        onChange={(synonyms) => updatedBotanicalInfo!.synonyms = synonyms.split(";").map(syn => syn.trim())}
+                        style={{ "max-width": "50%" }}
+                    />
+                </Box>
+            </Box>
+        }
+
         <Box
             className="plant-detail-section">
             <Typography variant="h6">
@@ -550,78 +575,78 @@ function AddPlantInfo(props: {
             </Typography>
 
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.light) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.light) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Light
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatLightRequirement(updatedBotanicalInfo?.plantCareInfo?.light, props.editModeEnabled)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, light: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.humidity) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.humidity) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Soil humidity
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatHumidityRequirement(updatedBotanicalInfo?.plantCareInfo?.humidity, props.editModeEnabled)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, humidity: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.maxTemp) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.maxTemp) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Maximum temperature
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatTemperatureRequirement(updatedBotanicalInfo?.plantCareInfo?.maxTemp, props.editModeEnabled)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, maxTemp: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.minTemp) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.minTemp) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Minimum temperature
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatTemperatureRequirement(updatedBotanicalInfo?.plantCareInfo?.minTemp, props.editModeEnabled)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, minTemp: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.phMax) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.phMax) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Maximum ph
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatPh(updatedBotanicalInfo?.plantCareInfo?.phMax)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, phMax: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
             {
-                (props.editModeEnabled || updatedBotanicalInfo?.plantCareInfo?.phMin) &&
+                (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.phMin) &&
                 <Box className="plant-detail-entry">
                     <Typography>
                         Minimum ph
                     </Typography>
                     <EditableTextField
-                        editable={props.editModeEnabled}
+                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatPh(updatedBotanicalInfo?.plantCareInfo?.phMin)}
                         onChange={(newVal) => updatedBotanicalInfo!.plantCareInfo = { ...updatedBotanicalInfo!.plantCareInfo!, phMin: getNumberValueOrUndefined(newVal) }}
                     />
@@ -768,6 +793,7 @@ function AddPlantInfo(props: {
                             onClick={() => {
                                 const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url || updatedBotanicalInfo?.imageUrl;
                                 if (props.botanicalInfoToAdd === undefined || props.botanicalInfoToAdd.id === null) {
+                                    updatedBotanicalInfo!.creator = "USER";
                                     addNewBotanicalInfo(updatedBotanicalInfo as botanicalInfo, thumbnail)
                                         .then(updatedBIRes => {
                                             setUpdatedBotanicalInfo(updatedBIRes);
@@ -792,40 +818,6 @@ function AddPlantInfo(props: {
             }
         </Box>
     </Box>;
-}
-
-
-function EditableTextField(props: {
-    editable: boolean,
-    text?: string;
-    onChange?: (arg: string) => void;
-}) {
-    const [value, setValue] = useState<string>(props.text || "");
-
-    useEffect(() => {
-        setValue(props.text || "");
-    }, [props.text]);
-
-    return props.editable ?
-        <TextField
-            variant="standard"
-            InputProps={{ disableUnderline: props.editable ? false : true }}
-            disabled={!props.editable}
-            onChange={(e) => {
-                setValue(e.target.value);
-                if (props.onChange != undefined) {
-                    props.onChange(e.target.value);
-                }
-            }}
-            value={value}
-            sx={{
-                color: "black",
-            }}
-        />
-        :
-        <Typography>
-            {props.text}
-        </Typography>;
 }
 
 
