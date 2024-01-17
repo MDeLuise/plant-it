@@ -2,7 +2,7 @@ import { Box, InputAdornment, OutlinedInput, Skeleton, Typography } from "@mui/m
 import { AxiosInstance } from "axios";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { botanicalInfo, plant } from "../interfaces";
 import { getPlantImg, isBigScreen } from "../common";
 import AddPlant from "./AddPlant";
@@ -182,27 +182,45 @@ export default function SearchPage(props: {
     const [addPlantOpen, setAddPlantOpen] = useState<boolean>(false);
     const [selectedBotanicalInfo, setSelectedBotanicalInfo] = useState<botanicalInfo>();
 
+    const throttleDelay = 500;
+    const retrieveBotanicalInfosTimeoutRef = useRef<number | null>(null);
     const retrieveBotanicalInfos = (): void => {
-        let backendUrl: string;
-        if (scientificName === "") {
-            backendUrl = "botanical-info";
-        } else {
-            backendUrl = `botanical-info/partial/${scientificName}`;
-        }
         setLoading(true);
-        props.requestor.get(backendUrl)
-            .then(res => {
-                let newBotanicalInfos: botanicalInfo[] = [];
-                res.data.forEach((botanicalInfo: botanicalInfo) => {
-                    newBotanicalInfos.push(botanicalInfo);
-                });
-                setBotanicalInfos(newBotanicalInfos);
-            })
-            .catch(props.printError)
-            .finally(() => setLoading(false));
+        retrieveBotanicalInfosTimeoutRef.current = window.setTimeout(() => {
+            let backendUrl: string;
+            if (scientificName === "") {
+                backendUrl = "botanical-info";
+            } else {
+                backendUrl = `botanical-info/partial/${scientificName}`;
+            }
+            props.requestor.get(backendUrl)
+                .then(res => {
+                    let newBotanicalInfos: botanicalInfo[] = [];
+                    res.data.forEach((botanicalInfo: botanicalInfo) => {
+                        newBotanicalInfos.push(botanicalInfo);
+                    });
+                    setBotanicalInfos(newBotanicalInfos);
+                })
+                .catch(props.printError)
+                .finally(() => setLoading(false));
+        }, throttleDelay);
     };
 
+    // Clear the timeout when the component unmounts
     useEffect(() => {
+        return () => {
+            if (retrieveBotanicalInfosTimeoutRef.current) {
+                clearTimeout(retrieveBotanicalInfosTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        // Cancel the previous timeout when the effect runs
+        if (retrieveBotanicalInfosTimeoutRef.current) {
+            clearTimeout(retrieveBotanicalInfosTimeoutRef.current);
+        }
+        // Call the throttled function
         retrieveBotanicalInfos();
     }, [scientificName, props.plants]);
 
