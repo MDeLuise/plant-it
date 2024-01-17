@@ -52,8 +52,7 @@ class BotanicalInfoServiceTest {
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
-        Mockito.when(botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName))
-               .thenReturn(toReturn);
+        Mockito.when(botanicalInfoRepository.getByScientificNameOrSynonym(partialScientificName)).thenReturn(toReturn);
 
         Assertions.assertThat(botanicalInfoService.getByPartialScientificName(partialScientificName, 2))
                   .as("botanical info set is correct").hasSameElementsAs(toReturn);
@@ -70,8 +69,7 @@ class BotanicalInfoServiceTest {
         toReturn2.setId(2L);
         final List<BotanicalInfo> toReturn = List.of(toReturn1, toReturn2);
 
-        Mockito.when(botanicalInfoRepository.findByScientificNameContainsIgnoreCase(partialScientificName))
-               .thenReturn(toReturn);
+        Mockito.when(botanicalInfoRepository.getByScientificNameOrSynonym(partialScientificName)).thenReturn(toReturn);
 
         Assertions.assertThat(botanicalInfoService.getByPartialScientificName(partialScientificName, 1))
                   .as("botanical info set is correct").hasSameElementsAs(List.of(toReturn1));

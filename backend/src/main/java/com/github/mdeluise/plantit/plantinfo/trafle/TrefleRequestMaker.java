@@ -8,7 +8,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
@@ -61,7 +63,7 @@ public class TrefleRequestMaker {
         final JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
         final List<BotanicalInfo> botanicalInfos = new ArrayList<>();
         responseJson.get("data").getAsJsonArray().forEach(plantResult -> {
-            BotanicalInfo botanicalInfo = new BotanicalInfo();
+            final BotanicalInfo botanicalInfo = new BotanicalInfo();
             botanicalInfo.setCreator(BotanicalInfoCreator.TREFLE);
             try {
                 fillTrefleInfo(plantResult, botanicalInfo);
@@ -85,7 +87,9 @@ public class TrefleRequestMaker {
             fillImage(botanicalInfo, plantJson.get("image_url").getAsString());
         }
         fillPlantCare(botanicalInfo, plantJson);
+        fillSynonyms(botanicalInfo, getSynonymsJson(plantResult.getAsJsonObject()));
     }
+
 
 
     private void fillPlantCare(BotanicalInfo botanicalInfo, JsonObject plantJson) {
@@ -123,6 +127,27 @@ public class TrefleRequestMaker {
     }
 
 
+    private void fillSynonyms(BotanicalInfo botanicalInfo, JsonObject plantJson) {
+        final Set<String> synonyms = getSynonyms(plantJson);
+        botanicalInfo.setSynonyms(synonyms);
+    }
+
+
+    private Set<String> getSynonyms(JsonObject plantJson) {
+        final Set<String> synonyms = new HashSet<>();
+        plantJson.get("synonyms").getAsJsonArray()
+                 .forEach(synonym -> synonyms.add(synonym.getAsJsonObject().get("name").getAsString()));
+        if (!isJsonValueNull(plantJson, "common_name")) {
+            synonyms.add(plantJson.get("common_name").getAsString());
+        }
+        if (plantJson.get("common_names").getAsJsonObject().has("en")) {
+            plantJson.get("common_names").getAsJsonObject().get("en").getAsJsonArray()
+                     .forEach(synonym -> synonyms.add(synonym.getAsString()));
+        }
+        return synonyms;
+    }
+
+
     private boolean isJsonValueNull(JsonObject jsonObject, String key) {
         if (jsonObject.get(key).isJsonNull()) {
             return true;
@@ -137,8 +162,7 @@ public class TrefleRequestMaker {
 
     protected JsonObject getPlantGrowthJson(JsonObject plantJson) {
         final String link = plantJson.get("links").getAsJsonObject().get("self").getAsString();
-        final String url =
-            String.format("%s%s?token=%s", domain, link, token);
+        final String url = String.format("%s%s?token=%s", domain, link, token);
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
@@ -154,7 +178,33 @@ public class TrefleRequestMaker {
             final JsonElement data = responseJson.get("data").getAsJsonObject().get("growth").getAsJsonObject();
             return data.getAsJsonObject();
         } catch (IndexOutOfBoundsException e) {
-            logger.error(String.format("Error while retrieving growth of species %s from Trefle.", plantJson.get("id")));
+            logger.error(
+                String.format("Error while retrieving growth of species %s from Trefle.", plantJson.get("id")));
+            return null;
+        }
+    }
+
+
+    private JsonObject getSynonymsJson(JsonObject searchSpeciesJson) {
+        final String link = searchSpeciesJson.get("links").getAsJsonObject().get("self").getAsString();
+        final String url = String.format("%s%s?token=%s", domain, link, token);
+        final HttpClient client = HttpClient.newHttpClient();
+        final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new InfoExtractionException(e);
+        }
+        final JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
+
+        try {
+            final JsonElement data = responseJson.get("data").getAsJsonObject();
+            return data.getAsJsonObject();
+        } catch (IndexOutOfBoundsException e) {
+            logger.error(
+                String.format("Error while retrieving species json for %s from Trefle.", searchSpeciesJson.get("id")));
             return null;
         }
     }
@@ -163,8 +213,8 @@ public class TrefleRequestMaker {
     public Page<BotanicalInfo> fetchAll(Pageable pageable) {
         logger.debug("Fetching all info from Trefle");
         final String url =
-            String.format("%s/species/search?limit=%s&page=%s&token=%s&q=*",
-                          baseEndpoint, pageable.getPageSize(), pageable.getPageNumber() + 1, token
+            String.format("%s/species/search?limit=%s&page=%s&token=%s&q=*", baseEndpoint, pageable.getPageSize(),
+                          pageable.getPageNumber() + 1, token
             );
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
@@ -221,8 +271,7 @@ public class TrefleRequestMaker {
 
 
     public PlantCareInfo getPlantCare(BotanicalInfo toUpdate) {
-        final String url =
-            String.format("%s/species/%s?token=%s", baseEndpoint, toUpdate.getExternalId(), token);
+        final String url = String.format("%s/species/%s?token=%s", baseEndpoint, toUpdate.getExternalId(), token);
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
@@ -238,7 +287,32 @@ public class TrefleRequestMaker {
             final JsonObject data = responseJson.get("data").getAsJsonObject().get("growth").getAsJsonObject();
             return getPlantCare(data);
         } catch (IndexOutOfBoundsException e) {
-            logger.error(String.format("Error while retrieving growth of species %s from Trefle.", toUpdate.getExternalId()));
+            logger.error(
+                String.format("Error while retrieving growth of species %s from Trefle.", toUpdate.getExternalId()));
+            return null;
+        }
+    }
+
+
+    public Set<String> getSynonyms(BotanicalInfo toUpdate) {
+        final String url = String.format("%s/species/%s?token=%s", baseEndpoint, toUpdate.getExternalId(), token);
+        final HttpClient client = HttpClient.newHttpClient();
+        final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new InfoExtractionException(e);
+        }
+        final JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
+
+        try {
+            final JsonObject data = responseJson.get("data").getAsJsonObject();
+            return getSynonyms(data);
+        } catch (IndexOutOfBoundsException e) {
+            logger.error(
+                String.format("Error while retrieving growth of species %s from Trefle.", toUpdate.getExternalId()));
             return null;
         }
     }

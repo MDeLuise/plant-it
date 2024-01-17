@@ -1,6 +1,7 @@
 export interface botanicalInfo {
     id: number,
     scientificName: string,
+    synonyms: string[],
     family: string,
     genus: string,
     species: string,

@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
 import java.util.Objects;
+import java.util.Set;
 
 import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,8 @@ public class BotanicalInfoDTO {
     private Long id;
     @Schema(description = "Scientific name of the botanical info.")
     private String scientificName;
+    @Schema(description = "Synonyms of the botanical info.")
+    private Set<String> synonyms;
     @Schema(description = "Family of the botanical info.")
     private String family;
     @Schema(description = "Genus of the botanical info.")
@@ -46,6 +49,16 @@ public class BotanicalInfoDTO {
 
     public void setScientificName(String scientificName) {
         this.scientificName = scientificName;
+    }
+
+
+    public Set<String> getSynonyms() {
+        return synonyms;
+    }
+
+
+    public void setSynonyms(Set<String> synonyms) {
+        this.synonyms = synonyms;
     }
 
 

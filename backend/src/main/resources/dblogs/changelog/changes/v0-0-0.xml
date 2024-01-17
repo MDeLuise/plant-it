@@ -259,6 +259,24 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="createSynonymsTable" author="MDeLuise">
+        <createTable tableName="synonyms">
+            <column name="botanical_info_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="fk_synonyms_botanicalInfo"
+                             references="botanical_infos(id)"/>
+            </column>
+            <column name="synonym_value" type="varchar(50)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                columnNames="botanical_info_id, synonym_value"
+                constraintName="synonym_unique"
+                tableName="synonyms"
+        />
+    </changeSet>
+
     <!-- can be removed after update to v0.1.0 -->
     <changeSet id="updateTo0.1.0" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
@@ -294,7 +312,7 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.1.1 -->
+    <!-- can be removed after update to v0.2.0 -->
     <changeSet id="updateTo0.1.1" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>

@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDeleteDialog from "./ConfirmDialog";
+import { EditableTextField } from "./EditableTextField";
 
 
 function PlantImageFullSize(props: {
@@ -440,55 +441,6 @@ function PlantHeader(props: {
 }
 
 
-function EditableTextField(props: {
-    editable: boolean,
-    text?: string,
-    maxLength?: number,
-    onChange?: (arg: string) => void,
-    variant?: "body1" | "h6",
-    style?: {};
-}) {
-    const [value, setValue] = useState<string>();
-
-    useEffect(() => {
-        setValue(props.text || "");
-    }, [props.text]);
-
-
-    const renderedText = (arg?: string) => {
-        if (arg === undefined) {
-            return arg;
-        }
-        if (props.maxLength !== undefined && arg.length > props.maxLength) {
-            return arg.substring(0, props.maxLength) + "...";
-        }
-        return arg;
-    }
-
-    return props.editable ?
-        <TextField
-            variant="standard"
-            InputProps={{ disableUnderline: props.editable ? false : true }}
-            disabled={!props.editable}
-            onChange={(e) => {
-                setValue(e.target.value);
-                if (props.onChange != undefined) {
-                    props.onChange(e.target.value);
-                }
-            }}
-            value={value}
-            sx={{
-                ...props.style,
-                color: "black",
-            }}
-        />
-        :
-        <Typography sx={{ ...props.style }} variant={props.variant}>
-            {renderedText(props.text)}
-        </Typography>;
-}
-
-
 function ReadMoreReadLess(props: {
     text: string,
     size: number;
@@ -760,6 +712,28 @@ function PlantInfo(props: {
             }
         </Box>
 
+
+        {
+            (!props.editModeEnabled && props.botanicalInfo?.synonyms !== undefined && props.botanicalInfo!.synonyms.length > 0) &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Species info
+                </Typography>
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Synonyms
+                    </Typography>
+                    <EditableTextField
+                        editable={props.editModeEnabled}
+                        text={props.botanicalInfo?.synonyms?.join("; ") || ""}
+                        rows={props.botanicalInfo?.synonyms.length}
+                        style={{ "max-width": "45%" }}
+                    />
+                </Box>
+            </Box>
+        }
+
         {
             !props.editModeEnabled &&
             <Box
@@ -944,73 +918,78 @@ function PlantInfo(props: {
             </Box>
         </Box>
 
-        <Box
-            className="plant-detail-section">
-            <Typography variant="h6">
-                Plant stats
-            </Typography>
+        {!props.editModeEnabled &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Plant stats
+                </Typography>
 
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Photos
-                </Typography>
-                <Typography>
-                    {props.imageIds.length}
-                </Typography>
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Photos
+                    </Typography>
+                    <Typography>
+                        {props.imageIds.length}
+                    </Typography>
+                </Box>
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Events
+                    </Typography>
+                    <Typography>
+                        {plantStats.events}
+                    </Typography>
+                </Box>
+                <Box className="plant-detail-entry">
+                    <Typography>
+                        Age (days)
+                    </Typography>
+                    <Typography>
+                        {
+                            props.plant?.startDate &&
+                            Math.floor(((new Date()).getTime() - new Date(props.plant?.startDate).getTime()) / (1000 * 3600 * 24))
+                            || "-"
+                        }
+                    </Typography>
+                </Box>
             </Box>
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Events
-                </Typography>
-                <Typography>
-                    {plantStats.events}
-                </Typography>
-            </Box>
-            <Box className="plant-detail-entry">
-                <Typography>
-                    Age (days)
-                </Typography>
-                <Typography>
-                    {
-                        props.plant?.startDate &&
-                        Math.floor(((new Date()).getTime() - new Date(props.plant?.startDate).getTime()) / (1000 * 3600 * 24))
-                        || "-"
-                    }
-                </Typography>
-            </Box>
-        </Box>
+        }
 
-        <Box
-            className="plant-detail-section">
-            <Typography variant="h6">
-                Events stats
-            </Typography>
-            {
-                diaryEntryStats.length == 0 &&
-                <Typography sx={{ fontStyle: 'italic' }}>no event present</Typography>
-            }
-            {
-                diaryEntryStats.map((value: { type: string, date: Date; }) => {
-                    return <Box
-                        key={value.type}
-                        style={{
-                            display: "flex",
-                            alignItems: "baseline",
-                            gap: "5px",
-                            justifyContent: "space-between",
-                        }}>
-                        <Typography>
-                            Last {titleCase(value.type).toLowerCase()}
-                        </Typography>
-                        <Typography>
-                            {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
-                        </Typography>
-                    </Box>;
-                })
-            }
-        </Box>
         {
-            props.imageIds.length > 0 &&
+            !props.editModeEnabled &&
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Events stats
+                </Typography>
+                {
+                    diaryEntryStats.length == 0 &&
+                    <Typography sx={{ fontStyle: 'italic' }}>no event present</Typography>
+                }
+                {
+                    diaryEntryStats.map((value: { type: string, date: Date; }) => {
+                        return <Box
+                            key={value.type}
+                            style={{
+                                display: "flex",
+                                alignItems: "baseline",
+                                gap: "5px",
+                                justifyContent: "space-between",
+                            }}>
+                            <Typography>
+                                Last {titleCase(value.type).toLowerCase()}
+                            </Typography>
+                            <Typography>
+                                {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
+                            </Typography>
+                        </Box>;
+                    })
+                }
+            </Box>
+        }
+        {
+            !props.editModeEnabled && props.imageIds.length > 0 &&
             <Box className="plant-detail-entry">
                 <Typography variant="h6" sx={{ marginBottom: "10px", }}>
                     Gallery

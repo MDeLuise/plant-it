@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit.plantinfo.trafle;
 
+import java.util.Set;
+
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoRepository;
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service;
 /**
  * This class is used to add new info in the existing species on system version update.
  * v0.1.0: Botanical Info object has new `external_id` field.
- * v0.1.1: Botanical Info object has new `PlantCareInfo` field.
+ * v0.2.0: Botanical Info object has new `PlantCareInfo` field.
+ * v0.2.0: Botanical Info object has new `synonyms` field.
  */
 @Service
 public class TrefleMigrator {
@@ -45,6 +48,9 @@ public class TrefleMigrator {
             if (botanicalInfo.getExternalId() != null && botanicalInfo.isPlantCareEmpty()) {
                 logger.info("external_id field found, updating care info...");
                 fillMissingExternalCareInfo(botanicalInfo);
+            } else if (botanicalInfo.getExternalId() != null && botanicalInfo.getSynonyms().isEmpty()) {
+                logger.info("external_id field found, updating synonyms...");
+                fillMissingExternalSynonyms(botanicalInfo);
             } else if (botanicalInfo.getExternalId() == null) {
                 logger.info("external_id field not found.");
             } else {
@@ -72,5 +78,14 @@ public class TrefleMigrator {
         }
         final PlantCareInfo plantCareInfo = trefleRequestMaker.getPlantCare(toUpdate);
         toUpdate.setPlantCareInfo(plantCareInfo);
+    }
+
+
+    private void fillMissingExternalSynonyms(BotanicalInfo toUpdate) {
+        if (toUpdate.getExternalId() == null) {
+            return;
+        }
+        final Set<String> synonyms = trefleRequestMaker.getSynonyms(toUpdate);
+        toUpdate.setSynonyms(synonyms);
     }
 }
