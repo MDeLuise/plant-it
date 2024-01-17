@@ -1,10 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import secureLocalStorage from "react-secure-storage";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import LaunchIcon from '@mui/icons-material/Launch';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import "../style/Settings.scss";
@@ -33,11 +34,11 @@ function UsernameDialog(props: {
                 id: authenticatedUserId,
                 username: newUsername,
             })
-                .then((_res) => {
+                .then(_res => {
                     secureLocalStorage.setItem("plant-it-username", newUsername);
                     accept();
                 })
-                .catch((err) => {
+                .catch(err => {
                     props.printError(err);
                     reject();
                 });
@@ -50,18 +51,16 @@ function UsernameDialog(props: {
             return;
         }
         props.requestor.get(`/user/${newUsername}/_available`)
-            .then((res) => {
+            .then(res => {
                 if (res.data) {
                     changeUsername(newUsername)
-                        .then((_res) => props.confirmCallBack())
-                        .catch(err => props.printError(err));
+                        .then(props.confirmCallBack)
+                        .catch(props.printError);
                 } else {
                     setNewUsernameError("username already taken");
                 }
             })
-            .catch((err) => {
-                props.printError(err);
-            });
+            .catch(props.printError);
     };
 
     const changeNewUsername = (value: string): void => {
@@ -71,10 +70,10 @@ function UsernameDialog(props: {
 
     const getAuthenticatedUserID = (): void => {
         props.requestor.get("/user")
-            .then((res) => {
+            .then(res => {
                 setAuthenticatedUserId(res.data.id);
             })
-            .catch((err) => props.printError(err));
+            .catch(props.printError);
     };
 
     useEffect(() => {
@@ -130,12 +129,8 @@ function PasswordDialog(props: {
             currentPassword: currentPassword,
             newPassword: newPassword,
         })
-            .then(_res => {
-                props.confirmCallBack();
-            })
-            .catch((err) => {
-                props.printError(err);
-            });
+            .then(props.confirmCallBack)
+            .catch(props.printError);
     };
 
     const changeNewPassword = (value: string): void => {
@@ -397,10 +392,12 @@ export default function Settings(props: {
 }) {
     let navigate: NavigateFunction = useNavigate();
     const username = secureLocalStorage.getItem("plant-it-username") as string;
-    const [version, setVersion] = useState<string>();
+    const [version, setVersion] = useState<{ current?: string, latest: boolean }>({ latest: true });
     const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
     const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false);
-
+    const repoLink = "https://github.com/MDeLuise/plant-it";
+    const repoOpenIssues = "https://github.com/MDeLuise/plant-it/issues/new/choose";
+    const repoLastVersion = "https://github.com/MDeLuise/plant-it/releases/latest";
 
     const logout = (): void => {
         secureLocalStorage.removeItem("plant-it-key");
@@ -409,20 +406,47 @@ export default function Settings(props: {
 
     const getVersion = (): void => {
         props.requestor.get("/info/version")
-            .then((res) => setVersion(res.data))
-            .catch((err) => props.printError(err));
+            .then(res => setVersion({ ...version, current: res.data }))
+            .catch(props.printError);
     };
 
-    const navigateToSourceCode = (): void => {
+    const navigateTo = (url: string): void => {
         var anchor = document.createElement('a');
-        anchor.href = 'https://github.com/MDeLuise/plant-it';
+        anchor.href = url;
         anchor.target = "_blank";
         anchor.click();
+    };
+
+    const checkIfLatest = (): void => {
+        props.requestor.get("https://api.github.com/repos/MDeLuise/plant-it/releases/latest")
+            .then(res => {
+                setVersion({ ...version, latest: isVersionLessThan(version.current!, res.data.tag_name) })
+            })
+            .catch(props.printError);
+    }
+
+    const isVersionLessThan = (versionA: string, versionB: string): boolean => {
+        const partsA = versionA.split('.').map(Number);
+        const partsB = versionB.split('.').map(Number);
+        for (let i = 0; i < 3; i++) {
+            if (partsA[i] < partsB[i]) {
+                return true;
+            } else if (partsA[i] > partsB[i]) {
+                return false;
+            }
+        }
+        return false;
     };
 
     useEffect(() => {
         getVersion();
     }, []);
+
+    useEffect(() => {
+        if (version.current && !version.current.endsWith("SNAPSHOT")) {
+            checkIfLatest();
+        }
+    }, [version.current])
 
     return <Box sx={{
         display: "flex",
@@ -483,17 +507,31 @@ export default function Settings(props: {
             <SettingsEntry
                 text="App version"
                 right={
-                    <Typography>
-                        {version}
-                    </Typography>
+                    <Box sx={{ display: 'flex', gap: '10px' }}>
+                        <Typography>
+                            {version.current}
+                        </Typography>
+                        {
+                            version.latest ||
+                            <NewReleasesIcon sx={{ color: "primary.main" }} />
+                        }
+                    </Box>
                 }
+                onClick={version.latest ? undefined : () => navigateTo(repoLastVersion)}
             />
             <SettingsEntry
                 text="Open source"
                 right={<LaunchIcon sx={{
                     opacity: .5,
                 }} />}
-                onClick={navigateToSourceCode}
+                onClick={() => navigateTo(repoLink)}
+            />
+            <SettingsEntry
+                text="Report issue"
+                right={<LaunchIcon sx={{
+                    opacity: .5,
+                }} />}
+                onClick={() => navigateTo(repoOpenIssues)}
             />
         </Box>
         <Box>
