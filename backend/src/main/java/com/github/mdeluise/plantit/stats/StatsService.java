@@ -1,10 +1,9 @@
-package com.github.mdeluise.plantit.systeminfo;
+package com.github.mdeluise.plantit.stats;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryService;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.PlantService;
-import com.github.mdeluise.plantit.stats.UserStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

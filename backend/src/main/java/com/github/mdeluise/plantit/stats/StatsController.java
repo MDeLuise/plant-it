@@ -1,6 +1,5 @@
 package com.github.mdeluise.plantit.stats;
 
-import com.github.mdeluise.plantit.systeminfo.StatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

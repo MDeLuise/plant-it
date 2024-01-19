@@ -11,23 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GitHubService {
+public class GitHubSystemVersionService {
     private final String gitHubApiUrl = "https://api.github.com/repos/MDeLuise/plant-it/releases/latest";
     private final HttpClient httpClient;
-    private final Logger logger = LoggerFactory.getLogger(GitHubService.class);
+    private final Logger logger = LoggerFactory.getLogger(GitHubSystemVersionService.class);
 
 
     @Autowired
-    public GitHubService(HttpClient httpClient) {
+    public GitHubSystemVersionService(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
 
-    @Cacheable(value = "latest-version")
     public GitHubReleaseInfo getLatestVersion() throws IOException, InterruptedException {
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(gitHubApiUrl)).build();
 
