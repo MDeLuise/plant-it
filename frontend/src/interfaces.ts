@@ -52,3 +52,10 @@ export interface systemVersionInfo {
     isLatest: boolean,
     latestReleaseNote: string,
 }
+
+export interface userStats {
+    diaryEntryCount: number,
+    plantCount: number,
+    botanicalInfoCount: number,
+    imageCount: number,
+}

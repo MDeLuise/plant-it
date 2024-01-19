@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -68,6 +69,12 @@ public class BotanicalInfoService {
                                       .stream().filter(
                 pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser())).collect(Collectors.toSet())
                                       .size();
+    }
+
+    public long count() {
+        return plantRepository.findAllByOwner(authenticatedUserService.getAuthenticatedUser(), Pageable.unpaged())
+                              .getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
+                              .collect(Collectors.toSet()).size();
     }
 
 

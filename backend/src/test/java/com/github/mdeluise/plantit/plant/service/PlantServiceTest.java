@@ -153,35 +153,6 @@ class PlantServiceTest {
 
 
     @Test
-    @DisplayName("Should count distinct botanical info")
-    void shouldCountDistinctBotanicalInfo() {
-        final User authenticatedUser = new User();
-        authenticatedUser.setId(1L);
-        final Pageable pageable = Pageable.unpaged();
-        final int count = 3;
-        final Set<Plant> botanicalInfoPlants = new HashSet<>();
-        for (int i = 0; i < count; i++) {
-            final Plant plant = new Plant();
-            plant.setId((long) i);
-            plant.setOwner(authenticatedUser);
-            final BotanicalInfo botanicalInfo = new BotanicalInfo();
-            botanicalInfo.setId((long) i);
-            plant.setBotanicalInfo(botanicalInfo);
-            botanicalInfoPlants.add(plant);
-        }
-        final Plant notDistincBotanicalInfoPlant = new Plant();
-        notDistincBotanicalInfoPlant.setBotanicalInfo(botanicalInfoPlants.stream().toList().get(0).getBotanicalInfo());
-        botanicalInfoPlants.add(notDistincBotanicalInfoPlant);
-        final PageImpl<Plant> toReturn = new PageImpl<>(botanicalInfoPlants.stream().toList());
-
-        Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
-        Mockito.when(plantRepository.findAllByOwner(authenticatedUser, pageable)).thenReturn(toReturn);
-
-        Assertions.assertThat(plantService.getNumberOfDistinctBotanicalInfo()).as("count is correct").isEqualTo(count);
-    }
-
-
-    @Test
     @DisplayName("Should check if name already exists")
     void shouldCheckNameExistence() {
         final User authenticatedUser = new User();

@@ -1,7 +1,5 @@
 package com.github.mdeluise.plantit.plant;
 
-import java.util.stream.Collectors;
-
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
@@ -82,12 +80,6 @@ public class PlantService {
         }
         toSave.setBotanicalInfo(botanicalInfoService.get(toSave.getBotanicalInfo().getId()));
         return plantRepository.save(toSave);
-    }
-
-
-    public long getNumberOfDistinctBotanicalInfo() {
-        return getAll(Pageable.unpaged()).getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
-                                         .collect(Collectors.toSet()).size();
     }
 
 
