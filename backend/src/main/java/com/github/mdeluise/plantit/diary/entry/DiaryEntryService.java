@@ -114,9 +114,7 @@ public class DiaryEntryService {
 
     public DiaryEntry update(Long id, DiaryEntry updated) {
         get(id);
-        if (!updated.getDiary().getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            throw new UnauthorizedException();
-        }
+        updated.getDiary().setOwner(authenticatedUserService.getAuthenticatedUser());
         updated.setId(id);
         return diaryEntryRepository.save(updated);
     }
