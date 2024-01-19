@@ -24,6 +24,7 @@ import AddLogEntry from "./AddLogEntry";
 import PlantDetails from "./PlantDetails";
 import UserPlant from "./UserPlant";
 import NewLogEntry from "./LogEntry";
+import ReleasesNotes from "./ReleasesNotes";
 
 
 function UserTopBar(props: {}) {
@@ -341,6 +342,8 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 open={errorDialogShown}
                 close={() => setErrorDialogShown(false)}
             />
+
+            <ReleasesNotes requestor={props.requestor} printError={printError}/>
 
             {addLogEntryComponent}
 

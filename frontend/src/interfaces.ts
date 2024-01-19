@@ -45,3 +45,10 @@ export interface diaryEntry {
     diaryTargetId: number,
     diaryTargetPersonalName: string,
 };
+
+export interface systemVersionInfo {
+    currentVersion: string,
+    latestVersion: string,
+    isLatest: boolean,
+    latestReleaseNote: string,
+}

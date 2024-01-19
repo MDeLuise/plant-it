@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit.systeminfo;
 
+import java.io.IOException;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirements()
 public class SystemInfoController {
     private final String version;
+    private final GitHubService gitHubService;
 
 
-    public SystemInfoController(@Value("${app.version}") String version) {
+    public SystemInfoController(@Value("${app.version}") String version, GitHubService gitHubService) {
         this.version = version;
+        this.gitHubService = gitHubService;
     }
 
 
@@ -35,7 +39,15 @@ public class SystemInfoController {
     @Operation(
         summary = "System version", description = "Get the version of the system."
     )
-    public ResponseEntity<String> getVersion() {
-        return ResponseEntity.ok(version);
+    public ResponseEntity<SystemVersionInfo> getVersion() throws IOException, InterruptedException {
+        final GitHubReleaseInfo latestVersion = gitHubService.getLatestVersion();
+
+        final SystemVersionInfo systemVersionInfo = new SystemVersionInfo();
+        systemVersionInfo.setCurrentVersion(version);
+        systemVersionInfo.setLatestVersion(latestVersion.getTagName());
+        systemVersionInfo.setLatest(version.equals(latestVersion.getTagName()));
+        systemVersionInfo.setLatestReleaseNote(latestVersion.getBody());
+
+        return ResponseEntity.ok(systemVersionInfo);
     }
 }

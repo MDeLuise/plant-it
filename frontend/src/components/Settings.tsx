@@ -406,7 +406,7 @@ export default function Settings(props: {
 
     const getVersion = (): void => {
         props.requestor.get("/info/version")
-            .then(res => setVersion({ ...version, current: res.data }))
+            .then(res => setVersion({current: res.data.currentVersion, latest: res.data.isLatest }))
             .catch(props.printError);
     };
 
@@ -417,36 +417,9 @@ export default function Settings(props: {
         anchor.click();
     };
 
-    const checkIfLatest = (): void => {
-        props.requestor.get("https://api.github.com/repos/MDeLuise/plant-it/releases/latest")
-            .then(res => {
-                setVersion({ ...version, latest: isVersionLessThan(version.current!, res.data.tag_name) })
-            })
-            .catch(props.printError);
-    }
-
-    const isVersionLessThan = (versionA: string, versionB: string): boolean => {
-        const partsA = versionA.split('.').map(Number);
-        const partsB = versionB.split('.').map(Number);
-        for (let i = 0; i < 3; i++) {
-            if (partsA[i] < partsB[i]) {
-                return true;
-            } else if (partsA[i] > partsB[i]) {
-                return false;
-            }
-        }
-        return false;
-    };
-
     useEffect(() => {
         getVersion();
     }, []);
-
-    useEffect(() => {
-        if (version.current && !version.current.endsWith("SNAPSHOT")) {
-            checkIfLatest();
-        }
-    }, [version.current])
 
     return <Box sx={{
         display: "flex",

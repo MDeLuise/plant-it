@@ -116,3 +116,16 @@ export const formatPh = (value: number | undefined) : string => {
     }
     return String(value);
 }
+
+export const isVersionLessThan = (versionA: string, versionB: string): boolean => {
+    const partsA = versionA.split('.').map(Number);
+    const partsB = versionB.split('.').map(Number);
+    for (let i = 0; i < 3; i++) {
+        if (partsA[i] < partsB[i]) {
+            return true;
+        } else if (partsA[i] > partsB[i]) {
+            return false;
+        }
+    }
+    return false;
+};
