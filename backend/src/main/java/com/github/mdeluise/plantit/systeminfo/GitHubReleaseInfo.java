@@ -1,8 +1,6 @@
 package com.github.mdeluise.plantit.systeminfo;
 
-import java.io.Serializable;
-
-public class GitHubReleaseInfo implements Serializable {
+public class GitHubReleaseInfo {
     private String tagName;
     private String body;
 

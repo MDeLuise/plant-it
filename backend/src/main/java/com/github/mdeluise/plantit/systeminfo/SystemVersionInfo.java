@@ -1,6 +1,8 @@
 package com.github.mdeluise.plantit.systeminfo;
 
-public class SystemVersionInfo {
+import java.io.Serializable;
+
+public class SystemVersionInfo implements Serializable {
     private String currentVersion;
     private String latestVersion;
     private String latestReleaseNote;
