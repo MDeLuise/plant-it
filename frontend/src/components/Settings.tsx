@@ -11,6 +11,7 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import "../style/Settings.scss";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { userStats } from "../interfaces";
 
 function UsernameDialog(props: {
     open: boolean,
@@ -276,40 +277,19 @@ function Stats(props: {
     printError: (err: any) => void;
 }) {
     const [expanded, setExpanded] = useState<boolean>(true);
-    const [totalEvents, setTotalEvents] = useState<number>(0);
-    const [totalPlants, setTotalPlants] = useState<number>(0);
-    const [totalBotanicalInfo, setTotalBotanicalInfo] = useState<number>(0);
-    const [totalPhotos, setTotalPhotos] = useState<number>(0);
+    const [stats, setStats] = useState<userStats>();
     const [erorr, setError] = useState<boolean>(false);
 
     useEffect(() => {
-        if (props.visibility && !erorr) {
-            props.requestor.get("diary/entry/_count")
-                .then(res => setTotalEvents(res.data))
-                .catch(err => {
-                    setError(true);
-                    props.printError(err);
-                });
-            props.requestor.get("plant/_count")
-                .then(res => setTotalPlants(res.data))
-                .catch(err => {
-                    setError(true);
-                    props.printError(err);
-                });
-            props.requestor.get("plant/_countBotanicalInfo")
-                .then(res => setTotalBotanicalInfo(res.data))
-                .catch(err => {
-                    setError(true);
-                    props.printError(err);
-                });
-            props.requestor.get("image/entity/_count")
-                .then(res => setTotalPhotos(res.data))
+        if (props.visibility) {
+            props.requestor.get("stats")
+                .then(res => setStats(res.data))
                 .catch(err => {
                     setError(true);
                     props.printError(err);
                 });
         }
-    });
+    }, [props.visibility]);
 
     return (
         <Accordion
@@ -364,19 +344,19 @@ function Stats(props: {
             >
                 <StatsSection
                     title="Events"
-                    value={totalEvents}
+                    value={stats?.diaryEntryCount || 0}
                 />
                 <StatsSection
                     title="Plants"
-                    value={totalPlants}
+                    value={stats?.plantCount || 0}
                 />
                 <StatsSection
                     title="Species"
-                    value={totalBotanicalInfo}
+                    value={stats?.botanicalInfoCount || 0}
                 />
                 <StatsSection
                     title="Photos"
-                    value={totalPhotos}
+                    value={stats?.imageCount || 0}
                 />
                 {/* <Box sx={{ width: "45%" }} /> */}
             </AccordionDetails>

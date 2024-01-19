@@ -206,19 +206,6 @@ class PlantControllerTest {
 
 
     @Test
-    @DisplayName("Should count the plants' botanical info")
-    void shouldCountPlantBotanicalInfo() throws Exception {
-        final long count = 1;
-
-        Mockito.when(plantService.getNumberOfDistinctBotanicalInfo()).thenReturn(count);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/plant/_countBotanicalInfo"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$").value(count + ""));
-    }
-
-
-    @Test
     @DisplayName("Check if the plant's name already exists")
     void shouldCheckPlantNameExistence() throws Exception {
         final String plantName = "this is the plant name";

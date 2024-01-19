@@ -65,10 +65,20 @@ public class BotanicalInfoController {
     }
 
 
-    @GetMapping("/{id}/_count")
-    @Operation(summary = "Count the botanical info.", description = "Count the botanical info.")
-    public ResponseEntity<Integer> count(@PathVariable Long id) {
-        return ResponseEntity.ok(botanicalInfoService.countPlants(id));
+    @GetMapping("/{botanicalInfoId}/_count")
+    @Operation(
+        summary = "Count the existing plant for a botanical info.",
+        description = "Count the existing plants with the botanical info which id is `botanicalInfoId`."
+    )
+    public ResponseEntity<Integer> count(@PathVariable Long botanicalInfoId) {
+        return ResponseEntity.ok(botanicalInfoService.countPlants(botanicalInfoId));
+    }
+
+
+    @GetMapping("/_count")
+    @Operation(summary = "Count the botanical info.", description = "Count all the botanical info.")
+    public ResponseEntity<Long> countAll() {
+        return ResponseEntity.ok(botanicalInfoService.count());
     }
 
 
