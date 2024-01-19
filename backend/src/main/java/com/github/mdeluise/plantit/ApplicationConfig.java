@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit;
 
+import java.net.http.HttpClient;
+
 import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -16,11 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import redis.embedded.RedisServer;
 
@@ -69,6 +73,18 @@ public class ApplicationConfig {
             final RedisServer redisServer = new RedisServer(port);
             redisServer.start();
         };
+    }
+
+
+    @Bean
+    public HttpClient httpClient() {
+        return HttpClient.newHttpClient();
+    }
+
+
+    @CacheEvict(allEntries = true, cacheNames = {"latest-version"})
+    @Scheduled(fixedDelay = 86400000) // 1 day
+    public void cacheEvict() {
     }
 
 

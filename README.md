@@ -54,20 +54,20 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
             image: msdeluise/plant-it-backend:latest
             env_file: backend.env
             depends_on:
-            - db
-            - cache
+              - db
+              - cache
             restart: unless-stopped
             volumes:
-            - "./upload-dir:/upload-dir"
+              - "./upload-dir:/upload-dir"
             ports:
-            - "8080:8080"
+              - "8080:8080"
 
         db:
             image: mysql:8.0
             restart: always
             env_file: backend.env
             volumes:
-            - "./db:/var/lib/mysql"
+              - "./db:/var/lib/mysql"
 
         cache:
             image: redis:7.2.1
@@ -77,9 +77,9 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
             image: msdeluise/plant-it-frontend:latest
             env_file: frontend.env
             links:
-            - backend
+              - backend
             ports:
-            - "3000:3000"
+              - "3000:3000"
     ```
     * `backend.env`:
     ```properties

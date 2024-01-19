@@ -1,5 +1,5 @@
 name: Ask a question
-description: Please ask and answer questions here.
+description: Ask and answer questions here.
 body:
   - type: textarea
     attributes:

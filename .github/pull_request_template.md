@@ -1,9 +1,13 @@
-<!--
-Before you create a new PR, please consider:
-1) DO NOT include translations in your PR. Only English US sentences.
-Thanks.
--->
+Hey Plant-it community!
+<!-- A brief introduction to the changes made -->
 
-This PR ...
+## What's new?
+<!-- If needed, explain the changes in more detail -->
 
-Fixes issue # (if relevant)
+## Why is it important?
+<!-- If needed, explain why these changes are important -->
+
+## How to Use?
+<!-- If applicable, provide instructions on how to use the changes -->
+
+Cheers and happy planting! 🌿🌼
