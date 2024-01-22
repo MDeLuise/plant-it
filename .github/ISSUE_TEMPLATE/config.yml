@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🐛 Bug report
+    url: https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=bug_report.yml
+    about: Report a bug in Plant-it.
+  - name: 💬 Question and Help
+    url: https://github.com/MDeLuise/plant-it/discussions/new?category=q-a
+    about: Ask and answer questions abount Plant-it.
+  - name: 🚀 Feature Request
+    url: https://github.com/gethomepage/homepage/discussions/new?category=feature-request
+    about: Request a feature or enhancement in Plant-it.
