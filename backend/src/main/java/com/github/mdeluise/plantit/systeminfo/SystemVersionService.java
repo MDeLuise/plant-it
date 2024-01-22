@@ -30,9 +30,9 @@ public class SystemVersionService {
     @Cacheable(value = "latest-version")
     public SystemVersionInfo getLatestVersion() throws IOException, InterruptedException {
         final SystemVersionInfo result = new SystemVersionInfo();
+        result.setCurrentVersion(version);
         if (isDevProfileActive()) {
             logger.debug("retrieve a dummy system version info.");
-            result.setCurrentVersion(version);
             result.setLatest(true);
         } else {
             logger.debug("retrieve the system version info from GitHub.");
