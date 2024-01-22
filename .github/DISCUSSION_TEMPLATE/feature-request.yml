@@ -1,5 +1,3 @@
-name: Feature Request
-description: Request a feature or enhancement in Plant-it
 body:
   - type: checkboxes
     attributes:

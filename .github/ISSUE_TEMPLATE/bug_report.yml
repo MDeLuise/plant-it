@@ -1,5 +1,5 @@
-name: Bug Report
-description: Report a bug in Plant-it
+name: 🐛 Bug Report
+description: Report a bug in Plant-it.
 body:
   - type: checkboxes
     attributes:
@@ -38,7 +38,12 @@ body:
     attributes:
       label: Local environment
       description: Please provide additional information related to the environment you are using.
-      placeholder: Are you using docker deployment or not? Which version (images versions / last commit)? etc...
+      placeholder: |
+        1. Are you using docker deployment or not?
+        1. system version: x.y.z
+        2. content of docker-compose.yml file (remember to hide possible sensitive info):
+        3. content of backend.env file (remember to hide possible sensitive info):
+        4. content of frontend.env file (remember to hide possible sensitive info):
 
   - type: textarea
     attributes:
