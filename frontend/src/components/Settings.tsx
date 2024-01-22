@@ -386,7 +386,7 @@ export default function Settings(props: {
 
     const getVersion = (): void => {
         props.requestor.get("/info/version")
-            .then(res => setVersion({current: res.data.currentVersion, latest: res.data.isLatest }))
+            .then(res => setVersion({current: res.data.currentVersion, latest: res.data.latest }))
             .catch(props.printError);
     };
 

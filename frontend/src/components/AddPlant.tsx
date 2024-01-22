@@ -573,7 +573,10 @@ function AddPlantInfo(props: {
             <Typography variant="h6">
                 Care info
             </Typography>
-
+            {
+                (!props.editModeEnabled && props.botanicalInfoToAdd?.plantCareInfo.allNull) &&
+                <Typography sx={{ fontStyle: 'italic' }}>not provided</Typography>
+            }
             {
                 (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.plantCareInfo?.light) &&
                 <Box className="plant-detail-entry">

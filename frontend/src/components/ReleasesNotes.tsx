@@ -21,8 +21,7 @@ export default function ReleasesNotes(props: {
                 .then(res => {
                     setSystemVersionInfo(res.data);
                     accept(res.data)
-                }
-                )
+                })
                 .catch(err => {
                     props.printError(err);
                     reject(err);
@@ -42,7 +41,6 @@ export default function ReleasesNotes(props: {
                 if (!lastVersion) {
                     setIsFirstStartupAfterUpgrade(true);
                 } else {
-                    setSystemVersionInfo(currentVersionInfo);
                     setIsFirstStartupAfterUpgrade(isVersionLessThan(lastVersion, currentVersionInfo.currentVersion));
                 }
             })
@@ -84,7 +82,7 @@ export default function ReleasesNotes(props: {
         </DialogContent>
         <DialogActions>
             <Button autoFocus onClick={handleClose}>
-                Ok
+                Got it
             </Button>
         </DialogActions>
     </Dialog>
