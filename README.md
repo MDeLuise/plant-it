@@ -40,7 +40,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 * 🔜 Dark/Light mode
 
-## Getting started
+## Quickstart 
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
 
 1. Create a folder where you want to place all Plant-it related files.
@@ -100,13 +100,13 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     TREFLE_KEY=
     ALLOWED_ORIGINS=*
     LOG_LEVEL=DEBUG
+    UPDATE_EXISTING=false
     ```
     * `frontend.env`:
     ```properties
     PORT=3000
     API_URL=http://localhost:8080/api
     WAIT_TIMEOUT=10000
-    PAGE_SIZE=25
     BROWSER=none
     ```
 1. Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
@@ -120,7 +120,7 @@ Feel free to contribute and help improve the repo.
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Feature development
-Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=fr.yml).
+Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/discussions/new?category=feature-request).
 
 ### How to contribute
 If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.
