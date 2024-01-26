@@ -1,4 +1,5 @@
 Hey Plant-it community!
+<br/>
 <!-- A brief introduction to the changes made -->
 
 ## What's new?
@@ -10,4 +11,12 @@ Hey Plant-it community!
 ## How to Use?
 <!-- If applicable, provide instructions on how to use the changes -->
 
+## Notes
+<!-- If needed, add some notes here -->
+
+## Screenshots
+<!-- If applicable, add some screenshots here -->
+
+<br/>
+<br/>
 Cheers and happy planting! 🌿🌼

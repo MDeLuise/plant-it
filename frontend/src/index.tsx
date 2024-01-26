@@ -12,6 +12,7 @@ declare global {
     _env_: {
       API_URL: string
       WAIT_TIMEOUT: number | undefined
+      CACHE_TTL_DAYS: number | undefined
     }
   }
 }
