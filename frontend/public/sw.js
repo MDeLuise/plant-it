@@ -54,6 +54,7 @@ this.addEventListener("fetch", event => {
     } else {
         const requestUrl = new URL(event.request.url);
 
+        if (event.request.method === 'GET') {
         // Cache images from any URL
         if (requestUrl.pathname.match(/\.(jpe?g|png|gif|bmp|svg)$/i)) {
             return fetch(event.request)
@@ -117,6 +118,7 @@ this.addEventListener("fetch", event => {
                     console.error("Error fetching backend response:", error);
                 });
         }
+    }
 
         // Default behavior if not matched
         return fetch(event.request);
