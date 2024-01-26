@@ -25,8 +25,8 @@ export default function UserPlant(props: {
             })
             .catch(err => {
                 console.error(err);
-                props.printError("Cannot load plant's avatar image");
-            })
+                props.printError(`Cannot load plant's avatar for ${props.entity.personalName}`);
+            });
     };
 
     useEffect(() => {

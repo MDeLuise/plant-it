@@ -19,11 +19,9 @@ export default function ReleasesNotes(props: {
         return new Promise((accept, reject) => {
             props.requestor.get("/info/version")
                 .then(res => {
-                    setSystemVersionInfo(res.data);
-                    accept(res.data)
+                    accept(res.data);
                 })
                 .catch(err => {
-                    props.printError(err);
                     reject(err);
                 });
         });
@@ -38,18 +36,18 @@ export default function ReleasesNotes(props: {
         fetchVersion()
             .then(currentVersionInfo => {
                 setSystemVersionInfo(currentVersionInfo);
+                localStorage.setItem("plant-it-version", systemVersionInfo?.currentVersion!);
                 if (!lastVersion) {
                     setIsFirstStartupAfterUpgrade(true);
                 } else {
                     setIsFirstStartupAfterUpgrade(isVersionLessThan(lastVersion, currentVersionInfo.currentVersion));
                 }
             })
-            .catch(console.error)
+            .catch(props.printError);
     }
 
     const handleClose = (): void => {
         setIsFirstStartupAfterUpgrade(false);
-        localStorage.setItem("plant-it-version", systemVersionInfo?.currentVersion!);
     };
 
     useEffect(() => {

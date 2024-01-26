@@ -1,7 +1,7 @@
 import { AxiosError, AxiosInstance } from "axios";
 import React, { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { Avatar, Box, InputAdornment, OutlinedInput, Typography } from "@mui/material";
+import { AlertColor, Avatar, Box, InputAdornment, OutlinedInput, Typography } from "@mui/material";
 import { diaryEntry, plant } from "../interfaces";
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -10,6 +10,7 @@ import SearchPage from "./SearchPage";
 import BottomBar from "./BottomBar";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Virtual, FreeMode } from "swiper";
+import Badge from '@mui/material/Badge';
 import "swiper/css";
 import "swiper/css/pagination";
 import 'swiper/css/virtual';
@@ -25,9 +26,12 @@ import PlantDetails from "./PlantDetails";
 import UserPlant from "./UserPlant";
 import NewLogEntry from "./LogEntry";
 import ReleasesNotes from "./ReleasesNotes";
+import { Snackbars } from "./Snackbar";
 
 
-function UserTopBar(props: {}) {
+function UserTopBar(props: {
+    online: boolean;
+}) {
     const username = secureLocalStorage.getItem("plant-it-username") as string;
 
     return (
@@ -41,7 +45,18 @@ function UserTopBar(props: {}) {
                 display: "flex",
                 gap: "15px"
             }}>
-                <Avatar alt={username} src="/static/images/avatar/1.jpg" />
+                <Badge
+                    color={props.online? "primary" : "error"}
+                    variant="dot"
+                    overlap="circular"
+                    invisible={false}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                >
+                    <Avatar alt={username} src="/static/images/avatar/1.jpg" />
+                </Badge>
                 <Box>
                     <Typography variant="body2">Welcome back</Typography>
                     <Typography variant="body1" style={{ fontWeight: 600 }}>{username} 👋</Typography>
@@ -175,8 +190,20 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     const [eventToEdit, setEventToEdit] = useState<diaryEntry>();
     const [plantDetails, setPlantDetails] = useState<{ plant?: plant, open: boolean; }>({ open: false });
     const [addDiaryLogOpen, setAddDiaryLogOpen] = useState<boolean>(false);
+    const [online, setOnline] = useState<boolean>(true);
     const [errorDialogShown, setErrorDialogShown] = useState<boolean>(false);
     const [errorDialogText, setErrorDialogText] = useState<string>();
+    const [snackbarState, setSnackbarState] = useState<{
+        open: boolean,
+        text: string,
+        setOpen: (arg: boolean) => void,
+        severity: AlertColor
+    }>({
+        open: false,
+        text: "This is a message (so what?)",
+        severity: "success",
+        setOpen: (_arg) => { }
+    });
 
     const getAllEntities = (): void => {
         props.requestor.get("plant/_count")
@@ -232,6 +259,11 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
 
 
     const printError = (err: any) => {
+        if (!navigator.onLine) {
+            snackbarAlert("warning", "You're offline");
+            console.error(err);
+            return;
+        }
         setErrorDialogText(getErrMessage(err));
         setErrorDialogShown(true);
     };
@@ -281,6 +313,23 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             })
             .catch(printError);
     }
+
+
+    const snackbarAlert = (severity: AlertColor, text: string): void => {
+        setSnackbarState({
+            severity: severity,
+            text: text,
+            open: true,
+            setOpen: (arg) => setSnackbarState({ ...snackbarState, open: arg })
+        });
+    };
+
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.action === 'showSnackbar') {
+            snackbarAlert("warning", "You're offline");
+            setOnline(false);
+        }
+    });
 
 
     useEffect(() => {
@@ -343,7 +392,14 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 close={() => setErrorDialogShown(false)}
             />
 
-            <ReleasesNotes requestor={props.requestor} printError={printError}/>
+            <Snackbars
+                open={snackbarState.open}
+                text={snackbarState.text}
+                severity={snackbarState.severity}
+                setOpen={snackbarState.setOpen}
+            />
+
+            <ReleasesNotes requestor={props.requestor} printError={printError} />
 
             {addLogEntryComponent}
 
@@ -354,14 +410,14 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 open={editEventVisible}
                 setOpen={(arg: boolean) => setEditEventVisible(arg)}
                 updateLog={(arg: diaryEntry) => {
-                    let newLogEntry = [arg, ...logEntries.filter((a) => a.id !== arg.id)];
+                    let newLogEntry = [arg, ...logEntries.filter(a => a.id !== arg.id)];
                     newLogEntry.sort((a, b) => {
                         return new Date(b.date).getTime() - new Date(a.date).getTime();
                     });
                     setLogEntries(newLogEntry);
                 }}
                 removeFromLog={(diaryEntryId: number) => {
-                    let newLogEntries = [...logEntries].filter((en) => en.id !== diaryEntryId);
+                    let newLogEntries = [...logEntries].filter(en => en.id !== diaryEntryId);
                     setLogEntries(newLogEntries);
                 }}
                 toEdit={eventToEdit}
@@ -388,7 +444,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
 
                 <Box sx={{ display: activeTab === 0 ? "visible" : "none" }}>
-                    <UserTopBar />
+                    <UserTopBar online={online} />
 
                     <UserPlantsList
                         requestor={props.requestor}

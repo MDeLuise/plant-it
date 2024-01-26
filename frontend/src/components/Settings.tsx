@@ -283,7 +283,9 @@ function Stats(props: {
     useEffect(() => {
         if (props.visibility) {
             props.requestor.get("stats")
-                .then(res => setStats(res.data))
+                .then(res => {
+                    setStats(res.data)
+                })
                 .catch(err => {
                     setError(true);
                     props.printError(err);
@@ -386,7 +388,9 @@ export default function Settings(props: {
 
     const getVersion = (): void => {
         props.requestor.get("/info/version")
-            .then(res => setVersion({current: res.data.currentVersion, latest: res.data.latest }))
+            .then(res => {
+                setVersion({ current: res.data.currentVersion, latest: res.data.latest })
+            })
             .catch(props.printError);
     };
 

@@ -20,7 +20,7 @@ function BotanicalEntity(props: {
 
     const setImageSrc = (): void => {
         getPlantImg(props.requestor, props.entity.imageUrl)
-            .then((res) => {
+            .then(res => {
                 setImageLoaded(true);
                 setImgSrc(res);
             })
@@ -33,7 +33,7 @@ function BotanicalEntity(props: {
                     })
                     .catch(err => {
                         console.error(err);
-                        props.printError(`Cannot load image for botanical info "${props.entity.scientificName}"`);
+                        props.printError(`Cannot load image for species "${props.entity.scientificName}"`);
                     });
             });
     };
