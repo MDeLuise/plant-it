@@ -388,7 +388,7 @@ class FileSystemImageStorageServiceTest {
         target.setId(1L);
         final List<String> wanted = List.of("1", "2", "3");
 
-        Mockito.when(plantImageRepository.findAllIdsPlantByImageTarget(target)).thenReturn(wanted);
+        Mockito.when(plantImageRepository.findAllIdsPlantByImageTargetOrderBySavedAtDesc(target)).thenReturn(wanted);
 
         Assertions.assertThat(fileSystemImageStorageService.getAllIds(target)).as("all ids are correct")
                   .hasSameElementsAs(wanted);

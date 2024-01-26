@@ -530,7 +530,7 @@ function PlantInfo(props: {
             setAutoCompleteOptions([props.botanicalInfo]);
         }
         props.requestor.get(`/image/entity/all/${props.plant?.id}`)
-            .then(res => props.setImageIds(res.data.reverse()))
+            .then(res => props.setImageIds(res.data))
             .catch(props.printError);
         setUseDate(props.plant.startDate !== undefined && props.plant.startDate !== null);
         setSelectedAvatarMode(props.plant.avatarMode || "NONE");

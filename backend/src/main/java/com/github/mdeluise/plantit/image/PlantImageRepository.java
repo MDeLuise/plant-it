@@ -11,8 +11,8 @@ public interface PlantImageRepository extends JpaRepository<PlantImage, String> 
     // Bugged due to the inheritance
     //List<PlantImage> findAllByPlantImageTarget(Plant target);
 
-    @Query("SELECT i.id from PlantImage i where i.target = ?1")
-    List<String> findAllIdsPlantByImageTarget(Plant target);
+    @Query("SELECT i.id FROM PlantImage i WHERE i.target = ?1 ORDER BY i.savedAt DESC")
+    List<String> findAllIdsPlantByImageTargetOrderBySavedAtDesc(Plant target);
 
     Integer countByTargetOwner(User user);
 }

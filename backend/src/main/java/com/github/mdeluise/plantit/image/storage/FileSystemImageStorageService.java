@@ -282,7 +282,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
     @Override
     public Collection<String> getAllIds(ImageTarget linkedEntity) {
-        return plantImageRepository.findAllIdsPlantByImageTarget((Plant) linkedEntity);
+        return plantImageRepository.findAllIdsPlantByImageTargetOrderBySavedAtDesc((Plant) linkedEntity);
     }
 
 
