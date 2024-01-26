@@ -1,9 +1,14 @@
 const cacheData = "plant-it-app-v1";
 let apiURL;
+let maxCacheAgeDays = 7;
+
 
 this.addEventListener('message', event => {
     if (event.data && event.data.apiURL) {
         apiURL = event.data.apiURL.replace(/\/api$/, '');
+    }
+    if (event.data && event.data.maxCacheAgeDays) {
+        maxCacheAgeDays = Number(event.data.maxCacheAgeDays);
     }
 });
 
@@ -55,72 +60,98 @@ this.addEventListener("fetch", event => {
         const requestUrl = new URL(event.request.url);
 
         if (event.request.method === 'GET') {
-        // Cache images from any URL
-        if (requestUrl.pathname.match(/\.(jpe?g|png|gif|bmp|svg)$/i)) {
-            return fetch(event.request)
-                .then(response => {
-                    const responseClone = response.clone();
-                    caches.open(cacheData)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(error => {
-                    console.error("Error fetching and caching image:", error);
-                });
-        }
 
-        // Cache Google Fonts
-        if (requestUrl.origin.startsWith('https://fonts.googleapis.com')) {
-            return fetch(event.request)
-                .then(response => {
-                    const responseClone = response.clone();
-                    caches.open(cacheData)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(error => {
-                    console.error("Error fetching and caching Google Font:", error);
-                });
-        }
+            // Cache images from any URL
+            if (requestUrl.pathname.match(/\.(jpe?g|png|gif|bmp|svg)$/i)) {
+                return fetch(event.request)
+                    .then(response => {
+                        const responseClone = response.clone();
+                        caches.open(cacheData)
+                            .then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching and caching image:", error);
+                    });
+            }
 
-        // Cache responses from URLs starting with https://bs.plantnet.org
-        if (requestUrl.origin.startsWith('https://bs.plantnet.org')) {
-            return fetch(event.request)
-                .then(response => {
-                    const responseClone = response.clone();
-                    caches.open(cacheData)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(error => {
-                    console.error("Error fetching and caching image from https://bs.plantnet.org:", error);
-                });
-        }
+            // Cache Google Fonts
+            if (requestUrl.origin.startsWith('https://fonts.googleapis.com')) {
+                return fetch(event.request)
+                    .then(response => {
+                        const responseClone = response.clone();
+                        caches.open(cacheData)
+                            .then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching and caching Google Font:", error);
+                    });
+            }
 
-        // Cache responses from backend URLs
-        if (requestUrl.origin.startsWith(apiURL)) {
-            return fetch(event.request)
-                .then(response => {
-                    const responseClone = response.clone();
-                    caches.open(cacheData)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(error => {
-                    console.error("Error fetching backend response:", error);
-                });
+            // Cache responses from URLs starting with https://bs.plantnet.org
+            if (requestUrl.origin.startsWith('https://bs.plantnet.org')) {
+                return fetch(event.request)
+                    .then(response => {
+                        const responseClone = response.clone();
+                        caches.open(cacheData)
+                            .then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching and caching image from https://bs.plantnet.org:", error);
+                    });
+            }
+
+            // Cache responses from backend URLs
+            if (requestUrl.origin.startsWith(apiURL)) {
+                return fetch(event.request)
+                    .then(response => {
+                        const responseClone = response.clone();
+                        caches.open(cacheData)
+                            .then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching backend response:", error);
+                    });
+            }
         }
-    }
 
         // Default behavior if not matched
         return fetch(event.request);
     }
 });
+
+
+const cleanupCache = async () => {
+    const maxAgeMillis = maxCacheAgeDays * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+
+    return caches.open(cacheData).then(cache => {
+        return cache.keys().then(keys => {
+            return Promise.all(keys.map(key => {
+                return cache.match(key).then(response => {
+                    if (response) {
+                        const lastModified = new Date(response.headers.get('last-modified')).getTime();
+                        const age = now - lastModified;
+
+                        if (age > maxAgeMillis) {
+                            return cache.delete(key);
+                        }
+                    }
+                });
+            }));
+        });
+    });
+}
+
+setInterval(cleanupCache, 24 * 60 * 60 * 1000); // Run every 24 hours

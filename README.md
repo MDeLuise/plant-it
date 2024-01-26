@@ -107,6 +107,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     PORT=3000
     API_URL=http://localhost:8080/api
     WAIT_TIMEOUT=10000
+    CACHE_TTL_DAYS=7
     BROWSER=none
     ```
 1. Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
