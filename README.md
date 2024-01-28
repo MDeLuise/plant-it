@@ -60,6 +60,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
         restart: unless-stopped
         volumes:
           - "./upload-dir:/upload-dir"
+          - "certs:/certificates"
         ports:
           - "8080:8080"
 
@@ -81,6 +82,15 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
           - backend
         ports:
           - "3000:3000"
+        volumes:
+          - "certs:/certificates"
+    volumes:
+      certs:
+        driver: local
+        driver_opts:
+          type: none
+          o: bind
+          device: ./certificates
     ```
     * `backend.env`:
     ```properties
@@ -117,6 +127,12 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     CACHE_TTL=86400
     CACHE_HOST=cache
     CACHE_PORT=6379
+
+    #
+    # SSL
+    #
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/
     ```
     * `frontend.env`:
     ```properties
@@ -125,6 +141,8 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     WAIT_TIMEOUT=10000
     CACHE_TTL_DAYS=7
     BROWSER=none
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/
     ```
 1. Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
 

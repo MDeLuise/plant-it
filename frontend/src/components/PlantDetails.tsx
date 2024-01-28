@@ -370,6 +370,11 @@ function PlantHeader(props: {
             .catch(err => {
                 console.error(err);
                 props.printError("Cannot load plant's avatar image");
+                getPlantImg(props.requestor, undefined)
+                    .then(res => {
+                        setImageSrc(res);
+                        setImageDownloaded(true);
+                    })
             })
     }, [props.entity]);
 

@@ -55,7 +55,7 @@ export default function NewLogEntry(props: {
             case "water_changing": return "rgb(120, 154, 201)";
             case "propagating": return "rgb(249, 136, 136)";
             case "pruning": return "rgb(165, 136, 249)";
-            case "repotting": return "rgb(7, 76, 211)";
+            case "repotting": return "rgb(195, 95, 21)";
             default: return "rgb(226, 233, 243)";
         }
     };
