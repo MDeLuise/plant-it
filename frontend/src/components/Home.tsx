@@ -46,7 +46,7 @@ function UserTopBar(props: {
                 gap: "15px"
             }}>
                 <Badge
-                    color={props.online? "primary" : "error"}
+                    color={props.online ? "primary" : "error"}
                     variant="dot"
                     overlap="circular"
                     invisible={false}
@@ -258,14 +258,22 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     };
 
 
-    const printError = (err: any) => {
+    const printError = (err: any, critical?: boolean) => {
+        // if (getErrMessage(err) === "Invalid API Key") {
+        //     snackbarAlert("error", getErrMessage(err));
+        //     navigate("/auth");
+        // }
         if (!navigator.onLine) {
             snackbarAlert("warning", "You're offline");
             console.error(err);
             return;
         }
-        setErrorDialogText(getErrMessage(err));
-        setErrorDialogShown(true);
+        if (critical) {
+            setErrorDialogText(getErrMessage(err));
+            setErrorDialogShown(true);
+        } else {
+            snackbarAlert("error", getErrMessage(err));
+        }
     };
 
 
@@ -422,6 +430,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 }}
                 toEdit={eventToEdit}
                 printError={printError}
+                online={online}
             />
 
             <PlantDetails
@@ -439,6 +448,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                     deletePlantFetchedCopy(deleted);
                     deleteEventFetchedCopy(deleted);
                 }}
+                online={online}
             />
 
             <Box sx={{ pb: 7, width: "90%", margin: "40px auto" }}>
@@ -491,6 +501,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
                 setActiveTab={setActiveTab}
                 requestor={props.requestor}
                 openAddLogEntry={() => setAddDiaryLogOpen(true)}
+                online={online}
             />
         </>
     );

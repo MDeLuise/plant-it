@@ -1,5 +1,5 @@
-import { Autocomplete, Box, Button, Drawer, Link, MenuItem, Modal, Select, Skeleton, Switch, TextField, Typography } from "@mui/material";
-import { botanicalInfo, plant, plantCareInfo } from "../interfaces";
+import { Autocomplete, Box, Button, Drawer, IconButton, MenuItem, Modal, Select, Skeleton, Switch, TextField, Tooltip, Typography } from "@mui/material";
+import { botanicalInfo, plant } from "../interfaces";
 import React, { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -27,6 +27,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDeleteDialog from "./ConfirmDialog";
 import { EditableTextField } from "./EditableTextField";
+import { ReadMoreReadLess } from "./ReadMoreReadLess";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { HelpTooltip } from "./HelpTooltip";
 
 
 function PlantImageFullSize(props: {
@@ -441,40 +444,6 @@ function PlantHeader(props: {
 }
 
 
-function ReadMoreReadLess(props: {
-    text: string,
-    size: number;
-}) {
-    const [expanded, setExpanded] = useState<boolean>(false);
-
-    return (
-        <Box sx={{ width: "100%", }}>
-            {
-                <Typography
-                    sx={{
-                        border: "1px solid #b4b4b4",
-                        borderRadius: "10px",
-                        padding: "16.5px 14px",
-                        whiteSpace: "pre-line",
-                    }}
-                >
-                    {
-                        props.text.length > props.size && !expanded &&
-                        props.text.substring(0, props.size) + "…" ||
-                        props.text + " "
-                    }
-                    {
-                        props.text.length > props.size && " " &&
-                        <Link onClick={() => { setExpanded(!expanded); }}>
-                            {expanded ? "Read less" : "Read more"}
-                        </Link>
-                    }
-                </Typography>
-            }
-        </Box>);
-}
-
-
 function PlantInfo(props: {
     requestor: AxiosInstance,
     plant?: plant,
@@ -499,7 +468,8 @@ function PlantInfo(props: {
         imgIndex: number,
         open: boolean;
     }) => void,
-    setNewBotanicalInfoToSave: (arg?: botanicalInfo) => void;
+    setNewBotanicalInfoToSave: (arg?: botanicalInfo) => void,
+    setBotanicalInfoSynonyms: (arg: string[]) => void;
 }) {
     const [diaryEntryStats, setDiaryEntryStats] = useState<any[]>([]);
     const [plantStats, setPlantStats] = useState<{
@@ -714,22 +684,33 @@ function PlantInfo(props: {
 
 
         {
-            (!props.editModeEnabled && props.botanicalInfo?.synonyms !== undefined && props.botanicalInfo!.synonyms.length > 0) &&
-            <Box
-                className="plant-detail-section">
+            !props.editModeEnabled && props.botanicalInfo?.synonyms &&
+            <Box className="plant-detail-section">
                 <Typography variant="h6">
                     Species info
                 </Typography>
-                <Box className="plant-detail-entry">
-                    <Typography>
-                        Synonyms
-                    </Typography>
-                    <EditableTextField
-                        editable={props.editModeEnabled}
-                        text={props.botanicalInfo?.synonyms?.join("; ") || ""}
-                        rows={props.botanicalInfo?.synonyms.length}
-                        style={{ "max-width": "45%" }}
-                    />
+                <Box className="plant-detail-entry" sx={{ flexDirection: "column" }}>
+                    <Box sx={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center"}}>
+                        <Typography>
+                            Synonyms
+                        </Typography>
+                        <HelpTooltip text="Semi-colon separated list of values" />
+                    </Box>
+                    {
+                        props.editModeEnabled &&
+                        <TextField
+                            fullWidth
+                            multiline
+                            defaultValue={props.botanicalInfo?.synonyms?.join("; ") || ""}
+                            rows={4}
+                            onChange={ev => props.setBotanicalInfoSynonyms(ev.target.value.split(";").map(syn => syn.trim()))}
+                        />
+                        ||
+                        <ReadMoreReadLess
+                            text={props.botanicalInfo?.synonyms?.join("; ") || ""}
+                            size={50}
+                        />
+                    }
                 </Box>
             </Box>
         }
@@ -1061,7 +1042,8 @@ function BottomBar(props: {
     onDelete: (arg: plant) => void,
     openConfirmDialog: (text: string, callback: () => void) => void,
     close: () => void,
-    changedBotanicalInfo?: botanicalInfo;
+    changedBotanicalInfo?: botanicalInfo,
+    online: boolean;
 }) {
 
     const updatePlant = (): void => {
@@ -1160,6 +1142,7 @@ function BottomBar(props: {
                             "Are you sure you want to delete the plant? This action can not be undone.",
                             deletePlant)
                         }
+                        disabled={!props.online}
                     >
                         <DeleteOutlineOutlinedIcon fontSize="medium" />
                     </Button>
@@ -1203,6 +1186,7 @@ function BottomBar(props: {
                             "&:hover": { backgroundColor: "accent.secondary" },
                         }}
                         onClick={props.openAddLog}
+                        disabled={!props.online}
                     >
                         <EventOutlinedIcon fontSize="medium" />
                     </Button>
@@ -1217,6 +1201,7 @@ function BottomBar(props: {
                         onClick={() => {
                             document.getElementById("upload-image")?.click();
                         }}
+                        disabled={!props.online}
                     >
                         <AddPhotoAlternateIcon fontSize="medium" />
                     </Button>
@@ -1233,7 +1218,8 @@ export default function PlantDetails(props: {
     printError: (err: any) => void,
     openAddLogEntry: () => void,
     onPlantUpdate: (arg: plant) => void,
-    onPlantDelete: (arg: plant) => void;
+    onPlantDelete: (arg: plant) => void,
+    online: boolean;
 }) {
     const [botanicalInfo, setBotanicalInfo] = useState<botanicalInfo>();
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
@@ -1304,6 +1290,13 @@ export default function PlantDetails(props: {
             return;
         }
         updatedEntity.avatarMode = arg;
+    };
+
+    const setSynonyms = (arg: string[]): void => {
+        if (botanicalInfo === undefined) {
+            return;
+        }
+        botanicalInfo.synonyms = arg;
     };
 
     const setAvatarImage = (id: string): void => {
@@ -1421,6 +1414,7 @@ export default function PlantDetails(props: {
                 uploadAndSetSpeciesThumbnail={setNewSpeciesThumbnailToUploadAndUse}
                 botanicalInfo={botanicalInfo}
                 setNewBotanicalInfoToSave={setNewBotanicalInfoToSave}
+                setBotanicalInfoSynonyms={setSynonyms}
             />
             <BottomBar
                 openAddLog={props.openAddLogEntry}
@@ -1453,6 +1447,7 @@ export default function PlantDetails(props: {
                 newSpeciesThumbnailToUploadAndUse={newSpeciesThumbnailToUploadAndUse}
                 botanicalInfo={botanicalInfo}
                 changedBotanicalInfo={newBotanicalInfoToSave}
+                online={props.online}
             />
         </Box>
     </Drawer>;

@@ -14,6 +14,8 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import ConfirmDeleteDialog from "./ConfirmDialog";
 import { EditableTextField } from "./EditableTextField";
+import { ReadMoreReadLess } from "./ReadMoreReadLess";
+import { HelpTooltip } from "./HelpTooltip";
 
 function AddPlantHeader(props: {
     requestor: AxiosInstance,
@@ -547,23 +549,34 @@ function AddPlantInfo(props: {
         </Box>
 
         {
-            (props.editModeEnabled || !props.botanicalInfoToAdd || (updatedBotanicalInfo?.synonyms && updatedBotanicalInfo!.synonyms.length > 0)) &&
+            (props.editModeEnabled || !props.botanicalInfoToAdd || updatedBotanicalInfo?.synonyms) &&
             <Box
                 className="plant-detail-section">
                 <Typography variant="h6">
                     Species info
                 </Typography>
-                <Box className="plant-detail-entry">
-                    <Typography>
-                        Synonyms
-                    </Typography>
-                    <EditableTextField
-                        editable={props.editModeEnabled || !props.botanicalInfoToAdd}
-                        text={updatedBotanicalInfo?.synonyms?.join("; ") || ""}
-                        rows={updatedBotanicalInfo?.synonyms?.length}
-                        onChange={(synonyms) => updatedBotanicalInfo!.synonyms = synonyms.split(";").map(syn => syn.trim())}
-                        style={{ "max-width": "50%" }}
-                    />
+                <Box className="plant-detail-entry" sx={{ flexDirection: "column" }}>
+                    <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography>
+                            Synonyms
+                        </Typography>
+                        <HelpTooltip text="Semi-colon separated list of values" />
+                    </Box>
+                    {
+                        (props.editModeEnabled || !props.botanicalInfoToAdd) &&
+                        <TextField
+                            fullWidth
+                            multiline
+                            defaultValue={updatedBotanicalInfo?.synonyms?.join("; ") || ""}
+                            rows={4}
+                            onChange={ev => updatedBotanicalInfo!.synonyms = ev.target.value.split(";").map(syn => syn.trim())}
+                        />
+                        ||
+                        <ReadMoreReadLess
+                            text={updatedBotanicalInfo?.synonyms?.join("; ") || ""}
+                            size={50}
+                        />
+                    }
                 </Box>
             </Box>
         }

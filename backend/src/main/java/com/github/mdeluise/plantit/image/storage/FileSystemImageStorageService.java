@@ -98,6 +98,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
                 }
                 final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
                 final Path pathToFile = Path.of(fileName);
+                createDestinationDirectoryIfNotExist(Path.of(rootLocation));
                 Files.copy(fileInputStream, pathToFile);
                 entityImage.setPath(String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension));
                 entityImage.setDescription(description);
@@ -110,6 +111,15 @@ public class FileSystemImageStorageService implements ImageStorageService {
             logger.error("Error while reading file", e);
             throw new StorageException("Could not read provided file.", e);
         }
+    }
+
+
+    private void createDestinationDirectoryIfNotExist(Path destinationPath) throws IOException {
+        if (Files.exists(destinationPath)) {
+            return;
+        }
+        logger.debug("Directory {} does not exist, creating it...", destinationPath);
+        Files.createDirectories(destinationPath);
     }
 
 

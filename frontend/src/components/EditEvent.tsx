@@ -70,7 +70,8 @@ export default function EditEvent(props: {
     open: boolean,
     setOpen: (arg: boolean) => void,
     removeFromLog: (arg: number) => void,
-    printError: (err: any) => void;
+    printError: (err: any) => void,
+    online: boolean;
 }) {
     const [date, setDate] = useState<Dayjs>(dayjs());
     const [selectedPlantName, setSelectedPlantName] = useState<string>();
@@ -248,7 +249,7 @@ export default function EditEvent(props: {
                             padding: "15px",
                             display: edit ? "none" : "flex",
                         }}
-                            disabled={loading}
+                            disabled={loading || !props.online}
                             onClick={() => {
                                 setConfirmDialogTitle("Confirm deletion");
                                 setConfirmDialogText("Are you sure to remove the selected event? This operation cannot be reverted.");
@@ -270,7 +271,7 @@ export default function EditEvent(props: {
                             padding: "15px",
                             display: edit ? "none" : "flex",
                         }}
-                            disabled={loading}
+                            disabled={loading || !props.online}
                             onClick={() => setEdit(true)}
                             startIcon={<EditOutlinedIcon />}
                         >
@@ -284,7 +285,7 @@ export default function EditEvent(props: {
                             padding: "15px",
                             display: edit ? "flex" : "none",
                         }}
-                            disabled={loading}
+                            disabled={loading || !props.online}
                             onClick={() => {
                                 setEdit(false);
                                 props.setOpen(false);
@@ -304,7 +305,7 @@ export default function EditEvent(props: {
                             padding: "15px",
                             display: edit ? "flex" : "none",
                         }}
-                            disabled={loading}
+                            disabled={loading || !props.online}
                             onClick={updateEvent}
                             startIcon={<SaveOutlinedIcon />}
                         >
