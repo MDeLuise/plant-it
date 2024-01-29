@@ -40,96 +40,50 @@ this.addEventListener("install", event => {
 
 
 this.addEventListener("fetch", event => {
-    if (!navigator.onLine) {
+    const requestUrl = new URL(event.request.url);
 
-        self.clients.matchAll().then(clients => {
-            clients.forEach(client => {
-                client.postMessage({ action: 'showSnackbar' });
+    if (event.request.method === 'GET') {
+        // If the network is available, fetch from the network and cache the response
+        if (navigator.onLine) {
+            event.respondWith(
+                fetch(event.request)
+                    .then(response => {
+                        const responseClone = response.clone();
+                        caches.open(cacheData)
+                            .then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching and caching:", error);
+                        // If fetching fails, try serving from the cache
+                        return caches.match(event.request);
+                    })
+            );
+        } else {
+            // If the network is unavailable, serve from the cache
+            self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({ action: 'showSnackbar' });
+                });
             });
-        });
 
-        event.respondWith(
-            caches.match(event.request)
-                .then(res => {
-                    if (res) {
-                        return res;
-                    }
-                })
-        );
-    } else {
-        const requestUrl = new URL(event.request.url);
-
-        if (event.request.method === 'GET') {
-
-            // Cache images from any URL
-            if (requestUrl.pathname.match(/\.(jpe?g|png|gif|bmp|svg)$/i)) {
-                return fetch(event.request)
-                    .then(response => {
-                        const responseClone = response.clone();
-                        caches.open(cacheData)
-                            .then(cache => {
-                                cache.put(event.request, responseClone);
-                            });
-                        return response;
+            event.respondWith(
+                caches.match(event.request)
+                    .then(res => {
+                        if (res) {
+                            return res;
+                        }
                     })
-                    .catch(error => {
-                        console.error("Error fetching and caching image:", error);
-                    });
-            }
-
-            // Cache Google Fonts
-            if (requestUrl.origin.startsWith('https://fonts.googleapis.com')) {
-                return fetch(event.request)
-                    .then(response => {
-                        const responseClone = response.clone();
-                        caches.open(cacheData)
-                            .then(cache => {
-                                cache.put(event.request, responseClone);
-                            });
-                        return response;
-                    })
-                    .catch(error => {
-                        console.error("Error fetching and caching Google Font:", error);
-                    });
-            }
-
-            // Cache responses from URLs starting with https://bs.plantnet.org
-            if (requestUrl.origin.startsWith('https://bs.plantnet.org')) {
-                return fetch(event.request)
-                    .then(response => {
-                        const responseClone = response.clone();
-                        caches.open(cacheData)
-                            .then(cache => {
-                                cache.put(event.request, responseClone);
-                            });
-                        return response;
-                    })
-                    .catch(error => {
-                        console.error("Error fetching and caching image from https://bs.plantnet.org:", error);
-                    });
-            }
-
-            // Cache responses from backend URLs
-            if (requestUrl.origin.startsWith(apiURL)) {
-                return fetch(event.request)
-                    .then(response => {
-                        const responseClone = response.clone();
-                        caches.open(cacheData)
-                            .then(cache => {
-                                cache.put(event.request, responseClone);
-                            });
-                        return response;
-                    })
-                    .catch(error => {
-                        console.error("Error fetching backend response:", error);
-                    });
-            }
+            );
         }
-
-        // Default behavior if not matched
-        return fetch(event.request);
+    } else {
+        // For non-GET requests, proceed with the default behavior
+        event.respondWith(fetch(event.request));
     }
 });
+
 
 
 const cleanupCache = async () => {

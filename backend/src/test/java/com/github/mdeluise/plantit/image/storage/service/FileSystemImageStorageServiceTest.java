@@ -66,8 +66,9 @@ class FileSystemImageStorageServiceTest {
     @Test
     @DisplayName("Should save new plant image")
     void shouldSavePlantImage() {
+        final byte[] validImageBytes = {0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
         final String name = "test-photo.jpg";
-        final MultipartFile toSave = new MockMultipartFile(name, name, "image/jpg", new byte[]{0, 1, 1, 0});
+        final MultipartFile toSave = new MockMultipartFile(name, name, "image/jpg", validImageBytes);
         final long imageTargetId = 1;
         final Plant imageTarget = new Plant();
         imageTarget.setId(imageTargetId);

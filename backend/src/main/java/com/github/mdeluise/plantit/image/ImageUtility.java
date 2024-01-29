@@ -20,17 +20,19 @@ public class ImageUtility {
 
 
     public static byte[] compressImage(File data, float quality) throws IOException {
-        File compressedImageFile =
-            new File(System.getProperty("java.io.tmpdir") + "/" + data.getName() + "_compressed.jpg");
-        OutputStream os = new FileOutputStream(compressedImageFile);
+        final String fileExtension = getFileExtension(data);
+        final String filePath =
+            String.format("%s/%s_compressed.%s", System.getProperty("java.io.tmpdir"), data.getName(), fileExtension);
+        final File compressedImageFile = new File(filePath);
+        final OutputStream os = new FileOutputStream(compressedImageFile);
 
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-        ImageWriter writer = writers.next();
+        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(fileExtension);
+        final ImageWriter writer = writers.next();
 
-        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+        final ImageOutputStream ios = ImageIO.createImageOutputStream(os);
         writer.setOutput(ios);
 
-        ImageWriteParam param = writer.getDefaultWriteParam();
+        final ImageWriteParam param = writer.getDefaultWriteParam();
 
         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         param.setCompressionQuality(quality);
@@ -47,5 +49,15 @@ public class ImageUtility {
         fl.read(arr);
         fl.close();
         return arr;
+    }
+
+    public static String getFileExtension(File file) {
+        final String fileName = file.getName();
+        final int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex != -1 && lastDotIndex < fileName.length() - 1) {
+            return fileName.substring(lastDotIndex + 1);
+        } else {
+            throw new UnsupportedOperationException(String.format("File %s does not have an extension", file.getName()));
+        }
     }
 }

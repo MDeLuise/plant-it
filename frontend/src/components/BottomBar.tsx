@@ -60,6 +60,7 @@ export default function BottomBar(props: {
     setActiveTab: (arg: number) => void,
     requestor: AxiosInstance,
     openAddLogEntry: () => void,
+    online: boolean;
 }) {
     return (
         <Box
@@ -102,6 +103,7 @@ export default function BottomBar(props: {
                     top: "-10px"
                 }}
                 onClick={props.openAddLogEntry}
+                disabled={!props.online}
             >
                 <AddIcon />
             </Fab>
