@@ -71,6 +71,9 @@ public class PlantService {
     // https://stackoverflow.com/questions/13370221/persistentobjectexception-detached-entity-passed-to-persist-thrown-by-jpa-and-h
     public Plant save(Plant toSave) {
         final User authenticatedUser = authenticatedUserService.getAuthenticatedUser();
+        if (toSave.getOwner() != null && toSave.getOwner() != authenticatedUser) {
+            throw new UnauthorizedException();
+        }
         toSave.setOwner(authenticatedUser);
         if (toSave.getDiary() == null) {
             final Diary diary = new Diary();
@@ -92,10 +95,6 @@ public class PlantService {
     @Transactional
     public void delete(Long plantId) {
         final Plant toDelete = get(plantId);
-        if (!toDelete.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            logger.warn("User not authorized to operate on plant " + plantId);
-            throw new UnauthorizedException();
-        }
 
         // FIXME
         // this is not needed for the DB PlantImage entities (which are removed in cascade),
@@ -110,10 +109,6 @@ public class PlantService {
     @Transactional
     public Plant update(Long id, Plant updated) {
         final Plant toUpdate = get(id);
-        if (!toUpdate.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            logger.warn("User not authorized to operate on plant " + id);
-            throw new UnauthorizedException();
-        }
         final BotanicalInfo newBotanicalInfo = botanicalInfoService.get(updated.getBotanicalInfo().getId());
         toUpdate.setBotanicalInfo(newBotanicalInfo);
         toUpdate.setInfo(updated.getInfo());

@@ -117,7 +117,10 @@ public class DiaryEntryService {
 
 
     public DiaryEntry update(Long id, DiaryEntry updated) {
-        get(id);
+        final DiaryEntry toUpdate = get(id);
+        if (updated.getDiary() == null) {
+            updated.setDiary(toUpdate.getDiary());
+        }
         updated.getDiary().setOwner(authenticatedUserService.getAuthenticatedUser());
         updated.setId(id);
         return diaryEntryRepository.save(updated);
@@ -130,10 +133,7 @@ public class DiaryEntryService {
 
 
     public Long count(Long plantId) {
-        final Diary targetDiary = diaryService.get(plantId);
-        if (!targetDiary.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            throw new UnauthorizedException();
-        }
+        diaryService.get(plantId);
         return diaryEntryRepository.countByDiaryOwnerAndDiaryTargetId(
             authenticatedUserService.getAuthenticatedUser(), plantId);
     }

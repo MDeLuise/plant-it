@@ -86,6 +86,7 @@ public class BotanicalInfoService {
         if (toSave.getImage() != null && toSave.getImage().getId() == null) {
             toSave.getImage().setId(UUID.randomUUID().toString());
         }
+        removeDuplicatedCaseInsensitiveSynonyms(toSave);
         return botanicalInfoRepository.save(toSave);
     }
 
@@ -130,6 +131,7 @@ public class BotanicalInfoService {
         }
         logger.info("Trying to update a NON custom botanical info. Creating custom copy...");
         final BotanicalInfo userCreatedCopy = createUserCreatedCopy(toUpdate);
+        removeDuplicatedCaseInsensitiveSynonyms(updated);
         return updateUserCreatedBotanicalInfo(updated, userCreatedCopy);
     }
 
@@ -189,5 +191,25 @@ public class BotanicalInfoService {
     public boolean existsExternalId(BotanicalInfoCreator creator, String externalId) {
         return botanicalInfoRepository.findAllByCreatorAndExternalId(creator, externalId).stream().anyMatch(
             botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()));
+    }
+
+
+    private void removeDuplicatedCaseInsensitiveSynonyms(BotanicalInfo botanicalInfo) {
+        final Set<String> newSynonyms = new HashSet<>();
+        botanicalInfo.getSynonyms().forEach(synonym -> {
+            if (!containsCaseInsensitive(newSynonyms, synonym)) {
+                newSynonyms.add(synonym);
+            }
+        });
+        botanicalInfo.setSynonyms(newSynonyms);
+    }
+
+    private boolean containsCaseInsensitive(Set<String> set, String value) {
+        for (String str : set) {
+            if (str.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
