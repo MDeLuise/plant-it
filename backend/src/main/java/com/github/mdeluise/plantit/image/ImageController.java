@@ -1,8 +1,11 @@
 package com.github.mdeluise.plantit.image;
 
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Date;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
@@ -60,7 +63,7 @@ public class ImageController {
             botanicalInfoService.save(linkedEntity);
             imageStorageService.remove(toDelete.getId());
         }
-        final EntityImage saved = imageStorageService.save(file, linkedEntity, null);
+        final EntityImage saved = imageStorageService.save(file, linkedEntity, null, null);
         linkedEntity.setImage((BotanicalInfoImage) saved);
         botanicalInfoService.save(linkedEntity);
         return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
@@ -132,9 +135,14 @@ public class ImageController {
     @PostMapping("/entity/{id}")
     public ResponseEntity<String> saveEntityImage(@RequestParam("image") MultipartFile file,
                                                   @PathVariable("id") Long entityId,
-                                                  @RequestBody(required = false) String description) {
+                                                  @RequestParam(value = "creationDate", required = false) String creationDateStr,
+                                                  @RequestParam(required = false) String description)
+        throws ParseException {
         final Plant linkedEntity = plantService.get(entityId);
-        final EntityImage saved = imageStorageService.save(file, linkedEntity, description);
+        final Date creationDate = creationDateStr != null ?
+                                      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(creationDateStr) :
+                                      null;
+        final EntityImage saved = imageStorageService.save(file, linkedEntity, creationDate, description);
         return ResponseEntity.ok(saved.getId());
     }
 

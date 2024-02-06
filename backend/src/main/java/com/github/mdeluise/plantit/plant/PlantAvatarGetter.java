@@ -25,7 +25,7 @@ public class PlantAvatarGetter {
         final List<PlantImage> plantImages = imageStorageService.getAllIds(plant).stream()
                                                                 .map(imageStorageService::get)
                                                                 .map(x -> (PlantImage) x)
-                                                                .sorted(Comparator.comparing(EntityImageImpl::getSavedAt))
+                                                                .sorted(Comparator.comparing(EntityImageImpl::getCreateOn))
                                                                 .toList();
         return switch (plant.getAvatarMode()) {
             case SPECIFIED -> plant.getAvatarImage();

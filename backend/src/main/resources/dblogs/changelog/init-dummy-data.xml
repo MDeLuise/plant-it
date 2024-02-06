@@ -126,21 +126,21 @@
         <insert tableName="entity_images">
             <column name="id" value="6a204453-175f-426f-8111-dabf3489d3e1"/>
             <column name="image_type" value="1"/>
-            <column name="saved_at" value="${now}"/>
+            <column name="create_on" value="${now}"/>
             <column name="url" value="https://bs.plantnet.org/image/o/b649fffd28d057200573eefeeafb01f9a82c9a8c"/>
             <column name="botanical_info_entity_id" value="99"/>
         </insert>
         <insert tableName="entity_images">
             <column name="id" value="72028063-00ba-4a63-88f3-412b69d66650"/>
             <column name="image_type" value="1"/>
-            <column name="saved_at" value="${now}"/>
+            <column name="create_on" value="${now}"/>
             <column name="url" value="https://bs.plantnet.org/image/o/ec1bdc007ab8b716b2e1cfc41404e561949e09d2"/>
             <column name="botanical_info_entity_id" value="98"/>
         </insert>
         <insert tableName="entity_images">
             <column name="id" value="3531aae7-486f-4650-a4e3-047d3755a759"/>
             <column name="image_type" value="1"/>
-            <column name="saved_at" value="${now}"/>
+            <column name="create_on" value="${now}"/>
             <column name="url" value="/3531aae7-486f-4650-a4e3-047d3755a759"/>
             <column name="path" value="/tmp/plant-it/dummy-image.jpg"/>
             <column name="botanical_info_entity_id" value="97"/>
