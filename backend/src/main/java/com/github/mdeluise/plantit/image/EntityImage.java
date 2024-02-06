@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit.image;
 
+import java.util.Date;
+
 public interface EntityImage {
     String getId();
 
@@ -12,4 +14,8 @@ public interface EntityImage {
     void setUrl(String url);
 
     String getUrl();
+
+    void setCreateOn(Date createOn);
+
+    Date getCreateOn();
 }

@@ -188,7 +188,7 @@
             </column>
             <column name="description" type="varchar(100)">
             </column>
-            <column name="saved_at" type="datetime">
+            <column name="create_on" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="url" type="varchar(255)">
@@ -339,6 +339,18 @@
                 <constraints nullable="true"/>
             </column>
         </addColumn>
+    </changeSet>
+
+
+    <!-- can be removed after update to v0.3.0 -->
+    <changeSet id="updateTo0.3.0" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="entity_images" columnName="create_on"/>
+            </not>
+        </preConditions>
+        <renameColumn tableName="entity_images" oldColumnName="saved_at"
+                      newColumnName="create_on" columnDataType="datetime"/>
     </changeSet>
 
 </databaseChangeLog>

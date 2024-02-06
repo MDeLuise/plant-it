@@ -1,5 +1,9 @@
 package com.github.mdeluise.plantit.image;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.UUID;
+
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -9,10 +13,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.UUID;
 
 @Entity(name = "entity_images")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -26,7 +26,7 @@ public class EntityImageImpl implements EntityImage, Serializable {
     @Length(max = 100)
     private String description;
     @NotNull
-    private Date savedAt = new Date();
+    private Date createOn;
     @NotBlank
     @Length(max = 255)
     private String url;
@@ -62,16 +62,6 @@ public class EntityImageImpl implements EntityImage, Serializable {
     }
 
 
-    public Date getSavedAt() {
-        return savedAt;
-    }
-
-
-    public void setSavedAt(Date savedAt) {
-        this.savedAt = savedAt;
-    }
-
-
     @Override
     public String getPath() {
         return path;
@@ -93,5 +83,17 @@ public class EntityImageImpl implements EntityImage, Serializable {
     @Override
     public void setUrl(String url) {
         this.url = url;
+    }
+
+
+    @Override
+    public void setCreateOn(Date createOn) {
+        this.createOn = createOn;
+    }
+
+
+    @Override
+    public Date getCreateOn() {
+        return createOn;
     }
 }

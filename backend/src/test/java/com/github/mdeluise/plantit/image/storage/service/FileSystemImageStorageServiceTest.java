@@ -73,7 +73,7 @@ class FileSystemImageStorageServiceTest {
         final Plant imageTarget = new Plant();
         imageTarget.setId(imageTargetId);
 
-        fileSystemImageStorageService.save(toSave, imageTarget, "description");
+        fileSystemImageStorageService.save(toSave, imageTarget, null, "description");
 
         Assertions.assertThat(tmpDir.toFile().listFiles().length).as("number of file is correct").isEqualTo(1);
         ArgumentCaptor<PlantImage> argument = ArgumentCaptor.forClass(PlantImage.class);
@@ -91,7 +91,7 @@ class FileSystemImageStorageServiceTest {
         final BotanicalInfo imageTarget = new BotanicalInfo();
         imageTarget.setId(imageTargetId);
 
-        fileSystemImageStorageService.save(toSave, imageTarget, "description");
+        fileSystemImageStorageService.save(toSave, imageTarget, null, "description");
 
         Assertions.assertThat(tmpDir.toFile().listFiles().length).as("number of file is correct").isEqualTo(1);
         ArgumentCaptor<BotanicalInfoImage> argument = ArgumentCaptor.forClass(BotanicalInfoImage.class);

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Date;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
@@ -66,7 +67,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
 
     @Override
-    public EntityImage save(MultipartFile file, ImageTarget linkedEntity, String description) {
+    public EntityImage save(MultipartFile file, ImageTarget linkedEntity, Date creationDate, String description) {
         if (file.isEmpty()) {
             logger.error("File is empty");
             throw new StorageException("Failed to save empty file.");
@@ -95,6 +96,11 @@ public class FileSystemImageStorageService implements ImageStorageService {
                     ((PlantImage) entityImage).setTarget(p);
                 } else {
                     throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
+                }
+                if (creationDate != null) {
+                    entityImage.setCreateOn(creationDate);
+                } else {
+                    entityImage.setCreateOn(new Date());
                 }
                 final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
                 final Path pathToFile = Path.of(fileName);

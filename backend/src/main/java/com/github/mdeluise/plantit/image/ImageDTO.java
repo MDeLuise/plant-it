@@ -1,15 +1,15 @@
 package com.github.mdeluise.plantit.image;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.Date;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Image", description = "Represents a plant's image.")
 public class ImageDTO {
     @Schema(description = "ID of the image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
-    @Schema(description = "Save date of the image.", accessMode = Schema.AccessMode.READ_ONLY)
-    private Date savedAt;
+    @Schema(description = "Creation date of the image.", accessMode = Schema.AccessMode.READ_ONLY)
+    private Date createOn;
     @Schema(description = "URL to retrieve the content of the image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String url;
     @Schema(description = "Description of the image.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -28,13 +28,13 @@ public class ImageDTO {
     }
 
 
-    public Date getSavedAt() {
-        return savedAt;
+    public Date getCreateOn() {
+        return createOn;
     }
 
 
-    public void setSavedAt(Date savedAt) {
-        this.savedAt = savedAt;
+    public void setCreateOn(Date createOn) {
+        this.createOn = createOn;
     }
 
 

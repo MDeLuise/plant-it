@@ -69,7 +69,7 @@ function PlantImageFullSize(props: {
             .then(res => {
                 setImageMetadata({
                     description: res.data.description,
-                    createOn: res.data.savedAt,
+                    createOn: res.data.createOn,
                 })
             })
             .catch(props.printError);
@@ -690,7 +690,7 @@ function PlantInfo(props: {
                     Species info
                 </Typography>
                 <Box className="plant-detail-entry" sx={{ flexDirection: "column" }}>
-                    <Box sx={{display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center"}}>
+                    <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                         <Typography>
                             Synonyms
                         </Typography>
@@ -1086,15 +1086,17 @@ function BottomBar(props: {
             .catch(props.printError);
     };
 
-    const addEntityImage = (toUpload: File): void => {
+    const addEntityImage = (toUpload: File, creationDate?: Date, description?: string): void => {
         let formData = new FormData();
         formData.append('image', toUpload);
+        formData.append('creationDate', creationDate ? creationDate.toISOString() : ''); // Append creationDate to formData
+        formData.append('description', description || ''); // Append description to formData
         props.requestor.post(`/image/entity/${props.plant?.id}`, formData)
             .then(res => {
                 props.addUploadedImgs(res.data);
             })
             .catch(props.printError);
-    };
+    };    
 
     return <Box
         sx={{
@@ -1173,7 +1175,7 @@ function BottomBar(props: {
                         hidden
                         onChange={event => {
                             if (event.target.files != undefined) {
-                                addEntityImage(event.target.files[0]);
+                                addEntityImage(event.target.files[0], new Date(event.target.files[0].lastModified));
                             }
                         }}
                     />
