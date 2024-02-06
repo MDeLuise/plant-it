@@ -11,6 +11,9 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ShowerOutlinedIcon from '@mui/icons-material/ShowerOutlined';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import WavesOutlinedIcon from '@mui/icons-material/WavesOutlined';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ChildCareIcon from '@mui/icons-material/ChildCare';
+import AddHomeIcon from '@mui/icons-material/AddHome';
 import { ReactElement } from "react";
 import { alpha } from "@mui/material";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -25,13 +28,16 @@ export default function NewLogEntry(props: {
         switch (type.toLowerCase()) {
             case "watering": return <WaterDropOutlinedIcon />;
             case "seeding": return <YardOutlinedIcon />;
-            case "transplanting": return <AutorenewOutlinedIcon />;
+            case "transplanting": return <AddHomeIcon />;
             case "fertilizing": return <LunchDiningOutlinedIcon />;
             case "biostimulating": return <BatterySaverOutlinedIcon />;
             case "observation": return <VisibilityOutlinedIcon />;
             case "misting": return <ShowerOutlinedIcon />;
             case "treatment": return <ScienceOutlinedIcon />;
             case "water_changing": return <WavesOutlinedIcon />;
+            case "propagating": return <ChildCareIcon />;
+            case "pruning": return <ContentCutIcon />;
+            case "repotting": return <AutorenewOutlinedIcon />;
             default: return <QuestionMarkOutlinedIcon />;
         }
     };
@@ -47,6 +53,9 @@ export default function NewLogEntry(props: {
             case "observation": return "rgb(92, 93, 94)";
             case "misting": return "rgb(4, 34, 77)";
             case "water_changing": return "rgb(120, 154, 201)";
+            case "propagating": return "rgb(249, 136, 136)";
+            case "pruning": return "rgb(165, 136, 249)";
+            case "repotting": return "rgb(7, 76, 211)";
             default: return "rgb(226, 233, 243)";
         }
     };

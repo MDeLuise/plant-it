@@ -10,4 +10,7 @@ public enum DiaryEntryType {
     WATER_CHANGING,
     OBSERVATION,
     TREATMENT,
+    PROPAGATING,
+    PRUNING,
+    REPOTTING,
 }

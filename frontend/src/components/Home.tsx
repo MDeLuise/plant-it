@@ -120,7 +120,7 @@ function UserPlantsList(props: {
             >
                 {
                     props.plants.filter(
-                        (en) => en.personalName.toLocaleLowerCase().includes(plantName.toLocaleLowerCase()))
+                        (en) => en.info.personalName.toLocaleLowerCase().includes(plantName.toLocaleLowerCase()))
                         .map((entity, index) => {
                             return <SwiperSlide
                                 key={entity.id}
@@ -215,7 +215,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
     };
 
     const getPlants = (count: number): void => {
-        props.requestor.get(`plant?sortBy=personalName&sortDir=ASC&pageSize=${count}`)
+        props.requestor.get(`plant?sortBy=infoPersonalName&sortDir=ASC&pageSize=${count}`)
             .then(res => {
                 let newPlants: plant[] = [];
                 res.data.content.forEach((en: plant) => {
@@ -292,7 +292,7 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         const newLogEntries: diaryEntry[] = [...logEntries];
         newLogEntries.forEach(event => {
             if (event.diaryTargetId === updatedPlant.id) {
-                event.diaryTargetPersonalName = updatedPlant.personalName;
+                event.diaryTargetPersonalName = updatedPlant.info.personalName;
             }
         });
         setLogEntries(newLogEntries);

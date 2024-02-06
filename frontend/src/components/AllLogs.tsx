@@ -77,10 +77,10 @@ function Filters(props: {
                         disableCloseOnSelect
                         disablePortal
                         multiple
-                        options={props.plants.map(pl => pl.personalName)}
+                        options={props.plants.map(pl => pl.info.personalName)}
                         value={selectedFilteredEntitiyNames}
                         onChange={(_event: any, newValue: readonly string[]) => {
-                            let selectedIds = props.plants.filter(pl => newValue.includes(pl.personalName)).map(pl => pl.id);
+                            let selectedIds = props.plants.filter(pl => newValue.includes(pl.info.personalName)).map(pl => pl.id);
                             props.setFilteredPlantIds(selectedIds);
                             setSelectedFilteredEntitiyNames(Array.from(newValue));
                         }}

@@ -92,6 +92,7 @@
             <column name="botanical_name_id" value="99"/>
             <column name="personal_name" value="Sedum spectabile"/>
             <column name="avatar_mode" value="NONE"/>
+            <column name="location" value="greenhouse 1"/>
         </insert>
         <insert tableName="plants">
             <column name="id" value="98"/>
@@ -101,6 +102,8 @@
             <column name="owner_id" value="99"/>
             <column name="botanical_name_id" value="98"/>
             <column name="avatar_mode" value="NONE"/>
+            <column name="location" value="greenhouse 2"/>
+            <column name="seller" value="Friend John"/>
         </insert>
         <insert tableName="plants">
             <column name="id" value="97"/>
@@ -118,6 +121,9 @@
                             and more recently with desktop publishing software like Aldus PageMaker
                             including versions of Lorem Ipsum."/>
             <column name="avatar_mode" value="NONE"/>
+            <column name="location" value="garden"/>
+            <column name="seller" value="Green Market Super Mega"/>
+            <column name="purchased_price" value="12.5"/>
         </insert>
     </changeSet>
 

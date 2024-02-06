@@ -129,3 +129,43 @@ export const isVersionLessThan = (versionA: string, versionB: string): boolean =
     }
     return false;
 };
+
+export const getAllCurrencySymbols = (): string[] => {
+    const currencySymbols: string[] = [
+        "€", // Euro Sign
+        "$", // Dollar sign
+        "¢", // Cent sign
+        "₠", // European Currency
+        "₡", // Colon Sign
+        "₢", // Cruzeiro Sign
+        "₣", // French Franc Sign
+        "₤", // Lira Sign
+        "₥", // Mill Sign
+        "₦", // Naira Sign
+        "₧", // Peseta Sign
+        "₨", // Rupee Sign
+        "₩", // Won Sign
+        "₪", // New Sheqel Sign
+        "₫", // Dong Sign
+        "₭", // Kip Sign
+        "₮", // Tugrik Sign
+        "₯", // Drachma Sign
+        "₰", // German Penny Sign
+        "₱", // Peso Sign
+        "₲", // Guarani Sign
+        "₳", // Austral Sign
+        "₴", // Hryvnia Sign
+        "₵", // Cedi Sign
+        "₶", // Old Turkish Lira Sign
+        "₷", // Lira Sign
+        "₸", // Rupee Sign
+        "₹", // Indian Rupee Sign
+        "₺", // Turkish Lira Sign
+        "₻", // Tamil Rupee Sign
+        "₼", // Azerbaijani Manat Sign
+        "₽", // Russian Ruble Sign
+        "₾", // Lari Sign
+        "₿", // Bitcoin Sign
+    ];
+    return currencySymbols;
+}

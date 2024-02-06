@@ -147,6 +147,14 @@
             </column>
             <column name="note" type="varchar(8500)">
             </column>
+            <column name="purchased_price" type="double">
+            </column>
+            <column name="currency_symbol" type="varchar(4)">
+            </column>
+            <column name="seller" type="varchar(100)">
+            </column>
+            <column name="location" type="varchar(100)">
+            </column>
             <column name="owner_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_plant_user" references="application_users(id)"/>
             </column>
@@ -337,6 +345,17 @@
             </column>
             <column name="ph_max" type="double" defaultValue="null">
                 <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="plants">
+            <column name="purchased_price" type="double" defaultValue="null">
+            </column>
+            <column name="currency_symbol" type="varchar(4)" defaultValue="null">
+            </column>
+            <column name="seller" type="varchar(100)" defaultValue="null">
+            </column>
+            <column name="location" type="varchar(100)" defaultValue="null">
             </column>
         </addColumn>
     </changeSet>
