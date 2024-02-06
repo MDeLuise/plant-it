@@ -14,7 +14,7 @@
 
 <p align="center"><a href="https://docs.plant-it.org">Explore the documentation</a></p>
 
-<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#getting-started">Getting started</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
+<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#quickstart">Quickstart</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
 
 <p align="center">
   <img src="/images/screenshot-1.png" width="45%" />
@@ -121,7 +121,7 @@ Feel free to contribute and help improve the repo.
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Feature development
-Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/discussions/new?category=feature-request).
+Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=feature_request.yml).
 
 ### How to contribute
 If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.

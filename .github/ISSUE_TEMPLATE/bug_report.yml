@@ -1,5 +1,7 @@
 name: 🐛 Bug Report
 description: Report a bug in Plant-it.
+labels:
+  - bug
 body:
   - type: checkboxes
     attributes:
