@@ -1,7 +1,6 @@
 package com.github.mdeluise.plantit.plant;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -11,7 +10,9 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.image.PlantImage;
+import com.github.mdeluise.plantit.plant.info.PlantInfo;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,9 +24,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "plants")
@@ -33,15 +32,8 @@ public class Plant implements Serializable, ImageTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date startDate;
-    @NotBlank
-    @Length(max = 30)
-    private String personalName;
-    private Date endDate;
-    @Enumerated(EnumType.STRING)
-    private PlantState plantState;
-    @Length(max = 8500)
-    private String note;
+    @Embedded
+    private PlantInfo info;
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL)
     private Diary diary;
     @NotNull
@@ -62,7 +54,7 @@ public class Plant implements Serializable, ImageTarget {
 
 
     public Plant() {
-        this.plantState = PlantState.PURCHASED;
+        this.info = new PlantInfo();
     }
 
 
@@ -79,56 +71,6 @@ public class Plant implements Serializable, ImageTarget {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-
-    public String getPersonalName() {
-        return personalName;
-    }
-
-
-    public void setPersonalName(String personalName) {
-        this.personalName = personalName;
-    }
-
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-
-    public PlantState getState() {
-        return plantState;
-    }
-
-
-    public void setState(PlantState plantState) {
-        this.plantState = plantState;
-    }
-
-
-    public String getNote() {
-        return note;
-    }
-
-
-    public void setNote(String note) {
-        this.note = note;
     }
 
 
@@ -195,6 +137,16 @@ public class Plant implements Serializable, ImageTarget {
     }
 
 
+    public PlantInfo getInfo() {
+        return info;
+    }
+
+
+    public void setInfo(PlantInfo plantInfo) {
+        this.info = plantInfo;
+    }
+
+
     @SuppressWarnings("BooleanExpressionComplexity") //FIXME
     @Override
     public boolean equals(Object o) {
@@ -205,9 +157,7 @@ public class Plant implements Serializable, ImageTarget {
             return false;
         }
         final Plant plant = (Plant) o;
-        return Objects.equals(id, plant.id) && Objects.equals(startDate, plant.startDate) &&
-                   Objects.equals(personalName, plant.personalName) && Objects.equals(endDate, plant.endDate) &&
-                   plantState == plant.plantState && Objects.equals(note, plant.note) &&
+        return Objects.equals(id, plant.id) && Objects.equals(info, plant.info) &&
                    Objects.equals(diary, plant.diary) && Objects.equals(owner, plant.owner) &&
                    Objects.equals(botanicalInfo, plant.botanicalInfo) && avatarMode == plant.avatarMode &&
                    Objects.equals(avatarImage, plant.avatarImage);
@@ -216,8 +166,6 @@ public class Plant implements Serializable, ImageTarget {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startDate, personalName, endDate, plantState, note, diary, owner, botanicalInfo,
-                            avatarMode, avatarImage
-        );
+        return Objects.hash(id, info, diary, owner, botanicalInfo, avatarMode, avatarImage);
     }
 }

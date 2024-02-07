@@ -268,10 +268,12 @@ function AddPlantInfo(props: {
                             setUpdatedBotanicalInfo(addedBotanicalInfo);
                             const plantToCreate = {
                                 botanicalInfoId: addedBotanicalInfo.id,
-                                personalName: plantName!,
-                                state: "ALIVE",
-                                startDate: useDate ? date : null,
-                                note: note,
+                                info: {
+                                    personalName: plantName!,
+                                    state: "ALIVE",
+                                    startDate: useDate ? date : null,
+                                    note: note,
+                                },
                                 avatarMode: "NONE",
                             };
                             addNewPlant(plantToCreate)
@@ -284,10 +286,12 @@ function AddPlantInfo(props: {
                 } else {
                     const plantToCreate = {
                         botanicalInfoId: props.botanicalInfoToAdd.id,
-                        personalName: plantName!,
-                        state: "ALIVE",
-                        startDate: useDate ? date : null,
-                        note: note,
+                        info: {
+                            personalName: plantName!,
+                            state: "ALIVE",
+                            startDate: useDate ? date : null,
+                            note: note,
+                        },
                         avatarMode: "NONE",
                     }
                     addNewPlant(plantToCreate)

@@ -160,8 +160,8 @@ class PlantServiceTest {
         final String personalName1 = "personal name to check 1";
         final String personalName2 = "personal name to check 2";
 
-        Mockito.when(plantRepository.existsByOwnerAndPersonalName(authenticatedUser, personalName1)).thenReturn(true);
-        Mockito.when(plantRepository.existsByOwnerAndPersonalName(authenticatedUser, personalName2)).thenReturn(false);
+        Mockito.when(plantRepository.existsByOwnerAndInfoPersonalName(authenticatedUser, personalName1)).thenReturn(true);
+        Mockito.when(plantRepository.existsByOwnerAndInfoPersonalName(authenticatedUser, personalName2)).thenReturn(false);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(plantService.isNameAlreadyExisting(personalName1)).as("name exists correctly").isTrue();

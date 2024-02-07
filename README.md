@@ -38,7 +38,8 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
 * 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
-* 🔜 Dark/Light mode
+
+Take a look at the [roadmap](https://github.com/users/MDeLuise/projects/3/views/1) for a more detailed list of future features and enhancements.
 
 ## Quickstart 
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
@@ -121,7 +122,7 @@ Feel free to contribute and help improve the repo.
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Feature development
-Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=&projects=&template=feature_request.yml).
+Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml).
 
 ### How to contribute
 If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.

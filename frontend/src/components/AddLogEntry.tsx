@@ -70,12 +70,12 @@ export default function AddLogEntry(props: {
                 props.requestor.post("diary/entry", {
                     type: eventType,
                     date: date,
-                    diaryId: props.plants.filter((en) => en.personalName === plantId)[0].diaryId,
+                    diaryId: props.plants.filter((en) => en.info.personalName === plantId)[0].diaryId,
                     note: note
                 })
                     .then((res) => {
                         res.data.diaryTargetPersonalName = plantId; // TODO should not be necessary but backend problem
-                        res.data.diaryTargetId = props.plants.filter((en) => en.personalName === plantId)[0].id;
+                        res.data.diaryTargetId = props.plants.filter((en) => en.info.personalName === plantId)[0].id;
                         props.updateLog(res.data);
                         closeDrawer();
                     })
@@ -121,7 +121,7 @@ export default function AddLogEntry(props: {
 
     useEffect(() => {
         if (props.addForPlant != undefined) {
-            setSelectedPlantName([props.addForPlant?.personalName]);
+            setSelectedPlantName([props.addForPlant?.info.personalName]);
         } else {
             setSelectedPlantName([]);
         }
@@ -166,7 +166,7 @@ export default function AddLogEntry(props: {
                         disableCloseOnSelect
                         disablePortal
                         multiple
-                        options={props.plants.map(pl => pl.personalName)}
+                        options={props.plants.map(pl => pl.info.personalName)}
                         disabled={props.addForPlant != undefined}
                         value={selectedPlantName}
                         onChange={(_event: any, newValue: readonly string[]) => changePlantName(newValue)}

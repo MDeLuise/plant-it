@@ -162,10 +162,10 @@ class PlantControllerTest {
         final Long plantId = 1L;
         final Plant updated = new Plant();
         updated.setId(plantId);
-        updated.setPersonalName(updatedPersonalName);
+        updated.getInfo().setPersonalName(updatedPersonalName);
         final PlantDTO updatedDTO = new PlantDTO();
         updatedDTO.setId(1L);
-        updatedDTO.setPersonalName(updatedPersonalName);
+        updatedDTO.getInfo().setPersonalName(updatedPersonalName);
 
         Mockito.when(plantService.update(plantId, updated)).thenReturn(updated);
         Mockito.when(plantDTOConverter.convertFromDTO(updatedDTO)).thenReturn(updated);

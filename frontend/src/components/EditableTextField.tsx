@@ -8,7 +8,8 @@ export function EditableTextField(props: {
     onChange?: (arg: string) => void,
     variant?: "body1" | "h6",
     style?: {},
-    rows?: number;
+    rows?: number,
+    number?: boolean;
 }) {
     const [value, setValue] = useState<string>();
 
@@ -43,6 +44,7 @@ export function EditableTextField(props: {
                 ...props.style,
                 color: "black",
             }}
+            type={props.number ? "number" : undefined}
         />
         :
         <Typography

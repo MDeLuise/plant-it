@@ -85,7 +85,7 @@ export default function EditEvent(props: {
     const [confirmDialogCallback, setConfirmDialogCallback] = useState<() => void>(() => () => { });
 
     const updateEvent = (): void => {
-        let newTarget: plant = props.plants.filter((en) => en.personalName === selectedPlantName)[0];
+        let newTarget: plant = props.plants.filter((en) => en.info.personalName === selectedPlantName)[0];
         props.requestor.put(`/diary/entry/${props.toEdit?.id}`, {
             type: selectedEventType,
             note: note,
@@ -179,9 +179,9 @@ export default function EditEvent(props: {
                             {props.plants.map((entity) => (
                                 <MenuItem
                                     key={entity.id}
-                                    value={entity.personalName}
+                                    value={entity.info.personalName}
                                 >
-                                    {entity.personalName}
+                                    {entity.info.personalName}
                                 </MenuItem>
                             ))}
                         </Select>

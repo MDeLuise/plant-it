@@ -47,11 +47,11 @@ export default function (props: { requestor: AxiosInstance; }) {
                 "Authorization": 'Bearer ' + jwt
             }
         })
-            .then((response) => {
-                secureLocalStorage.setItem("plant-it-key", response.data.value);
+            .then(res => {
+                secureLocalStorage.setItem("plant-it-key", res.data.value);
                 navigate('/');
             })
-            .catch((_error) => {
+            .catch(_err => {
                 props.requestor.post("api-key/?name=" + apiKeyName, {}, {
                     headers: {
                         "Authorization": 'Bearer ' + jwt

@@ -25,7 +25,7 @@ export default function UserPlant(props: {
             })
             .catch(err => {
                 console.error(err);
-                props.printError(`Cannot load plant's avatar for ${props.entity.personalName}`);
+                props.printError(`Cannot load plant's avatar for ${props.entity.info.personalName}`);
             });
     };
 
@@ -105,7 +105,7 @@ export default function UserPlant(props: {
                     backdropFilter: "blur(3px)",
                 }}>
                     <Typography variant="h6" sx={{ color: "white" }}>
-                        {props.entity.personalName}
+                        {props.entity.info.personalName}
                     </Typography>
                 </Box>
             }

@@ -1,23 +1,16 @@
 package com.github.mdeluise.plantit.plant;
 
-import java.util.Date;
 import java.util.Objects;
 
+import com.github.mdeluise.plantit.plant.info.PlantInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(name = "Plant", description = "Represents a plant.")
 public class PlantDTO {
     @Schema(description = "ID of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-    @Schema(description = "Start date plant.")
-    private Date startDate;
-    @Schema(description = "Personal name of the plant.")
-    private String personalName;
-    @Schema(description = "End date of the plant.")
-    private Date endDate;
-    @Schema(description = "PlantState of the plant.")
-    private PlantState plantState;
-    @Schema(description = "Note of the plant.")
-    private String note;
+    @Schema(description = "Info about the plant.")
+    private PlantInfoDTO info;
     @Schema(description = "Owner ID of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long ownerId;
     @Schema(description = "ID of the plant's avatar.")
@@ -33,6 +26,7 @@ public class PlantDTO {
 
 
     public PlantDTO() {
+        this.info = new PlantInfoDTO();
     }
 
 
@@ -46,53 +40,13 @@ public class PlantDTO {
     }
 
 
-    public Date getStartDate() {
-        return startDate;
+    public PlantInfoDTO getInfo() {
+        return info;
     }
 
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-
-    public String getPersonalName() {
-        return personalName;
-    }
-
-
-    public void setPersonalName(String personalName) {
-        this.personalName = personalName;
-    }
-
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-
-    public PlantState getState() {
-        return plantState;
-    }
-
-
-    public void setState(PlantState plantState) {
-        this.plantState = plantState;
-    }
-
-
-    public String getNote() {
-        return note;
-    }
-
-
-    public void setNote(String note) {
-        this.note = note;
+    public void setInfo(PlantInfoDTO plantInfoDTO) {
+        this.info = plantInfoDTO;
     }
 
 
@@ -165,9 +119,7 @@ public class PlantDTO {
             return false;
         }
         final PlantDTO plantDTO = (PlantDTO) o;
-        return Objects.equals(id, plantDTO.id) && Objects.equals(startDate, plantDTO.startDate) &&
-                   Objects.equals(personalName, plantDTO.personalName) && Objects.equals(endDate, plantDTO.endDate) &&
-                   plantState == plantDTO.plantState && Objects.equals(note, plantDTO.note) &&
+        return Objects.equals(id, plantDTO.id) && Objects.equals(info, plantDTO.info) &&
                    Objects.equals(ownerId, plantDTO.ownerId) && Objects.equals(avatarImageId, plantDTO.avatarImageId) &&
                    Objects.equals(avatarImageUrl, plantDTO.avatarImageUrl) &&
                    Objects.equals(avatarMode, plantDTO.avatarMode) && Objects.equals(diaryId, plantDTO.diaryId) &&
@@ -177,8 +129,7 @@ public class PlantDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startDate, personalName, endDate, plantState, note, ownerId, avatarImageId,
-                            avatarImageUrl, avatarMode, diaryId, botanicalInfoId
-        );
+        return Objects.hash(
+            id, info, ownerId, avatarImageId, avatarImageUrl, avatarMode, diaryId, botanicalInfoId);
     }
 }

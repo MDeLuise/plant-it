@@ -23,18 +23,26 @@ export interface plantCareInfo {
 
 export interface plant {
     id: number,
-    startDate?: Date,
-    endDate?: Date,
-    personalName: string,
-    state: "PURCHASED" | "PLANTED" | "ALIVE" | "GIFTED" | "DEAD",
     ownerId: number,
     diaryId: number,
-    note?: string,
     avatarMode: "NONE" | "RANDOM" | "LAST" | "SPECIFIED",
     avatarImageId?: string,
     botanicalInfoId: number,
     avatarImageUrl?: string;
+    info: plantInfo;
 };
+
+export interface plantInfo {
+    note?: string,
+    startDate?: Date,
+    endDate?: Date,
+    personalName: string,
+    state: "PURCHASED" | "PLANTED" | "ALIVE" | "GIFTED" | "DEAD",
+    purchasedPrice?: number,
+    currencySymbol?: string,
+    seller?: string,
+    location?: string;
+}
 
 export interface diaryEntry {
     id: number,

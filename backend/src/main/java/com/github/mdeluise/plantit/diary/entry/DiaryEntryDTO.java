@@ -1,8 +1,9 @@
 package com.github.mdeluise.plantit.diary.entry;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Diary entry", description = "Represents an entry in the diary.")
 public class DiaryEntryDTO {
@@ -18,8 +19,9 @@ public class DiaryEntryDTO {
     private Long diaryId;
     @Schema(description = "ID of the tracked entity.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryTargetId;
+    @JsonProperty("diaryTargetPersonalName")
     @Schema(description = "Personal name of the tracked entity.", accessMode = Schema.AccessMode.READ_ONLY)
-    private String diaryTargetPersonalName;
+    private String diaryTargetInfoPersonalName;
 
 
     public Long getId() {
@@ -82,12 +84,12 @@ public class DiaryEntryDTO {
     }
 
 
-    public void setDiaryTargetPersonalName(String diaryTargetPersonalName) {
-        this.diaryTargetPersonalName = diaryTargetPersonalName;
+    public void setDiaryTargetInfoPersonalName(String diaryTargetInfoPersonalName) {
+        this.diaryTargetInfoPersonalName = diaryTargetInfoPersonalName;
     }
 
 
-    public String getDiaryTargetPersonalName() {
-        return diaryTargetPersonalName;
+    public String getDiaryTargetInfoPersonalName() {
+        return diaryTargetInfoPersonalName;
     }
 }

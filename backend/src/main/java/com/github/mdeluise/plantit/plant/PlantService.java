@@ -84,7 +84,7 @@ public class PlantService {
 
 
     public boolean isNameAlreadyExisting(String plantName) {
-        return plantRepository.existsByOwnerAndPersonalName(authenticatedUserService.getAuthenticatedUser(), plantName);
+        return plantRepository.existsByOwnerAndInfoPersonalName(authenticatedUserService.getAuthenticatedUser(), plantName);
     }
 
 
@@ -115,12 +115,8 @@ public class PlantService {
             throw new UnauthorizedException();
         }
         final BotanicalInfo newBotanicalInfo = botanicalInfoService.get(updated.getBotanicalInfo().getId());
-        toUpdate.setPersonalName(updated.getPersonalName());
         toUpdate.setBotanicalInfo(newBotanicalInfo);
-        toUpdate.setState(updated.getState());
-        toUpdate.setNote(updated.getNote());
-        toUpdate.setStartDate(updated.getStartDate());
-        toUpdate.setEndDate(updated.getEndDate());
+        toUpdate.setInfo(updated.getInfo());
 
         handleAvatar(updated, toUpdate);
 
