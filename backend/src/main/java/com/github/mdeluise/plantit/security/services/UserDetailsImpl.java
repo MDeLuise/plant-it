@@ -1,27 +1,23 @@
 package com.github.mdeluise.plantit.security.services;
 
+import java.io.Serial;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mdeluise.plantit.authentication.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serial;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-
 public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
-
     private final long id;
-
     private final String username;
-
     @JsonProperty
     private final String password;
-
     private final Collection<? extends GrantedAuthority> authorities;
 
 

@@ -14,6 +14,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function ErrorDialog(props: {
     text?: string,
     open: boolean,
+    title?: string,
     close: () => void;
 }) {
     return <Box
@@ -26,7 +27,7 @@ export default function ErrorDialog(props: {
             open={props.open}
         >
             <DialogTitle sx={{ m: 0, p: 2 }} >
-                Error
+                {props.title || "Error"}
             </DialogTitle>
             <IconButton
                 aria-label="close"

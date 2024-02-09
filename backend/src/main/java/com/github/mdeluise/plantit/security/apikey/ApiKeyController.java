@@ -1,5 +1,8 @@
 package com.github.mdeluise.plantit.security.apikey;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.authentication.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,14 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api-key")
 @Tag(name = "API Key", description = "Endpoints for API Key")
 public class ApiKeyController {
-
     private final UserService userService;
     private final ApiKeyService apiKeyService;
     private final ApiKeyDTOConverter apiKeyDTOConverter;
@@ -43,10 +42,10 @@ public class ApiKeyController {
         summary = "Create a new API Key", description = "Create a new API Key."
     )
     public ResponseEntity<String> createNewApiKey(@RequestParam(required = false) String name) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.get(username);
-        String result = apiKeyService.createNew(user, name);
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String username = authentication.getName();
+        final User user = userService.get(username);
+        final String result = apiKeyService.createNew(user, name);
         return ResponseEntity.ok().body(result);
     }
 
@@ -56,9 +55,9 @@ public class ApiKeyController {
         summary = "Delete an API Key", description = "Delete an API Key."
     )
     public ResponseEntity<String> removeApiKey(@PathVariable("id") Long apiKeyId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.get(username);
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String username = authentication.getName();
+        final User user = userService.get(username);
         apiKeyService.remove(user, apiKeyId);
         return ResponseEntity.ok().body("Api Key correctly removed.");
     }
@@ -69,10 +68,10 @@ public class ApiKeyController {
         summary = "Get all the API Key", description = "Get all the API Key."
     )
     public ResponseEntity<Collection<ApiKeyDTO>> getAllApiKey() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.get(username);
-        List<ApiKeyDTO> result = apiKeyService.getAll(user).stream().map(apiKeyDTOConverter::convertToDTO).toList();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String username = authentication.getName();
+        final User user = userService.get(username);
+        final List<ApiKeyDTO> result = apiKeyService.getAll(user).stream().map(apiKeyDTOConverter::convertToDTO).toList();
         return ResponseEntity.ok().body(result);
     }
 
@@ -82,10 +81,10 @@ public class ApiKeyController {
         summary = "Get a single API Key", description = "Get a single API Key, according to the `id` parameter."
     )
     public ResponseEntity<ApiKeyDTO> getApiKey(@PathVariable("id") Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.get(username);
-        ApiKeyDTO result = apiKeyDTOConverter.convertToDTO(apiKeyService.get(user, id));
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String username = authentication.getName();
+        final User user = userService.get(username);
+        final ApiKeyDTO result = apiKeyDTOConverter.convertToDTO(apiKeyService.get(user, id));
         return ResponseEntity.ok().body(result);
     }
 
@@ -96,10 +95,10 @@ public class ApiKeyController {
         description = "Get a single API Key, according to the `name` parameter."
     )
     public ResponseEntity<ApiKeyDTO> getApiKeyByName(@PathVariable("name") String name) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.get(username);
-        ApiKeyDTO result = apiKeyDTOConverter.convertToDTO(apiKeyService.get(user, name));
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String username = authentication.getName();
+        final User user = userService.get(username);
+        final ApiKeyDTO result = apiKeyDTOConverter.convertToDTO(apiKeyService.get(user, name));
         return ResponseEntity.ok().body(result);
     }
 }

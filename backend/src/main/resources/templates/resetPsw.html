@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body>
+<p>Dear <span th:text="${username}"></span>,</p>
+<p>We've received a request to reset your password. Please find below your temporary password:</p>
+<p><strong>Temporary Password:</strong> <span th:text="${temporaryPassword}"></span></p>
+<p>Please note that this temporary password is valid for a limited time for security reasons. Be sure to use it
+    promptly.</p>
+<p>Please use this temporary password to log in to your account. After logging in with this temporary password, it's
+    mandatory to change your password immediately in the account settings for security reasons.</p>
+<p>If you didn't request this password reset, please disregard this email. Your account remains secure.</p>
+
+<p>Happy planting! 🌱</p>
+<p>Best regards,<br>The Plant-It Team</p>
+</body>
+</html>

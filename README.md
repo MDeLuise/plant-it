@@ -51,57 +51,72 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     version: "3"
     name: plant-it
     services:
-        backend:
-            image: msdeluise/plant-it-backend:latest
-            env_file: backend.env
-            depends_on:
-              - db
-              - cache
-            restart: unless-stopped
-            volumes:
-              - "./upload-dir:/upload-dir"
-            ports:
-              - "8080:8080"
+      backend:
+        image: msdeluise/plant-it-backend:latest
+        env_file: backend.env
+        depends_on:
+          - db
+          - cache
+        restart: unless-stopped
+        volumes:
+          - "./upload-dir:/upload-dir"
+        ports:
+          - "8080:8080"
 
-        db:
-            image: mysql:8.0
-            restart: always
-            env_file: backend.env
-            volumes:
-              - "./db:/var/lib/mysql"
+      db:
+        image: mysql:8.0
+        restart: always
+        env_file: backend.env
+        volumes:
+          - "./db:/var/lib/mysql"
 
-        cache:
-            image: redis:7.2.1
-            restart: always
+      cache:
+        image: redis:7.2.1
+        restart: always
 
-        frontend:
-            image: msdeluise/plant-it-frontend:latest
-            env_file: frontend.env
-            links:
-              - backend
-            ports:
-              - "3000:3000"
+      frontend:
+        image: msdeluise/plant-it-frontend:latest
+        env_file: frontend.env
+        links:
+          - backend
+        ports:
+          - "3000:3000"
     ```
     * `backend.env`:
     ```properties
+    #
+    # DB
+    #
     MYSQL_HOST=db
     MYSQL_PORT=3306
     MYSQL_USERNAME=root
     MYSQL_PSW=root
     MYSQL_ROOT_PASSWORD=root
     MYSQL_DATABASE=bootdb
+
+    #
+    # JWT
+    #
     JWT_SECRET=putTheSecretHere
     JWT_EXP=1
+    
+    #
+    # Server config
+    #
     USERS_LIMIT=-1
     UPLOAD_DIR=/upload-dir
     API_PORT=8080
-    CACHE_TTL=86400
-    CACHE_HOST=cache
-    CACHE_PORT=6379
     TREFLE_KEY=
     ALLOWED_ORIGINS=*
     LOG_LEVEL=DEBUG
     UPDATE_EXISTING=false
+    
+    #
+    # Cache
+    #
+    CACHE_TTL=86400
+    CACHE_HOST=cache
+    CACHE_PORT=6379
     ```
     * `frontend.env`:
     ```properties

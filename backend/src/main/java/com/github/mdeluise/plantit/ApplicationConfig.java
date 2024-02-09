@@ -1,7 +1,10 @@
 package com.github.mdeluise.plantit;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 
+import com.github.mdeluise.plantit.notification.otp.OtpService;
+import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -13,9 +16,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.servers.ServerVariable;
+import jakarta.annotation.PreDestroy;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.CacheEvict;
@@ -57,7 +62,17 @@ import redis.embedded.RedisServer;
 @EnableMethodSecurity
 @EnableCaching
 public class ApplicationConfig {
+    private final OtpService otpService;
+    private final TemporaryPasswordService temporaryPasswordService;
+    private RedisServer redisServer;
     private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
+
+
+    @Autowired
+    public ApplicationConfig(OtpService otpService, TemporaryPasswordService temporaryPasswordService) {
+        this.otpService = otpService;
+        this.temporaryPasswordService = temporaryPasswordService;
+    }
 
 
     @Bean
@@ -70,9 +85,23 @@ public class ApplicationConfig {
     @Profile(value = "dev")
     public CommandLineRunner initEmbeddedCache(@Value("${spring.data.redis.port}") int port) {
         return args -> {
-            final RedisServer redisServer = new RedisServer(port);
+            redisServer = new RedisServer(port);
             redisServer.start();
         };
+    }
+
+
+    @PreDestroy
+    public void stopRedisServer() throws IOException {
+        if (redisServer != null) {
+            logger.debug("Stopping embedded redis...");
+            try {
+                redisServer.stop();
+            } catch (IOException e) {
+                logger.error("Error while stopping embedded redis instance", e);
+                throw e;
+            }
+        }
     }
 
 
@@ -85,6 +114,13 @@ public class ApplicationConfig {
     @CacheEvict(allEntries = true, cacheNames = {"latest-version"})
     @Scheduled(fixedDelay = 86400000) // 1 day
     public void cacheEvict() {
+    }
+
+
+    @Scheduled(fixedDelay = 28800000) // 8 hours
+    public void removeExpired() {
+        otpService.removeExpired();
+        temporaryPasswordService.removeExpired();
     }
 
 

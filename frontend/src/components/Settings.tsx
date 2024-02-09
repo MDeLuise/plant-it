@@ -51,7 +51,7 @@ function UsernameDialog(props: {
             setNewUsernameError("username length must be between 3 and 20");
             return;
         }
-        props.requestor.get(`/user/${newUsername}/_available`)
+        props.requestor.get(`/user/username/${newUsername}/_available`)
             .then(res => {
                 if (res.data) {
                     changeUsername(newUsername)
@@ -97,12 +97,135 @@ function UsernameDialog(props: {
                 helperText={newUsernameError}
                 placeholder="New username"
                 required
-                onChange={(event => changeNewUsername(event.target.value))}
+                onChange={event => changeNewUsername(event.target.value)}
             />
         </DialogContent>
         <DialogActions>
             <Button onClick={props.close}>Cancel</Button>
             <Button onClick={checkUsernameConstraintThenExecThenCallback}>Confirm</Button>
+        </DialogActions>
+    </Dialog>;
+}
+
+
+function EmailDialog(props: {
+    open: boolean,
+    close: () => void,
+    requestor: AxiosInstance,
+    printError: (msg: any) => void,
+    confirmCallBack: () => void;
+}) {
+    const [authenticatedUserDetails, setAuthenticatedUserDetails] = useState<{
+        id: number,
+        username: string,
+        email: string
+    }>({ id: 42, username: "to-load", email: "to-load" });
+    const [currentEmail, setCurrentEmail] = useState<string>();
+    const [password, setPassword] = useState<string>();
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [newEmailError, setNewEmailError] = useState<string>();
+
+    const changeEmail = (newEmail: string): Promise<void> => {
+        return new Promise((accept, reject) => {
+            if (authenticatedUserDetails === undefined) {
+                props.printError("Could not get authenticated user details");
+                return reject("Could not get authenticated user details");
+            }
+            props.requestor.put("/user/_email", {
+                password: password,
+                newEmail: newEmail,
+            })
+                .then(_res => accept())
+                .catch(err => {
+                    props.printError(err);
+                    reject(err);
+                });
+        });
+    };
+
+    const checkEmailConstraintThenExecThenCallback = (): void => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValidEmail = emailRegex.test(authenticatedUserDetails.email);
+        if (!isValidEmail) {
+            setNewEmailError("invalid email format");
+            return;
+        }
+        props.requestor.get(`/user/email/${authenticatedUserDetails.email}/_available`)
+            .then(res => {
+                if (res.data) {
+                    changeEmail(authenticatedUserDetails.email)
+                        .then(props.confirmCallBack)
+                        .catch(props.printError);
+                } else {
+                    setNewEmailError("email already used");
+                }
+            })
+            .catch(props.printError);
+    };
+
+    const changeNewEmail = (value: string): void => {
+        setNewEmailError(undefined);
+        setAuthenticatedUserDetails({ ...authenticatedUserDetails, email: value });
+    };
+
+    const getAuthenticatedUserDetails = (): void => {
+        props.requestor.get("/user")
+            .then(res => {
+                setAuthenticatedUserDetails(res.data);
+                setCurrentEmail(res.data.email);
+            })
+            .catch(props.printError);
+    };
+
+    useEffect(() => {
+        if (!props.open && currentEmail) {
+            setAuthenticatedUserDetails({ ...authenticatedUserDetails, email: currentEmail });
+        } else {
+            getAuthenticatedUserDetails(); 
+        }
+    }, [props.open])
+
+    return <Dialog open={props.open} onClose={props.close}>
+        <DialogContent>
+            <DialogContentText>
+                Change the email
+            </DialogContentText>
+            <FormControl fullWidth margin="normal" variant="outlined" required>
+                <InputLabel>Password</InputLabel>
+                <OutlinedInput
+                    type={showPassword ? 'text' : 'password'}
+                    onChange={e => setPassword(e.target.value)}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                            >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                    label="Password"
+                />
+            </FormControl>
+            <TextField
+                autoFocus
+                margin="normal"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={authenticatedUserDetails.email}
+                error={newEmailError != undefined}
+                helperText={newEmailError}
+                placeholder="New email"
+                required
+                onChange={e => changeNewEmail(e.target.value)}
+            />
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={props.close}>Cancel</Button>
+            <Button onClick={checkEmailConstraintThenExecThenCallback}>Confirm</Button>
         </DialogActions>
     </Dialog>;
 }
@@ -376,8 +499,10 @@ export default function Settings(props: {
     const username = secureLocalStorage.getItem("plant-it-username") as string;
     const [version, setVersion] = useState<{ current?: string, latest: boolean }>({ latest: true });
     const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
+    const [emailDialogOpen, setEmailDialogOpen] = useState<boolean>(false);
     const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false);
     const repoLink = "https://github.com/MDeLuise/plant-it";
+    const documentationLink = "https://docs.plant-it.org/";
     const repoOpenIssues = "https://github.com/MDeLuise/plant-it/issues/new/choose";
     const repoLastVersion = "https://github.com/MDeLuise/plant-it/releases/latest";
 
@@ -411,6 +536,16 @@ export default function Settings(props: {
         flexDirection: "column",
     }}>
 
+        <EmailDialog
+            open={emailDialogOpen}
+            requestor={props.requestor}
+            printError={props.printError}
+            close={() => setEmailDialogOpen(false)}
+            confirmCallBack={() => {
+                setEmailDialogOpen(false);
+            }}
+        />
+
         <UsernameDialog
             open={usernameDialogOpen}
             requestor={props.requestor}
@@ -435,6 +570,15 @@ export default function Settings(props: {
         <SettingsHeader username={username} />
 
         <Box className={"setting-section"}>
+            <SettingsEntry
+                text="Change email"
+                right={<ArrowForwardIcon sx={{
+                    opacity: .5,
+                }} />}
+                onClick={() => {
+                    setEmailDialogOpen(true);
+                }}
+            />
             <SettingsEntry
                 text="Change username"
                 right={<ArrowForwardIcon sx={{
@@ -475,6 +619,13 @@ export default function Settings(props: {
                     </Box>
                 }
                 onClick={version.latest ? undefined : () => navigateTo(repoLastVersion)}
+            />
+            <SettingsEntry
+                text="Documentation"
+                right={<LaunchIcon sx={{
+                    opacity: .5,
+                }} />}
+                onClick={() => navigateTo(documentationLink)}
             />
             <SettingsEntry
                 text="Open source"

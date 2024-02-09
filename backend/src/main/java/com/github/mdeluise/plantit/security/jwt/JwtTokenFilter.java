@@ -1,7 +1,11 @@
 package com.github.mdeluise.plantit.security.jwt;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.exception.ErrorMessage;
+import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +20,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.Date;
-
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
@@ -29,7 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, JwtWebUtil jwtWebUtil, ObjectMapper objectMapper,
-                          UserDetailsService userDetailsService) {
+                          PasswordUserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtWebUtil = jwtWebUtil;
         this.objectMapper = objectMapper;
@@ -43,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         if (hasAccessToken(request)) {
-            String token = jwtWebUtil.getJwtTokenFromRequest(request);
+            final String token = jwtWebUtil.getJwtTokenFromRequest(request);
             if (!jwtTokenUtil.isValid(token)) {
                 sendError("Invalid value", response);
                 return;
@@ -55,12 +56,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 
     private void sendError(String message, HttpServletResponse response) throws IOException {
-        ErrorMessage error = new ErrorMessage(
-                HttpStatus.FORBIDDEN.value(),
-                new Date(),
-                message,
-                "",
-                ""
+        final ErrorMessage error = new ErrorMessage(
+            HttpStatus.FORBIDDEN.value(),
+            new Date(),
+            message,
+            "",
+            ""
         );
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -74,15 +75,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 
     private void setAuthenticationContext(String token, HttpServletRequest request) {
-        UserDetails userDetails = getUserDetails(token);
+        final UserDetails userDetails = getUserDetails(token);
 
-        UsernamePasswordAuthenticationToken
-                authentication =
-                new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+        final UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request));
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

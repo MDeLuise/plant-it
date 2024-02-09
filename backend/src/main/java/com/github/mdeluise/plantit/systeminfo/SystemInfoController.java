@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.systeminfo;
 
 import java.io.IOException;
 
+import com.github.mdeluise.plantit.notification.email.EmailServiceProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirements()
 public class SystemInfoController {
     private final SystemVersionService systemVersionService;
+    private final EmailServiceProvider emailServiceProvider;
 
 
     @Autowired
-    public SystemInfoController(SystemVersionService systemVersionService) {
+    public SystemInfoController(SystemVersionService systemVersionService, EmailServiceProvider emailServiceProvider) {
         this.systemVersionService = systemVersionService;
+        this.emailServiceProvider = emailServiceProvider;
     }
 
 
@@ -41,5 +44,14 @@ public class SystemInfoController {
     public ResponseEntity<SystemVersionInfo> getVersion() throws IOException, InterruptedException {
         final SystemVersionInfo result = systemVersionService.getLatestVersion();
         return ResponseEntity.ok(result);
+    }
+
+
+    @GetMapping("/smtp")
+    @Operation(
+        summary = "SMTP configuration", description = "Check if the system use an SMTP server or not"
+    )
+    public ResponseEntity<Boolean> useSmtp() {
+        return ResponseEntity.ok(emailServiceProvider.get().isPresent());
     }
 }

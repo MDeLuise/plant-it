@@ -36,6 +36,10 @@ public class User implements Serializable {
     @Length(min = 8, max = 120)
     @JsonProperty
     private String password;
+    @Column(unique = true)
+    @NotEmpty
+    @Length(min = 5, max = 70)
+    private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<ApiKey> apiKeys = new HashSet<>();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
@@ -75,6 +79,16 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 
