@@ -1,8 +1,12 @@
 package com.github.mdeluise.plantit.security.apikey;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.exception.ErrorMessage;
+import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,25 +16,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.Date;
-
 @Component
 public class ApiKeyFilter extends OncePerRequestFilter {
     private final ApiKeyService apiKeyService;
-    private final UserDetailsService userDetailsService;
+    private final PasswordUserDetailsService passwordUserDetailsService;
     private final ObjectMapper objectMapper;
 
 
     @Autowired
-    public ApiKeyFilter(ApiKeyService apiKeyService, UserDetailsService userDetailsService, ObjectMapper objectMapper) {
+    public ApiKeyFilter(ApiKeyService apiKeyService, PasswordUserDetailsService passwordUserDetailsService, ObjectMapper objectMapper) {
         this.apiKeyService = apiKeyService;
-        this.userDetailsService = userDetailsService;
+        this.passwordUserDetailsService = passwordUserDetailsService;
         this.objectMapper = objectMapper;
     }
 
@@ -39,7 +39,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
         if (hasApiKey(request)) {
-            String apiKeyValue = getApiKeyValue(request);
+            final String apiKeyValue = getApiKeyValue(request);
             if (!apiKeyService.exist(apiKeyValue)) {
                 sendError("Invalid API Key", response);
                 return;
@@ -51,7 +51,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     private void sendError(String message, HttpServletResponse response) throws IOException {
-        ErrorMessage error = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), message, "", "");
+        final ErrorMessage error = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), message, "", "");
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(objectMapper.writeValueAsString(error));
@@ -69,9 +69,9 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     private void setAuthenticationContext(String apiKeyValue, HttpServletRequest request) {
-        UserDetails userDetails = getUserDetails(apiKeyValue);
+        final UserDetails userDetails = getUserDetails(apiKeyValue);
 
-        UsernamePasswordAuthenticationToken authentication =
+        final UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -81,7 +81,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     private UserDetails getUserDetails(String apiKeyValue) {
-        User user = apiKeyService.getUserFromApiKey(apiKeyValue);
-        return userDetailsService.loadUserByUsername(user.getUsername());
+        final User user = apiKeyService.getUserFromApiKey(apiKeyValue);
+        return passwordUserDetailsService.loadUserByUsername(user.getUsername());
     }
 }

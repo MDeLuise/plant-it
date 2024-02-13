@@ -7,6 +7,9 @@ chapter = false
 There are 2 configuration files available:
 * `backend.env`: file containing the configuration for the backend. An example of content is the following:
     ```properties
+    #
+    # DB
+    #
     MYSQL_HOST=db
     MYSQL_PORT=3306
     MYSQL_USERNAME=root
@@ -14,23 +17,39 @@ There are 2 configuration files available:
     MYSQL_ROOT_PASSWORD=root
     MYSQL_DATABASE=bootdb
 
+    #
+    # JWT
+    #
     JWT_SECRET=putTheSecretHere
     JWT_EXP=1
 
+    #
+    # Server config
+    #
     USERS_LIMIT=-1 # less then 0 means no limit
     UPLOAD_DIR=/upload-dir # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
     API_PORT=8080
+    TREFLE_KEY=
+    ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
+    LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
+    UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
 
+    #
+    # Cache
+    #
     CACHE_TTL=86400
     CACHE_HOST=cache
     CACHE_PORT=6379
 
-    TREFLE_KEY=
-
-    ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
-
-    LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
-    UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
+    #
+    # SMTP
+    #
+    SMTP_HOST=
+    SMTP_PORT=
+    SMTP_EMAIL=
+    SMTP_PASSWORD=
+    SMTP_AUTH=
+    SMTP_START_TTL=
     ```
 * `frontend.env`: file containing the configuration for the frontend. An example of content is the following:
     ```properties
@@ -72,19 +91,19 @@ Then this will be you configuration:
             image: msdeluise/plant-it-backend:latest
             env_file: backend.env
             depends_on:
-            - db
-            - cache
+                - db
+                - cache
             restart: unless-stopped
             volumes:
-            - "./upload-dir:/upload-dir"
+                - "./upload-dir:/upload-dir"
             ports:
-            - "8089:8080"
+                - "8089:8080"
         db:
             image: mysql:8.0
             restart: always
             env_file: backend.env
             volumes:
-            - "./db:/var/lib/mysql"
+                - "./db:/var/lib/mysql"
         cache:
             image: redis:7.2.1
             restart: always
@@ -92,9 +111,9 @@ Then this will be you configuration:
             image: msdeluise/plant-it-frontend:latest
             env_file: frontend.env
             links:
-            - backend
+                - backend
             ports:
-            - "3009:3000"
+                - "3009:3000"
     ```
 * `frontend.env`:
     ```properties
@@ -106,24 +125,158 @@ Then this will be you configuration:
     ```
 * `backend.env`:
     ```properties
+    #
+    # DB
+    #
     MYSQL_HOST=db
     MYSQL_PORT=3306
     MYSQL_USERNAME=root
     MYSQL_PSW=root
     MYSQL_ROOT_PASSWORD=root
     MYSQL_DATABASE=bootdb
+    
+    #
+    # JWT
+    #
     JWT_SECRET=32characterscomplicatedsecret
     JWT_EXP=1
+    
+    #
+    # Server config
+    #
     USERS_LIMIT=2
     UPLOAD_DIR=/upload-dir
     API_PORT=8080
+    TRAFLE_KEY=
+    ALLOWED_ORIGINS=*
+    
+    #
+    # Cache
+    #
     CACHE_TTL=86400
     CACHE_HOST=cache
     CACHE_PORT=6379
-    TRAFLE_KEY=
-    ALLOWED_ORIGINS=*
     ```
 
+##### Example of traefik deployment
+[This](https://github.com/MDeLuise/plant-it/discussions/119#discussioncomment-8446597) is an example of deployment provider by a user using [traefik](https://traefik.io/traefik/):
+```
+  plantit-fe:
+    image: msdeluise/plant-it-frontend:latest
+    container_name: plantit-fe
+    restart: unless-stopped
+    networks:
+      reverse_proxy:
+      internal:
+        # ipv4_address: ${PLANTIT_FE_IP}
+    # ports:
+    #   - 3000:3000
+    environment:
+      - PORT=3000
+      - API_URL=https://plantit.${DOMAINNAME0}/api
+      - WAIT_TIMEOUT=10000 # backend response timeout in ms
+      - PAGE_SIZE=25
+      - BROWSER=none
+    labels:
+      # Traefik
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.plantit-rtr.entrypoints=https"
+      - "traefik.http.routers.plantit-rtr.rule=Host(`plantit.${DOMAINNAME0}`)"
+      ## Middlewares
+      - "traefik.http.routers.plantit-rtr.middlewares=chain-authelia@file"
+      ## HTTP Services
+      - "traefik.http.routers.plantit-rtr.service=plantit-svc"
+      - "traefik.http.services.plantit-svc.loadbalancer.server.port=3000"
+
+  plantit-be:
+    image: msdeluise/plant-it-backend:latest
+    container_name: plantit-be
+    restart: unless-stopped
+    depends_on:
+      - plantit-db
+      - plantit-cache
+    networks:
+      reverse_proxy:
+      internal:
+        # ipv4_address: ${PLANTIT_BE_IP}
+    # ports:
+    #   - 8080:8080
+    volumes:
+      - $DOCKERDIR/appdata/plantit/upload-dir:/upload-dir
+    environment:
+      - MYSQL_HOST=plantit-db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=${PLANTIT_DB_NAME}
+      - MYSQL_USERNAME=${PLANTIT_DB_USER}
+      - MYSQL_PSW=${PLANTIT_DB_ROOT}
+      - MYSQL_ROOT_PASSWORD=${PLANTIT_DB_ROOT}
+      - CACHE_HOST=plantit-cache
+      - CACHE_TTL=86400
+      - CACHE_PORT=6379
+      - API_PORT=8080
+      - JWT_SECRET=<redacted>
+      - JWT_EXP=1
+      - USERS_LIMIT=-1 # less then 0 means no limit
+      - UPLOAD_DIR=/upload-dir
+      - TREFLE_KEY=<redacted>
+      # - ALLOWED_ORIGINS=http://${PLANTIT_FE_IP}:3000
+      - ALLOWED_ORIGINS=https://plantit.${DOMAINNAME0}:3000
+      - LOG_LEVEL=INFO # DEBUG, INFO, WARN, ERROR
+    labels:
+      # Traefik
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.plantit-api-rtr.entrypoints=https"
+      - "traefik.http.routers.plantit-api-rtr.rule=Host(`plantit.$DOMAINNAME0`) && (PathPrefix(`/api`))"
+      ## Middlewares
+      - "traefik.http.routers.plantit-api-rtr.middlewares=plantit-cors@docker,chain-no-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.plantit-api-rtr.service=plantit-api-svc"
+      - "traefik.http.services.plantit-api-svc.loadbalancer.server.port=8080"
+      ## CORS
+      - "traefik.http.middlewares.plantit-cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://plantit.${DOMAINNAME0}"
+
+  plantit-db:
+    image: mysql:8.0
+    container_name: plantit-db
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - $DOCKERDIR/appdata/plantit-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${PLANTIT_DB_ROOT}
+
+  plantit-cache:
+    image: redis:7.2.1
+    container_name: plantit-cache
+    restart: unless-stopped
+    networks:
+      - internal
+```
+
+#### SMTP Configuration for Email Notifications
+An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the `backend.env` file:
+- **SMTP_HOST**: The host of the SMTP server.
+- **SMTP_PORT**: The port of the SMTP server.
+- **SMTP_EMAIL**: The email address used to send notifications.
+- **SMTP_PASSWORD**: The password of the email account used for authentication.
+- **SMTP_AUTH**: This parameter enables or disables authentication for the SMTP server.
+- **SMTP_START_TLS**: This parameter enables or disables the use of STARTTLS for secure communication with the SMTP server.
+
+Please note that some providers, such as Gmail, may require the use of an [application-specific password](https://support.google.com/mail/answer/185833?hl=en) for authentication.
+
+##### Example Gmail Configuration
+
+```properties
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_EMAIL=your-email@gmail.com
+SMTP_PASSWORD=your-application-password
+SMTP_AUTH=true
+SMTP_START_TTL=true
+```
 
 #### DNS and CORS
 ##### DNS

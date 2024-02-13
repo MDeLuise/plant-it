@@ -15,21 +15,22 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 export function App() {
   const isLoggedIn: () => boolean = () => secureLocalStorage.getItem("plant-it-key") != null;
   const backendURL = window._env_.API_URL != null ? window._env_.API_URL : "http://localhost:8085/api";
-  const axiosTimeout = window._env_.WAIT_TIMEOUT != null ? window._env_.WAIT_TIMEOUT : 5000;
+  const axiosTimeout = window._env_.WAIT_TIMEOUT != null ? window._env_.WAIT_TIMEOUT : 10000;
   const axiosReq = axios.create({
     baseURL: backendURL,
     timeout: axiosTimeout,
+    maxRedirects: 3,
   });
 
   axiosReq.interceptors.request.use(
-    (req) => {
+    req => {
       if (!req.url?.startsWith("authentication") && !req.url?.startsWith("api-key") &&
         !req.url?.startsWith("info")) {
         req.headers['Key'] = secureLocalStorage.getItem("plant-it-key");
       }
       return req;
     },
-    (err) => {
+    err => {
       return Promise.reject(err);
     }
   );

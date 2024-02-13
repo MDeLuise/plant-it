@@ -7,13 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApiKeyDTOConverter extends AbstractDTOConverter<ApiKey, ApiKeyDTO> {
-    private final ModelMapper modelMapper;
-
-
     @Autowired
     public ApiKeyDTOConverter(ModelMapper modelMapper) {
         super(modelMapper);
-        this.modelMapper = modelMapper;
     }
 
 

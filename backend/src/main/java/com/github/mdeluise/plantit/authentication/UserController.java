@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.authentication;
 
 import javax.naming.AuthenticationException;
 
+import com.github.mdeluise.plantit.authentication.payload.request.ChangeEmailRequest;
 import com.github.mdeluise.plantit.authentication.payload.request.ChangePasswordRequest;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,11 +83,33 @@ public class UserController {
     }
 
 
-    @GetMapping("/{username}/_available")
+    @GetMapping("/username/{username}/_available")
     @Operation(
         summary = "Check if a username is available", description = "Check if the provided `username` is available"
     )
-    public ResponseEntity<Boolean> checkAvailability(@PathVariable String username) {
+    public ResponseEntity<Boolean> checkUsernameAvailability(@PathVariable String username) {
         return ResponseEntity.ok(!userService.existsByUsername(username));
+    }
+
+
+    @GetMapping("/email/{email}/_available")
+    @Operation(
+        summary = "Check if a email is available", description = "Check if the provided `email` is available"
+    )
+    public ResponseEntity<Boolean> checkEmailAvailability(@PathVariable String email) {
+        return ResponseEntity.ok(!userService.existsByEmail(email));
+    }
+
+
+    @PutMapping("/_email")
+    @Operation(
+        summary = "Update a user's email", description = "Update the email of the authenticated User"
+    )
+    public ResponseEntity<String> updateEmail(@RequestBody ChangeEmailRequest changeEmailRequest)
+        throws AuthenticationException {
+        final Long idOfUserToUpdate = authenticatedUserService.getAuthenticatedUser().getId();
+        userService.updateEmail(idOfUserToUpdate, changeEmailRequest.password(),
+                                changeEmailRequest.newEmail());
+        return ResponseEntity.ok("updated");
     }
 }

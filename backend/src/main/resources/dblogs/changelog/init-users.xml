@@ -16,22 +16,8 @@
         <insert tableName="application_users">
             <column name="id" value="99"/>
             <column name="username" value="user"/>
+            <column name="email" value="to-change@null.com"/>
             <column name="password" value="$2a$10$TwhwicHicKzaC4TIdXNN8.siFXTRhY6Elfic.hS0/ZyLA3LL1GZS2"/> <!-- user -->
-        </insert>
-    </changeSet>
-
-    <changeSet id="insertUser1" author="MDeLuise">
-        <preConditions onFail="HALT">
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*)
-                FROM application_users
-                WHERE username = 'user1';
-            </sqlCheck>
-        </preConditions>
-        <insert tableName="application_users">
-            <column name="id" value="98"/>
-            <column name="username" value="user1"/>
-            <column name="password" value="$2a$10$bSb1UTsLzi3mF1FEygFtV.y/EJ3ZO7AX5vf4vcTJJRk/WdoazxB7K6"/> <!-- user1 -->
         </insert>
     </changeSet>
 

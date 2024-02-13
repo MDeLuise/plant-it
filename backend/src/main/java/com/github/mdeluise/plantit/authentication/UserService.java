@@ -1,10 +1,17 @@
 package com.github.mdeluise.plantit.authentication;
 
 import java.util.List;
+import java.util.Optional;
 import javax.naming.AuthenticationException;
 
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
+import com.github.mdeluise.plantit.notification.email.EmailException;
+import com.github.mdeluise.plantit.notification.email.EmailServiceProvider;
+import com.github.mdeluise.plantit.notification.password.TemporaryPassword;
+import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +20,18 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final EmailServiceProvider emailServiceProvider;
+    private final TemporaryPasswordService temporaryPasswordService;
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder encoder,
+                       EmailServiceProvider emailServiceProvider, TemporaryPasswordService temporaryPasswordService) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.emailServiceProvider = emailServiceProvider;
+        this.temporaryPasswordService = temporaryPasswordService;
     }
 
 
@@ -38,38 +51,76 @@ public class UserService {
     }
 
 
-    public User save(String username, String plainPassword) {
-        User user = new User();
+    public User save(String username, String plainPassword, String email) {
+        final User user = new User();
         user.setUsername(username);
         user.setPassword(plainPassword);
+        user.setEmail(email);
         return save(user);
     }
 
 
     @Transactional
     public User update(Long id, User updatedUser) {
-        User toUpdate = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        final User toUpdate = get(id);
         if (updatedUser.getUsername() != null && !updatedUser.getUsername().isBlank() &&
                 !updatedUser.getUsername().equals(toUpdate.getUsername())) {
             toUpdate.setUsername(updatedUser.getUsername());
-        }
-        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank() &&
-                !updatedUser.getPassword().equals(toUpdate.getPassword())) {
-            toUpdate.setPassword(updatedUser.getPassword());
         }
         return userRepository.save(toUpdate);
     }
 
 
     public void updatePassword(Long userId, String currentPassword, String newPassword) throws AuthenticationException {
-        User toUpdate = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(userId));
+        final User toUpdate = get(userId);
         if (!encoder.matches(currentPassword, toUpdate.getPassword())) {
-            throw new AuthenticationException("Current password does not match");
+            final Optional<TemporaryPassword> optionalTemporaryPassword =
+                temporaryPasswordService.get(toUpdate.getUsername());
+            if (optionalTemporaryPassword.isEmpty() ||
+                    !encoder.matches(currentPassword, optionalTemporaryPassword.get().getPassword())) {
+                logger.error(
+                    "Error while updating password for user {}, incorrect current password.", toUpdate.getUsername());
+                throw new AuthenticationException("Current password does not match");
+            } else {
+                logger.debug("User {} update his password using a temporary password", toUpdate.getUsername());
+            }
         }
         if (newPassword != null && !newPassword.isBlank() && !newPassword.equals(toUpdate.getPassword())) {
             final String encodedNewPassword = encoder.encode(newPassword);
             toUpdate.setPassword(encodedNewPassword);
             userRepository.save(toUpdate);
+            temporaryPasswordService.remove(toUpdate.getUsername());
+            logger.info("Password for user {} updated", toUpdate.getUsername());
+            emailServiceProvider.get().ifPresent(emailService -> {
+                try {
+                    emailService.sendPasswordChangeNotification(toUpdate.getUsername(), toUpdate.getEmail());
+                    logger.info("Sent email to user in order to notify about the password change");
+                } catch (EmailException e) {
+                    logger.error("Error while sending password change notification to user", e);
+                }
+            });
+        }
+    }
+
+
+    public void updateEmail(Long userId, String password, String newEmail) throws AuthenticationException {
+        final User toUpdate = get(userId);
+        if (!encoder.matches(password, toUpdate.getPassword())) {
+            logger.error("Error while updating email for user {}, incorrect current password.", toUpdate.getUsername());
+            throw new AuthenticationException("Incorrect password");
+        }
+        if (newEmail != null && !newEmail.isBlank() && !newEmail.equals(toUpdate.getPassword())) {
+            toUpdate.setEmail(newEmail);
+            userRepository.save(toUpdate);
+            logger.info("Email for user {} updated", toUpdate.getUsername());
+            emailServiceProvider.get().ifPresent(emailService -> {
+                try {
+                    emailService.sendEmailChangeNotification(toUpdate.getUsername(), newEmail);
+                    logger.info("Sent email to user in order to notify about the email change");
+                } catch (EmailException e) {
+                    logger.error("Error while sending email change notification to user", e);
+                }
+            });
         }
     }
 
@@ -98,5 +149,15 @@ public class UserService {
 
     public long count() {
         return userRepository.count();
+    }
+
+
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("email", email));
+    }
+
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

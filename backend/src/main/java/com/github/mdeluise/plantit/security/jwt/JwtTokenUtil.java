@@ -1,5 +1,8 @@
 package com.github.mdeluise.plantit.security.jwt;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -7,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
@@ -29,21 +29,20 @@ public class JwtTokenUtil {
 
 
     public com.github.mdeluise.plantit.security.jwt.JwtTokenInfo generateAccessToken(UserDetails userDetails) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String token = JWT.create()
-                          .withIssuer(issuer)
-                          .withSubject(userDetails.getUsername())
-                          .withIssuedAt(new Date())
-                          .withExpiresAt(java.sql.Date.valueOf(
-                              LocalDate.now().plusDays(expireAfterDays)))
-                          .sign(algorithm);
-        Date expireOn = java.sql.Date.valueOf(LocalDate.now().plusDays(expireAfterDays));
+        final Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        final String token = JWT.create()
+                                .withIssuer(issuer)
+                                .withSubject(userDetails.getUsername())
+                                .withIssuedAt(new Date())
+                                .withExpiresAt(java.sql.Date.valueOf(LocalDate.now().plusDays(expireAfterDays)))
+                                .sign(algorithm);
+        final Date expireOn = java.sql.Date.valueOf(LocalDate.now().plusDays(expireAfterDays));
         return new JwtTokenInfo(token, expireOn);
     }
 
 
     public boolean isValid(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        final Algorithm algorithm = Algorithm.HMAC256(secretKey);
         try {
             JWT.require(algorithm)
                .withIssuer(issuer)

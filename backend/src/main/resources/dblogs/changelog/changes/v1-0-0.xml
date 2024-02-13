@@ -22,11 +22,19 @@
             <column name="password" type="varchar(120)">
                 <constraints nullable="false"/>
             </column>
+            <column name="email" type="varchar(70)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addUniqueConstraint
                 columnNames="username"
                 constraintName="username_unique"
+                tableName="application_users"
+        />
+        <addUniqueConstraint
+                columnNames="email"
+                constraintName="email_unique"
                 tableName="application_users"
         />
     </changeSet>
@@ -60,6 +68,26 @@
                 constraintName="api_key_name_unique"
                 tableName="api_keys"
         />
+    </changeSet>
+
+
+    <changeSet id="createTemporaryPasswordTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="temporary_passwords"/>
+            </not>
+        </preConditions>
+        <createTable tableName="temporary_passwords">
+            <column name="username" type="varchar(20)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
@@ -370,6 +398,24 @@
         </preConditions>
         <renameColumn tableName="entity_images" oldColumnName="saved_at"
                       newColumnName="create_on" columnDataType="datetime"/>
+
+        <addColumn tableName="application_users">
+            <column name="email" type="varchar(70)" defaultValueComputed="(username || '@to-change.com')">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <createTable tableName="temporary_passwords">
+            <column name="username" type="varchar(20)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

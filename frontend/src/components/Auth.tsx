@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AxiosInstance } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 import { NavigateFunction, useNavigate } from "react-router";
 import secureLocalStorage from "react-secure-storage";
 import Button from '@mui/material/Button';
@@ -18,13 +18,13 @@ import { FormHelperText, useTheme } from "@mui/material";
 import ErrorDialog from "./ErrorDialog";
 import { getErrMessage, isBackendReachable } from "../common";
 
-export default function (props: { requestor: AxiosInstance; }) {
+export default function Auth(props: { requestor: AxiosInstance; }) {
     const navigate: NavigateFunction = useNavigate();
-    const [authMode, setAuthMode] = useState<"register" | "login" | undefined>();
-    const [credentials, setCredentials] = useState<{ username: string, password: string; }>();
-    const [errors, setErrors] = useState<{ username?: string, password?: string; }>();
+    const [authMode, setAuthMode] = useState<"register" | "login" | "forgot" | undefined>();
+    const [credentials, setCredentials] = useState<{ username?: string, email?: string, password?: string; }>();
+    const [errors, setErrors] = useState<{ username?: string, email?: string, password?: string; }>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [errorDialog, setErrorDialog] = useState<{ text: string, shown: boolean; }>();
+    const [errorDialog, setErrorDialog] = useState<{ text: string, shown: boolean, title?: string; }>();
 
     const doLogin = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -76,6 +76,26 @@ export default function (props: { requestor: AxiosInstance; }) {
             });
     };
 
+
+    const resetPassword = (event: React.SyntheticEvent): void => {
+        event.preventDefault();
+        props.requestor.post(`authentication/password/reset/${credentials?.username}`)
+        .then(res => {
+            setErrorDialog({
+                title: "Success",
+                text: res.data,
+                shown: true
+            });
+        })
+        .catch((err: AxiosError) => {
+            setErrorDialog({
+                text: getErrMessage(err),
+                shown: true
+            });
+        })
+    };
+
+
     const changeAuthMode = () => {
         let newAuthMode: "register" | "login" = authMode === "login" ? "register" : "login";
         setAuthMode(newAuthMode);
@@ -99,7 +119,19 @@ export default function (props: { requestor: AxiosInstance; }) {
         } else {
             setErrors({ ...errors, username: undefined });
         }
-        setCredentials({ username: value, password: credentials?.password || "" });
+        setCredentials({ username: value, password: credentials?.password, email: credentials?.email });
+    };
+
+
+    const changeEmail = (value: string, validate?: boolean): void => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValidEmail = emailRegex.test(value);
+        if (authMode == "register" && !isValidEmail || validate) {
+            setErrors({ ...errors, email: "invalid email format" });
+        } else {
+            setErrors({ ...errors, email: undefined });
+        }
+        setCredentials({ email: value, password: credentials?.password, username: credentials?.username });
     };
 
 
@@ -109,13 +141,14 @@ export default function (props: { requestor: AxiosInstance; }) {
         } else {
             setErrors({ ...errors, password: undefined });
         }
-        setCredentials({ password: value, username: credentials?.username || "" });
+        setCredentials({ password: value, username: credentials?.username, email: credentials?.email });
     };
 
 
     const isSubmitButtonEnabled = (): boolean => {
-        return credentials !== undefined &&
-            credentials.username.length > 0 && credentials.password.length > 0;
+        return credentials !== undefined && credentials.username !== undefined && credentials.password !== undefined &&
+            credentials.username.length > 0 && credentials.password.length > 0 || (credentials !== undefined &&
+                credentials.username != undefined && credentials?.username.length > 0 && authMode === "forgot");
     };
 
 
@@ -123,7 +156,10 @@ export default function (props: { requestor: AxiosInstance; }) {
         isBackendReachable(props.requestor)
             .then(res => {
                 if (!res) {
-                    setErrorDialog({ text: "Cannot connect to the backend", shown: true });
+                    setErrorDialog({
+                        text: `Cannot connect to the backend at ${props.requestor.defaults.baseURL}`,
+                        shown: true
+                    });
                 }
             });
     }, []);
@@ -139,6 +175,7 @@ export default function (props: { requestor: AxiosInstance; }) {
 
             <ErrorDialog
                 text={errorDialog?.text}
+                title={errorDialog?.title}
                 open={errorDialog?.shown || false}
                 close={() => setErrorDialog({ text: "", shown: false })}
             />
@@ -223,7 +260,7 @@ export default function (props: { requestor: AxiosInstance; }) {
                 authMode != undefined &&
                 <Box
                     component="form"
-                    onSubmit={authMode === "login" ? doLogin : signUp}
+                    onSubmit={authMode === "login" ? doLogin : (authMode === "forgot" ? resetPassword : signUp)}
                     noValidate
                     sx={{
                         mt: 1,
@@ -241,13 +278,13 @@ export default function (props: { requestor: AxiosInstance; }) {
                             marginBottom: "20px",
                         }}>
                         <Typography
-                            variant="h4"
+                            variant={authMode === "forgot" ? "h6" : "h4"}
                             fontWeight={600}
                         >
-                            {authMode === "login" ? "Login to" : "Register to"}
+                            {authMode === "login" ? "Login to" : (authMode === "register" ? "Register to" : "Reset password for")}
                         </Typography>
                         <Typography
-                            variant="h4"
+                            variant={authMode === "forgot" ? "h6" : "h4"}
                             fontWeight={600}
                             sx={{
                                 color: "primary.main"
@@ -264,37 +301,68 @@ export default function (props: { requestor: AxiosInstance; }) {
                         name="username"
                         autoComplete="username"
                         autoFocus
-                        onChange={(e) => changeUsername(e.target.value)}
+                        onChange={e => changeUsername(e.target.value)}
                         error={errors?.username !== undefined}
                         helperText={errors?.username}
                     />
-                    <FormControl fullWidth margin="normal" variant="outlined" required>
-                        <InputLabel htmlFor="password-input">Password</InputLabel>
-                        <OutlinedInput
-                            id="password-input"
-                            type={showPassword ? 'text' : 'password'}
-                            onChange={(e) => changePassword(e.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            label="Password"
-                            error={errors?.password != undefined}
+                    {
+                        authMode === "register" &&
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="enail"
+                            label="Email"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={e => changeEmail(e.target.value)}
+                            error={errors?.email !== undefined}
+                            helperText={errors?.email}
                         />
+                    }
+                    <>
+                        {
+                            authMode !== "forgot" &&
+                            <>
+                                <FormControl fullWidth margin="normal" variant="outlined" required>
+                                    <InputLabel htmlFor="password-input">Password</InputLabel>
+                                    <OutlinedInput
+                                        id="password-input"
+                                        type={showPassword ? 'text' : 'password'}
+                                        onChange={(e) => changePassword(e.target.value)}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                        error={errors?.password != undefined}
+                                    />
+                                </FormControl>
+                                {
+                                    authMode === "login" &&
+                                    <Box sx={{
+                                        textAlign: "right",
+                                    }}>
+                                        <Link onClick={() => setAuthMode("forgot")}>Forgot password?</Link>
+                                    </Box>
+                                }
+                            </>
+                        }
                         {
                             errors?.password != undefined &&
                             <FormHelperText error>
                                 {errors.password}
                             </FormHelperText>
                         }
-                    </FormControl>
+                    </>
 
                     <Button
                         type="submit"
@@ -303,7 +371,7 @@ export default function (props: { requestor: AxiosInstance; }) {
                         sx={{ mt: 3, mb: 2 }}
                         disabled={!isSubmitButtonEnabled()}
                     >
-                        {authMode == "login" ? "Login" : "Register"}
+                        {authMode == "login" ? "Login" : (authMode === "forgot" ? "Reset password" : "Register")}
                     </Button>
                     <Link
                         href="#"

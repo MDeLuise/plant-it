@@ -7,7 +7,7 @@ chapter = false
 Feel free to contribute and help improve the project.
 
 #### Bug Report, Feature Request and Question
-You can submit any of this in the [github issues section of the repository](https://github.com/MDeLuise/plant-it/issues). Chose the right template and then fill the required info.
+You can submit any of this in the [github issues section of the repository](https://github.com/MDeLuise/plant-it/issues/new/choose). Chose the right template and then fill the required info.
 
 #### Bug fix
 If you fix a bug, please follow the contribution guideline in order to merge the fix in the repository.

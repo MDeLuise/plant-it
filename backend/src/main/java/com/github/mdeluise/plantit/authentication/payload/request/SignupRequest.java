@@ -9,5 +9,7 @@ public record SignupRequest(
     @Schema(description = "Username to use to register.", example = "admin") @NotBlank @Size(min = 3, max = 20)
     String username,
     @Schema(description = "Username to use to register.", example = "admin") @NotBlank @Size(min = 6, max = 40)
-    String password) {
+    String password,
+    @Schema(description = "Email to use to register.", example = "foo@bar.com") @NotBlank @Size(min = 5, max = 70)
+    String email) {
 }
