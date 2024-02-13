@@ -159,7 +159,7 @@ Then this will be you configuration:
     ```
 
 ##### Example of traefik deployment
-[This](https://github.com/MDeLuise/plant-it/discussions/119#discussioncomment-8446597) is an example of deployment provider by a user using [traefik](https://traefik.io/traefik/):
+[This](https://github.com/MDeLuise/plant-it/discussions/119) is an example of deployment provider by a user using [traefik](https://traefik.io/traefik/):
 ```
   plantit-fe:
     image: msdeluise/plant-it-frontend:latest
