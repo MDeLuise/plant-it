@@ -1312,17 +1312,24 @@ function BottomBar(props: {
             .catch(props.printError);
     };
 
+    const addEntityImages = (toUpload: FileList, description?: string): void => {
+        Array.from(toUpload).forEach(file => {
+            const creationDate = new Date(file.lastModified);
+            addEntityImage(file, creationDate, description);
+        })
+    };
+
     const addEntityImage = (toUpload: File, creationDate?: Date, description?: string): void => {
         let formData = new FormData();
         formData.append('image', toUpload);
-        formData.append('creationDate', creationDate ? creationDate.toISOString() : ''); // Append creationDate to formData
-        formData.append('description', description || ''); // Append description to formData
+        formData.append('creationDate', creationDate ? creationDate.toISOString() : '');
+        formData.append('description', description || '');
         props.requestor.post(`/image/entity/${props.plant?.id}`, formData)
             .then(res => {
                 props.addUploadedImgs(res.data);
             })
             .catch(props.printError);
-    };    
+    };
 
     return <Box
         sx={{
@@ -1399,9 +1406,10 @@ function BottomBar(props: {
                         type="file"
                         accept="image/*"
                         hidden
+                        multiple
                         onChange={event => {
                             if (event.target.files != undefined) {
-                                addEntityImage(event.target.files[0], new Date(event.target.files[0].lastModified));
+                                addEntityImages(event.target.files);
                             }
                         }}
                     />
