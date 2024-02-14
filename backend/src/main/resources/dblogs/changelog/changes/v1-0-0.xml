@@ -296,6 +296,11 @@
     </changeSet>
 
     <changeSet id="createSynonymsTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="synonyms"/>
+            </not>
+        </preConditions>
         <createTable tableName="synonyms">
             <column name="botanical_info_id" type="bigint">
                 <constraints nullable="false" primaryKey="true" foreignKeyName="fk_synonyms_botanicalInfo"

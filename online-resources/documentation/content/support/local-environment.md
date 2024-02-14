@@ -13,7 +13,7 @@ You need to install:
 * [ReactJS](https://reactjs.org/)
 
 #### Run the services
-1. Be sure to have the `mysql` database up and running
+1. (if backend `dev` profile not used) Be sure to have the `mysql` database up and running
 1. Run the following command in the terminal inside the `backend` folder
   `./mvnw spring-boot:run`
 1. Run the following command in the terminal inside the `frontend` folder
