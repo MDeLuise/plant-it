@@ -87,33 +87,33 @@ Then this will be you configuration:
     version: "3"
     name: plant-it
     services:
-        backend:
-            image: msdeluise/plant-it-backend:latest
-            env_file: backend.env
-            depends_on:
-                - db
-                - cache
-            restart: unless-stopped
-            volumes:
-                - "./upload-dir:/upload-dir"
-            ports:
-                - "8089:8080"
-        db:
-            image: mysql:8.0
-            restart: always
-            env_file: backend.env
-            volumes:
-                - "./db:/var/lib/mysql"
-        cache:
-            image: redis:7.2.1
-            restart: always
-        frontend:
-            image: msdeluise/plant-it-frontend:latest
-            env_file: frontend.env
-            links:
-                - backend
-            ports:
-                - "3009:3000"
+      backend:
+        image: msdeluise/plant-it-backend:latest
+        env_file: backend.env
+        depends_on:
+          - db
+          - cache
+        restart: unless-stopped
+        volumes:
+          - "./upload-dir:/upload-dir"
+        ports:
+          - "8089:8080"
+      db:
+        image: mysql:8.0
+        restart: always
+        env_file: backend.env
+        volumes:
+          - "./db:/var/lib/mysql"
+      cache:
+        image: redis:7.2.1
+        restart: always
+      frontend:
+        image: msdeluise/plant-it-frontend:latest
+        env_file: frontend.env
+        links:
+          - backend
+        ports:
+          - "3009:3000"
     ```
 * `frontend.env`:
     ```properties
@@ -159,7 +159,7 @@ Then this will be you configuration:
     ```
 
 ##### Example of traefik deployment
-[This](https://github.com/MDeLuise/plant-it/discussions/119) is an example of deployment provider by a user using [traefik](https://traefik.io/traefik/):
+[This](https://github.com/MDeLuise/plant-it/discussions/119) is an example of deployment provider by @filcuk using [traefik](https://traefik.io/traefik/):
 ```
   plantit-fe:
     image: msdeluise/plant-it-frontend:latest

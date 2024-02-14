@@ -8,10 +8,14 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: "PUSH_IMAGES", defaultValue: false, description: "Push the images on Docker Hub")
-        booleanParam(name: "BUILD_IMAGES", defaultValue: false, description: "Build the docker images")
-        text(name: "IMAGES_VERSION", defaultValue: "vX.X.X", description: "Version of the docker images")
-        booleanParam(name: "IMAGES_LATEST", defaultValue: true, description: "Update the latest version of the images on Docker Hub")
+        booleanParam(name: "BACKEND_TESTS", defaultValue: true, description: "Run the backend tests")
+        booleanParam(name: "BACKEND_BUILD_IMAGE", defaultValue: true, description: "Build the backend docker images")
+        booleanParam(name: "BACKEND_PUSH_IMAGE", defaultValue: true, description: "Push the backend image on Docker Hub")
+        booleanParam(name: "FRONTEND_TESTS", defaultValue: true, description: "Run the frontend tests")
+        booleanParam(name: "FRONTEND_BUILD_IMAGE", defaultValue: true, description: "Build the backend docker images")
+        booleanParam(name: "FRONTEND_PUSH_IMAGE", defaultValue: true, description: "Push the frontend image on Docker Hub")
+        text(name: "IMAGES_VERSION", defaultValue: "X.X.X", description: "Version of the docker images")
+        booleanParam(name: "IMAGES_LATEST", defaultValue: false, description: "Update the latest version of the images on Docker Hub")
     }
 
     agent any
@@ -19,6 +23,7 @@ pipeline {
         stage('Build and test') {
             parallel {
                 stage('Backend') {
+                    failFast true
                     agent {
                         docker {
                             image "maven:3-eclipse-temurin-20"
@@ -35,6 +40,7 @@ pipeline {
                             }
                         }
                         stage('Test') {
+                            when { environment name: 'BACKEND_TESTS', value: 'true' }
                             steps {
                                 dir("backend") {
                                     echo 'Testing...'
@@ -51,6 +57,7 @@ pipeline {
                             }
                         }
                         stage('Package') {
+                            when { environment name: 'BACKEND_BUILD_IMAGE', value: 'true' }
                             steps {
                                 dir("backend") {
                                     echo 'Packaging...'
@@ -69,9 +76,10 @@ pipeline {
                     }
                 }
                 stage('Frontend') {
+                    failFast true
                     agent {
                         docker {
-                            image 'node:lts-bullseye-slim'
+                            image 'node:21.6.0-slim'
                         }
                     }
                     stages {
@@ -87,6 +95,7 @@ pipeline {
                             }
                         }
                         stage('Test') {
+                            when { environment name: 'FRONTEND_TESTS', value: 'true' }
                             steps {
                                 dir("frontend") {
                                     sh """
@@ -110,9 +119,13 @@ pipeline {
             post {
                 failure {
                     script {
-                        def title = "Build failed"
+                        def title = "${JOB_NAME} build failed"
                         def tag = "rotating_light"
-                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
+                        def failingStepName = currentBuild.rawBuild.getExecutor().getOwner().getDisplayName()
+                        def failingStepMessage = currentBuild.rawBuild.getLog(70)
+                        def body = "- Build id: ${env.BUILD_ID}\n- Build result: ${currentBuild.result}\n- Build branch: ${BRANCH_NAME}\n- Time: ${currentBuild.durationString}\n-Failing step: ${failingStepName}\n- Error log: ${failingStepMessage}"
+
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d '${body}'"
                     }
                 }
             }
@@ -121,13 +134,21 @@ pipeline {
             agent any
             stages {
                 stage('Login') {
-                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    when {
+                        expression {
+                            return params.BACKEND_BUILD_IMAGE || params.FRONTEND_BUILD_IMAGE
+                        }
+                    }
                     steps {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
                     }
                 }
                 stage("Create Buildx Builder") {
-                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    when {
+                        expression {
+                            return params.BACKEND_BUILD_IMAGE || params.FRONTEND_BUILD_IMAGE
+                        }
+                    }
                     steps {
                         sh """
                         docker context create $BUILDER_NAME
@@ -137,25 +158,26 @@ pipeline {
                     }
                 }
                 stage("Build (and publish) multi-arch image") {
-                    when { environment name: 'BUILD_IMAGES', value: 'true' }
+                    failFast true
                     parallel {
                         stage('Build backend image') {
+                            when { environment name: 'BACKEND_BUILD_IMAGE', value: 'true' }
                             steps {
                                 dir("backend") {
                                     unstash 'jarFiles'
                                     script {
-                                        if (params.PUSH_IMAGES) {
+                                        if (params.BACKEND_PUSH_IMAGE) {
                                             sh """
-                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                                docker buildx build --progress=plain --no-cache --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
                                             """
                                             if (params.IMAGES_LATEST) {
                                                 sh """
-                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:latest -f deployment/Dockerfile .
+                                                    docker buildx build --progress=plain --no-cache --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:latest -f deployment/Dockerfile .
                                                 """
                                             }
                                         } else {
                                             sh """
-                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                                docker buildx build --progress=plain --no-cache --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-backend:$params.IMAGES_VERSION -f deployment/Dockerfile .
                                             """
                                         }
                                     }
@@ -163,21 +185,22 @@ pipeline {
                             }
                         }
                         stage('Build frontend image') {
+                            when { environment name: 'FRONTEND_BUILD_IMAGE', value: 'true' }
                             steps {
                                 dir("frontend") {
                                     script {
-                                        if (params.PUSH_IMAGES) {
+                                        if (params.FRONTEND_PUSH_IMAGE) {
                                             sh """
-                                                docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                                docker buildx build --progress=plain --no-cache --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
                                             """
                                             if (params.IMAGES_LATEST) {
                                                 sh """
-                                                    docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:latest -f deployment/Dockerfile .
+                                                    docker buildx build --progress=plain --no-cache --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:latest -f deployment/Dockerfile .
                                                 """
                                             }
                                         } else {
                                             sh """
-                                                docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
+                                                docker buildx build --progress=plain --no-cache --platform linux/amd64,linux/arm64 -t $DOCKER_ID/$SERVICE-frontend:$params.IMAGES_VERSION -f deployment/Dockerfile .
                                             """
                                         }
                                     }
@@ -190,7 +213,7 @@ pipeline {
             post {
                 always {
                     script {
-                        if (params.BUILD_IMAGES) {
+                        if (params.BACKEND_BUILD_IMAGE || params.FRONTEND_BUILD_IMAGE) {
                             sh """
                                 docker stop \$(docker ps -a -q)
                                 docker images -q | xargs --no-run-if-empty docker rmi -f
@@ -199,15 +222,20 @@ pipeline {
                                 rm -rf backend/target
                             """
                         }
-                        def title = "Build "
+                        def title = "${JOB_NAME} build "
                         def tag = "tada"
+                        def body = "- Build id: ${env.BUILD_ID}\n- Build result: ${currentBuild.result}\n- Build branch: ${BRANCH_NAME}\n- Time: ${currentBuild.durationString}"
                         if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
                             title += "succeeded"
                         } else {
+                            def failingStepName = currentBuild.rawBuild.getExecutor().getOwner().getDisplayName()
+                            def failingStepMessage = currentBuild.rawBuild.getLog(70)
                             title += "failed"
                             tag = "rotating_light"
+
+                            body += "\n-Failing step: ${failingStepName}\n- Error log: ${failingStepMessage}"
                         }
-                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d 'Build result: ${currentBuild.result}'"
+                        sh "curl -H \"Title: ${title}\" -H \"Tags: ${tag}\" -X POST http://192.168.1.108:19492/jenkins -d '${body}'"
                     }
                 }
             }
