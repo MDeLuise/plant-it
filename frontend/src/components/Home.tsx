@@ -332,12 +332,15 @@ export default function Home(props: { isLoggedIn: () => boolean, requestor: Axio
         });
     };
 
-    navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data && event.data.action === 'showSnackbar') {
-            snackbarAlert("warning", "You're offline");
-            setOnline(false);
-        }
-    });
+
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data && event.data.action === 'showSnackbar') {
+                snackbarAlert("warning", "You're offline");
+                setOnline(false);
+            }
+        });
+    }
 
 
     useEffect(() => {

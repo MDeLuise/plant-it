@@ -33,6 +33,13 @@ There are 2 configuration files available:
     ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
     LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
     UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
+    CONTACT_MAIL=foo@bar.com # address used as "contact" for template email
+    
+    #
+    # SSL
+    #
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/ # path to files to use for ssl. If on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
 
     #
     # Cache
@@ -57,6 +64,8 @@ There are 2 configuration files available:
     API_URL=http://localhost:8080/api
     WAIT_TIMEOUT=5000 # timeout for backend responses (in milliseconds)
     CACHE_TTL_DAYS=7 # days before cache will be deleted
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/ # path to files to use for ssl. If on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
 
     PAGE_SIZE=25
 
@@ -96,6 +105,7 @@ Then this will be you configuration:
         restart: unless-stopped
         volumes:
           - "./upload-dir:/upload-dir"
+          - "certs:/certificates"
         ports:
           - "8089:8080"
       db:
@@ -114,6 +124,15 @@ Then this will be you configuration:
           - backend
         ports:
           - "3009:3000"
+        volumes:
+          - "certs:/certificates"
+    volumes:
+      certs:
+        driver: local
+        driver_opts:
+        type: none
+        o: bind
+        device: ./certificates
     ```
 * `frontend.env`:
     ```properties
@@ -122,6 +141,8 @@ Then this will be you configuration:
     WAIT_TIMEOUT=5000
     PAGE_SIZE=25
     BROWSER=none
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/
     ```
 * `backend.env`:
     ```properties
@@ -156,11 +177,20 @@ Then this will be you configuration:
     CACHE_TTL=86400
     CACHE_HOST=cache
     CACHE_PORT=6379
+
+    #
+    # SSL
+    #
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/
     ```
 
 ##### Example of traefik deployment
 [This](https://github.com/MDeLuise/plant-it/discussions/119) is an example of deployment provider by @filcuk using [traefik](https://traefik.io/traefik/):
 ```
+version: "3"
+name: plant-it
+services:
   plantit-fe:
     image: msdeluise/plant-it-frontend:latest
     container_name: plantit-fe
@@ -171,6 +201,8 @@ Then this will be you configuration:
         # ipv4_address: ${PLANTIT_FE_IP}
     # ports:
     #   - 3000:3000
+    volumes:
+      - certs:/certificates
     environment:
       - PORT=3000
       - API_URL=https://plantit.${DOMAINNAME0}/api
@@ -204,6 +236,7 @@ Then this will be you configuration:
     #   - 8080:8080
     volumes:
       - $DOCKERDIR/appdata/plantit/upload-dir:/upload-dir
+      - certs:/certificates
     environment:
       - MYSQL_HOST=plantit-db
       - MYSQL_PORT=3306
@@ -254,6 +287,13 @@ Then this will be you configuration:
     restart: unless-stopped
     networks:
       - internal
+volumes:
+  certs:
+    driver: local
+    driver_opts:
+    type: none
+    o: bind
+    device: ./certificates
 ```
 
 #### SMTP Configuration for Email Notifications
@@ -264,6 +304,7 @@ An SMTP server can be used to send notifications to users, such as password rese
 - **SMTP_PASSWORD**: The password of the email account used for authentication.
 - **SMTP_AUTH**: This parameter enables or disables authentication for the SMTP server.
 - **SMTP_START_TLS**: This parameter enables or disables the use of STARTTLS for secure communication with the SMTP server.
+- **CONTACT_MAIL**: contact address to use in the email templates if a user want to contact the administrator
 
 Please note that some providers, such as Gmail, may require the use of an [application-specific password](https://support.google.com/mail/answer/185833?hl=en) for authentication.
 
@@ -276,6 +317,7 @@ SMTP_EMAIL=your-email@gmail.com
 SMTP_PASSWORD=your-application-password
 SMTP_AUTH=true
 SMTP_START_TTL=true
+CONTACT_MAIL=your-email@gmail.com
 ```
 
 #### DNS and CORS
@@ -291,3 +333,109 @@ In a more practical way:
 
 ##### CORS
 Given the above, you can change the value of the `ALLOWED_ORIGINS` parameter (`backend.env` file) in order to be more strict than the default `*`. However, keep in mind that there you have to put the IPs from which you will access the system (i.e. the client/browser you're using and the REST API client if any).
+
+
+#### Enable SSL
+To enable SSL for your Plant-it deployment, follow these steps:
+
+1. **Set SSL Enabled Property**: Ensure that SSL is enabled by adding the property `SSL_ENABLED=true` to both the `frontend.env` and `backend.env` files.
+2. **Modify Frontend API URL**: Update the `API_URL` value in the `frontend.env` file to use the `https` protocol. This ensures that the frontend communicates with the backend over a secure connection.
+3. **Create Volume Binding**: Add a volume binding `"./certificates:/certificates"` to both the `frontend.env` and `backend.env` services in your `docker-compose.yml` file. This allows the services to access SSL certificates stored in the `/certificates` directory.
+4. **Export Frontend Port**: Export port `3001` of the frontend service in your `docker-compose.yml` file to ensure that it's accessible externally.
+
+##### Complete Example
+Let's say that you want to run Plant-it on a server with IP `https://192.168.1.103` and want to have:
+* the backend on port `8089`,
+* the frontend on port `3009`.
+
+**docker-compose.yml**:
+```yaml
+version: "3"
+name: plant-it
+services:
+  backend:
+    image: msdeluise/plant-it-backend:latest
+    env_file: backend.env
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+    volumes:
+      - "./upload-dir:/upload-dir"
+      - "certs:/certificates"
+    ports:
+      - "8089:8080"
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file: backend.env
+    volumes:
+      - "./db:/var/lib/mysql"
+  cache:
+    image: redis:7.2.1
+    restart: always
+  frontend:
+    image: msdeluise/plant-it-frontend:latest
+    env_file: frontend.env
+    links:
+      - backend
+    ports:
+      - "3009:3001"
+    volumes:
+      - "certs:/certificates"
+volumes:
+  certs:
+    driver: local
+    driver_opts:
+    type: none
+    o: bind
+    device: ./certificates
+```
+
+**frontend.env**:
+```properties
+PORT=3000
+API_URL=https://192.168.1.103:8089/api
+WAIT_TIMEOUT=5000
+PAGE_SIZE=25
+BROWSER=none
+SSL_ENABLED=true
+CERTIFICATE_PATH=/certificates/ 
+```
+
+**backend.env**:
+```properties
+MYSQL_HOST=db
+MYSQL_PORT=3306
+MYSQL_USERNAME=root
+MYSQL_PSW=root
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=bootdb
+JWT_SECRET=32characterscomplicatedsecret
+JWT_EXP=1
+USERS_LIMIT=2
+UPLOAD_DIR=/upload-dir
+API_PORT=8080
+CACHE_TTL=86400
+CACHE_HOST=cache
+CACHE_PORT=6379
+TRAFLE_KEY=
+ALLOWED_ORIGINS=*
+SSL_ENABLED=true
+CERTIFICATE_PATH=/certificates/ 
+```
+
+This setup creates a self-hosted certificate for both the backend and frontend services.
+
+{{% notice note %}}
+When SSL is enabled for your application and a self-signed certificate is used, it's important to note that the service worker might not be available. This means that the offline mode, which results is a cached version of the application served by the service worker, won't function as expected.
+Service workers require a secure context to run, and self-signed certificates are not considered secure by default. As a result, browsers may restrict the execution of service workers when using self-signed certificates, leading to the inability to utilize offline capabilities.
+{{% /notice %}}
+
+{{% notice warning %}}
+In some cases, certain browsers may require explicit acceptance of certificates from both the frontend and backend of the application, even if they share the same certificate. This scenario typically arises when encountering a "Cannot connect to the backend" error message and SSL is enabled.
+To resolve this issue, users may need to navigate to both the frontend and backend URLs of the application and manually accept the certificate presented by each. By acknowledging the certificates, users can establish a trusted connection between their browser and the application's frontend and backend servers, thereby resolving connectivity issues.
+{{% /notice %}}
+
+##### Provide Custom Certificate
+If you prefer to use your own certificate, simply place the `app.key` and `app.crt` files inside the `CERTIFICATE_PATH` folder.

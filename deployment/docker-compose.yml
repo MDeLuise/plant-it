@@ -1,5 +1,4 @@
 version: "3"
-
 name: plant-it
 services:
   backend:
@@ -11,6 +10,7 @@ services:
     restart: unless-stopped
     volumes:
       - "./upload-dir:/upload-dir"
+      - "certs:/certificates"
     ports:
       - "8080:8080"
 
@@ -32,3 +32,13 @@ services:
       - backend
     ports:
       - "3000:3000"
+    volumes:
+      - "certs:/certificates"
+
+volumes:
+  certs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./certificates

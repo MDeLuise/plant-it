@@ -12,36 +12,43 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     version: "3"
     name: plant-it
     services:
-        backend:
-            image: msdeluise/plant-it-backend:latest
-            env_file: backend.env
-            depends_on:
-                - db
-                - cache
-            restart: unless-stopped
-            volumes:
-                - "./upload-dir:/upload-dir"
-            ports:
-                - "8080:8080"
-
-        db:
-            image: mysql:8.0
-            restart: always
-            env_file: backend.env
-            volumes:
-                - "./db:/var/lib/mysql"
-
-        cache:
-            image: redis:7.2.1
-            restart: always
-
-        frontend:
-            image: msdeluise/plant-it-frontend:latest
-            env_file: frontend.env
-            links:
-                - backend
-            ports:
-                - "3000:3000"
+      backend:
+        image: msdeluise/plant-it-backend:latest
+        env_file: backend.env
+        depends_on:
+          - db
+          - cache
+        restart: unless-stopped
+        volumes:
+          - "./upload-dir:/upload-dir"
+          - "certs:/certificates"
+        ports:
+          - "8080:8080"
+      db:
+        image: mysql:8.0
+        restart: always
+        env_file: backend.env
+        volumes:
+          - "./db:/var/lib/mysql"
+      cache:
+        image: redis:7.2.1
+        restart: always
+      frontend:
+        image: msdeluise/plant-it-frontend:latest
+        env_file: frontend.env
+        links:
+          - backend
+        ports:
+          - "3000:3000"
+        volumes:
+          - "certs:/certificates"
+    volumes:
+      certs:
+        driver: local
+        driver_opts:
+        type: none
+        o: bind
+        device: ./certificates
     ```
     * `backend.env`:
     ```properties
@@ -77,12 +84,19 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     CACHE_TTL=86400
     CACHE_HOST=cache
     CACHE_PORT=6379
+
+    #
+    # SSL
+    #
+    SSL_ENABLED=false
+    CERTIFICATE_PATH=/certificates/
     ```
     * `frontend.env`:
     ```properties
     PORT=3000 # port that will serve the frontend, if on docker deployment leave as it is and change the port binding in the docker-compose file if needed
     API_URL=http://localhost:8080/api
     WAIT_TIMEOUT=10000 # timeout for backend responses (in milliseconds)
+    SSL_ENABLED=false
 
     PAGE_SIZE=25
 

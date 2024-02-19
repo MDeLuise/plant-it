@@ -15,7 +15,7 @@ public class PlantInfoDTO {
     @Schema(description = "End date of the plant.")
     private Date endDate;
     @Schema(description = "State of the plant.")
-    private PlantState plantState;
+    private PlantState state;
     @Schema(description = "Note of the plant.")
     private String note;
     @Schema(description = "Price of the plant when purchased.")
@@ -58,13 +58,13 @@ public class PlantInfoDTO {
     }
 
 
-    public PlantState getPlantState() {
-        return plantState;
+    public PlantState getState() {
+        return state;
     }
 
 
-    public void setPlantState(PlantState plantState) {
-        this.plantState = plantState;
+    public void setState(PlantState state) {
+        this.state = state;
     }
 
 
@@ -129,7 +129,7 @@ public class PlantInfoDTO {
         }
         final PlantInfoDTO that = (PlantInfoDTO) o;
         return Objects.equals(startDate, that.startDate) && Objects.equals(personalName, that.personalName) &&
-                   Objects.equals(endDate, that.endDate) && plantState == that.plantState &&
+                   Objects.equals(endDate, that.endDate) && state == that.state &&
                    Objects.equals(note, that.note) && Objects.equals(purchasedPrice, that.purchasedPrice) &&
                    Objects.equals(currencySymbol, that.currencySymbol) && Objects.equals(seller, that.seller) &&
                    Objects.equals(location, that.location);
@@ -138,7 +138,7 @@ public class PlantInfoDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(startDate, personalName, endDate, plantState, note, purchasedPrice, currencySymbol, seller,
+        return Objects.hash(startDate, personalName, endDate, state, note, purchasedPrice, currencySymbol, seller,
                             location
         );
     }

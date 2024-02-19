@@ -17,26 +17,15 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(20)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" uniqueConstraintName="username_unique"/>
             </column>
             <column name="password" type="varchar(120)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(70)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" uniqueConstraintName="email_unique"/>
             </column>
         </createTable>
-
-        <addUniqueConstraint
-                columnNames="username"
-                constraintName="username_unique"
-                tableName="application_users"
-        />
-        <addUniqueConstraint
-                columnNames="email"
-                constraintName="email_unique"
-                tableName="application_users"
-        />
     </changeSet>
 
 
@@ -405,8 +394,8 @@
                       newColumnName="create_on" columnDataType="datetime"/>
 
         <addColumn tableName="application_users">
-            <column name="email" type="varchar(70)" defaultValueComputed="(username || '@to-change.com')">
-                <constraints nullable="false"/>
+            <column name="email" type="varchar(70)" valueComputed="(username || '@to-change.com')">
+                <constraints nullable="false" unique="true" uniqueConstraintName="email_unique"/>
             </column>
         </addColumn>
 
