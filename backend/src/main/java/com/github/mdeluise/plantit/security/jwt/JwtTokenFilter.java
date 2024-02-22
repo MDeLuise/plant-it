@@ -1,10 +1,10 @@
 package com.github.mdeluise.plantit.security.jwt;
 
 import java.io.IOException;
-import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mdeluise.plantit.exception.ErrorMessage;
+import com.github.mdeluise.plantit.exception.error.ErrorCode;
+import com.github.mdeluise.plantit.exception.error.ErrorMessage;
 import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -58,10 +58,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private void sendError(String message, HttpServletResponse response) throws IOException {
         final ErrorMessage error = new ErrorMessage(
             HttpStatus.FORBIDDEN.value(),
-            new Date(),
-            message,
-            "",
-            ""
+            ErrorCode.AUTHENTICATION_ERROR,
+            message
         );
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
