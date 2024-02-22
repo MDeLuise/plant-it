@@ -198,7 +198,7 @@ export default function EditEvent(props: {
                             input={<OutlinedInput label="Event type" />}
                             disabled={!edit}
                         >
-                            {props.eventTypes.map((type) => (
+                            {props.eventTypes.map(type => (
                                 <MenuItem
                                     key={type}
                                     value={type}
@@ -214,7 +214,7 @@ export default function EditEvent(props: {
                         <LocalizationProvider dateAdapter={AdapterDayjs} >
                             <DatePicker
                                 value={date}
-                                onChange={(newValue) => setDate(newValue!)}
+                                onChange={newValue => setDate(newValue!)}
                                 slotProps={{ textField: { fullWidth: true } }}
                                 format="DD/MM/YYYY"
                                 disabled={!edit}

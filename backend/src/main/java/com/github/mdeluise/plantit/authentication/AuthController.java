@@ -1,7 +1,5 @@
 package com.github.mdeluise.plantit.authentication;
 
-import java.util.Optional;
-
 import com.github.mdeluise.plantit.authentication.payload.request.LoginRequest;
 import com.github.mdeluise.plantit.authentication.payload.request.SignupRequest;
 import com.github.mdeluise.plantit.authentication.payload.response.MessageResponse;
@@ -9,7 +7,6 @@ import com.github.mdeluise.plantit.authentication.payload.response.UserInfoRespo
 import com.github.mdeluise.plantit.exception.MaximumNumberOfUsersReachedExceptions;
 import com.github.mdeluise.plantit.notification.email.EmailException;
 import com.github.mdeluise.plantit.notification.email.EmailService;
-import com.github.mdeluise.plantit.notification.email.EmailServiceProvider;
 import com.github.mdeluise.plantit.notification.otp.OtpService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import com.github.mdeluise.plantit.security.jwt.JwtTokenInfo;
@@ -44,7 +41,7 @@ public class AuthController {
     private final JwtWebUtil jwtWebUtil;
     private final UserService userService;
     private final int maxAllowedUsers;
-    private final EmailServiceProvider emailServiceProvider;
+    private final EmailService emailService;
     private final OtpService otpService;
     private final TemporaryPasswordService temporaryPasswordService;
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -53,13 +50,13 @@ public class AuthController {
     @Autowired
     @SuppressWarnings("ParameterNumber")
     public AuthController(AuthenticationManager authManager, JwtWebUtil jwtWebUtil, UserService userService,
-                          @Value("${users.max}") int maxAllowedUsers, EmailServiceProvider emailServiceProvider,
+                          @Value("${users.max}") int maxAllowedUsers, EmailService emailService,
                           OtpService otpService, TemporaryPasswordService temporaryPasswordService) {
         this.authManager = authManager;
         this.jwtWebUtil = jwtWebUtil;
         this.userService = userService;
         this.maxAllowedUsers = maxAllowedUsers;
-        this.emailServiceProvider = emailServiceProvider;
+        this.emailService = emailService;
         this.otpService = otpService;
         this.temporaryPasswordService = temporaryPasswordService;
     }
@@ -97,9 +94,8 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        final Optional<EmailService> optionalEmailService = emailServiceProvider.get();
-        if (optionalEmailService.isPresent()) {
-            optionalEmailService.get().sendOtpMessage(signUpRequest.username(), signUpRequest.email());
+        if (emailService.isEnabled()) {
+            emailService.sendOtpMessage(signUpRequest.username(), signUpRequest.email());
             return ResponseEntity.accepted().body(new MessageResponse("Signup request pending verification"));
         }
 
@@ -150,8 +146,7 @@ public class AuthController {
         description = "Start the process of resetting the user password"
     )
     public ResponseEntity<String> resetPassword(@PathVariable String username) throws EmailException {
-        final Optional<EmailService> optionalEmailService = emailServiceProvider.get();
-        if (optionalEmailService.isEmpty()) {
+        if (emailService.isEnabled()) {
             final String temporaryPassword = temporaryPasswordService.generateNew(username);
             logger.info("Temporary password for user {} is {}. Login with this temporary password.", username,
                         temporaryPassword
@@ -160,7 +155,6 @@ public class AuthController {
                 "Password reset instructions have been printed into the server log. Contact the administrator in " +
                     "order to get it if needed.");
         }
-        final EmailService emailService = optionalEmailService.get();
         final User user = userService.get(username);
         emailService.sendTemporaryPasswordMessage(username, user.getEmail());
         return ResponseEntity.ok("Password reset instructions have been sent to your email address.");

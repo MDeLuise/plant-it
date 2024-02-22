@@ -36,7 +36,7 @@ export default function ReleasesNotes(props: {
         fetchVersion()
             .then(currentVersionInfo => {
                 setSystemVersionInfo(currentVersionInfo);
-                localStorage.setItem("plant-it-version", systemVersionInfo?.currentVersion!);
+                localStorage.setItem("plant-it-version", currentVersionInfo.currentVersion);
                 if (!lastVersion) {
                     setIsFirstStartupAfterUpgrade(true);
                 } else {

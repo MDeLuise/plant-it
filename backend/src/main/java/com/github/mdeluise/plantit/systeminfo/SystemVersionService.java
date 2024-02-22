@@ -34,6 +34,7 @@ public class SystemVersionService {
         if (isDevProfileActive()) {
             logger.debug("retrieve a dummy system version info.");
             result.setLatest(true);
+            result.setLatestReleaseNote("This is a dummy release note");
         } else {
             logger.debug("retrieve the system version info from GitHub.");
             final GitHubReleaseInfo latestGithubVersion = gitHubSystemVersionService.getLatestVersion();
@@ -46,7 +47,7 @@ public class SystemVersionService {
 
 
     private boolean isDevProfileActive() {
-        String[] profileArray = activeProfiles.split(",");
+        final String[] profileArray = activeProfiles.split(",");
         for (String profile : profileArray) {
             if ("dev".equals(profile.trim())) {
                 return true;

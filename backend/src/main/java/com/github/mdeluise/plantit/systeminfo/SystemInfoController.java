@@ -1,8 +1,10 @@
 package com.github.mdeluise.plantit.systeminfo;
 
 import java.io.IOException;
+import java.util.Collection;
 
-import com.github.mdeluise.plantit.notification.email.EmailServiceProvider;
+import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
+import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,13 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirements()
 public class SystemInfoController {
     private final SystemVersionService systemVersionService;
-    private final EmailServiceProvider emailServiceProvider;
+    private final NotificationDispatcherService notificationDispatcherService;
 
 
     @Autowired
-    public SystemInfoController(SystemVersionService systemVersionService, EmailServiceProvider emailServiceProvider) {
+    public SystemInfoController(SystemVersionService systemVersionService,
+                                NotificationDispatcherService notificationDispatcherService) {
         this.systemVersionService = systemVersionService;
-        this.emailServiceProvider = emailServiceProvider;
+        this.notificationDispatcherService = notificationDispatcherService;
     }
 
 
@@ -47,11 +50,14 @@ public class SystemInfoController {
     }
 
 
-    @GetMapping("/smtp")
+    @GetMapping("/notification-dispatchers")
     @Operation(
-        summary = "SMTP configuration", description = "Check if the system use an SMTP server or not"
+        summary = "Available notifications dispatchers",
+        description = "List the available notifications dispatchers."
     )
-    public ResponseEntity<Boolean> useSmtp() {
-        return ResponseEntity.ok(emailServiceProvider.get().isPresent());
+    public ResponseEntity<Collection<NotificationDispatcherName>> notificationsDispatchers() {
+        final Collection<NotificationDispatcherName> result =
+            notificationDispatcherService.getAvailableNotificationDispatchers();
+        return ResponseEntity.ok(result);
     }
 }

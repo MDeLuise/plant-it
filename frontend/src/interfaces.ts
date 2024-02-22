@@ -67,3 +67,18 @@ export interface userStats {
     botanicalInfoCount: number,
     imageCount: number,
 }
+
+export interface reminder {
+    id: number,
+    targetId: number,
+    start: Date,
+    end?: Date,
+    frequency: reminderFrequency
+    action: string,
+    enabled: boolean;
+}
+
+export interface reminderFrequency {
+    unit: "DAYS" | "WEEKS" | "MONTHS" | "YEARS"
+    quantity: number,
+}
