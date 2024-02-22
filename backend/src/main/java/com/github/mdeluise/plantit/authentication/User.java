@@ -9,14 +9,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.diary.Diary;
+import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.security.apikey.ApiKey;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -48,6 +55,14 @@ public class User implements Serializable {
     private Set<Plant> plants = new HashSet<>();
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private Set<BotanicalInfo> botanicalInfos = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+        name = "notification_dispatchers",
+        joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "dispatcher_name")
+    private Set<NotificationDispatcherName> notificationDispatchers = new HashSet<>();
 
 
     public User(Long id, String username, String password) {
@@ -159,6 +174,16 @@ public class User implements Serializable {
 
     public void setDiaries(Set<Diary> diaries) {
         this.diaries = diaries;
+    }
+
+
+    public Set<NotificationDispatcherName> getNotificationDispatchers() {
+        return notificationDispatchers;
+    }
+
+
+    public void setNotificationDispatchers(Set<NotificationDispatcherName> notificationDispatchers) {
+        this.notificationDispatchers = notificationDispatchers;
     }
 
 

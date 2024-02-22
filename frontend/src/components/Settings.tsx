@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import secureLocalStorage from "react-secure-storage";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
@@ -12,6 +12,7 @@ import "../style/Settings.scss";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { userStats } from "../interfaces";
+import CheckBox from "@mui/icons-material/CheckBox";
 
 function UsernameDialog(props: {
     open: boolean,
@@ -181,7 +182,7 @@ function EmailDialog(props: {
         if (!props.open && currentEmail) {
             setAuthenticatedUserDetails({ ...authenticatedUserDetails, email: currentEmail });
         } else {
-            getAuthenticatedUserDetails(); 
+            getAuthenticatedUserDetails();
         }
     }, [props.open])
 
@@ -319,6 +320,72 @@ function PasswordDialog(props: {
         <DialogActions>
             <Button onClick={props.close}>Cancel</Button>
             <Button onClick={checkPasswordConstraintThenExecThenCallback}>Confirm</Button>
+        </DialogActions>
+    </Dialog>;
+}
+
+
+function NotificationDialog(props: {
+    open: boolean,
+    close: () => void,
+    requestor: AxiosInstance,
+    printError: (msg: any) => void,
+    confirmCallBack: () => void;
+}) {
+    const [availableDispatcher, setAvailableDispatcher] = useState<string[]>([]);
+    const [enabledDispatcher, setEnabledDispatcher] = useState<string[]>([]);
+
+    const setNewDispatchers = (): void => {
+        props.requestor.put("/notification-dispatcher", enabledDispatcher)
+            .then(props.confirmCallBack)
+            .catch(props.printError);
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>, name: string): void => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            if (!enabledDispatcher.includes(name)) {
+                setEnabledDispatcher(prevState => [...prevState, name]);
+            }
+        } else {
+            if (enabledDispatcher.includes(name)) {
+                setEnabledDispatcher(prevState =>
+                    prevState.filter(item => item !== name)
+                );
+            }
+        }
+    };
+
+    useEffect(() => {
+        props.requestor.get("/info/notification-dispatchers")
+            .then(res => setAvailableDispatcher(res.data))
+            .catch(props.printError);
+        props.requestor.get("/notification-dispatcher")
+            .then(res => setEnabledDispatcher(res.data))
+            .catch(props.printError);
+    }, []);
+
+
+    return <Dialog open={props.open} onClose={props.close}>
+        <DialogContent>
+            <DialogTitle>
+                Notification dispatchers
+            </DialogTitle>
+            <FormGroup>
+                {
+                    availableDispatcher.map(dispatcher => {
+                        return <FormControlLabel
+                            control={<Checkbox onChange={e => handleChange(e, dispatcher)} />}
+                            label={dispatcher}
+                            checked={enabledDispatcher.includes(dispatcher)}
+                        />
+                    })
+                }
+            </FormGroup>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={props.close}>Cancel</Button>
+            <Button onClick={setNewDispatchers}>Confirm</Button>
         </DialogActions>
     </Dialog>;
 }
@@ -501,6 +568,7 @@ export default function Settings(props: {
     const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
     const [emailDialogOpen, setEmailDialogOpen] = useState<boolean>(false);
     const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false);
+    const [notificationDispatcherOpen, setNotificationDispatcherOpen] = useState<boolean>(false);
     const repoLink = "https://github.com/MDeLuise/plant-it";
     const documentationLink = "https://docs.plant-it.org/";
     const repoOpenIssues = "https://github.com/MDeLuise/plant-it/issues/new/choose";
@@ -567,6 +635,16 @@ export default function Settings(props: {
             }}
         />
 
+        <NotificationDialog
+            open={notificationDispatcherOpen}
+            requestor={props.requestor}
+            printError={props.printError}
+            close={() => setNotificationDispatcherOpen(false)}
+            confirmCallBack={() => {
+                setNotificationDispatcherOpen(false);
+            }}
+        />
+
         <SettingsHeader username={username} />
 
         <Box className={"setting-section"}>
@@ -604,6 +682,20 @@ export default function Settings(props: {
             visibility={props.visibility}
             printError={props.printError}
         />
+
+
+        <Box className={"setting-section"}>
+            <SettingsEntry
+                text="Reminder notification"
+                right={<ArrowForwardIcon sx={{
+                    opacity: .5,
+                }} />}
+                onClick={() => {
+                    setNotificationDispatcherOpen(true);
+                }}
+            />
+        </Box>
+
         <Box className={"setting-section"}>
             <SettingsEntry
                 text="App version"

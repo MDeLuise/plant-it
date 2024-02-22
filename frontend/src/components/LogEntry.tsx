@@ -72,7 +72,6 @@ export default function NewLogEntry(props: {
                 borderRadius: "10px",
                 padding: "10px",
                 alignItems: "center",
-                //border: "1px solid white"
             }}
             onClick={props.editEvent}
         >

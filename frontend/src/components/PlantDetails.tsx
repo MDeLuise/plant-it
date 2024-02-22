@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Drawer, IconButton, MenuItem, Modal, Select, Skeleton, Switch, Tab, Tabs, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Avatar, Box, Button, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Modal, Select, Skeleton, Switch, Tab, Tabs, TextField, Tooltip, Typography } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { botanicalInfo, plant, plantInfo } from "../interfaces";
 import React, { useEffect, useState } from "react";
@@ -31,6 +31,10 @@ import { EditableTextField } from "./EditableTextField";
 import { ReadMoreReadLess } from "./ReadMoreReadLess";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { HelpTooltip } from "./HelpTooltip";
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import ImageIcon from '@mui/icons-material/Image';
+import WorkIcon from '@mui/icons-material/Work';
+import { ReminderList } from "./Reminder";
 
 
 function PlantImageFullSize(props: {
@@ -1175,30 +1179,40 @@ function PlantInfoDetails(props: {
                     Events stats
                 </Typography>
                 {
-                    diaryEntryStats.length == 0 &&
-                    <Typography sx={{ fontStyle: 'italic' }}>no event present</Typography>
-                }
-                {
-                    diaryEntryStats.map((value: { type: string, date: Date; }) => {
-                        return <Box
-                            key={value.type}
-                            style={{
-                                display: "flex",
-                                alignItems: "baseline",
-                                gap: "5px",
-                                justifyContent: "space-between",
-                            }}>
-                            <Typography>
-                                Last {titleCase(value.type).toLowerCase()}
-                            </Typography>
-                            <Typography>
-                                {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
-                            </Typography>
-                        </Box>;
-                    })
+                    diaryEntryStats.length == 0 ?
+                        <Typography sx={{ fontStyle: 'italic' }}>no event present</Typography>
+                        :
+                        diaryEntryStats.map((value: { type: string, date: Date; }) => {
+                            return <Box
+                                key={value.type}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "baseline",
+                                    gap: "5px",
+                                    justifyContent: "space-between",
+                                }}>
+                                <Typography>
+                                    Last {titleCase(value.type).toLowerCase()}
+                                </Typography>
+                                <Typography>
+                                    {Math.floor(((new Date()).getTime() - new Date(value.date).getTime()) / (1000 * 3600 * 24))} days ago
+                                </Typography>
+                            </Box>;
+                        })
                 }
             </Box>
         }
+        <Box
+            className="plant-detail-section">
+            <Typography variant="h6">
+                Reminders
+            </Typography>
+            <ReminderList
+                plantId={props.plant?.id}
+                requestor={props.requestor}
+                printError={props.printError}
+            />
+        </Box>
         {
             !props.editModeEnabled && props.imageIds.length > 0 &&
             <Box className="plant-detail-entry">

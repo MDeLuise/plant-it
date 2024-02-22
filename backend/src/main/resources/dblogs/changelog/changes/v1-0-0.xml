@@ -307,6 +307,64 @@
         />
     </changeSet>
 
+
+    <changeSet id="createRemindersTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reminders"/>
+            </not>
+        </preConditions>
+        <createTable tableName="reminders">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="target_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_reminder_plant" references="plants(id)"/>
+            </column>
+            <column name="reminder_start" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reminder_end" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="createUserNotificationDispatchersTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification_dispatchers"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notification_dispatchers">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_dispatcher_user" references="application_users(id)"/>
+            </column>
+            <column name="dispatcher_name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+                tableName="notification_dispatchers"
+                columnNames="user_id,dispatcher_name"
+                constraintName="pk_userNotificationDispatchers"
+        />
+    </changeSet>
+
+
     <!-- can be removed after update to v0.1.0 -->
     <changeSet id="updateTo0.1.0" author="MDeLuise">
         <preConditions onFail="MARK_RAN">

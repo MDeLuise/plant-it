@@ -489,7 +489,6 @@ function PlantInfoDetails(props: {
                         defaultValue={props.info?.currencySymbol || ""}
                         variant="standard"
                         onChange={e => {
-                            console.debug(e.target.value)
                             props.setInfo({ ...props.info!, currencySymbol: e.target.value as (string | undefined) });
                         }}
                     >

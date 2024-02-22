@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import com.github.mdeluise.plantit.notification.otp.OtpService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
+import com.github.mdeluise.plantit.reminder.ReminderDispatcher;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -64,14 +65,17 @@ import redis.embedded.RedisServer;
 public class ApplicationConfig {
     private final OtpService otpService;
     private final TemporaryPasswordService temporaryPasswordService;
+    private final ReminderDispatcher reminderDispatcher;
     private RedisServer redisServer;
     private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
 
     @Autowired
-    public ApplicationConfig(OtpService otpService, TemporaryPasswordService temporaryPasswordService) {
+    public ApplicationConfig(OtpService otpService, TemporaryPasswordService temporaryPasswordService,
+                             ReminderDispatcher reminderDispatcher) {
         this.otpService = otpService;
         this.temporaryPasswordService = temporaryPasswordService;
+        this.reminderDispatcher = reminderDispatcher;
     }
 
 
@@ -121,6 +125,12 @@ public class ApplicationConfig {
     public void removeExpired() {
         otpService.removeExpired();
         temporaryPasswordService.removeExpired();
+    }
+
+
+    @Scheduled(cron = "${reminders.notify_check}")
+    public void dispatchReminders() {
+        reminderDispatcher.dispatch();
     }
 
 

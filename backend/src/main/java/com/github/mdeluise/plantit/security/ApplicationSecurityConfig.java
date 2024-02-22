@@ -6,6 +6,7 @@ import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import com.github.mdeluise.plantit.security.services.TemporaryPasswordUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,8 +64,10 @@ public class ApplicationSecurityConfig {
     @SuppressWarnings("LineLength")
     public AuthenticationManager authManager(HttpSecurity http, AuthenticationProvider passwordAuthProvider,
                                              AuthenticationProvider temporaryPasswordAuthProvider) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).authenticationProvider(passwordAuthProvider)
-                   .authenticationProvider(temporaryPasswordAuthProvider).parentAuthenticationManager(null) // see https://stackoverflow.com/questions/27956378/infinte-loop-when-bad-credentials-are-entered-in-spring-security-form-login
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                   .authenticationProvider(passwordAuthProvider)
+                   .authenticationProvider(temporaryPasswordAuthProvider)
+                   .parentAuthenticationManager(null) // see https://stackoverflow.com/questions/27956378/infinte-loop-when-bad-credentials-are-entered-in-spring-security-form-login
                    .build();
     }
 
@@ -76,7 +79,8 @@ public class ApplicationSecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager)
+    public SecurityFilterChain configure(@Value("${spring.profiles.active:unknown}") String activeProfiles,
+                                         HttpSecurity http, AuthenticationManager authenticationManager)
         throws Exception {
         final String[] authWhitelist = {
             // REST authentication endpoint
@@ -88,13 +92,20 @@ public class ApplicationSecurityConfig {
             "/swagger-ui.html",
             "/webjars/swagger-ui/**",
             // h2 endpoint
-            "/",
-            "/h2-console/**"
+            "/"
         };
 
+        final String[] profileArray = activeProfiles.split(",");
+        for (String profile : profileArray) {
+            if ("dev".equals(profile.trim())) {
+                configureH2(http);
+                break;
+            }
+        }
+
         http.cors();
-        http.csrf()
-            .disable();
+         http.csrf()
+             .disable();
         http.sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -106,8 +117,7 @@ public class ApplicationSecurityConfig {
 
         http.headers()
             .frameOptions()
-            .sameOrigin();
-        // http.csrf().ignoringRequestMatchers("/api/h2-console/**");
+            .disable();
 
         http.authenticationManager(authenticationManager);
 
@@ -116,6 +126,12 @@ public class ApplicationSecurityConfig {
         http.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+
+    private void configureH2(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests().requestMatchers(PathRequest.toH2Console()).permitAll();
+        //http.csrf().ignoringRequestMatchers(PathRequest.toH2Console());
     }
 
 

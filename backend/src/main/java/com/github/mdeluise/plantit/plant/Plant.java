@@ -11,6 +11,7 @@ import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.image.PlantImage;
 import com.github.mdeluise.plantit.plant.info.PlantInfo;
+import com.github.mdeluise.plantit.reminder.Reminder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -51,6 +52,8 @@ public class Plant implements Serializable, ImageTarget {
     private PlantAvatarMode avatarMode;
     @OneToOne(mappedBy = "avatarOf", cascade = CascadeType.ALL)
     private PlantImage avatarImage;
+    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
+    private Set<Reminder> reminders = new HashSet<>();
 
 
     public Plant() {
@@ -144,6 +147,16 @@ public class Plant implements Serializable, ImageTarget {
 
     public void setInfo(PlantInfo plantInfo) {
         this.info = plantInfo;
+    }
+
+
+    public Set<Reminder> getReminders() {
+        return reminders;
+    }
+
+
+    public void setReminders(Set<Reminder> reminders) {
+        this.reminders = reminders;
     }
 
 

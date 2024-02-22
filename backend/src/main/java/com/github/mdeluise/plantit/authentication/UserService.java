@@ -6,7 +6,7 @@ import javax.naming.AuthenticationException;
 
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.notification.email.EmailException;
-import com.github.mdeluise.plantit.notification.email.EmailServiceProvider;
+import com.github.mdeluise.plantit.notification.email.EmailService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPassword;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import jakarta.transaction.Transactional;
@@ -20,17 +20,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final EmailServiceProvider emailServiceProvider;
+    private final EmailService emailService;
     private final TemporaryPasswordService temporaryPasswordService;
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder encoder,
-                       EmailServiceProvider emailServiceProvider, TemporaryPasswordService temporaryPasswordService) {
+                       EmailService emailService, TemporaryPasswordService temporaryPasswordService) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.emailServiceProvider = emailServiceProvider;
+        this.emailService = emailService;
         this.temporaryPasswordService = temporaryPasswordService;
     }
 
@@ -91,14 +91,14 @@ public class UserService {
             userRepository.save(toUpdate);
             temporaryPasswordService.remove(toUpdate.getUsername());
             logger.info("Password for user {} updated", toUpdate.getUsername());
-            emailServiceProvider.get().ifPresent(emailService -> {
+            if (emailService.isEnabled()) {
                 try {
                     emailService.sendPasswordChangeNotification(toUpdate.getUsername(), toUpdate.getEmail());
                     logger.info("Sent email to user in order to notify about the password change");
                 } catch (EmailException e) {
                     logger.error("Error while sending password change notification to user", e);
                 }
-            });
+            }
         }
     }
 
@@ -113,14 +113,14 @@ public class UserService {
             toUpdate.setEmail(newEmail);
             userRepository.save(toUpdate);
             logger.info("Email for user {} updated", toUpdate.getUsername());
-            emailServiceProvider.get().ifPresent(emailService -> {
+            if (emailService.isEnabled()) {
                 try {
                     emailService.sendEmailChangeNotification(toUpdate.getUsername(), newEmail);
                     logger.info("Sent email to user in order to notify about the email change");
                 } catch (EmailException e) {
                     logger.error("Error while sending email change notification to user", e);
                 }
-            });
+            }
         }
     }
 

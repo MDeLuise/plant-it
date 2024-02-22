@@ -19,6 +19,11 @@
             <column name="email" value="to-change@null.com"/>
             <column name="password" value="$2a$10$TwhwicHicKzaC4TIdXNN8.siFXTRhY6Elfic.hS0/ZyLA3LL1GZS2"/> <!-- user -->
         </insert>
+
+        <insert tableName="notification_dispatchers">
+            <column name="user_id" value="99"/>
+            <column name="dispatcher_name" value="CONSOLE"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

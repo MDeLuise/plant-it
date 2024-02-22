@@ -14,6 +14,8 @@ import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.diary.DiaryService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
+import com.github.mdeluise.plantit.plant.Plant;
+import com.github.mdeluise.plantit.plant.PlantRepository;
 import com.github.mdeluise.plantit.plant.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,16 +30,18 @@ public class DiaryEntryService {
     private final DiaryEntryRepository diaryEntryRepository;
     private final DiaryService diaryService;
     private final PlantService plantService;
+    private final PlantRepository plantRepository;
 
 
     @Autowired
     public DiaryEntryService(AuthenticatedUserService authenticatedUserService,
                              DiaryEntryRepository diaryEntryRepository, DiaryService diaryService,
-                             PlantService plantService) {
+                             PlantService plantService, PlantRepository plantRepository) {
         this.authenticatedUserService = authenticatedUserService;
         this.diaryEntryRepository = diaryEntryRepository;
         this.diaryService = diaryService;
         this.plantService = plantService;
+        this.plantRepository = plantRepository;
     }
 
 
@@ -151,5 +155,11 @@ public class DiaryEntryService {
         sortedResult.sort(Comparator.comparing(DiaryEntryStats::date));
         Collections.reverse(sortedResult);
         return sortedResult;
+    }
+
+
+    public Optional<DiaryEntry> getLast(Long plantId, DiaryEntryType type) {
+        final Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new ResourceNotFoundException(plantId));
+        return diaryEntryRepository.findFirstByDiaryTargetAndType(plant, type);
     }
 }
