@@ -1,11 +1,11 @@
 package com.github.mdeluise.plantit.security.apikey;
 
 import java.io.IOException;
-import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.authentication.User;
-import com.github.mdeluise.plantit.exception.ErrorMessage;
+import com.github.mdeluise.plantit.exception.error.ErrorCode;
+import com.github.mdeluise.plantit.exception.error.ErrorMessage;
 import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,7 +28,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     @Autowired
-    public ApiKeyFilter(ApiKeyService apiKeyService, PasswordUserDetailsService passwordUserDetailsService, ObjectMapper objectMapper) {
+    public ApiKeyFilter(ApiKeyService apiKeyService, PasswordUserDetailsService passwordUserDetailsService,
+                        ObjectMapper objectMapper) {
         this.apiKeyService = apiKeyService;
         this.passwordUserDetailsService = passwordUserDetailsService;
         this.objectMapper = objectMapper;
@@ -51,7 +52,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
 
     private void sendError(String message, HttpServletResponse response) throws IOException {
-        final ErrorMessage error = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(), message, "", "");
+        final ErrorMessage error =
+            new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), ErrorCode.USER_UNAUTHORIZED, message);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(objectMapper.writeValueAsString(error));
