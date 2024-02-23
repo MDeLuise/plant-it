@@ -327,10 +327,19 @@
             <column name="reminder_end" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="quantity" type="int">
+            <column name="frequency_quantity" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="unit" type="varchar(20)">
+            <column name="frequency_unit" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_notified" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="repeat_after_quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="repeat_after_unit" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
             <column name="action" type="varchar(25)">

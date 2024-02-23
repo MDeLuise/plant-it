@@ -73,7 +73,8 @@ export interface reminder {
     targetId: number,
     start: Date,
     end?: Date,
-    frequency: reminderFrequency
+    frequency: reminderFrequency,
+    repeatAfter: reminderFrequency,
     action: string,
     enabled: boolean;
 }

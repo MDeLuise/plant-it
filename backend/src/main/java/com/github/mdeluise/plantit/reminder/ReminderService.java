@@ -2,7 +2,6 @@ package com.github.mdeluise.plantit.reminder;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -28,11 +27,6 @@ public class ReminderService {
     }
 
 
-    public Collection<Reminder> getAllEnabledInternal() {
-        return reminderRepository.findAllByEnabledTrue();
-    }
-
-
     public Collection<Reminder> getAll(long plantId) {
         final Plant plant = plantService.get(plantId);
         return reminderRepository.findAllByTargetAndTargetOwner(plant, authenticatedUserService.getAuthenticatedUser());
@@ -41,13 +35,6 @@ public class ReminderService {
 
     public Collection<Reminder> getAll() {
         return reminderRepository.findAllByTargetOwner(authenticatedUserService.getAuthenticatedUser());
-    }
-
-
-    public Collection<Reminder> getAllActive() {
-        return reminderRepository.findAllByTargetOwner(authenticatedUserService.getAuthenticatedUser()).stream()
-                                 .filter(Reminder::isActive)
-                                 .collect(Collectors.toSet());
     }
 
 
@@ -86,18 +73,8 @@ public class ReminderService {
         toUpdate.setFrequency(updated.getFrequency());
         toUpdate.setEnabled(updated.isEnabled());
         toUpdate.setTarget(updated.getTarget());
-        return reminderRepository.save(toUpdate);
-    }
-
-
-    public Reminder updateInternal(long id, Reminder updated) {
-        final Reminder toUpdate = get(id);
-        toUpdate.setAction(updated.getAction());
-        toUpdate.setStart(updated.getStart());
-        toUpdate.setEnd(updated.getEnd());
-        toUpdate.setFrequency(updated.getFrequency());
-        toUpdate.setEnabled(updated.isEnabled());
-        toUpdate.setTarget(updated.getTarget());
+        toUpdate.setRepeatAfter(updated.getRepeatAfter());
+        toUpdate.setLastNotified(updated.getLastNotified());
         return reminderRepository.save(toUpdate);
     }
 
