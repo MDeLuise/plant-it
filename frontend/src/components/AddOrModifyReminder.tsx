@@ -38,7 +38,11 @@ export function AddOrModifyReminder(props: {
                 frequency: {
                     quantity: 0,
                     unit: "DAYS",
-                }
+                },
+                repeatAfter: {
+                    quantity: 3,
+                    unit: "DAYS",
+                },
             });
             setEnabled(true);
             setUseEndDate(false);
@@ -130,6 +134,62 @@ export function AddOrModifyReminder(props: {
                             onChange={event => {
                                 const value = event.target.value as "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
                                 updatedReminder.frequency!.unit = value;
+                            }}
+                            sx={{
+                                width: "45%",
+                            }}
+                            variant="standard"
+                        >
+                            <MenuItem
+                                key={"DAYS"}
+                                value={"DAYS"}
+                            >
+                                days
+                            </MenuItem>
+                            <MenuItem
+                                key={"WEEKS"}
+                                value={"WEEKS"}
+                            >
+                                weeks
+                            </MenuItem>
+                            <MenuItem
+                                key={"MONTHS"}
+                                value={"MONTHS"}
+                            >
+                                months
+                            </MenuItem>
+                            <MenuItem
+                                key={"YEARS"}
+                                value={"YEARS"}
+                            >
+                                years
+                            </MenuItem>
+                        </Select>
+                    </Box>
+                </Box>
+
+                <Box sx={{ width: "100%", margin: "20px 0" }}>
+                    <InputLabel>Repeat after</InputLabel>
+                    <Box sx={{ display: "flex", gap: "5px", justifyContent: "center", }}>
+                        <TextField
+                            defaultValue={updatedReminder.repeatAfter?.quantity}
+                            type="number"
+                            variant="standard"
+                            InputProps={{ disableUnderline: false }}
+                            onChange={e => {
+                                updatedReminder.repeatAfter!.quantity = Number(e.target.value);
+                            }}
+                            sx={{
+                                width: "45%",
+                            }}
+                        />
+                        <Select
+                            fullWidth
+                            required
+                            defaultValue={updatedReminder.repeatAfter?.unit}
+                            onChange={event => {
+                                const value = event.target.value as "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
+                                updatedReminder.repeatAfter!.unit = value;
                             }}
                             sx={{
                                 width: "45%",

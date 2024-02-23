@@ -13,6 +13,7 @@ import com.github.mdeluise.plantit.notification.NotifyException;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
 import com.github.mdeluise.plantit.reminder.frequency.Frequency;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ReminderDispatcher {
     }
 
 
+    @Transactional
     public void dispatch() {
         logger.info("Starting reminder dispatching...");
         reminderRepository.findAllByEnabledTrue().forEach(reminder -> {
@@ -46,14 +48,39 @@ public class ReminderDispatcher {
     }
 
 
+    @SuppressWarnings("ReturnCount") //FIXME
     private boolean isToNotify(Reminder reminder) {
-        final Optional<DiaryEntry> last = diaryEntryService.getLast(reminder.getTarget().getId(), reminder.getAction());
-        if (last.isEmpty() && reminder.getStart().before(new Date())) {
-            return true;
-        } else {
-            return last.filter(diaryEntry -> isEntryOlderThanFrequency(diaryEntry, reminder.getFrequency()))
-                       .isPresent();
+        final Optional<DiaryEntry> lastEntry =
+            diaryEntryService.getLast(reminder.getTarget().getId(), reminder.getAction());
+        final Date now = new Date();
+        if (reminder.getStart().after(now)) {
+            return false;
         }
+
+        // Case 1: No last entry, start date is before now, and no last notification
+        if (lastEntry.isEmpty() && reminder.getStart().before(now) && reminder.getLastNotified() == null) {
+            return true;
+        }
+
+        // Case 2: No last entry, start date is before now, and last notification is before repeatAfter time
+        if (lastEntry.isEmpty() && reminder.getStart().before(now) && reminder.getLastNotified() != null && new Date(
+            reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getRepeatAfter())).before(now)) {
+            return true;
+        }
+
+        // Case 3: Last entry exists, but time since last entry is greater than frequency
+        return lastEntry.map(entry -> {
+            if (isEntryOlderThanFrequency(entry, reminder.getFrequency())) {
+                // No last notification
+                if (reminder.getLastNotified() == null) {
+                    return true;
+                }
+                // Time since last notification is greater than frequency
+                return new Date(
+                    reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getFrequency())).before(now);
+            }
+            return false;
+        }).orElse(false);
     }
 
 
@@ -68,16 +95,16 @@ public class ReminderDispatcher {
                 );
             }
         });
+        reminder.setLastNotified(new Date());
+        reminderRepository.save(reminder);
     }
 
 
     protected Set<NotificationDispatcher> getUserNotificationDispatcher(Reminder reminder) {
         final Set<NotificationDispatcherName> userNotificationDispatchers =
             reminder.getTarget().getOwner().getNotificationDispatchers();
-        return notificationsDispatchers.stream()
-                                       .filter(NotificationDispatcher::isEnabled)
-                                       .filter(notificationDispatcher -> userNotificationDispatchers.contains(
-                                           notificationDispatcher.getName()))
+        return notificationsDispatchers.stream().filter(NotificationDispatcher::isEnabled).filter(
+                                           notificationDispatcher -> userNotificationDispatchers.contains(notificationDispatcher.getName()))
                                        .collect(Collectors.toSet());
     }
 

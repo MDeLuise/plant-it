@@ -14,7 +14,7 @@
     <changeSet id="insertBotanicalInfo" author="MDeLuise">
         <insert tableName="botanical_infos">
             <column name="id" value="99"/>
-            <column name="external_id" value="355135" />
+            <column name="external_id" value="355135"/>
             <column name="scientific_name" value="Hylotelephium spectabile"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Hylotelephium"/>
@@ -23,16 +23,16 @@
         </insert>
         <insert tableName="botanical_infos">
             <column name="id" value="98"/>
-            <column name="external_id" value="354807" />
+            <column name="external_id" value="354807"/>
             <column name="scientific_name" value="Sedum palmeri"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Sedum"/>
             <column name="species" value="Sedum palmeri"/>
             <column name="creator" value="TREFLE"/>
-            <column name="light" value="8" />
-            <column name="humidity" value="6" />
-            <column name="min_temp" value="-10" />
-            <column name="max_temp" value="29" />
+            <column name="light" value="8"/>
+            <column name="humidity" value="6"/>
+            <column name="min_temp" value="-10"/>
+            <column name="max_temp" value="29"/>
         </insert>
         <insert tableName="botanical_infos">
             <column name="id" value="97"/>
@@ -42,7 +42,7 @@
             <column name="species" value="Echeveria Perle von Nurnberg"/>
             <column name="creator" value="USER"/>
             <column name="user_creator_id" value="99"/>
-            <column name="light" value="7" />
+            <column name="light" value="7"/>
         </insert>
     </changeSet>
 
@@ -208,6 +208,21 @@
             <column name="note" value=""/>
             <column name="date" value="${now}"/>
             <column name="diary_id" value="97"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertReminders" author="MDeLuise">
+        <insert tableName="reminders">
+            <column name="id" value="99"/>
+            <column name="target_id" value="97"/>
+            <column name="reminder_start" value="${now}"/>
+            <column name="frequency_quantity" value="0"/>
+            <column name="frequency_unit" value="DAYS"/>
+            <column name="repeat_after_quantity" value="0"/>
+            <column name="repeat_after_unit" value="DAYS"/>
+            <column name="action" value="WATERING"/>
+            <column name="enabled" value="true"/>
         </insert>
     </changeSet>
 

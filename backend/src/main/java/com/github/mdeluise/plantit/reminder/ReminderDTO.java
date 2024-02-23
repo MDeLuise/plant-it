@@ -18,6 +18,10 @@ public class ReminderDTO {
     private Date end;
     @Schema(description = "Frequency of the reminder.")
     private FrequencyDTO frequency;
+    @Schema(description = "Repetition of the reminder.")
+    private FrequencyDTO repeatAfter;
+    @Schema(description = "Date of last reminder's notification")
+    private Date lastNotified;
     @Schema(description = "Action of the reminder.")
     private DiaryEntryType action;
     @Schema(description = "Is reminder enabled.")
@@ -71,6 +75,26 @@ public class ReminderDTO {
 
     public void setFrequency(FrequencyDTO frequency) {
         this.frequency = frequency;
+    }
+
+
+    public FrequencyDTO getRepeatAfter() {
+        return repeatAfter;
+    }
+
+
+    public void setRepeatAfter(FrequencyDTO repeatAfter) {
+        this.repeatAfter = repeatAfter;
+    }
+
+
+    public Date getLastNotified() {
+        return lastNotified;
+    }
+
+
+    public void setLastNotified(Date lastNotified) {
+        this.lastNotified = lastNotified;
     }
 
 

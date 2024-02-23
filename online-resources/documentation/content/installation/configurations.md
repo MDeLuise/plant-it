@@ -439,3 +439,6 @@ To resolve this issue, users may need to navigate to both the frontend and backe
 
 ##### Provide Custom Certificate
 If you prefer to use your own certificate, simply place the `app.key` and `app.crt` files inside the `CERTIFICATE_PATH` folder.
+
+#### Reminders
+

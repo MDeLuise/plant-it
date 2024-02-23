@@ -1,6 +1,8 @@
 package com.github.mdeluise.plantit.reminder.frequency;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 
 @Embeddable
@@ -8,6 +10,7 @@ public class Frequency {
     @NotNull
     private int quantity;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Unit unit;
 
 

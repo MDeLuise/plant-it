@@ -5,6 +5,8 @@ import java.util.Date;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryType;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.reminder.frequency.Frequency;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -34,7 +36,18 @@ public class Reminder {
     @Column(name = "reminder_end")
     private Date end;
     @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "quantity", column = @Column(name = "frequency_quantity")),
+        @AttributeOverride(name = "unit", column = @Column(name = "frequency_unit")),
+    })
     private Frequency frequency;
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "quantity", column = @Column(name = "repeat_after_quantity")),
+        @AttributeOverride(name = "unit", column = @Column(name = "repeat_after_unit")),
+    })
+    private Frequency repeatAfter;
+    private Date lastNotified;
     @NotNull
     @Enumerated(EnumType.STRING)
     private DiaryEntryType action;
@@ -91,6 +104,26 @@ public class Reminder {
     }
 
 
+    public Date getLastNotified() {
+        return lastNotified;
+    }
+
+
+    public void setLastNotified(Date lastNotified) {
+        this.lastNotified = lastNotified;
+    }
+
+
+    public Frequency getRepeatAfter() {
+        return repeatAfter;
+    }
+
+
+    public void setRepeatAfter(Frequency repeatAfter) {
+        this.repeatAfter = repeatAfter;
+    }
+
+
     public DiaryEntryType getAction() {
         return action;
     }
@@ -113,6 +146,6 @@ public class Reminder {
 
     public boolean isActive() {
         final Date now = new Date();
-        return enabled && now.after(start) && now.before(end);
+        return enabled && now.after(start) && (end == null || now.before(end));
     }
 }
