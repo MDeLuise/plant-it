@@ -1,11 +1,10 @@
 import { AxiosInstance } from "axios";
-import { reminder } from "../interfaces";
+import { reminder, reminderFrequency } from "../interfaces";
 import { Dialog, DialogContent, FormGroup, DialogActions, Button, DialogTitle, InputLabel, OutlinedInput, Select, MenuItem, Box, Switch, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { titleCase } from "../common";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import CheckBox from "@mui/icons-material/CheckBox";
 import dayjs, { Dayjs } from "dayjs";
 
 export function AddOrModifyReminder(props: {
@@ -31,23 +30,16 @@ export function AddOrModifyReminder(props: {
             setEnabled(props.entity.enabled);
             setUseEndDate(props.entity.end != undefined);
         } else {
-            setUpdatedReminder({
-                action: "SEEDING",
-                start: new Date(),
-                enabled: true,
-                frequency: {
-                    quantity: 0,
-                    unit: "DAYS",
-                },
-                repeatAfter: {
-                    quantity: 3,
-                    unit: "DAYS",
-                },
-            });
-            setEnabled(true);
-            setUseEndDate(false);
+            cleanup();
         }
     }, [props.entity]);
+
+
+    useEffect(() => {
+        if (!props.open) {
+            cleanup();
+        }
+    }, [props.open]);
 
 
     useEffect(() => {
@@ -60,6 +52,25 @@ export function AddOrModifyReminder(props: {
             .then(res => setEventTypes(res.data))
             .catch(props.printError);
     }, []);
+
+
+    const cleanup = (): void => {
+        setUpdatedReminder({
+            action: "SEEDING",
+            start: new Date(),
+            enabled: true,
+            frequency: {
+                quantity: 0,
+                unit: "DAYS",
+            },
+            repeatAfter: {
+                quantity: 3,
+                unit: "DAYS",
+            },
+        });
+        setEnabled(true);
+        setUseEndDate(false);
+    };
 
 
     const addOrEdit = (): void => {
@@ -104,7 +115,7 @@ export function AddOrModifyReminder(props: {
                     <InputLabel>Start date</InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         <DatePicker
-                            value={dayjs(updatedReminder.start)}
+                            defaultValue={dayjs(updatedReminder.start)}
                             onChange={newValue => updatedReminder.start = newValue?.toDate()}
                             slotProps={{ textField: { fullWidth: true } }}
                             format="DD/MM/YYYY"
@@ -116,12 +127,18 @@ export function AddOrModifyReminder(props: {
                     <InputLabel>Frequency</InputLabel>
                     <Box sx={{ display: "flex", gap: "5px", justifyContent: "center", }}>
                         <TextField
-                            defaultValue={updatedReminder.frequency?.quantity}
+                            value={updatedReminder.frequency?.quantity}
                             type="number"
                             variant="standard"
                             InputProps={{ disableUnderline: false }}
                             onChange={e => {
-                                updatedReminder.frequency!.quantity = Number(e.target.value);
+                                setUpdatedReminder((prevState: Partial<reminder>) => ({
+                                    ...prevState!,
+                                    frequency: {
+                                        ...prevState.frequency,
+                                        quantity: Number(e.target.value)
+                                    } as reminderFrequency
+                                }));
                             }}
                             sx={{
                                 width: "45%",
@@ -172,12 +189,18 @@ export function AddOrModifyReminder(props: {
                     <InputLabel>Repeat after</InputLabel>
                     <Box sx={{ display: "flex", gap: "5px", justifyContent: "center", }}>
                         <TextField
-                            defaultValue={updatedReminder.repeatAfter?.quantity}
+                            value={updatedReminder.repeatAfter?.quantity}
                             type="number"
                             variant="standard"
                             InputProps={{ disableUnderline: false }}
                             onChange={e => {
-                                updatedReminder.repeatAfter!.quantity = Number(e.target.value);
+                                setUpdatedReminder((prevState: Partial<reminder>) => ({
+                                    ...prevState!,
+                                    repeatAfter: {
+                                        ...prevState.repeatAfter,
+                                        quantity: Number(e.target.value)
+                                    } as reminderFrequency
+                                }));
                             }}
                             sx={{
                                 width: "45%",
