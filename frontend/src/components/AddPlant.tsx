@@ -427,6 +427,12 @@ function PlantInfoDetails(props: {
         props.setPlantName(name);
     };
 
+
+    useEffect(() => {
+        props.setUseDate(true);
+        props.setDate(dayjs(new Date()));
+    }, []);
+
     return <Box>
         <Box
             className="plant-detail-section">
@@ -450,7 +456,7 @@ function PlantInfoDetails(props: {
                     Purchased date
                 </Typography>
                 <Switch
-                    checked={props.useDate}
+                    defaultChecked={props.useDate}
                     onChange={event => props.setUseDate(event.target.checked)}
                 />
             </Box>
@@ -460,10 +466,11 @@ function PlantInfoDetails(props: {
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                        value={props.date}
+                        defaultValue={props.date}
                         disabled={!props.useDate}
-                        onChange={(newValue) => props.setDate(newValue != undefined ? newValue : dayjs(new Date()))}
+                        onChange={newValue => props.setDate(newValue != undefined ? newValue : dayjs(new Date()))}
                         slotProps={{ textField: { variant: 'standard', } }}
+                        format="DD/MM/YYYY"
                     />
                 </LocalizationProvider>
             </Box>
@@ -651,6 +658,7 @@ function AddPlantInfo(props: {
                                 botanicalInfoId: addedBotanicalInfo.id,
                                 info: {
                                     ...info,
+                                    startDate: useDate ? info.startDate : undefined,
                                     state: "ALIVE",
                                 },
                                 avatarMode: "NONE",
@@ -667,6 +675,7 @@ function AddPlantInfo(props: {
                         botanicalInfoId: props.botanicalInfoToAdd.id,
                         info: {
                             ...info,
+                            startDate: useDate ? info.startDate : undefined,
                             state: "ALIVE",
                         },
                         avatarMode: "NONE",

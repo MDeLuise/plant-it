@@ -7,7 +7,8 @@ chapter = false
 #### Manage reminders
 | <!-- -->    | <!-- -->    |
 |-------------|-------------|
-| ![Reminders](/images/reminders-1.png?height=80vh)| ![Add new reminder](/images/reminders-2.png?height=80vh) |
+| ![Reminders](/images/reminders-1.png?height=80vh) | ![Add new reminder](/images/reminders-2.png?height=80vh) |
+
 The Reminder feature in the project allows users to set up reminders for specific actions related to their plants. Follow the steps below to create a new reminder:
 1. **Navigate to Plant Detail View:**
    Open the detail view of the desired plant by selecting it from the plant list. Once in the detail view, locate and click on the "Plant" section.
