@@ -1068,7 +1068,6 @@ function PlantInfoDetails(props: {
                                     defaultValue={props.plant?.info.currencySymbol || ""}
                                     variant="standard"
                                     onChange={e => {
-                                        console.debug(e.target.value)
                                         props.setInfo({ ...props.plant?.info!, currencySymbol: e.target.value as (string | undefined) });
                                     }}
                                 >
@@ -1202,17 +1201,20 @@ function PlantInfoDetails(props: {
                 }
             </Box>
         }
-        <Box
-            className="plant-detail-section">
-            <Typography variant="h6">
-                Reminders
-            </Typography>
-            <ReminderList
-                plantId={props.plant?.id}
-                requestor={props.requestor}
-                printError={props.printError}
-            />
-        </Box>
+        {
+            props.editModeEnabled ||
+            <Box
+                className="plant-detail-section">
+                <Typography variant="h6">
+                    Reminders
+                </Typography>
+                <ReminderList
+                    plantId={props.plant?.id}
+                    requestor={props.requestor}
+                    printError={props.printError}
+                />
+            </Box>
+        }
         {
             !props.editModeEnabled && props.imageIds.length > 0 &&
             <Box className="plant-detail-entry">

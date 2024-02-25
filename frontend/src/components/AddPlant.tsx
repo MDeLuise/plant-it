@@ -334,7 +334,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatLightRequirement(props.updatedBotanicalInfo?.plantCareInfo?.light, props.editModeEnabled)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, light: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, light: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -347,7 +347,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatHumidityRequirement(props.updatedBotanicalInfo?.plantCareInfo?.humidity, props.editModeEnabled)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, humidity: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, humidity: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -360,7 +360,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatTemperatureRequirement(props.updatedBotanicalInfo?.plantCareInfo?.maxTemp, props.editModeEnabled)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, maxTemp: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, maxTemp: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -373,7 +373,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatTemperatureRequirement(props.updatedBotanicalInfo?.plantCareInfo?.minTemp, props.editModeEnabled)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, minTemp: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, minTemp: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -386,7 +386,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatPh(props.updatedBotanicalInfo?.plantCareInfo?.phMax)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, phMax: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, phMax: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -399,7 +399,7 @@ function SpecieInfoDetails(props: {
                     <EditableTextField
                         editable={props.editModeEnabled || !props.botanicalInfoToAdd}
                         text={formatPh(props.updatedBotanicalInfo?.plantCareInfo?.phMin)}
-                        onChange={(newVal) => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, phMin: getNumberValueOrUndefined(newVal) }}
+                        onChange={newVal => props.updatedBotanicalInfo!.plantCareInfo = { ...props.updatedBotanicalInfo!.plantCareInfo!, phMin: getNumberValueOrUndefined(newVal) }}
                     />
                 </Box>
             }
@@ -502,7 +502,7 @@ function PlantInfoDetails(props: {
                         {
                             getAllCurrencySymbols().map(symbol => {
                                 return <MenuItem value={symbol}>{symbol}</MenuItem>
-                            })
+                            }) 
                         }
                     </Select>
                 </Box>
@@ -538,7 +538,7 @@ function PlantInfoDetails(props: {
                     multiline
                     value={props.note}
                     rows={4}
-                    onChange={(e) => props.setNote(e.currentTarget.value)}
+                    onChange={e => props.setNote(e.currentTarget.value)}
                 >
                 </TextField>
             </Box>
