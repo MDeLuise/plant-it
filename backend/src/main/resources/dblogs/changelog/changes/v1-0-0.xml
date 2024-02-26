@@ -321,10 +321,10 @@
             <column name="target_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_reminder_plant" references="plants(id)"/>
             </column>
-            <column name="reminder_start" type="datetime">
+            <column name="reminder_start" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="reminder_end" type="datetime">
+            <column name="reminder_end" type="date">
                 <constraints nullable="true"/>
             </column>
             <column name="frequency_quantity" type="int">
@@ -477,6 +477,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+
+    <changeSet id="modifyReminderColumns" author="MDeLuise">
+        <modifyDataType tableName="reminders" columnName="reminder_start" newDataType="date"/>
+        <modifyDataType tableName="reminders" columnName="reminder_end" newDataType="date"/>
     </changeSet>
 
 </databaseChangeLog>

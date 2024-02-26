@@ -37,6 +37,7 @@ public class EntityImageImpl implements EntityImage, Serializable {
         final String uuid = UUID.randomUUID().toString();
         this.id = uuid;
         this.url = "/" + uuid;
+        this.createOn = new Date();
     }
 
 
