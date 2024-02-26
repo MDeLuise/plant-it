@@ -146,7 +146,7 @@ public class AuthController {
         description = "Start the process of resetting the user password"
     )
     public ResponseEntity<String> resetPassword(@PathVariable String username) throws EmailException {
-        if (emailService.isEnabled()) {
+        if (!emailService.isEnabled()) {
             final String temporaryPassword = temporaryPasswordService.generateNew(username);
             logger.info("Temporary password for user {} is {}. Login with this temporary password.", username,
                         temporaryPassword
