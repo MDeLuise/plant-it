@@ -53,7 +53,7 @@ public class User implements Serializable {
     private Set<Diary> diaries = new HashSet<>();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Plant> plants = new HashSet<>();
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator")
     private Set<BotanicalInfo> botanicalInfos = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

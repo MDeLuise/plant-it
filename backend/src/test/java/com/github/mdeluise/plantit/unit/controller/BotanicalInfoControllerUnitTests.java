@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.unit.controller;
 
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -135,7 +136,7 @@ class BotanicalInfoControllerUnitTests {
 
     @Test
     @DisplayName("Test saving a new botanical info")
-    void testSaveBotanicalInfo() {
+    void testSaveBotanicalInfo() throws MalformedURLException {
         final BotanicalInfoDTO botanicalInfoDTO = new BotanicalInfoDTO();
         final BotanicalInfo botanicalInfo = new BotanicalInfo();
         Mockito.when(botanicalInfoDtoConverter.convertFromDTO(botanicalInfoDTO)).thenReturn(botanicalInfo);
@@ -166,7 +167,7 @@ class BotanicalInfoControllerUnitTests {
 
     @Test
     @DisplayName("Test updating a botanical info")
-    void testUpdateBotanicalInfo() {
+    void testUpdateBotanicalInfo() throws MalformedURLException {
         final long id = 1L;
         final BotanicalInfoDTO updatedDTO = new BotanicalInfoDTO();
         final BotanicalInfo updatedInfo = new BotanicalInfo();
@@ -205,7 +206,7 @@ class BotanicalInfoControllerUnitTests {
 
     @Test
     @DisplayName("Test updating a non-existent botanical info")
-    void testUpdateNonExistentBotanicalInfo() {
+    void testUpdateNonExistentBotanicalInfo() throws MalformedURLException {
         final long id = 1L;
         final BotanicalInfoDTO updatedDTO = new BotanicalInfoDTO();
         final BotanicalInfo botanicalInfo = new BotanicalInfo();
@@ -238,7 +239,7 @@ class BotanicalInfoControllerUnitTests {
 
     @Test
     @DisplayName("Test updating a invalid botanical info")
-    void testUpdateInvalidBotanicalInfo() {
+    void testUpdateInvalidBotanicalInfo() throws MalformedURLException {
         final long id = 1L;
         final BotanicalInfoDTO updatedDTO = new BotanicalInfoDTO();
         final BotanicalInfo botanicalInfo = new BotanicalInfo();

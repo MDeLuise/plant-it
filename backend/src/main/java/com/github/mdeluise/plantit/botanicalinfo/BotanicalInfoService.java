@@ -1,11 +1,13 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
@@ -44,12 +46,14 @@ public class BotanicalInfoService {
 
     public Set<BotanicalInfo> getByPartialScientificName(String partialScientificName, int size) {
         logger.debug(String.format("Search for DB saved botanical info matching '%s' scientific name (max size %s)",
-                                   partialScientificName, size));
-        final List<BotanicalInfo> result =
-            botanicalInfoRepository.getByScientificNameOrSynonym(partialScientificName).stream().filter(
-                botanicalInfo -> botanicalInfo.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser()))
-                                   .limit(size)
-                                   .toList();
+                                   partialScientificName, size
+        ));
+        final List<BotanicalInfo> result = botanicalInfoRepository
+                                               .getBySpeciesOrSynonym(partialScientificName).stream()
+                                               .filter(botanicalInfo -> botanicalInfo.isAccessibleToUser(
+                                                   authenticatedUserService.getAuthenticatedUser()))
+                                               .limit(size)
+                                               .toList();
         return new HashSet<>(result.subList(0, Math.min(size, result.size())));
     }
 
@@ -66,28 +70,75 @@ public class BotanicalInfoService {
     public int countPlants(Long botanicalInfoId) {
         return botanicalInfoRepository.findById(botanicalInfoId)
                                       .orElseThrow(() -> new ResourceNotFoundException(botanicalInfoId)).getPlants()
-                                      .stream().filter(
-                pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser())).collect(Collectors.toSet())
+                                      .stream()
+                                      .filter(
+                                          pl -> pl.getOwner().equals(authenticatedUserService.getAuthenticatedUser()))
+                                      .collect(Collectors.toSet())
                                       .size();
     }
 
+
     public long count() {
         return plantRepository.findAllByOwner(authenticatedUserService.getAuthenticatedUser(), Pageable.unpaged())
-                              .getContent().stream().map(entity -> entity.getBotanicalInfo().getId())
+                              .getContent()
+                              .stream()
+                              .map(entity -> entity.getBotanicalInfo().getId())
                               .collect(Collectors.toSet()).size();
     }
 
 
     @CacheEvict(cacheNames = "botanical-info", allEntries = true)
-    public BotanicalInfo save(BotanicalInfo toSave) {
+    @Transactional
+    public BotanicalInfo save(BotanicalInfo toSave) throws MalformedURLException {
+        checkSpeciesNotDuplicatedForSameCreator(toSave);
         if (toSave.isUserCreated()) {
             toSave.setUserCreator(authenticatedUserService.getAuthenticatedUser());
         }
-        if (toSave.getImage() != null && toSave.getImage().getId() == null) {
-            toSave.getImage().setId(UUID.randomUUID().toString());
-        }
         removeDuplicatedCaseInsensitiveSynonyms(toSave);
-        return botanicalInfoRepository.save(toSave);
+        final BotanicalInfoImage imageToSave = toSave.getImage();
+        toSave.setImage(null);
+        final BotanicalInfo result = botanicalInfoRepository.save(toSave);
+        try {
+            linkNewImage(imageToSave, result);
+        } catch (MalformedURLException e) {
+            logger.error("Error while setting the image for the new species", e);
+            throw e;
+        }
+        return result;
+    }
+
+
+    private void linkNewImage(BotanicalInfoImage toSave, BotanicalInfo toUpdate) throws MalformedURLException {
+        if (toSave == null) {
+            logger.debug("Species {} does not have a linked image", toUpdate.getSpecies());
+            return;
+        }
+        if (toSave.getContent() != null) {
+            logger.debug("Species {} have a linked image's content, updating...", toUpdate.getSpecies());
+            final BotanicalInfoImage saved =
+                (BotanicalInfoImage) imageStorageService.save(toSave.getContent(), toSave.getContentType(), toUpdate);
+            toUpdate.setImage(saved);
+        } else if (toSave.getUrl() != null && !toSave.getUrl().isBlank()) {
+            logger.debug("Species {} have a linked image's url, updating...", toUpdate.getSpecies());
+            final BotanicalInfoImage saved = (BotanicalInfoImage) imageStorageService.save(toSave.getUrl(), toUpdate);
+            toUpdate.setImage(saved);
+        } else if (toSave.getId() != null && !toSave.getId().isBlank()) {
+            logger.debug("Species {} have a linked image's id, updating...", toUpdate.getSpecies());
+            final BotanicalInfoImage entityImage = (BotanicalInfoImage) imageStorageService.get(toSave.getId());
+            toUpdate.setImage(entityImage);
+            botanicalInfoRepository.save(toUpdate);
+        }
+    }
+
+
+    private void checkSpeciesNotDuplicatedForSameCreator(BotanicalInfo toSave) {
+        final String species = toSave.getSpecies();
+        final BotanicalInfoCreator creator = toSave.getCreator();
+        final User userCreator = toSave.getUserCreator();
+        if (botanicalInfoRepository.existsBySpeciesAndCreatorAndUserCreator(species, creator, userCreator)) {
+            throw new IllegalArgumentException(
+                String.format("Species %s with creator %s already exists", species, creator));
+        }
     }
 
 
@@ -98,6 +149,11 @@ public class BotanicalInfoService {
             throw new UnauthorizedException();
         }
         return result;
+    }
+
+
+    public BotanicalInfo getInternal(String scientificName) {
+        return botanicalInfoRepository.getBySpeciesOrSynonym(scientificName).get(0);
     }
 
 
@@ -120,19 +176,67 @@ public class BotanicalInfoService {
 
 
     @Transactional
+    public void deleteInternal(BotanicalInfo toDelete) {
+        imageStorageService.removeAll();
+        botanicalInfoRepository.delete(toDelete);
+    }
+
+
+    @Transactional
+    public void deleteAll() {
+        botanicalInfoRepository.findAll().forEach(this::deleteInternal);
+    }
+
+
+    @Transactional
     @CacheEvict(cacheNames = {"botanical-info", "plants"}, allEntries = true)
-    public BotanicalInfo update(Long id, BotanicalInfo updated) {
+    public BotanicalInfo update(Long id, BotanicalInfo updated) throws MalformedURLException {
         final BotanicalInfo toUpdate = get(id);
         if (!toUpdate.isAccessibleToUser(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
+
+        final String species = updated.getSpecies();
+        final BotanicalInfoCreator creator = updated.getCreator();
+        final User userCreator = updated.getUserCreator();
+        final Optional<BotanicalInfo> optionalDuplicatedSpecies =
+            botanicalInfoRepository.findBySpeciesAndCreatorAndUserCreator(species, updated.getCreator(), userCreator);
+        final boolean existDistinctDuplicate =
+            optionalDuplicatedSpecies.isPresent() && !optionalDuplicatedSpecies.get().getId().equals(updated.getId());
+        if (existDistinctDuplicate) {
+            throw new IllegalArgumentException(
+                String.format("Species %s with creator %s already exists", species, creator));
+        }
+
+        final BotanicalInfoImage updatedImage = updated.getImage();
+        updated.setImage(toUpdate.getImage());
+
         if (toUpdate.isUserCreated()) {
-            return updateUserCreatedBotanicalInfo(updated, toUpdate);
+            final BotanicalInfo saved = updateUserCreatedBotanicalInfo(updated, toUpdate);
+            return updateImage(updatedImage, saved);
         }
         logger.info("Trying to update a NON custom botanical info. Creating custom copy...");
         final BotanicalInfo userCreatedCopy = createUserCreatedCopy(toUpdate);
         removeDuplicatedCaseInsensitiveSynonyms(updated);
-        return updateUserCreatedBotanicalInfo(updated, userCreatedCopy);
+        final BotanicalInfo result = updateUserCreatedBotanicalInfo(updated, userCreatedCopy);
+        try {
+            return updateImage(updatedImage, result);
+        } catch (MalformedURLException e) {
+            logger.error("Error while updating image for species {}", updated.getSpecies(), e);
+            throw e;
+        }
+    }
+
+
+    private BotanicalInfo updateImage(BotanicalInfoImage updatedImage, BotanicalInfo toUpdate) throws MalformedURLException {
+        final BotanicalInfoImage oldImage = toUpdate.getImage();
+        if (oldImage != updatedImage) { // both not null
+            linkNewImage(updatedImage, toUpdate);
+            if (oldImage != null && (updatedImage == null || !updatedImage.equals(oldImage))) {
+                imageStorageService.remove(oldImage.getId());
+            }
+        }
+        return toUpdate;
     }
 
 
@@ -141,20 +245,18 @@ public class BotanicalInfoService {
         toUpdate.setFamily(updated.getFamily());
         toUpdate.setGenus(updated.getGenus());
         toUpdate.setSpecies(updated.getSpecies());
-        toUpdate.setScientificName(updated.getScientificName());
         toUpdate.setPlantCareInfo(updated.getPlantCareInfo());
-        toUpdate.setSynonyms(updated.getSynonyms());
+        toUpdate.setSynonyms(new HashSet<>(updated.getSynonyms()));
         return botanicalInfoRepository.save(toUpdate);
     }
 
 
-    private BotanicalInfo createUserCreatedCopy(BotanicalInfo toCopy) {
+    private BotanicalInfo createUserCreatedCopy(BotanicalInfo toCopy) throws MalformedURLException {
         BotanicalInfo userCreatedCopy = new BotanicalInfo();
         userCreatedCopy.setUserCreator(authenticatedUserService.getAuthenticatedUser());
         userCreatedCopy.setFamily(toCopy.getFamily());
         userCreatedCopy.setGenus(toCopy.getGenus());
         userCreatedCopy.setSpecies(toCopy.getSpecies());
-        userCreatedCopy.setScientificName(toCopy.getScientificName());
         userCreatedCopy.setPlantCareInfo(toCopy.getPlantCareInfo());
         userCreatedCopy.setSynonyms(new HashSet<>(toCopy.getSynonyms()));
 
@@ -203,6 +305,7 @@ public class BotanicalInfoService {
         });
         botanicalInfo.setSynonyms(newSynonyms);
     }
+
 
     private boolean containsCaseInsensitive(Set<String> set, String value) {
         for (String str : set) {

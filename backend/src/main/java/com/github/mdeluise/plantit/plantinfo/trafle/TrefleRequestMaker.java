@@ -80,7 +80,6 @@ public class TrefleRequestMaker {
         final JsonObject plantJson = plantResult.getAsJsonObject();
         botanicalInfo.setExternalId(plantJson.get("id").getAsString());
         botanicalInfo.setSpecies(plantJson.get("scientific_name").getAsString());
-        botanicalInfo.setScientificName(plantJson.get("scientific_name").getAsString());
         botanicalInfo.setFamily(plantJson.get("family").getAsString());
         botanicalInfo.setGenus(plantJson.get("genus").getAsString());
         if (!isJsonValueNull(plantJson, "image_url")) {

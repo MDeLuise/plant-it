@@ -6,6 +6,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 @DiscriminatorValue("1")
@@ -13,6 +14,10 @@ public class BotanicalInfoImage extends EntityImageImpl {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "botanical_info_entity_id")
     private BotanicalInfo target;
+    @Transient
+    private byte[] content;
+    @Transient
+    private String contentType;
 
 
     public BotanicalInfoImage() {
@@ -27,5 +32,25 @@ public class BotanicalInfoImage extends EntityImageImpl {
 
     public void setTarget(BotanicalInfo target) {
         this.target = target;
+    }
+
+
+    public byte[] getContent() {
+        return content;
+    }
+
+
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
+
+    public String getContentType() {
+        return contentType;
+    }
+
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

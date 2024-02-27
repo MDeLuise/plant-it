@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,23 +11,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class BotanicalInfoDTO {
     @Schema(description = "ID of the botanical info.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-    @Schema(description = "Scientific name of the botanical info.")
+    @Schema(description = "Scientific name of the botanical info.", accessMode = Schema.AccessMode.READ_ONLY)
     private String scientificName;
     @Schema(description = "Synonyms of the botanical info.")
-    private Set<String> synonyms;
+    private Set<String> synonyms = new HashSet<>();
     @Schema(description = "Family of the botanical info.")
     private String family;
     @Schema(description = "Genus of the botanical info.")
     private String genus;
     @Schema(description = "Species of the botanical info.")
     private String species;
-    @Schema(description = "Care information of the botanical info")
+    @Schema(description = "Care information of the botanical info.")
     private PlantCareInfoDTO plantCareInfo;
     @Schema(description = "ID of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String imageId;
-    @Schema(description = "URL of the botanical info image.", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "URL of the botanical info image.")
     private String imageUrl;
-    @Schema(description = "Creator of the botanical info", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Content of the botanical info image.", accessMode = Schema.AccessMode.WRITE_ONLY)
+    private byte[] imageContent;
+    @Schema(description = "Content type of the botanical info image.", accessMode = Schema.AccessMode.WRITE_ONLY)
+    private String imageContentType;
+    @Schema(description = "Creator of the botanical info")
     private String creator;
     @Schema(description = "ID of the botanical info in the creator service")
     private String externalId;
@@ -119,6 +124,26 @@ public class BotanicalInfoDTO {
 
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+
+    public byte[] getImageContent() {
+        return imageContent;
+    }
+
+
+    public void setImageContent(byte[] imageContent) {
+        this.imageContent = imageContent;
+    }
+
+
+    public String getImageContentType() {
+        return imageContentType;
+    }
+
+
+    public void setImageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
     }
 
 

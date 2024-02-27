@@ -77,7 +77,7 @@ public class ReminderDispatcher {
                 }
                 // Time since last notification is greater than frequency
                 return new Date(
-                    reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getFrequency())).before(now);
+                    reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getRepeatAfter())).before(now);
             }
             return false;
         }).orElse(false);

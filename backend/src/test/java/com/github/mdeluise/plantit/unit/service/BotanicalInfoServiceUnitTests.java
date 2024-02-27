@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.unit.service;
 
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -59,14 +60,14 @@ class BotanicalInfoServiceUnitTests {
         final List<BotanicalInfo> botanicalInfoList = Arrays.asList(botanicalInfo1, botanicalInfo2);
         final Set<BotanicalInfo> expectedBotanicalInfoSet = new HashSet<>(botanicalInfoList);
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
-        Mockito.when(botanicalInfoRepository.getByScientificNameOrSynonym(partialScientificName))
+        Mockito.when(botanicalInfoRepository.getBySpeciesOrSynonym(partialScientificName))
                .thenReturn(botanicalInfoList);
 
         final Set<BotanicalInfo> result = botanicalInfoService.getByPartialScientificName(partialScientificName, size);
 
         Assertions.assertThat(expectedBotanicalInfoSet).hasSameElementsAs(result);
         Mockito.verify(authenticatedUserService, Mockito.times(2)).getAuthenticatedUser();
-        Mockito.verify(botanicalInfoRepository, Mockito.times(1)).getByScientificNameOrSynonym(partialScientificName);
+        Mockito.verify(botanicalInfoRepository, Mockito.times(1)).getBySpeciesOrSynonym(partialScientificName);
     }
 
 
@@ -161,7 +162,7 @@ class BotanicalInfoServiceUnitTests {
 
     @Test
     @DisplayName("Should save a botanical info")
-    void shouldSaveBotanicalInfo() {
+    void shouldSaveBotanicalInfo() throws MalformedURLException {
         final BotanicalInfo botanicalInfoToSave = new BotanicalInfo();
         botanicalInfoToSave.setId(1L);
         botanicalInfoToSave.setCreator(BotanicalInfoCreator.USER);
@@ -322,7 +323,7 @@ class BotanicalInfoServiceUnitTests {
 
     @Test
     @DisplayName("Should set user creator correctly for newer botanical info")
-    void shouldSetUserCreatorCorrectlyForNewerBotanicalInfo() {
+    void shouldSetUserCreatorCorrectlyForNewerBotanicalInfo() throws MalformedURLException {
         final BotanicalInfo botanicalInfoToSave = new BotanicalInfo();
         botanicalInfoToSave.setCreator(BotanicalInfoCreator.USER);
         final User authenticatedUser = new User();
@@ -345,7 +346,7 @@ class BotanicalInfoServiceUnitTests {
 
     @Test
     @DisplayName("Should update botanical info")
-    void shouldUpdateBotanicalInfo() {
+    void shouldUpdateBotanicalInfo() throws MalformedURLException {
         final Long botanicalInfoId = 1L;
         final User authenticatedUser = new User();
         authenticatedUser.setId(1L);
@@ -355,7 +356,7 @@ class BotanicalInfoServiceUnitTests {
         final BotanicalInfo updatedBotanicalInfo = new BotanicalInfo();
         updatedBotanicalInfo.setId(botanicalInfoId);
         updatedBotanicalInfo.setUserCreator(authenticatedUser);
-        updatedBotanicalInfo.setScientificName("Updated Scientific Name");
+        updatedBotanicalInfo.setSpecies("Updated Species");
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(existingBotanicalInfo));
         Mockito.when(botanicalInfoRepository.save(updatedBotanicalInfo)).thenReturn(updatedBotanicalInfo);
@@ -401,7 +402,7 @@ class BotanicalInfoServiceUnitTests {
         final BotanicalInfo updatedBotanicalInfo = new BotanicalInfo();
         updatedBotanicalInfo.setId(botanicalInfoId);
         updatedBotanicalInfo.setUserCreator(ownerUser);
-        updatedBotanicalInfo.setScientificName("Updated Scientific Name");
+        updatedBotanicalInfo.setSpecies("Updated Species");
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(botanicalInfoRepository.findById(botanicalInfoId)).thenReturn(Optional.of(existingBotanicalInfo));
 

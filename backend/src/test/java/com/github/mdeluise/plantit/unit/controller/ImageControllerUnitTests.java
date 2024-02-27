@@ -6,10 +6,8 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
-import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
+import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoRepository;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
-import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.EntityImage;
 import com.github.mdeluise.plantit.image.ImageController;
@@ -41,7 +39,7 @@ class ImageControllerUnitTests {
     @Mock
     private ImageStorageService imageStorageService;
     @Mock
-    private BotanicalInfoService botanicalInfoService;
+    private BotanicalInfoRepository botanicalInfoRepository;
     @Mock
     private PlantService plantService;
     @Mock
@@ -50,29 +48,6 @@ class ImageControllerUnitTests {
     private PlantDTOConverter plantDtoConverter;
     @InjectMocks
     private ImageController imageController;
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with non-existing ID")
-    void testSaveBotanicalInfoImageWithNonExistingId() {
-        final Long id = 1L;
-        final MultipartFile file = Mockito.mock(MultipartFile.class);
-        Mockito.when(botanicalInfoService.get(id)).thenThrow(ResourceNotFoundException.class);
-
-        Assertions.assertThrows(
-            ResourceNotFoundException.class, () -> imageController.saveBotanicalInfoImage(file, id));
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with invalid ID")
-    void testSaveBotanicalInfoImageWithInvalidId() {
-        final Long id = 1L;
-        final MultipartFile file = Mockito.mock(MultipartFile.class);
-        Mockito.when(botanicalInfoService.get(id)).thenThrow(UnauthorizedException.class);
-
-        Assertions.assertThrows(UnauthorizedException.class, () -> imageController.saveBotanicalInfoImage(file, id));
-    }
 
 
     @Test
@@ -104,25 +79,6 @@ class ImageControllerUnitTests {
         Mockito.doThrow(ResourceNotFoundException.class).when(imageStorageService).remove(id);
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> imageController.delete(id));
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with existing ID")
-    void testSaveBotanicalInfoImageWithExistingId() {
-        final Long id = 1L;
-        final MultipartFile file = Mockito.mock(MultipartFile.class);
-        final BotanicalInfo botanicalInfo = new BotanicalInfo();
-        Mockito.when(botanicalInfoService.get(id)).thenReturn(botanicalInfo);
-        final BotanicalInfoImage savedImage = new BotanicalInfoImage();
-        final ImageDTO imageDto = new ImageDTO();
-        Mockito.when(imageStorageService.save(file, botanicalInfo, null, null)).thenReturn(savedImage);
-        Mockito.when(imageDtoConverter.convertToDTO(savedImage)).thenReturn(imageDto);
-
-        final ResponseEntity<ImageDTO> responseEntity = imageController.saveBotanicalInfoImage(file, id);
-
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertEquals(imageDto, responseEntity.getBody());
     }
 
 
@@ -202,23 +158,6 @@ class ImageControllerUnitTests {
         Assertions.assertEquals(expected, responseEntity.getBody());
     }
 
-
-    @Test
-    @DisplayName("Test saving botanical info image with existing ID and valid URL")
-    void testSaveBotanicalInfoImageWithExistingIdAndValidUrl() throws MalformedURLException {
-        final Long id = 1L;
-        final String validUrl = "http://valid-url.com/image.jpg";
-        final SaveImageUrlRequest saveImageUrlRequest = new SaveImageUrlRequest(validUrl);
-        final BotanicalInfo linkedEntity = new BotanicalInfo();
-        final BotanicalInfoImage savedImage = new BotanicalInfoImage();
-        Mockito.when(botanicalInfoService.get(id)).thenReturn(linkedEntity);
-        Mockito.when(imageStorageService.save(saveImageUrlRequest.url(), linkedEntity)).thenReturn(savedImage);
-        Mockito.when(imageDtoConverter.convertToDTO(savedImage)).thenReturn(new ImageDTO());
-
-        final ResponseEntity<ImageDTO> responseEntity = imageController.saveBotanicalInfoImage(id, saveImageUrlRequest);
-
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    }
 
 
     @Test
@@ -345,83 +284,6 @@ class ImageControllerUnitTests {
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Assertions.assertEquals(expected, responseEntity.getBody());
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with null file")
-    @Disabled
-        //TODO
-    void testSaveBotanicalInfoImageWithNullFile() {
-        final Long id = 1L;
-        final MultipartFile nullFile = null;
-
-        Assertions.assertThrows(IllegalArgumentException.class,
-                                () -> imageController.saveBotanicalInfoImage(nullFile, id)
-        );
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with non-existing ID and valid file")
-    void testSaveBotanicalInfoImageWithNonExistingIdAndValidFile() {
-        final Long nonExistingId = -1L;
-        final MultipartFile file = Mockito.mock(MultipartFile.class);
-        Mockito.when(botanicalInfoService.get(nonExistingId)).thenThrow(ResourceNotFoundException.class);
-
-        Assertions.assertThrows(ResourceNotFoundException.class,
-                                () -> imageController.saveBotanicalInfoImage(file, nonExistingId)
-        );
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with existing ID, null file, and null URL")
-    @Disabled
-        //TODO
-    void testSaveBotanicalInfoImageWithExistingIdNullFileAndNullUrl() {
-        final Long id = 1L;
-        final MultipartFile nullFile = null;
-
-        Assertions.assertThrows(IllegalArgumentException.class,
-                                () -> imageController.saveBotanicalInfoImage(nullFile, id)
-        );
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with existing ID, valid file, and null URL")
-    void testSaveBotanicalInfoImageWithExistingIdValidFileAndNullUrl() {
-        final Long id = 1L;
-        final MultipartFile file = Mockito.mock(MultipartFile.class);
-        final BotanicalInfo botanicalInfo = new BotanicalInfo();
-        Mockito.when(botanicalInfoService.get(id)).thenReturn(botanicalInfo);
-        final BotanicalInfoImage savedImage = new BotanicalInfoImage();
-        final ImageDTO imageDto = new ImageDTO();
-        Mockito.when(imageStorageService.save(file, botanicalInfo, null, null)).thenReturn(savedImage);
-        Mockito.when(imageDtoConverter.convertToDTO(savedImage)).thenReturn(imageDto);
-
-        final ResponseEntity<ImageDTO> responseEntity = imageController.saveBotanicalInfoImage(file, id);
-
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    }
-
-
-    @Test
-    @DisplayName("Test saving botanical info image with existing ID, null file, and valid URL")
-    void testSaveBotanicalInfoImageWithExistingIdNullFileAndValidUrl() throws MalformedURLException {
-        final Long id = 1L;
-        final SaveImageUrlRequest saveImageUrlRequest = new SaveImageUrlRequest("http://valid-url.com/image.jpg");
-        final BotanicalInfo botanicalInfo = new BotanicalInfo();
-        Mockito.when(botanicalInfoService.get(id)).thenReturn(botanicalInfo);
-        final BotanicalInfoImage savedImage = new BotanicalInfoImage();
-        final ImageDTO imageDto = new ImageDTO();
-        Mockito.when(imageStorageService.save(saveImageUrlRequest.url(), botanicalInfo)).thenReturn(savedImage);
-        Mockito.when(imageDtoConverter.convertToDTO(savedImage)).thenReturn(imageDto);
-
-        final ResponseEntity<ImageDTO> responseEntity = imageController.saveBotanicalInfoImage(id, saveImageUrlRequest);
-
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
 

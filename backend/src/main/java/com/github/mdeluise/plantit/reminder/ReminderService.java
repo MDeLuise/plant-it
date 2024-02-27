@@ -85,4 +85,9 @@ public class ReminderService {
         }
         return reminderRepository.save(reminder);
     }
+
+
+    public void deleteAll() {
+        reminderRepository.findAll().forEach(reminder -> remove(reminder.getId()));
+    }
 }

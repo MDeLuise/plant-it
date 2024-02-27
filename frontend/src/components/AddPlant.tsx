@@ -502,7 +502,7 @@ function PlantInfoDetails(props: {
                         {
                             getAllCurrencySymbols().map(symbol => {
                                 return <MenuItem value={symbol}>{symbol}</MenuItem>
-                            }) 
+                            })
                         }
                     </Select>
                 </Box>
@@ -693,43 +693,77 @@ function AddPlantInfo(props: {
 
     const addNewBotanicalInfo = (toAdd: botanicalInfo, image?: string | File): Promise<botanicalInfo> => {
         return new Promise<botanicalInfo>((accept, reject) => {
-            props.requestor.post("botanical-info", toAdd)
-                .then(newBotanicalInfoRes => {
-                    if (image === undefined) {
+            if (image === undefined) {
+                props.requestor.post("botanical-info", toAdd)
+                    .then(newBotanicalInfoRes => {
+                        props.setUpdatedImgUrl(newBotanicalInfoRes.data.imageUrl);
                         accept(newBotanicalInfoRes.data)
-                        return;
-                    }
-                    if (typeof (image) === "string") {
-                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}/url/`, {
-                            url: image,
+                    })
+                    .catch(reject);
+            } else if (typeof (image) === "string") {
+                props.requestor.post("botanical-info", {
+                    ...toAdd,
+                    imageUrl: image,
+                })
+                    .then(newBotanicalInfoRes => {
+                        props.setUpdatedImgUrl(newBotanicalInfoRes.data.imageUrl);
+                        accept(newBotanicalInfoRes.data)
+                    })
+                    .catch(reject);
+            } else {
+                readImgContent(image as File)
+                    .then(imgContent => {
+                        props.requestor.post("botanical-info", {
+                            ...toAdd,
+                            imageContent: imgContent,
+                            imageContentType: (image as File).type,
                         })
-                            .then(imgRes => {
-                                props.setUpdatedImgUrl(imgRes.data.url);
-                                accept({
-                                    ...newBotanicalInfoRes.data,
-                                    imageId: imgRes.data.id,
-                                    imageUrl: imgRes.data.url,
-                                } as botanicalInfo);
+                            .then(newBotanicalInfoRes => {
+                                props.setUpdatedImgUrl(newBotanicalInfoRes.data.imageUrl);
+                                accept(newBotanicalInfoRes.data)
                             })
                             .catch(reject);
-                    } else {
-                        let formData = new FormData();
-                        formData.append('image', image);
-                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}`, formData)
-                            .then(imgRes => {
-                                props.setUpdatedImgUrl(imgRes.data.url);
-                                accept({
-                                    ...newBotanicalInfoRes.data,
-                                    imageUrl: imgRes.data.url,
-                                    imageId: imgRes.data.id,
-                                })
-                            })
-                            .catch(reject)
-                    }
-                })
-                .catch(reject);
+                    })
+            }
         });
     };
+
+
+    const readImgContent = (input: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                const arrayBuffer = event.target?.result as ArrayBuffer;
+                const byteArray = new Uint8Array(arrayBuffer);
+                resolve(byteArrayToBase64(byteArray as Uint8Array));
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+
+            reader.readAsArrayBuffer(input);
+        });
+
+
+    const byteArrayToBase64 = (byteArray: Uint8Array): string => {
+        let binary = '';
+        byteArray.forEach((byte) => {
+            binary += String.fromCharCode(byte);
+        });
+        return btoa(binary);
+    }
+
+    const base64ToByteArray = (base64String: string): Uint8Array => {
+        const binaryString = atob(base64String);
+        const byteArray = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            byteArray[i] = binaryString.charCodeAt(i);
+        }
+        return byteArray;
+    }
+
 
     const addNewPlant = (plant: {}): Promise<plant> => {
         return new Promise((accept, reject) => {
@@ -752,43 +786,34 @@ function AddPlantInfo(props: {
         setPlantNameError(undefined);
     };
 
-    const updateBotanicalInfo = (id: number, updated: {}, image?: string | File): Promise<botanicalInfo> => {
+    const updateBotanicalInfo = (id: number, updated: Partial<botanicalInfo>, image?: string | File): Promise<botanicalInfo> => {
         return new Promise<botanicalInfo>((accept, reject) => {
-            props.requestor.put(`botanical-info/${id}`, updated)
-                .then(newBotanicalInfoRes => {
-                    if (image === undefined) {
-                        accept(newBotanicalInfoRes.data);
-                        return;
-                    }
-                    if (typeof (image) === "string") {
-                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}/url/`, {
-                            url: image,
-                        })
-                            .then(imgRes => {
-                                props.setUpdatedImgUrl(imgRes.data.url);
-                                accept({
-                                    ...newBotanicalInfoRes.data,
-                                    imageId: imgRes.data.id,
-                                    imageUrl: imgRes.data.url,
-                                } as botanicalInfo);
-                            })
-                            .catch(reject);
-                    } else {
-                        let formData = new FormData();
-                        formData.append('image', image);
-                        props.requestor.post(`image/botanical-info/${newBotanicalInfoRes.data.id}`, formData)
-                            .then(imgRes => {
-                                props.setUpdatedImgUrl(imgRes.data.url);
-                                accept({
-                                    ...newBotanicalInfoRes.data,
-                                    imageUrl: imgRes.data.url,
-                                    imageId: imgRes.data.id,
-                                })
-                            })
-                            .catch(reject)
-                    }
+            if (image === undefined) {
+                props.requestor.put(`botanical-info/${id}`, updated)
+                    .then(res => accept(res.data))
+                    .catch(props.printError);
+            } else if (typeof (image) === "string") {
+                props.requestor.put(`botanical-info/${id}`, {
+                    ...updated,
+                    imageUrl: image,
+                    imageId: undefined
                 })
-                .catch(reject);
+                    .then(res => accept(res.data))
+                    .catch(reject);
+            } else {
+                readImgContent(image)
+                    .then(imgContent => {
+                        props.requestor.put(`botanical-info/${updated.id}`, {
+                            ...updated,
+                            imageContent: imgContent,
+                            imageContentType: image.type,
+                            imageUrl: undefined,
+                            imageId: undefined,
+                        })
+                            .then(res => accept(res.data))
+                            .catch(reject);
+                    })
+            }
         });
     };
 
@@ -989,7 +1014,7 @@ function AddPlantInfo(props: {
                                 "&:hover": { backgroundColor: "primary.main" },
                             }}
                             onClick={() => {
-                                const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url || updatedBotanicalInfo?.imageUrl;
+                                const thumbnail = updatedBotanicalInfoThumbnail.file || updatedBotanicalInfoThumbnail.url;
                                 if (props.botanicalInfoToAdd === undefined || props.botanicalInfoToAdd.id === null) {
                                     updatedBotanicalInfo!.creator = "USER";
                                     addNewBotanicalInfo(updatedBotanicalInfo as botanicalInfo, thumbnail)

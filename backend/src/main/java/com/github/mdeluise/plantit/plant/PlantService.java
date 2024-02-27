@@ -81,6 +81,9 @@ public class PlantService {
             toSave.setDiary(diary);
             toSave.getDiary().setOwner(authenticatedUser);
         }
+        if (toSave.getAvatarMode() == null) {
+            toSave.setAvatarMode(PlantAvatarMode.NONE);
+        }
         toSave.setBotanicalInfo(botanicalInfoService.get(toSave.getBotanicalInfo().getId()));
         return plantRepository.save(toSave);
     }
@@ -150,5 +153,17 @@ public class PlantService {
         } else {
             toUpdate.setAvatarImage(null);
         }
+    }
+
+
+    @Transactional
+    public void deleteAll() {
+        plantRepository.findAll().forEach(plant -> delete(plant.getId()));
+    }
+
+
+    public Plant getInternal(String name) {
+        return plantRepository.findByInfoPersonalName(name)
+                              .orElseThrow(() -> new ResourceNotFoundException("name", name));
     }
 }

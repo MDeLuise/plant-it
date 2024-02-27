@@ -15,7 +15,6 @@
         <insert tableName="botanical_infos">
             <column name="id" value="99"/>
             <column name="external_id" value="355135"/>
-            <column name="scientific_name" value="Hylotelephium spectabile"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Hylotelephium"/>
             <column name="species" value="Hylotelephium spectabile"/>
@@ -24,7 +23,6 @@
         <insert tableName="botanical_infos">
             <column name="id" value="98"/>
             <column name="external_id" value="354807"/>
-            <column name="scientific_name" value="Sedum palmeri"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Sedum"/>
             <column name="species" value="Sedum palmeri"/>
@@ -36,7 +34,6 @@
         </insert>
         <insert tableName="botanical_infos">
             <column name="id" value="97"/>
-            <column name="scientific_name" value="Echeveria Perle von Nurnberg"/>
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Echeveria"/>
             <column name="species" value="Echeveria Perle von Nurnberg"/>

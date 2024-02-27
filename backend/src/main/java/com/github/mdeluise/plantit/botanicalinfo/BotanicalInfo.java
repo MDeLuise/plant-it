@@ -27,7 +27,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -37,7 +37,7 @@ public class BotanicalInfo implements Serializable, ImageTarget {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     // https://landscapeplants.oregonstate.edu/scientific-plant-names-binomial-nomenclature
-    @NotBlank
+    @Transient
     private String scientificName;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "synonyms")
@@ -73,12 +73,7 @@ public class BotanicalInfo implements Serializable, ImageTarget {
 
 
     public String getScientificName() {
-        return scientificName;
-    }
-
-
-    public void setScientificName(String scientificName) {
-        this.scientificName = scientificName;
+        return species;
     }
 
 
@@ -119,7 +114,6 @@ public class BotanicalInfo implements Serializable, ImageTarget {
 
     public void setSpecies(String species) {
         this.species = species;
-        this.scientificName = species;
     }
 
 

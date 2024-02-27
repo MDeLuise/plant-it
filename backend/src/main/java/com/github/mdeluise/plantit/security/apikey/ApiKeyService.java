@@ -1,11 +1,11 @@
 package com.github.mdeluise.plantit.security.apikey;
 
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Collection;
 
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
-import org.codehaus.plexus.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +33,9 @@ public class ApiKeyService {
 
     private String generateNewApiKeyValue() {
         final SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[64];
+        final byte[] bytes = new byte[64];
         random.nextBytes(bytes);
-        return new String(Base64.encodeBase64(bytes));
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
 
@@ -46,7 +46,7 @@ public class ApiKeyService {
 
     public void remove(User user, Long id) {
         final ApiKey toRemove = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        if (!user.getApiKeys().contains(toRemove)) { // FIXME add admin case
+        if (!user.getApiKeys().contains(toRemove)) {
             throw new ResourceNotFoundException(id);
         }
         user.removeApiKey(toRemove);
@@ -55,7 +55,7 @@ public class ApiKeyService {
 
     public ApiKey get(User user, Long id) {
         final ApiKey toReturn = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        if (!toReturn.getUser().equals(user)) { // FIXME add admin case
+        if (!toReturn.getUser().equals(user)) {
             throw new ResourceNotFoundException(id);
         }
         return toReturn;
