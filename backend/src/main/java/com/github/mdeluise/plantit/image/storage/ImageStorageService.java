@@ -24,6 +24,8 @@ public interface ImageStorageService {
 
     byte[] getContent(String id);
 
+    byte[] getContentInternal(String id);
+
     void remove(String id);
 
     void removeAll();

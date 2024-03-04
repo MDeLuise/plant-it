@@ -17,6 +17,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfo;
 import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfoDTO;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
+import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.integration.StepData;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantDTO;
@@ -48,12 +49,13 @@ public class EntitiesSteps {
     final ObjectMapper objectMapper;
     final BotanicalInfoService botanicalInfoService;
     final PlantService plantService;
+    final ImageStorageService imageStorageService;
     final String imageLocation;
 
 
     public EntitiesSteps(@Value("${server.port}") int port, MockMvc mockMvc, StepData stepData,
                          ObjectMapper objectMapper, BotanicalInfoService botanicalInfoService,
-                         PlantService plantService,
+                         PlantService plantService, ImageStorageService imageStorageService,
                          @Value("${upload.location}") String imageLocation) {
         this.port = port;
         this.mockMvc = mockMvc;
@@ -61,6 +63,7 @@ public class EntitiesSteps {
         this.objectMapper = objectMapper;
         this.botanicalInfoService = botanicalInfoService;
         this.plantService = plantService;
+        this.imageStorageService = imageStorageService;
         this.imageLocation = imageLocation;
     }
 
@@ -131,7 +134,6 @@ public class EntitiesSteps {
         }
         if (stepData.contains("plantCareInfoDTO")) {
             botanicalInfoDTO.setPlantCareInfo((PlantCareInfoDTO) stepData.get("plantCareInfoDTO"));
-            stepData.delete("plantCareInfoDTO");
         }
 
         final MvcResult result = mockMvc.perform(
@@ -173,7 +175,6 @@ public class EntitiesSteps {
         }
         if (stepData.contains("plantCareInfoDTO")) {
             botanicalInfoDTO.setPlantCareInfo((PlantCareInfoDTO) stepData.get("plantCareInfoDTO"));
-            stepData.delete("plantCareInfoDTO");
         }
 
         final Long toUpdate = getBotanicalInfoFromScientificName(botanicalInfoName).getId();
@@ -242,7 +243,6 @@ public class EntitiesSteps {
 
         if (stepData.contains("plantInfoDTO")) {
             plantDTO.setInfo((PlantInfoDTO) stepData.get("plantInfoDTO"));
-            stepData.delete("plantInfoDTO");
         }
 
         final MvcResult result = mockMvc.perform(
@@ -305,7 +305,6 @@ public class EntitiesSteps {
 
         if (stepData.contains("plantInfoDTO")) {
             plantDTO.setInfo((PlantInfoDTO) stepData.get("plantInfoDTO"));
-            stepData.delete("plantInfoDTO");
         }
 
         final Long toUpdateId = getPlantFromName(plantName).getId();
@@ -458,10 +457,17 @@ public class EntitiesSteps {
             Assertions.assertThat(toCheck.getUrl()).isEqualTo(parameters.get("image_url"));
         }
         if (parameters.get("image_content") != null) {
-            Assertions.assertThat(toCheck.getContent())
+            final byte[] expected = imageStorageService.getContentInternal(toCheck.getId());
+            Assertions.assertThat(expected)
                       .isEqualTo(Base64.getDecoder().decode(parameters.get("image_content")));
         } else {
-            Assertions.assertThat(toCheck.getContent()).isNull();
+            try {
+                imageStorageService.getContentInternal(toCheck.getId());
+                Assertions.assertThat(false).isTrue();
+            } catch (UnsupportedOperationException ignored) {
+                Assertions.assertThat(true).isTrue();
+            }
+
         }
     }
 

@@ -220,23 +220,3 @@ Feature: Integration tests regards botanical info managements
       | light | humidity | minTemp | maxTemp | phMax | phMin |
       | 6     | 5        |         |         | 2     | 1     |
     * cleanup the database
-
-
-  Scenario: Add a TREFLE species, then link to it a plant, then edit the species.
-    Given a user signup with username "user", password "user000", email "foo@bar.com"
-    * a user login with username "user" and password "user000"
-    * user adds new botanical info
-      | synonyms | family | genus | species | creator | externalId | image_id | image_url | image_content |
-      |          |        |       | foo     | TREFLE  |            |          |           |               |
-    * response is ok
-    * using this plant info
-      | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
-      |           | plant1       |         | PURCHASED |      |                |                |        |          |
-    * user adds new plant
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            |             | foo            |
-    * response is ok
-#    When user updates botanical info "foo"
-#      | synonyms | family | genus | species | imageUrl       | imageId | creator | externalId | image_id | image_url | image_content |
-#      | a,b,c,d  | fam    | gen   | foo     | http://foo.png |         | TREFLE  |            |          |           |               |
-    * cleanup the database

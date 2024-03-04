@@ -755,16 +755,6 @@ function AddPlantInfo(props: {
         return btoa(binary);
     }
 
-    const base64ToByteArray = (base64String: string): Uint8Array => {
-        const binaryString = atob(base64String);
-        const byteArray = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
-        }
-        return byteArray;
-    }
-
-
     const addNewPlant = (plant: {}): Promise<plant> => {
         return new Promise((accept, reject) => {
             props.requestor.post("plant", plant)
