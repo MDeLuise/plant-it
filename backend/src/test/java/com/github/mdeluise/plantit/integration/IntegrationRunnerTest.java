@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
         "com.github.mdeluise.plantit.integration",
         "com.github.mdeluise.plantit.integration.steps"
     },
-    plugin = {"pretty"}
+    plugin = {"pretty", "html:target/cucumber-reports"}
 )
 public class IntegrationRunnerTest {
 }

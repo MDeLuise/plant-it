@@ -1,4 +1,4 @@
-package com.github.mdeluise.plantit.image.storage.service;
+package com.github.mdeluise.plantit.unit.service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.mdeluise.plantit.TestEnvironment;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
@@ -31,27 +30,24 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(SpringExtension.class)
-@WithMockUser(username = "user")
-@Import(TestEnvironment.class)
-class FileSystemImageStorageServiceTest {
+@DisplayName("Unit tests for FileSystemImageStorageService")
+class FileSystemImageStorageServiceUnitTests {
     @TempDir(cleanup = CleanupMode.ALWAYS)
-    Path tmpDir;
+    private Path tmpDir;
     @Mock
-    ImageRepository imageRepository;
+    private ImageRepository imageRepository;
     @Mock
-    PlantImageRepository plantImageRepository;
+    private PlantImageRepository plantImageRepository;
     @Mock
-    PlantRepository plantRepository;
+    private PlantRepository plantRepository;
     @Mock
-    AuthenticatedUserService authenticatedUserService;
-    FileSystemImageStorageService fileSystemImageStorageService;
+    private AuthenticatedUserService authenticatedUserService;
+    private FileSystemImageStorageService fileSystemImageStorageService;
 
 
     @BeforeEach

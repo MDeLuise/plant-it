@@ -17,13 +17,21 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(20)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="username_unique"/>
+                <constraints
+                        nullable="false"
+                        unique="true"
+                        uniqueConstraintName="username_unique"
+                />
             </column>
             <column name="password" type="varchar(120)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(70)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="email_unique"/>
+                <constraints
+                        nullable="false"
+                        unique="true"
+                        uniqueConstraintName="email_unique"
+                />
             </column>
         </createTable>
     </changeSet>
@@ -40,7 +48,12 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_apiKey_user" references="application_users(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_apiKey_user"
+                        references="application_users(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="api_key_value" type="varchar(255)">
                 <constraints unique="true"/>
@@ -90,9 +103,6 @@
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="scientific_name" type="varchar(40)">
-                <constraints nullable="false"/>
-            </column>
             <column name="family" type="varchar(40)">
             </column>
             <column name="genus" type="varchar(40)">
@@ -118,8 +128,11 @@
                 <constraints nullable="true"/>
             </column>
             <column name="user_creator_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_botanicalInfo_user"
-                             references="application_users(id)"/>
+                <constraints nullable="true"
+                             foreignKeyName="fk_botanicalInfo_user"
+                             references="application_users(id)"
+                             deleteCascade="true"
+                />
             </column>
             <column name="creator" type="varchar(20)" defaultValue="USER">
                 <constraints nullable="false"/>
@@ -135,8 +148,8 @@
                 tableName="botanical_infos"
         />
         <addUniqueConstraint
-                columnNames="scientific_name, creator, user_creator_id"
-                constraintName="botanical_info_scientific_name_unique"
+                columnNames="creator, external_id"
+                constraintName="botanical_info_external_id_unique"
                 tableName="botanical_infos"
         />
     </changeSet>
@@ -173,10 +186,19 @@
             <column name="location" type="varchar(100)">
             </column>
             <column name="owner_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_plant_user" references="application_users(id)"/>
+                <constraints nullable="false"
+                             foreignKeyName="fk_plant_user"
+                             references="application_users(id)"
+                             deleteCascade="true"
+                />
             </column>
             <column name="botanical_name_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_plant_botanicalName" references="botanical_infos(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_plant_botanicalName"
+                        references="botanical_infos(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="avatar_mode" type="varchar(50)" defaultValue="NONE">
                 <constraints nullable="false"/>
@@ -205,11 +227,20 @@
                 <constraints nullable="false"/>
             </column>
             <column name="botanical_info_entity_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_entityImage_botanicalInfoId"
-                             references="botanical_infos(id)"/>
+                <constraints
+                        nullable="true"
+                        foreignKeyName="fk_entityImage_botanicalInfoId"
+                        references="botanical_infos(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="plant_entity_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_entityImage_plantId" references="plants(id)"/>
+                <constraints
+                        nullable="true"
+                        foreignKeyName="fk_entityImage_plantId"
+                        references="plants(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="description" type="varchar(100)">
             </column>
@@ -225,6 +256,7 @@
                 <constraints nullable="true"
                              foreignKeyName="fk_avatar_plantId"
                              references="plants(id)"
+                             deleteCascade="true"
                 />
             </column>
         </createTable>
@@ -251,10 +283,20 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_diary_user" references="application_users(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_diary_user"
+                        references="application_users(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="target_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_diary_trackedEntity" references="plants(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_diary_trackedEntity"
+                        references="plants(id)"
+                        deleteCascade="true"
+                />
             </column>
         </createTable>
     </changeSet>
@@ -279,7 +321,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="diary_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_diaryEntry_diary" references="diaries(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_diaryEntry_diary"
+                        references="diaries(id)"
+                        deleteCascade="true"
+                />
             </column>
         </createTable>
     </changeSet>
@@ -292,8 +339,13 @@
         </preConditions>
         <createTable tableName="synonyms">
             <column name="botanical_info_id" type="bigint">
-                <constraints nullable="false" primaryKey="true" foreignKeyName="fk_synonyms_botanicalInfo"
-                             references="botanical_infos(id)"/>
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        foreignKeyName="fk_synonyms_botanicalInfo"
+                        references="botanical_infos(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="synonym_value" type="varchar(50)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -319,7 +371,12 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="target_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_reminder_plant" references="plants(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_reminder_plant"
+                        references="plants(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="reminder_start" type="date">
                 <constraints nullable="false"/>
@@ -360,7 +417,12 @@
         </preConditions>
         <createTable tableName="notification_dispatchers">
             <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_dispatcher_user" references="application_users(id)"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_dispatcher_user"
+                        references="application_users(id)"
+                        deleteCascade="true"
+                />
             </column>
             <column name="dispatcher_name" type="varchar(20)">
                 <constraints nullable="false"/>
@@ -371,41 +433,6 @@
                 columnNames="user_id,dispatcher_name"
                 constraintName="pk_userNotificationDispatchers"
         />
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.1.0 -->
-    <changeSet id="updateTo0.1.0" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <columnExists tableName="botanical_infos" columnName="botanical_info_type"/>
-        </preConditions>
-        <addColumn tableName="botanical_infos">
-            <column name="creator" type="VARCHAR(20)"/>
-        </addColumn>
-        <renameColumn tableName="botanical_infos" oldColumnName="user_id"
-                      newColumnName="user_creator_id" columnDataType="bigint"/>
-        <addColumn tableName="botanical_infos">
-            <column name="external_id" type="VARCHAR(255)"/>
-        </addColumn>
-        <dropIndex tableName="botanical_infos" indexName="botanical_info_species_unique"/>
-        <dropIndex tableName="botanical_infos" indexName="botanical_info_scientific_name_unique"/>
-        <addUniqueConstraint tableName="botanical_infos" columnNames="species,creator,user_creator_id"
-                             constraintName="botanical_info_species_unique"/>
-        <addUniqueConstraint tableName="botanical_infos"
-                             columnNames="scientific_name,creator,user_creator_id"
-                             constraintName="botanical_info_scientific_name_unique"/>
-
-        <update tableName="botanical_infos">
-            <column name="creator" value="USER"/>
-            <where>botanical_info_type = 2</where>
-        </update>
-
-        <update tableName="botanical_infos">
-            <column name="creator" value="TREFLE"/>
-            <where>botanical_info_type = 1</where>
-        </update>
-
-        <dropColumn tableName="botanical_infos" columnName="botanical_info_type"/>
     </changeSet>
 
 
@@ -480,9 +507,167 @@
     </changeSet>
 
 
+    <!-- can be removed after update to v0.4.0 -->
     <changeSet id="modifyReminderColumns" author="MDeLuise">
         <modifyDataType tableName="reminders" columnName="reminder_start" newDataType="date"/>
         <modifyDataType tableName="reminders" columnName="reminder_end" newDataType="date"/>
     </changeSet>
+
+
+    <!-- can be removed after update to v0.4.3 -->
+    <changeSet id="addDeleteCascadeToForeignKeys" author="MDeLuise">
+        <!-- Drop and recreate foreign key constraint fk_apiKey_user -->
+        <dropForeignKeyConstraint baseTableName="api_keys" constraintName="fk_apiKey_user"/>
+        <addForeignKeyConstraint baseTableName="api_keys"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_apiKey_user"
+                                 referencedTableName="application_users"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_botanicalInfo_user -->
+        <dropForeignKeyConstraint baseTableName="botanical_infos" constraintName="fk_botanicalInfo_user"/>
+        <addForeignKeyConstraint baseTableName="botanical_infos"
+                                 baseColumnNames="user_creator_id"
+                                 constraintName="fk_botanicalInfo_user"
+                                 referencedTableName="application_users"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_plant_user -->
+        <dropForeignKeyConstraint baseTableName="plants" constraintName="fk_plant_user"/>
+        <addForeignKeyConstraint baseTableName="plants"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_plant_user"
+                                 referencedTableName="application_users"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_plant_botanicalName -->
+        <dropForeignKeyConstraint baseTableName="plants" constraintName="fk_plant_botanicalName"/>
+        <addForeignKeyConstraint baseTableName="plants"
+                                 baseColumnNames="botanical_name_id"
+                                 constraintName="fk_plant_botanicalName"
+                                 referencedTableName="botanical_infos"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_entityImage_botanicalInfoId -->
+        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_entityImage_botanicalInfoId"/>
+        <addForeignKeyConstraint baseTableName="entity_images"
+                                 baseColumnNames="botanical_info_entity_id"
+                                 constraintName="fk_entityImage_botanicalInfoId"
+                                 referencedTableName="botanical_infos"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_entityImage_plantId -->
+        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_entityImage_plantId"/>
+        <addForeignKeyConstraint baseTableName="entity_images"
+                                 baseColumnNames="plant_entity_id"
+                                 constraintName="fk_entityImage_plantId"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_avatar_plantId -->
+        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_avatar_plantId"/>
+        <addForeignKeyConstraint baseTableName="entity_images"
+                                 baseColumnNames="avatar_of"
+                                 constraintName="fk_avatar_plantId"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_diary_user -->
+        <dropForeignKeyConstraint baseTableName="diaries" constraintName="fk_diary_user"/>
+        <addForeignKeyConstraint baseTableName="diaries"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_diary_user"
+                                 referencedTableName="application_users"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_diary_trackedEntity -->
+        <dropForeignKeyConstraint baseTableName="diaries" constraintName="fk_diary_trackedEntity"/>
+        <addForeignKeyConstraint baseTableName="diaries"
+                                 baseColumnNames="target_id"
+                                 constraintName="fk_diary_trackedEntity"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_diaryEntry_diary -->
+        <dropForeignKeyConstraint baseTableName="diary_entries" constraintName="fk_diaryEntry_diary"/>
+        <addForeignKeyConstraint baseTableName="diary_entries"
+                                 baseColumnNames="diary_id"
+                                 constraintName="fk_diaryEntry_diary"
+                                 referencedTableName="diaries"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_synonyms_botanicalInfo -->
+        <dropForeignKeyConstraint baseTableName="synonyms" constraintName="fk_synonyms_botanicalInfo"/>
+        <addForeignKeyConstraint baseTableName="synonyms"
+                                 baseColumnNames="botanical_info_id"
+                                 constraintName="fk_synonyms_botanicalInfo"
+                                 referencedTableName="botanical_infos"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_reminder_plant -->
+        <dropForeignKeyConstraint baseTableName="reminders" constraintName="fk_reminder_plant"/>
+        <addForeignKeyConstraint baseTableName="reminders"
+                                 baseColumnNames="target_id"
+                                 constraintName="fk_reminder_plant"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+
+        <!-- Drop and recreate foreign key constraint fk_dispatcher_user -->
+        <dropForeignKeyConstraint baseTableName="notification_dispatchers" constraintName="fk_dispatcher_user"/>
+        <addForeignKeyConstraint baseTableName="notification_dispatchers"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_dispatcher_user"
+                                 referencedTableName="application_users"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
+
+    <!-- can be removed after update to v0.4.3 -->
+    <changeSet id="addExternalIdUniqueConstraintIfNotExists" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                WHERE CONSTRAINT_TYPE = 'UNIQUE'
+                  AND LOWER(CONSTRAINT_NAME) = 'botanical_info_external_id_unique'
+                  AND LOWER(TABLE_NAME) = 'botanical_infos';
+            </sqlCheck>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="creator, external_id"
+                constraintName="botanical_info_external_id_unique"
+                tableName="botanical_infos"
+        />
+    </changeSet>
+
+
+    <!-- can be removed after update to v0.4.3 -->
+    <changeSet id="remove_unique_constraint_and_column" author="your_name">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="botanical_infos" columnName="scientific_name"/>
+        </preConditions>
+
+        <!-- Drop the unique constraint -->
+        <dropUniqueConstraint
+                constraintName="botanical_info_scientific_name_unique"
+                tableName="botanical_infos"/>
+
+        <!-- Drop the scientific_name column -->
+        <dropColumn tableName="botanical_infos" columnName="scientific_name"/>
+    </changeSet>
+
 
 </databaseChangeLog>

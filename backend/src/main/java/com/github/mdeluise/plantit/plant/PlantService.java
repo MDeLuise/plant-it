@@ -71,12 +71,18 @@ public class PlantService {
     // https://stackoverflow.com/questions/13370221/persistentobjectexception-detached-entity-passed-to-persist-thrown-by-jpa-and-h
     public Plant save(Plant toSave) {
         final User authenticatedUser = authenticatedUserService.getAuthenticatedUser();
+        if (toSave.getOwner() != null && toSave.getOwner() != authenticatedUser) {
+            throw new UnauthorizedException();
+        }
         toSave.setOwner(authenticatedUser);
         if (toSave.getDiary() == null) {
             final Diary diary = new Diary();
             diary.setTarget(toSave);
             toSave.setDiary(diary);
             toSave.getDiary().setOwner(authenticatedUser);
+        }
+        if (toSave.getAvatarMode() == null) {
+            toSave.setAvatarMode(PlantAvatarMode.NONE);
         }
         toSave.setBotanicalInfo(botanicalInfoService.get(toSave.getBotanicalInfo().getId()));
         return plantRepository.save(toSave);
@@ -92,10 +98,6 @@ public class PlantService {
     @Transactional
     public void delete(Long plantId) {
         final Plant toDelete = get(plantId);
-        if (!toDelete.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            logger.warn("User not authorized to operate on plant " + plantId);
-            throw new UnauthorizedException();
-        }
 
         // FIXME
         // this is not needed for the DB PlantImage entities (which are removed in cascade),
@@ -110,10 +112,6 @@ public class PlantService {
     @Transactional
     public Plant update(Long id, Plant updated) {
         final Plant toUpdate = get(id);
-        if (!toUpdate.getOwner().equals(authenticatedUserService.getAuthenticatedUser())) {
-            logger.warn("User not authorized to operate on plant " + id);
-            throw new UnauthorizedException();
-        }
         final BotanicalInfo newBotanicalInfo = botanicalInfoService.get(updated.getBotanicalInfo().getId());
         toUpdate.setBotanicalInfo(newBotanicalInfo);
         toUpdate.setInfo(updated.getInfo());
@@ -155,5 +153,17 @@ public class PlantService {
         } else {
             toUpdate.setAvatarImage(null);
         }
+    }
+
+
+    @Transactional
+    public void deleteAll() {
+        plantRepository.findAll().forEach(plant -> delete(plant.getId()));
+    }
+
+
+    public Plant getInternal(String name) {
+        return plantRepository.findByInfoPersonalName(name)
+                              .orElseThrow(() -> new ResourceNotFoundException("name", name));
     }
 }

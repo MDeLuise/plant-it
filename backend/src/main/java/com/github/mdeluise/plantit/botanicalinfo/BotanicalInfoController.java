@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.botanicalinfo;
 
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,7 +85,7 @@ public class BotanicalInfoController {
 
     @PostMapping
     @Operation(summary = "Save a new botanical info.", description = "Save a new botanical info.")
-    public ResponseEntity<BotanicalInfoDTO> save(@RequestBody BotanicalInfoDTO toSave) {
+    public ResponseEntity<BotanicalInfoDTO> save(@RequestBody BotanicalInfoDTO toSave) throws MalformedURLException {
         final BotanicalInfo result = botanicalInfoService.save(botanicalInfoDtoConverter.convertFromDTO(toSave));
         return ResponseEntity.ok(botanicalInfoDtoConverter.convertToDTO(result));
     }
@@ -100,7 +101,8 @@ public class BotanicalInfoController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a botanical info.", description = "Update the botanical info with the specified `id`.")
-    public ResponseEntity<BotanicalInfoDTO> update(@PathVariable Long id, @RequestBody BotanicalInfoDTO updated) {
+    public ResponseEntity<BotanicalInfoDTO> update(@PathVariable Long id, @RequestBody BotanicalInfoDTO updated)
+        throws MalformedURLException {
         final BotanicalInfo result = botanicalInfoService.update(id, botanicalInfoDtoConverter.convertFromDTO(updated));
         return ResponseEntity.ok(botanicalInfoDtoConverter.convertToDTO(result));
     }

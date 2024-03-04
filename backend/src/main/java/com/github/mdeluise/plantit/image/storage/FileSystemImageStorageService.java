@@ -82,41 +82,55 @@ public class FileSystemImageStorageService implements ImageStorageService {
         try {
             InputStream fileInputStream = file.getInputStream();
             if (file.getBytes().length > maxOriginImgSize) { // default to 10 MB
-                logger.info(String.format("File size (%s byte) exceed %s MB, compressing...",
-                                          file.getBytes().length, maxOriginImgSize));
+                logger.info(String.format("File size (%s byte) exceed %s MB, compressing...", file.getBytes().length,
+                                          maxOriginImgSize
+                ));
                 fileInputStream = new ByteArrayInputStream(ImageUtility.compressImage(file.getResource().getFile()));
             }
-            try {
-                EntityImageImpl entityImage;
-                if (linkedEntity instanceof BotanicalInfo b) {
-                    entityImage = new BotanicalInfoImage();
-                    ((BotanicalInfoImage) entityImage).setTarget(b);
-                } else if (linkedEntity instanceof Plant p) {
-                    entityImage = new PlantImage();
-                    ((PlantImage) entityImage).setTarget(p);
-                } else {
-                    throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
-                }
-                if (creationDate != null) {
-                    entityImage.setCreateOn(creationDate);
-                } else {
-                    entityImage.setCreateOn(new Date());
-                }
-                final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
-                final Path pathToFile = Path.of(fileName);
-                createDestinationDirectoryIfNotExist(Path.of(rootLocation));
-                Files.copy(fileInputStream, pathToFile);
-                entityImage.setPath(String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension));
-                entityImage.setDescription(description);
-                return imageRepository.save(entityImage);
-            } catch (IOException e) {
-                logger.error("Error while saving file", e);
-                throw new StorageException("Failed to save file.", e);
-            }
+            return createImage(linkedEntity, creationDate, description, fileExtension, fileInputStream);
         } catch (IOException e) {
             logger.error("Error while reading file", e);
             throw new StorageException("Could not read provided file.", e);
         }
+    }
+
+
+    private EntityImageImpl createImage(ImageTarget linkedEntity, Date creationDate, String description,
+                                        String fileExtension, InputStream fileInputStream) {
+        try {
+            EntityImageImpl entityImage;
+            if (linkedEntity instanceof BotanicalInfo b) {
+                entityImage = new BotanicalInfoImage();
+                ((BotanicalInfoImage) entityImage).setTarget(b);
+            } else if (linkedEntity instanceof Plant p) {
+                entityImage = new PlantImage();
+                ((PlantImage) entityImage).setTarget(p);
+            } else {
+                throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
+            }
+            if (creationDate != null) {
+                entityImage.setCreateOn(creationDate);
+            } else {
+                entityImage.setCreateOn(new Date());
+            }
+            final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
+            final Path pathToFile = Path.of(fileName);
+            createDestinationDirectoryIfNotExist(Path.of(rootLocation));
+            Files.copy(fileInputStream, pathToFile);
+            entityImage.setPath(String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension));
+            entityImage.setDescription(description);
+            return imageRepository.save(entityImage);
+        } catch (IOException e) {
+            logger.error("Error while saving file", e);
+            throw new StorageException("Failed to save file.", e);
+        }
+    }
+
+
+    @Override
+    public EntityImage save(byte[] content, String contentType, BotanicalInfo linkedEntity) {
+        final String fileExtension = contentType.split("/")[1];
+        return createImage(linkedEntity, new Date(), null, fileExtension, new ByteArrayInputStream(content));
     }
 
 
@@ -196,6 +210,19 @@ public class FileSystemImageStorageService implements ImageStorageService {
     @Override
     public byte[] getContent(String id) {
         final EntityImage getContentFrom = get(id);
+        return getBytes(id, getContentFrom);
+    }
+
+
+    @Override
+    public byte[] getContentInternal(String id) {
+        final EntityImage getContentFrom =
+            imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        return getBytes(id, getContentFrom);
+    }
+
+
+    private byte[] getBytes(String id, EntityImage getContentFrom) {
         if (getContentFrom.getPath() == null) {
             logger.warn("Trying to read an image that has no content but only URL");
             throw new UnsupportedOperationException(String.format("Image with id %s has no content (only URL)", id));
@@ -246,14 +273,11 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
     @Caching(
         evict = {
-            @CacheEvict(cacheNames = {"image", "thumbnail", "image-content"}, key = "{#id}"),
-            @CacheEvict(
-                value = "plants",
-                allEntries = true,
-                beforeInvocation = true,
-                condition = "@plantImageRepository.findById(#id).present and " +
-                                "@plantImageRepository.findById(#id).get().avatarOf != null"
-            )
+            @CacheEvict(cacheNames = {"image", "thumbnail", "image-content"}, key = "{#id}"), @CacheEvict(
+            value = "plants", allEntries = true, beforeInvocation = true,
+            condition = "@plantImageRepository.findById(#id).present and " +
+                            "@plantImageRepository.findById(#id).get().avatarOf != null"
+        )
         }
     )
     @Override

@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.notification.otp;
 
 import java.util.Date;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -49,5 +50,25 @@ public class Otp {
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Otp otp = (Otp) o;
+        return Objects.equals(email, otp.email) && Objects.equals(code, otp.code) &&
+                   Objects.equals(expiration, otp.expiration);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, code, expiration);
     }
 }

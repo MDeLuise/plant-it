@@ -1,14 +1,11 @@
 package com.github.mdeluise.plantit.image;
 
-import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 
-import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
-import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantDTO;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,58 +30,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/image")
 public class ImageController {
     private final ImageStorageService imageStorageService;
-    private final BotanicalInfoService botanicalInfoService;
     private final PlantService plantService;
     private final ImageDTOConverter imageDtoConverter;
     private final PlantDTOConverter plantDtoConverter;
 
 
     @Autowired
-    public ImageController(ImageStorageService imageStorageService, BotanicalInfoService botanicalInfoService,
-                           PlantService plantService, ImageDTOConverter imageDtoConverter,
+    public ImageController(ImageStorageService imageStorageService, PlantService plantService, ImageDTOConverter imageDtoConverter,
                            PlantDTOConverter plantDtoConverter) {
         this.imageStorageService = imageStorageService;
-        this.botanicalInfoService = botanicalInfoService;
         this.plantService = plantService;
         this.imageDtoConverter = imageDtoConverter;
         this.plantDtoConverter = plantDtoConverter;
-    }
-
-
-    @PostMapping("/botanical-info/{id}")
-    @Transactional
-    public ResponseEntity<ImageDTO> saveBotanicalInfoImage(@RequestParam("image") MultipartFile file,
-                                                           @PathVariable("id") Long id) {
-        final BotanicalInfo linkedEntity = botanicalInfoService.get(id);
-        final BotanicalInfoImage toDelete = linkedEntity.getImage();
-        if (toDelete != null) {
-            linkedEntity.setImage(null);
-            botanicalInfoService.save(linkedEntity);
-            imageStorageService.remove(toDelete.getId());
-        }
-        final EntityImage saved = imageStorageService.save(file, linkedEntity, null, null);
-        linkedEntity.setImage((BotanicalInfoImage) saved);
-        botanicalInfoService.save(linkedEntity);
-        return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
-    }
-
-
-    @PostMapping("/botanical-info/{id}/url/")
-    @Transactional
-    public ResponseEntity<ImageDTO> saveBotanicalInfoImage(@PathVariable("id") Long id,
-                                                           @RequestBody SaveImageUrlRequest saveImageUrlRequest)
-        throws MalformedURLException {
-        final BotanicalInfo linkedEntity = botanicalInfoService.get(id);
-        final BotanicalInfoImage toDelete = linkedEntity.getImage();
-        if (toDelete != null) {
-            linkedEntity.setImage(null);
-            botanicalInfoService.save(linkedEntity);
-            imageStorageService.remove(toDelete.getId());
-        }
-        final EntityImage saved = imageStorageService.save(saveImageUrlRequest.url(), linkedEntity);
-        linkedEntity.setImage((BotanicalInfoImage) saved);
-        botanicalInfoService.save(linkedEntity);
-        return ResponseEntity.ok(imageDtoConverter.convertToDTO(saved));
     }
 
 

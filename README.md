@@ -37,7 +37,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
-* 🔜 Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
+* Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 
 Take a look at the [roadmap](https://github.com/users/MDeLuise/projects/3/views/1) for a more detailed list of future features and enhancements.
 

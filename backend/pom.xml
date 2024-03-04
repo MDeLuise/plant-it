@@ -5,8 +5,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.0.1</version> <!-- 3.2.3 -->
+        <relativePath/>
     </parent>
     <groupId>com.github.mdeluise</groupId>
     <artifactId>plant-it</artifactId>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.15.1</version>
         </dependency>
 
         <dependency>
@@ -63,12 +63,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>4.18.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-maven-plugin</artifactId>
-            <version>3.4.1</version>
+            <version>4.26.0</version> <!-- 4.26.0 -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -87,7 +82,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>3.2.2  </version>
+            <version>3.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -7,6 +7,8 @@ export interface botanicalInfo {
     species: string,
     imageUrl: string,
     imageId?: string,
+    imageContent?: Uint8Array,
+    imageContentType?: string,
     creator: "USER" | "TREFLE",
     plantCareInfo: plantCareInfo,
 };

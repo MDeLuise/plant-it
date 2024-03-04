@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.reminder;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryType;
 import com.github.mdeluise.plantit.plant.Plant;
@@ -147,5 +148,27 @@ public class Reminder {
     public boolean isActive() {
         final Date now = new Date();
         return enabled && now.after(start) && (end == null || now.before(end));
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Reminder reminder = (Reminder) o;
+        return enabled == reminder.enabled && Objects.equals(id, reminder.id) &&
+                   Objects.equals(target, reminder.target) && Objects.equals(start, reminder.start) &&
+                   Objects.equals(end, reminder.end) && Objects.equals(frequency, reminder.frequency) &&
+                   action == reminder.action;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, target, start, end, frequency, action, enabled);
     }
 }

@@ -80,6 +80,14 @@ public class ReminderService {
 
 
     public Reminder save(Reminder reminder) {
+        if (reminder.getTarget().getOwner() != authenticatedUserService.getAuthenticatedUser()) {
+            throw new UnauthorizedException();
+        }
         return reminderRepository.save(reminder);
+    }
+
+
+    public void deleteAll() {
+        reminderRepository.findAll().forEach(reminder -> remove(reminder.getId()));
     }
 }

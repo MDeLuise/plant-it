@@ -85,6 +85,7 @@ public class AuthController {
         summary = "Signup", description = "Create a new account."
     )
     @SecurityRequirements()
+    @SuppressWarnings("ReturnCount") // FIXME
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest)
         throws EmailException {
         if (maxAllowedUsers > 0 && userService.count() >= maxAllowedUsers) {
@@ -92,6 +93,9 @@ public class AuthController {
         }
         if (userService.existsByUsername(signUpRequest.username())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+        }
+        if (userService.existsByEmail(signUpRequest.email())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already used!"));
         }
 
         if (emailService.isEnabled()) {

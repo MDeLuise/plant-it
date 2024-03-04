@@ -34,7 +34,8 @@ There are 2 configuration files available:
     LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
     UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
     CONTACT_MAIL=foo@bar.com # address used as "contact" for template email
-    
+    REMINDER_NOTIFY_CHECK=0 30 7 * * * # 6-values crontab expression to set the check time for reminders
+
     #
     # SSL
     #
