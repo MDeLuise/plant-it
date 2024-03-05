@@ -1,6 +1,26 @@
 {
+  "enterValue": "Please enter a value",
+  "enterValidURL": "Please enter a valid URL",
+  "go": "Continue",
   "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  }
+  "noBackend": "Cannot connect to the backend",
+  "ok": "Ok",
+  "serverURL": "Server URL",
+  "username": "Username",
+  "password": "Password",
+  "login": "Login",
+  "badCredentials": "Bad credentials",
+  "loginMessage": "Welcome back on",
+  "signupMessage": "Welcome on",
+  "appName": "Plant-it",
+  "forgotPassword": "Forgot password?",
+  "areYouNew": "Are you new?",
+  "createAccount": "Create an account",
+  "email": "Email",
+  "usernameSize": "Username lenght must be between 3 and 20 characters",
+  "passwordSize": "Password lenght must be between 3 and 20 characters",
+  "enterValidEmail": "Please enter a valid email",
+  "alreadyRegistered": "Already registered?",
+  "signup": "Signup",
+  "error": "Error while performing the operation"
 }

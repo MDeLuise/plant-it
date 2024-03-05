@@ -1,3 +1,26 @@
 {
-    "helloWorld": "Ciao Mondo!"
+  "enterValue": "Insertisci un valore",
+  "enterValidURL": "Inserisci un indirizzo valido",
+  "go": "Avanti",
+  "helloWorld": "Ciao Mondo!",
+  "noBackend": "Impossibile collegarsi al server",
+  "ok": "Ok",
+  "serverURL": "Indirizzo del server",
+  "username": "Username",
+  "password": "Password",
+  "login": "Accedi",
+  "badCredentials": "Credenziali errate",
+  "loginMessage": "Bentornato su",
+  "signupMessage": "Benvenuto su",
+  "appName": "Plant-it",
+  "forgotPassword": "Password dimenticata?",
+  "areYouNew": "Non hai un account?",
+  "createAccount": "Crea un account",
+  "email": "Email",
+  "usernameSize": "Lo username deve avere tra 3 e 20 caratteri",
+  "passwordSize": "La password deve avere tra 3 e 20 caratteri",
+  "enterValidEmail": "Inserisci un'email valida",
+  "alreadyRegistered": "Hai già un account?",
+  "signup": "Crea account",
+  "error": "Errore durante l'operazione"
 }
