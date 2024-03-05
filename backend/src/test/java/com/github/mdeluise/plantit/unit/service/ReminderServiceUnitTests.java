@@ -205,11 +205,14 @@ class ReminderServiceUnitTests {
     void shouldThrowUnauthorizedExceptionWhenSavingReminderForPlantNotOwnedByAuthenticatedUser() {
         final User authenticated = new User();
         authenticated.setId(1L);
+        final long plantId = 1L;
         final Plant plant = new Plant();
+        plant.setId(plantId);
         plant.setOwner(new User());
         final Reminder reminderToSave = new Reminder();
         reminderToSave.setTarget(plant);
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticated);
+        Mockito.when(plantService.get(plantId)).thenThrow(new UnauthorizedException());
 
         Assertions.assertThatThrownBy(() -> reminderService.save(reminderToSave))
                   .isInstanceOf(UnauthorizedException.class);
@@ -224,14 +227,18 @@ class ReminderServiceUnitTests {
         final long reminderId = 1L;
         final Reminder existingReminder = new Reminder();
         final Reminder updatedReminder = new Reminder();
+        final long plantId = 1L;
         final Plant plant = new Plant();
+        plant.setId(plantId);
         plant.setOwner(authenticated);
         existingReminder.setTarget(plant);
         existingReminder.setId(reminderId);
         updatedReminder.setId(reminderId);
+        updatedReminder.setTarget(plant);
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticated);
         Mockito.when(reminderRepository.findById(reminderId)).thenReturn(Optional.of(existingReminder));
         Mockito.when(reminderRepository.save(updatedReminder)).thenReturn(updatedReminder);
+        Mockito.when(plantService.get(plantId)).thenReturn(plant);
 
         final Reminder result = reminderService.update(reminderId, updatedReminder);
 

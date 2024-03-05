@@ -64,9 +64,8 @@ public class ReminderService {
 
     public Reminder update(long id, Reminder updated) {
         final Reminder toUpdate = get(id);
-        if (toUpdate.getTarget().getOwner() != authenticatedUserService.getAuthenticatedUser()) {
-            throw new UnauthorizedException();
-        }
+        plantService.get(updated.getTarget().getId()); // check if authorized
+
         toUpdate.setAction(updated.getAction());
         toUpdate.setStart(updated.getStart());
         toUpdate.setEnd(updated.getEnd());
@@ -80,9 +79,7 @@ public class ReminderService {
 
 
     public Reminder save(Reminder reminder) {
-        if (reminder.getTarget().getOwner() != authenticatedUserService.getAuthenticatedUser()) {
-            throw new UnauthorizedException();
-        }
+        plantService.get(reminder.getTarget().getId()); // check if authorized
         return reminderRepository.save(reminder);
     }
 
