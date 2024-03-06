@@ -88,8 +88,8 @@ class _SetServerState extends State<SetServer> {
           borderRadius: BorderRadius.circular(15.0),
           child: Image.asset(
             'images/logo.png',
-            width: 200,
-            height: 200,
+            width: 150,
+            height: 150,
           )),
       Form(
         key: _formKey,
@@ -98,13 +98,22 @@ class _SetServerState extends State<SetServer> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(AppLocalizations.of(context).insertBackendURL,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize:
+                          DefaultTextStyle.of(context).style.fontSize! * 0.35,
+                      decoration: TextDecoration.none,
+                    )),
+              ),
               TextFormField(
                 controller: _backendController,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).serverURL,
-                  border: const OutlineInputBorder(),
-                ),
-                //initialValue: "http://192.168.1.6:8085", // TODO delete
+                    labelText: AppLocalizations.of(context).serverURL,
+                    border: const OutlineInputBorder(),
+                    hintText: "http://192.168.1.6:8085"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return AppLocalizations.of(context).enterValue;

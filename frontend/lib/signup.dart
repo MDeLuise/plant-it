@@ -226,12 +226,12 @@ class Login extends StatelessWidget {
             children: [
               TextSpan(
                 text: AppLocalizations.of(context).alreadyRegistered,
-                style: const TextStyle(color: Colors.black),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const TextSpan(text: " "),
               TextSpan(
                 text: AppLocalizations.of(context).login,
-                style: const TextStyle(color: Colors.blue),
+                style: const TextStyle(color: Color(0xFF6DD075)),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     Navigator.pushReplacement(
@@ -256,34 +256,50 @@ class HeaderMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyLarge,
+              children: [
+                TextSpan(
                   text: AppLocalizations.of(context).signupMessage,
                   style: TextStyle(
-                      fontSize:
-                          DefaultTextStyle.of(context).style.fontSize! * 2,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.bold)),
-              TextSpan(
+                    fontSize: DefaultTextStyle.of(context).style.fontSize! * 2,
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
                   text: ' ',
                   style: TextStyle(
                     fontSize: DefaultTextStyle.of(context).style.fontSize! * 2,
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.bold,
-                  )),
-              TextSpan(
+                  ),
+                ),
+                TextSpan(
                   text: AppLocalizations.of(context).appName,
                   style: TextStyle(
-                      fontSize:
-                          DefaultTextStyle.of(context).style.fontSize! * 2,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green)),
-            ],
+                    fontSize: DefaultTextStyle.of(context).style.fontSize! * 2,
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+          const SizedBox(
+              height: 10), // Add spacing between the RichText and the tagline
+          Text(
+            AppLocalizations.of(context).singupTagline,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -24,5 +24,8 @@
   "signup": "Crea account",
   "generalError": "Errore durante l'operazione",
   "error": "Errore",
-  "details": "Dettagli"
+  "details": "Dettagli",
+  "insertBackendURL": "Ciao! Pronto per iniziare? Cominciamo impostando l'URL del server a cui connettersi.",
+  "loginTagline": "Esplora la natura e coltiva la tua passione!",
+  "singupTagline": "Unisciti alla nostra community!"
 }

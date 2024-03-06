@@ -24,5 +24,8 @@
   "signup": "Signup",
   "generalError": "Error while performing the operation",
   "error": "Error",
-  "details": "Details"
+  "details": "Details",
+  "insertBackendURL": "Hi friend! Let's make magic happen, start by setting up your backend URL.",
+  "loginTagline": "Explore, learn, and cultivate!",
+  "singupTagline": "Let's grow together!"
 }
