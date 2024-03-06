@@ -78,12 +78,9 @@ class _SetServerState extends State<SetServer> {
     return urlRegExp.hasMatch(url);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+  Widget _buildMobileView(BuildContext context) {
+    return Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       ClipRRect(
           borderRadius: BorderRadius.circular(15.0),
           child: Image.asset(
@@ -146,6 +143,51 @@ class _SetServerState extends State<SetServer> {
           ),
         ),
       )
-    ])));
+    ]));
+  }
+
+  Widget _buildDesktopView(BuildContext context) {
+    return Container(
+      decoration: null,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Image.asset(
+            'images/set_server.jpg',
+            width: 1000,
+            height: 1000,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < screenSizeTreshold;
+
+    if (isSmallScreen) {
+      return Scaffold(body: _buildMobileView(context));
+    } else {
+      return Scaffold(
+          body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: _buildDesktopView(context),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              decoration: null,
+              child: _buildMobileView(context),
+            ),
+          ),
+        ],
+      ));
+    }
   }
 }

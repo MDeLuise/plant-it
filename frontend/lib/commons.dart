@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/homepage.dart';
 
+const int screenSizeTreshold = 600;
+
 Future<void> showErrorDialog(
     BuildContext context, String message, String details) async {
   return showDialog<void>(
@@ -46,8 +48,8 @@ Future<void> showErrorDialog(
   );
 }
 
-Future<void> loginAndSetAppKey(
-    Environment env, BuildContext context, String username, String password) async {
+Future<void> loginAndSetAppKey(Environment env, BuildContext context,
+    String username, String password) async {
   const String appKeyName = "frontend";
 
   if (!context.mounted) return;
@@ -95,8 +97,8 @@ Future<void> loginAndSetAppKey(
   }
 }
 
-Future<void> _login(
-    Environment env, BuildContext context, String username, String password) async {
+Future<void> _login(Environment env, BuildContext context, String username,
+    String password) async {
   try {
     final response = await env.http.post(
       Uri.parse('authentication/login'),
