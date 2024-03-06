@@ -71,7 +71,7 @@ void main() {
   });
 
   testWidgets(
-      'Correct ussername and password with already created key, then login',
+      'Correct username and password with already created key, then login',
       (WidgetTester tester) async {
     // Arrange
     const username = 'test_username';
@@ -108,7 +108,7 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
-  testWidgets('Correct ussername and password with no precious key, then login',
+  testWidgets('Correct ussername and password with no previous key, then login',
       (WidgetTester tester) async {
     // Arrange
     const username = 'test_username';

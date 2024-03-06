@@ -27,5 +27,9 @@
   "details": "Details",
   "insertBackendURL": "Hi friend! Let's make magic happen, start by setting up your server URL.",
   "loginTagline": "Explore, learn, and cultivate!",
-  "singupTagline": "Let's grow together!"
+  "singupTagline": "Let's grow together!",
+  "sentOTPCode": "Please insert the code sent by email at: ",
+  "verify": "Verify",
+  "resendCode": "Resend code",
+  "otpCode": "OTP code"
 }

@@ -41,6 +41,12 @@ class _SetServerState extends State<SetServer> {
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(env: _env),
+            // builder: (context) => OTPInsertPage(
+            //     env: _env,
+            //     request: SignupRequest(
+            //         username: "max",
+            //         password: "user00000",
+            //         email: "homeservertest.mummy895@slmails.com")),
           ),
         );
       } else {
@@ -147,6 +153,10 @@ class _SetServerState extends State<SetServer> {
   }
 
   Widget _buildDesktopView(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final double imageWidth = screenSize.width * 0.8;
+    final double imageHeight = screenSize.height * 0.8;
+
     return Container(
       decoration: null,
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -155,8 +165,8 @@ class _SetServerState extends State<SetServer> {
           padding: const EdgeInsets.all(20.0),
           child: Image.asset(
             'images/set_server.jpg',
-            width: 1000,
-            height: 1000,
+            width: imageWidth,
+            height: imageHeight,
           ),
         ),
       ),
@@ -168,12 +178,12 @@ class _SetServerState extends State<SetServer> {
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < screenSizeTreshold;
 
+    Widget body;
     if (isSmallScreen) {
-      return Scaffold(body: _buildMobileView(context));
+      body = _buildMobileView(context);
     } else {
-      return Scaffold(
-          body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body = Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             flex: 3,
@@ -187,7 +197,16 @@ class _SetServerState extends State<SetServer> {
             ),
           ),
         ],
-      ));
+      );
     }
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: body,
+        ),
+      ),
+    );
   }
 }

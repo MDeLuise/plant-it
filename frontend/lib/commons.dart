@@ -7,6 +7,26 @@ import 'package:plant_it/homepage.dart';
 
 const int screenSizeTreshold = 600;
 
+class SignupRequest {
+  final String username;
+  final String password;
+  final String email;
+
+  SignupRequest({
+    required this.username,
+    required this.password,
+    required this.email,
+  });
+
+  Map<String, String> toMap() {
+    return {
+      'username': username,
+      'password': password,
+      'email': email,
+    };
+  }
+}
+
 Future<void> showErrorDialog(
     BuildContext context, String message, String details) async {
   return showDialog<void>(

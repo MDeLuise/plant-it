@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
+import 'package:plant_it/otp.dart';
 
 class SignupPage extends StatefulWidget {
   final Environment env;
@@ -30,21 +31,31 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _signup() async {
+    final SignupRequest request = SignupRequest(
+        username: _usernameController.text,
+        password: _passwordController.text,
+        email: _emailController.text);
     try {
       final response = await _env.http.post(
         Uri.parse('authentication/signup'),
-        {
-          'username': _usernameController.text,
-          'email': _emailController.text,
-          'password': _passwordController.text,
-        },
+        request.toMap(),
       );
       if (!mounted) return;
-      final responseBody = json.decode(response.body);
       if (response.statusCode == 200) {
         await loginAndSetAppKey(
             _env, context, _usernameController.text, _passwordController.text);
+      } else if (response.statusCode == 202) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OTPInsertPage(
+              env: _env,
+              request: request,
+            ),
+          ),
+        );
       } else {
+        final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
         showErrorDialog(
             context, AppLocalizations.of(context).generalError, errorMessage);
@@ -72,6 +83,9 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildDesktopView(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final double imageWidth = screenSize.width * 0.8;
+    final double imageHeight = screenSize.height * 0.8;
     return Container(
       decoration: null,
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -80,8 +94,8 @@ class _SignupPageState extends State<SignupPage> {
           padding: const EdgeInsets.all(15.0),
           child: Image.asset(
             'images/signup.jpg',
-            width: 1000,
-            height: 1000,
+            width: imageWidth,
+            height: imageHeight,
           ),
         ),
       ),
@@ -229,28 +243,36 @@ class _SignupPageState extends State<SignupPage> {
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < screenSizeTreshold;
 
+    Widget body;
     if (isSmallScreen) {
-      return Scaffold(appBar: AppBar(), body: _buildMobileView(context));
+      body = _buildMobileView(context);
     } else {
-      return Scaffold(
-          appBar: AppBar(),
-          body: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildDesktopView(context),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  decoration: null,
-                  child: _buildMobileView(context),
-                ),
-              ),
-            ],
-          ));
+      body = Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: _buildDesktopView(context),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              decoration: null,
+              child: _buildMobileView(context),
+            ),
+          ),
+        ],
+      );
     }
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: body,
+        ),
+      ),
+    );
   }
 }
 

@@ -35,6 +35,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildDesktopView(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final double imageWidth = screenSize.width * 0.8;
+    final double imageHeight = screenSize.height * 0.8;
     return Container(
       decoration: null,
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -43,8 +46,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(15.0),
           child: Image.asset(
             'images/login.jpg',
-            width: 1000,
-            height: 1000,
+            width: imageWidth,
+            height: imageHeight,
           ),
         ),
       ),
@@ -56,28 +59,36 @@ class _LoginPageState extends State<LoginPage> {
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < screenSizeTreshold;
 
+    Widget body;
     if (isSmallScreen) {
-      return Scaffold(appBar: AppBar(), body: _buildMobileView(context));
+      body = _buildMobileView(context);
     } else {
-      return Scaffold(
-          appBar: AppBar(),
-          body: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _buildDesktopView(context),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  decoration: null,
-                  child: _buildMobileView(context),
-                ),
-              ),
-            ],
-          ));
+      body = Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: _buildDesktopView(context),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              decoration: null,
+              child: _buildMobileView(context),
+            ),
+          ),
+        ],
+      );
     }
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: body,
+        ),
+      ),
+    );
   }
 
   Widget _buildMobileView(BuildContext context) {

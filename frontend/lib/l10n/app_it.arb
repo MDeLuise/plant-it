@@ -27,5 +27,9 @@
   "details": "Dettagli",
   "insertBackendURL": "Ciao! Pronto per iniziare? Cominciamo impostando l'URL del server a cui connettersi.",
   "loginTagline": "Esplora la natura e coltiva la tua passione!",
-  "singupTagline": "Unisciti alla nostra community!"
+  "singupTagline": "Unisciti alla nostra community!",
+  "sentOTPCode": "Inserisci il codice inviato all'indirizzo: ",
+  "verify": "Verify",
+  "resendCode": "Resend code",
+  "otpCode": "Codice OTP"
 }
