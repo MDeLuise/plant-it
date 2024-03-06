@@ -1,17 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:plant_it/common.dart';
+import 'package:plant_it/commons.dart';
+import 'package:plant_it/environment.dart';
 import 'package:plant_it/signup.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final Environment env;
+
+  const LoginPage({super.key, required this.env});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late final Environment _env;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -20,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    _env = widget.env;
   }
 
   @override
@@ -52,6 +57,12 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: AppLocalizations.of(context).username,
                         border: const OutlineInputBorder(),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context).enterValue;
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
 
@@ -75,6 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context).enterValue;
+                            }
+                            return null;
+                          },
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
@@ -92,8 +109,13 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        loginAndSetAppKey(context, _usernameController.text,
-                            _passwordController.text);
+                        if (_formKey.currentState!.validate()) {
+                          loginAndSetAppKey(
+                              _env,
+                              context,
+                              _usernameController.text,
+                              _passwordController.text);
+                        }
                       },
                       child: Text(AppLocalizations.of(context).login),
                     ),
@@ -123,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               // Signup
-              const Signup()
+              Signup(env: _env)
             ],
           ),
         ),
@@ -133,7 +155,9 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class Signup extends StatelessWidget {
-  const Signup({super.key});
+  final Environment env;
+
+  const Signup({super.key, required this.env});
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +179,7 @@ class Signup extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupPage(),
+                        builder: (context) => SignupPage(env: env),
                       ),
                     );
                   },

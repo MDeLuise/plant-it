@@ -2,28 +2,36 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:plant_it/app_http_client.dart';
-import 'package:plant_it/common.dart';
+import 'package:plant_it/commons.dart';
+import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  final Environment env;
+
+  const SignupPage({super.key, required this.env});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _httpClient = AppHttpClient();
+  late final Environment _env;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _env = widget.env;
+  }
+
   Future<void> _signup() async {
     try {
-      final response = await _httpClient.post(
+      final response = await _env.http.post(
         Uri.parse('authentication/signup'),
         {
           'username': _usernameController.text,
@@ -35,11 +43,11 @@ class _SignupPageState extends State<SignupPage> {
       final responseBody = json.decode(response.body);
       if (response.statusCode == 200) {
         await loginAndSetAppKey(
-            context, _usernameController.text, _passwordController.text);
+            _env, context, _usernameController.text, _passwordController.text);
       } else {
         final errorMessage = responseBody['message'];
         showErrorDialog(
-            context, AppLocalizations.of(context).error, errorMessage);
+            context, AppLocalizations.of(context).generalError, errorMessage);
       }
     } catch (e) {
       if (!mounted) return;
@@ -195,7 +203,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
 
               // Signup
-              const Login()
+              Login(env: _env)
             ],
           ),
         ),
@@ -205,7 +213,9 @@ class _SignupPageState extends State<SignupPage> {
 }
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  final Environment env;
+
+  const Login({super.key, required this.env});
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +237,7 @@ class Login extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
+                        builder: (context) => LoginPage(env: env),
                       ),
                     );
                   },

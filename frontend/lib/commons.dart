@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:plant_it/app_http_client.dart';
+import 'package:plant_it/environment.dart';
 import 'package:plant_it/homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> showErrorDialog(
     BuildContext context, String message, String details) async {
@@ -13,7 +12,7 @@ Future<void> showErrorDialog(
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Error'),
+        title: Text(AppLocalizations.of(context).error),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,9 +23,9 @@ Future<void> showErrorDialog(
             ),
             const SizedBox(height: 8),
             ExpansionTile(
-              title: const Text(
-                'Details',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              title: Text(
+                AppLocalizations.of(context).details,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               children: [
                 Text(details),
@@ -48,39 +47,37 @@ Future<void> showErrorDialog(
 }
 
 Future<void> loginAndSetAppKey(
-    BuildContext context, String username, String password) async {
+    Environment env, BuildContext context, String username, String password) async {
   const String appKeyName = "frontend";
-  final http = AppHttpClient();
-  final prefs = await SharedPreferences.getInstance();
 
   if (!context.mounted) return;
-  await _login(context, username, password);
+  await _login(env, context, username, password);
   try {
-    final response = await http.get(
+    final response = await env.http.get(
       Uri.parse('api-key/name/$appKeyName'),
     );
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
-      http.removeJwt();
-      await prefs.setString('key', responseBody["value"]);
+      env.http.removeJwt();
+      await env.prefs.setString('key', responseBody["value"]);
       if (!context.mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => HomePage(env: env),
         ),
       );
     } else if (response.statusCode == 404) {
       final response =
-          await http.post(Uri.parse('api-key/'), {"name": appKeyName});
+          await env.http.post(Uri.parse('api-key/'), {"name": appKeyName});
       if (response.statusCode == 200) {
-        http.removeJwt();
-        await prefs.setString('key', response.body);
+        env.http.removeJwt();
+        await env.prefs.setString('key', response.body);
         if (!context.mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomePage(),
+            builder: (context) => HomePage(env: env),
           ),
         );
       } else {
@@ -88,7 +85,7 @@ Future<void> loginAndSetAppKey(
         final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
         await showErrorDialog(
-            context, AppLocalizations.of(context).error, errorMessage);
+            context, AppLocalizations.of(context).generalError, errorMessage);
       }
     }
   } catch (e) {
@@ -99,10 +96,9 @@ Future<void> loginAndSetAppKey(
 }
 
 Future<void> _login(
-    BuildContext context, String username, String password) async {
-  final http = AppHttpClient();
+    Environment env, BuildContext context, String username, String password) async {
   try {
-    final response = await http.post(
+    final response = await env.http.post(
       Uri.parse('authentication/login'),
       {
         'username': username,
@@ -111,7 +107,7 @@ Future<void> _login(
     );
     final responseBody = json.decode(response.body);
     if (response.statusCode == 200) {
-      http.addJwt(responseBody["jwt"]["value"]);
+      env.http.addJwt(responseBody["jwt"]["value"]);
     } else {
       if (!context.mounted) return;
       final errorMessage = responseBody['message'];

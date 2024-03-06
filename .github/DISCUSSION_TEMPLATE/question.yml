@@ -5,3 +5,13 @@ body:
       description: Please provide the question here.
     validations:
       required: true
+  - type: textarea
+    attributes:
+      label: (if applicable) Local environment
+      description: Please provide additional information related to the environment you are using.
+      placeholder: |
+        1. system version: x.y.z
+        2. content of docker-compose.yml file (remember to hide possible sensitive info)
+        3. content of backend.env file (remember to hide possible sensitive info)
+        4. content of frontend.env file (remember to hide possible sensitive info)
+        5. output of the docker compose log

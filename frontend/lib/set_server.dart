@@ -1,44 +1,50 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:plant_it/app_http_client.dart';
-import 'package:plant_it/common.dart';
+import 'package:plant_it/commons.dart';
+import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
 
 class SetServer extends StatefulWidget {
-  const SetServer({super.key});
+  final Environment env;
+
+  const SetServer({super.key, required this.env});
 
   @override
   State<SetServer> createState() => _SetServerState();
 }
 
 class _SetServerState extends State<SetServer> {
+  late final Environment _env;
   final TextEditingController _backendController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool insertedBackendController = false;
-  final _httpClient = AppHttpClient();
+
+  @override
+  void initState() {
+    super.initState();
+    _env = widget.env;
+  }
 
   Future<void> _ping() async {
     try {
       String url = _backendController.text;
       url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
-      final response = await http.get(
-        Uri.parse('$url/api/info/ping'),
-        headers: {'accept': '*/*'},
+      _env.http.setBackendUrl("$url/api/");
+      final response = await _env.http.get(
+        Uri.parse('info/ping'),
       );
       if (!mounted) return;
-      final responseBody = json.decode(response.body);
       if (response.statusCode == 200 && response.body == "pong") {
-        _httpClient.setBackendUrl("$url/api/");
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const LoginPage(),
+            builder: (context) => LoginPage(env: _env),
           ),
         );
       } else {
+        final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
         await showErrorDialog(
             context, AppLocalizations.of(context).noBackend, errorMessage);
@@ -98,6 +104,7 @@ class _SetServerState extends State<SetServer> {
                   labelText: AppLocalizations.of(context).serverURL,
                   border: const OutlineInputBorder(),
                 ),
+                //initialValue: "http://192.168.1.6:8085", // TODO delete
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return AppLocalizations.of(context).enterValue;
@@ -111,17 +118,17 @@ class _SetServerState extends State<SetServer> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  //if (_formKey.currentState!.validate()) {
-                  //_ping();
-                  //}
+                  if (_formKey.currentState!.validate()) {
+                    _ping();
+                  }
 
                   // to delete below, just for testing
-                  _httpClient.setBackendUrl("${_backendController.text}/api/");
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
-                      ));
+                  // _httpClient.setBackendUrl("${_backendController.text}/api/");
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => const LoginPage(),
+                  //     ));
                 },
                 child: Text(AppLocalizations.of(context).go),
               ),

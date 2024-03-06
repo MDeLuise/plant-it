@@ -22,5 +22,7 @@
   "enterValidEmail": "Inserisci un'email valida",
   "alreadyRegistered": "Hai già un account?",
   "signup": "Crea account",
-  "error": "Errore durante l'operazione"
+  "generalError": "Errore durante l'operazione",
+  "error": "Errore",
+  "details": "Dettagli"
 }

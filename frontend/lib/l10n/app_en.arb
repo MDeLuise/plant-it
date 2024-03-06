@@ -17,10 +17,12 @@
   "areYouNew": "Are you new?",
   "createAccount": "Create an account",
   "email": "Email",
-  "usernameSize": "Username lenght must be between 3 and 20 characters",
-  "passwordSize": "Password lenght must be between 3 and 20 characters",
+  "usernameSize": "Username length must be between 3 and 20 characters",
+  "passwordSize": "Password length must be between 3 and 20 characters",
   "enterValidEmail": "Please enter a valid email",
   "alreadyRegistered": "Already registered?",
   "signup": "Signup",
-  "error": "Error while performing the operation"
+  "generalError": "Error while performing the operation",
+  "error": "Error",
+  "details": "Details"
 }
