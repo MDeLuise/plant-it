@@ -25,8 +25,10 @@ public class PlantInfoExtractorFacade {
         this.authenticatedUserService = authenticatedUserService;
         List<PlantInfoExtractorStep> stepsToUse = steps.stream().toList();
         if (trefleKey == null || trefleKey.isBlank()) {
-            logger.debug("TRAFLE service not used");
+            logger.debug("Trefle service not used");
             stepsToUse = stepsToUse.stream().filter(step -> !(step instanceof TreflePlantInfoExtractorStep)).toList();
+        } else {
+            logger.debug("Trefle service used");
         }
         this.chainHead = ChainElement.buildChain(stepsToUse, new NoOpPlantInfoExtractor());
     }

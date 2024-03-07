@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.notification.dispatcher;
 import java.util.Collection;
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/notification-dispatcher")
+@Tag(name = "Notifications", description = "Endpoints for notifications management")
 public class NotificationDispatcherController {
     private final NotificationDispatcherService notificationDispatcherService;
 
