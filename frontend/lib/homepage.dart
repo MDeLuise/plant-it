@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class HomePage extends StatefulWidget {
   final Environment env;
@@ -12,41 +15,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Homepage"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(AppLocalizations.of(context).helloWorld),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        body: Center(
+            child: Column(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              showSnackbar(context, ContentType.failure, "foo");
+            },
+            child: const Text("test")),
+        ElevatedButton(
+            onPressed: () {
+              showSnackbar(context, ContentType.help, "foo");
+            },
+            child: const Text("test")),
+        ElevatedButton(
+            onPressed: () {
+              showSnackbar(context, ContentType.success, "foo");
+            },
+            child: const Text("test")),
+        ElevatedButton(
+            onPressed: () {
+              showSnackbar(context, ContentType.warning, "foo");
+            },
+            child: const Text("test")),
+      ],
+    )));
   }
 }

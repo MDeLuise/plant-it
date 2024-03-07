@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Image.asset(
-            'images/login.jpg',
+            'assets/images/login.jpg',
             width: imageWidth,
             height: imageHeight,
           ),

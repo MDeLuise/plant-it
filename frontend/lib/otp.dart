@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -78,29 +79,26 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
 
   void _verify() async {
     final response = await _env.http.post(
-        Uri.parse("authentication/signup/otp/${_getInsertedOTP()}"),
-        _request.toMap());
+        "authentication/signup/otp/${_getInsertedOTP()}", _request.toMap());
     if (response.statusCode == 200) {
       if (!mounted) return;
       loginAndSetAppKey(_env, context, _request.username, _request.password);
     } else {
       if (!mounted) return;
       final responseBody = json.decode(response.body);
-      showErrorDialog(context, AppLocalizations.of(context).generalError,
-          responseBody["message"]);
+      showSnackbar(context, ContentType.failure, responseBody["message"]);
     }
   }
 
   void _resendCode() async {
-    final response = await _env.http
-        .post(Uri.parse("authentication/signup"), _request.toMap());
+    final response =
+        await _env.http.post("authentication/signup", _request.toMap());
     if (response.statusCode == 202) {
       resetCode();
     } else {
       if (!mounted) return;
       final responseBody = json.decode(response.body);
-      showErrorDialog(context, AppLocalizations.of(context).generalError,
-          responseBody["message"]);
+      showSnackbar(context, ContentType.failure, responseBody["message"]);
     }
   }
 
@@ -220,7 +218,7 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Image.asset(
-            'images/otp.jpg',
+            'assets/images/otp.jpg',
             width: imageWidth,
             height: imageHeight,
           ),

@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/commons.dart';
@@ -32,9 +31,8 @@ class _SetServerState extends State<SetServer> {
       String url = _backendController.text;
       url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
       _env.http.setBackendUrl("$url/api/");
-      final response = await _env.http.get(
-        Uri.parse('info/ping'),
-      );
+      final response =
+          await _env.http.get('info/ping').timeout(const Duration(seconds: 3));
       if (!mounted) return;
       if (response.statusCode == 200 && response.body == "pong") {
         Navigator.push(
@@ -50,15 +48,12 @@ class _SetServerState extends State<SetServer> {
           ),
         );
       } else {
-        final responseBody = json.decode(response.body);
-        final errorMessage = responseBody['message'];
-        await showErrorDialog(
-            context, AppLocalizations.of(context).noBackend, errorMessage);
+        showSnackbar(context, ContentType.failure,
+            AppLocalizations.of(context).noBackend);
       }
     } catch (e) {
       if (!mounted) return;
-      await showErrorDialog(
-          context, AppLocalizations.of(context).noBackend, e.toString());
+      showSnackbar(context, ContentType.failure, e.toString());
     }
   }
 
@@ -90,7 +85,7 @@ class _SetServerState extends State<SetServer> {
       ClipRRect(
           borderRadius: BorderRadius.circular(15.0),
           child: Image.asset(
-            'images/logo.png',
+            'assets/images/logo.png',
             width: 150,
             height: 150,
           )),
@@ -164,7 +159,7 @@ class _SetServerState extends State<SetServer> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Image.asset(
-            'images/set_server.jpg',
+            'assets/images/set_server.jpg',
             width: imageWidth,
             height: imageHeight,
           ),

@@ -80,16 +80,15 @@ void main() {
     const appKey = 'frontend';
 
     // Mock behavior
-    when(http.post(Uri.parse('authentication/login'), {
+    when(http.post('authentication/login', {
       'username': username,
       'password': password,
     })).thenAnswer((_) => Future.value(Response(
         '{"id": 99, "username": "$username", "jwt": {"value": "$jwt", "expiresOn": "06-03-2024 11:00:00"}}',
         200)));
-    when(http.get(Uri.parse('api-key/name/$appKey'))).thenAnswer((_) =>
-        Future.value(Response(
-            '{"id": 1, "name": "user_key_1709710168787", "value": "$appKey", "createdOn": "2024-03-06T07:29:28.787+00:00"}',
-            200)));
+    when(http.get('api-key/name/$appKey')).thenAnswer((_) => Future.value(Response(
+        '{"id": 1, "name": "user_key_1709710168787", "value": "$appKey", "createdOn": "2024-03-06T07:29:28.787+00:00"}',
+        200)));
 
     // Act
     await tester.pumpWidget(LocalizationsInjector(
@@ -108,7 +107,7 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
-  testWidgets('Correct ussername and password with no previous key, then login',
+  testWidgets('Correct username and password with no previous key, then login',
       (WidgetTester tester) async {
     // Arrange
     const username = 'test_username';
@@ -117,17 +116,16 @@ void main() {
     const appKey = 'frontend';
 
     // Mock behavior
-    when(http.post(Uri.parse('authentication/login'), {
+    when(http.post('authentication/login', {
       'username': username,
       'password': password,
     })).thenAnswer((_) => Future.value(Response(
         '{"id": 99, "username": "$username", "jwt": {"value": "$jwt", "expiresOn": "06-03-2024 11:00:00"}}',
         200)));
-    when(http.get(Uri.parse('api-key/name/$appKey'))).thenAnswer((_) =>
-        Future.value(Response(
-            '{"statusCode": 404, "errorCode": "RESOURCE_NOT_FOUND", "message": ""}',
-            404)));
-    when(http.post(Uri.parse("api-key/"), {"name": appKey}))
+    when(http.get('api-key/name/$appKey')).thenAnswer((_) => Future.value(Response(
+        '{"statusCode": 404, "errorCode": "RESOURCE_NOT_FOUND", "message": ""}',
+        404)));
+    when(http.post("api-key/", {"name": appKey}))
         .thenAnswer((_) => Future.value(Response(appKey, 200)));
 
     // Act

@@ -28,7 +28,7 @@ class AppHttpClient {
     _backendUrl = url;
   }
 
-  Future<http.Response> get(Uri url) async {
+  Future<http.Response> get(String url) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('GET', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
@@ -42,7 +42,7 @@ class AppHttpClient {
     return await _inner.send(request).then(http.Response.fromStream);
   }
 
-  Future<http.Response> post(Uri url, Map<String, String>? body) async {
+  Future<http.Response> post(String url, Map<String, String>? body) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('POST', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
@@ -57,7 +57,7 @@ class AppHttpClient {
     return _inner.send(request).then(http.Response.fromStream);
   }
 
-  Future<http.Response> put(Uri url, Map<String, String>? body) async {
+  Future<http.Response> put(String url, Map<String, String>? body) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('PUT', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
@@ -72,7 +72,7 @@ class AppHttpClient {
     return await _inner.send(request).then(http.Response.fromStream);
   }
 
-  Future<http.Response> delete(Uri url) async {
+  Future<http.Response> delete(String url) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('DELETE', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
@@ -90,8 +90,8 @@ class AppHttpClient {
     _inner.close();
   }
 
-  Uri _prependBackendURL(Uri url) {
-    String urlString = _backendUrl + url.toString();
+  Uri _prependBackendURL(String url) {
+    String urlString = _backendUrl + url;
     return Uri.parse(urlString);
   }
 

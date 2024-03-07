@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -37,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
         email: _emailController.text);
     try {
       final response = await _env.http.post(
-        Uri.parse('authentication/signup'),
+        'authentication/signup',
         request.toMap(),
       );
       if (!mounted) return;
@@ -57,13 +58,12 @@ class _SignupPageState extends State<SignupPage> {
       } else {
         final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
-        showErrorDialog(
-            context, AppLocalizations.of(context).generalError, errorMessage);
+        showSnackbar(context, ContentType.failure, errorMessage);
       }
     } catch (e) {
       if (!mounted) return;
-      showErrorDialog(
-          context, AppLocalizations.of(context).noBackend, e.toString());
+      showSnackbar(
+          context, ContentType.failure, AppLocalizations.of(context).noBackend);
     }
   }
 
@@ -93,7 +93,7 @@ class _SignupPageState extends State<SignupPage> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Image.asset(
-            'images/signup.jpg',
+            'assets/images/signup.jpg',
             width: imageWidth,
             height: imageHeight,
           ),

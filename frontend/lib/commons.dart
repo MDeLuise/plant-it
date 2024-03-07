@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/environment.dart';
@@ -27,46 +28,76 @@ class SignupRequest {
   }
 }
 
-Future<void> showErrorDialog(
-    BuildContext context, String message, String details) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context).error),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              message,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            ExpansionTile(
-              title: Text(
-                AppLocalizations.of(context).details,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              children: [
-                Text(details),
-              ],
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(AppLocalizations.of(context).ok),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
+void showSnackbar(
+    BuildContext context, ContentType contentType, String message) {
+  String title = "Oh Snap!";
+  if (contentType == ContentType.help) {
+    title = "Hi there!";
+  } else if (contentType == ContentType.warning) {
+    title = "Warning!";
+  } else if (contentType == ContentType.success) {
+    title = "Well done!";
+  }
+
+  final snackBar = SnackBar(
+    /// need to set following properties for best effect of awesome_snackbar_content
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    content: AwesomeSnackbarContent(
+      title: title,
+      message: message,
+
+      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+      contentType: contentType,
+    ),
   );
+
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(snackBar);
 }
+
+// Future<void> showErrorDialog(
+//     BuildContext context, String message, String details) async {
+//   return showDialog<void>(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text(AppLocalizations.of(context).error),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               message,
+//               style: const TextStyle(fontWeight: FontWeight.bold),
+//             ),
+//             const SizedBox(height: 8),
+//             ExpansionTile(
+//               title: Text(
+//                 AppLocalizations.of(context).details,
+//                 style: const TextStyle(fontWeight: FontWeight.bold),
+//               ),
+//               children: [
+//                 Text(details),
+//               ],
+//             ),
+//           ],
+//         ),
+//         actions: <Widget>[
+//           TextButton(
+//             child: Text(AppLocalizations.of(context).ok),
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
 
 Future<void> loginAndSetAppKey(Environment env, BuildContext context,
     String username, String password) async {
@@ -76,7 +107,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
   await _login(env, context, username, password);
   try {
     final response = await env.http.get(
-      Uri.parse('api-key/name/$appKeyName'),
+      'api-key/name/$appKeyName',
     );
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
@@ -90,8 +121,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
         ),
       );
     } else if (response.statusCode == 404) {
-      final response =
-          await env.http.post(Uri.parse('api-key/'), {"name": appKeyName});
+      final response = await env.http.post('api-key/', {"name": appKeyName});
       if (response.statusCode == 200) {
         env.http.removeJwt();
         await env.prefs.setString('key', response.body);
@@ -106,14 +136,13 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
         if (!context.mounted) return;
         final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
-        await showErrorDialog(
-            context, AppLocalizations.of(context).generalError, errorMessage);
+        showSnackbar(context, ContentType.failure, errorMessage);
       }
     }
   } catch (e) {
     if (!context.mounted) return;
-    await showErrorDialog(
-        context, AppLocalizations.of(context).noBackend, e.toString());
+    showSnackbar(
+        context, ContentType.failure, AppLocalizations.of(context).noBackend);
   }
 }
 
@@ -121,7 +150,7 @@ Future<void> _login(Environment env, BuildContext context, String username,
     String password) async {
   try {
     final response = await env.http.post(
-      Uri.parse('authentication/login'),
+      'authentication/login',
       {
         'username': username,
         'password': password,
@@ -133,12 +162,11 @@ Future<void> _login(Environment env, BuildContext context, String username,
     } else {
       if (!context.mounted) return;
       final errorMessage = responseBody['message'];
-      await showErrorDialog(
-          context, AppLocalizations.of(context).badCredentials, errorMessage);
+      showSnackbar(context, ContentType.failure, errorMessage);
     }
   } catch (e) {
     if (!context.mounted) return;
-    await showErrorDialog(
-        context, AppLocalizations.of(context).noBackend, e.toString());
+    showSnackbar(
+        context, ContentType.failure, AppLocalizations.of(context).noBackend);
   }
 }

@@ -69,7 +69,7 @@ void main() {
         'Entering valid and working URL "$validUrl" navigates to LoginPage',
         (tester) async {
       // Mock behavior
-      when(http.get(Uri.parse("info/ping")))
+      when(http.get("info/ping"))
           .thenAnswer((_) => Future.value(Response("pong", 200)));
 
       // Act
@@ -91,7 +91,7 @@ void main() {
         'Entering valid but not working URL "$validUrl" results in error',
         (tester) async {
       // Mock behavior
-      when(http.get(Uri.parse("info/ping")))
+      when(http.get("info/ping"))
           .thenAnswer((_) => Future.value(Response("{}", 404)));
 
       // Act
@@ -104,17 +104,16 @@ void main() {
 
       // Assert and verify
       expect(find.byType(LoginPage), findsNothing);
-      expect(find.byType(AlertDialog), findsWidgets);
+      expect(find.byType(SnackBar), findsWidgets);
     });
   }
-
 
   void testValidButNotExistingUrl(String validUrl) {
     testWidgets(
         'Entering valid but not existing URL "$validUrl" results in error',
         (tester) async {
       // Mock behavior
-      when(http.get(Uri.parse("info/ping")))
+      when(http.get("info/ping"))
           .thenThrow(ClientException('Failed to connect'));
 
       // Act
@@ -127,7 +126,7 @@ void main() {
 
       // Assert and verify
       expect(find.byType(LoginPage), findsNothing);
-      expect(find.byType(AlertDialog), findsWidgets);
+      expect(find.byType(SnackBar), findsWidgets);
     });
   }
 

@@ -169,7 +169,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
       );
 
   @override
-  _i8.Future<_i4.Response> get(Uri? url) => (super.noSuchMethod(
+  _i8.Future<_i4.Response> get(String? url) => (super.noSuchMethod(
         Invocation.method(
           #get,
           [url],
@@ -185,7 +185,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
 
   @override
   _i8.Future<_i4.Response> post(
-    Uri? url,
+    String? url,
     Map<String, String>? body,
   ) =>
       (super.noSuchMethod(
@@ -210,7 +210,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
 
   @override
   _i8.Future<_i4.Response> put(
-    Uri? url,
+    String? url,
     Map<String, String>? body,
   ) =>
       (super.noSuchMethod(
@@ -234,7 +234,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
       ) as _i8.Future<_i4.Response>);
 
   @override
-  _i8.Future<_i4.Response> delete(Uri? url) => (super.noSuchMethod(
+  _i8.Future<_i4.Response> delete(String? url) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [url],
