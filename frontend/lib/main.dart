@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/homepage.dart';
 import 'package:plant_it/set_server.dart';
+import 'package:plant_it/template.dart';
 import 'package:plant_it/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -18,6 +18,6 @@ void main() async {
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     theme: theme,
-    home: isLoggedIn ? HomePage(env: env) : SetServer(env: env),
+    home: isLoggedIn ? TempletePage(env: env) : SetServer(env: env),
   ));
 }
