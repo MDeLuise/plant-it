@@ -8,7 +8,7 @@ class FilterWidget extends StatefulWidget {
   const FilterWidget({super.key});
 
   @override
-  _FilterWidgetState createState() => _FilterWidgetState();
+  State<FilterWidget> createState() => _FilterWidgetState();
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
@@ -46,20 +46,28 @@ class _FilterWidgetState extends State<FilterWidget> {
           ),
           if (_isOpen) ...[
             const SizedBox(height: 16.0),
-            TextField(
-              controller: _textFieldController1,
-              decoration: const InputDecoration(
-                labelText: 'Filter 1',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _textFieldController2,
-              decoration: const InputDecoration(
-                labelText: 'Filter 2',
-                border: OutlineInputBorder(),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _textFieldController1,
+                    decoration: const InputDecoration(
+                      labelText: 'Plant',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: TextField(
+                    controller: _textFieldController2,
+                    decoration: const InputDecoration(
+                      labelText: 'Event',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ],
@@ -222,6 +230,7 @@ class EventsPage extends StatefulWidget {
 class _EventsPageState extends State<EventsPage> {
   late final Environment _env;
   final _pageSize = 10;
+  String? filteredEventType;
   final PagingController<int, Event> _pagingController =
       PagingController(firstPageKey: 0);
 
@@ -273,31 +282,25 @@ class _EventsPageState extends State<EventsPage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (screenWidth > screenSizeTreshold) {
-      return Column(
-        children: [
-          const FilterWidget(),
-          _buildGridView(),
-        ],
-      );
+      return _buildGridView();
     } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const FilterWidget(),
-          _buildListView(),
-        ],
-      );
+      return _buildListView();
     }
   }
 
   Widget _buildListView() {
-    return Expanded(
-      child: PagedListView<int, Event>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Event>(
-          itemBuilder: (context, item, index) => item,
+    return CustomScrollView(
+      slivers: <Widget>[
+        const SliverToBoxAdapter(
+          child: FilterWidget(),
         ),
-      ),
+        PagedSliverList<int, Event>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Event>(
+            itemBuilder: (context, item, index) => item,
+          ),
+        )
+      ],
     );
   }
 
@@ -307,22 +310,27 @@ class _EventsPageState extends State<EventsPage> {
         builder: (context, constraints) {
           const itemWidth = 250; // Adjust the width of each grid item as needed
           final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
-          return PagedGridView<int, Event>(
-            pagingController: _pagingController,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
+          return CustomScrollView(slivers: <Widget>[
+            const SliverToBoxAdapter(
+              child: FilterWidget(),
             ),
-            builderDelegate: PagedChildBuilderDelegate<Event>(
-              itemBuilder: (context, item, index) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: item,
+            PagedSliverGrid<int, Event>(
+              pagingController: _pagingController,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+              ),
+              builderDelegate: PagedChildBuilderDelegate<Event>(
+                itemBuilder: (context, item, index) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: item,
+                  ),
                 ),
               ),
-            ),
-          );
+            )
+          ]);
         },
       ),
     );
