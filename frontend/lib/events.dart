@@ -1,7 +1,72 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
+
+class FilterWidget extends StatefulWidget {
+  const FilterWidget({super.key});
+
+  @override
+  _FilterWidgetState createState() => _FilterWidgetState();
+}
+
+class _FilterWidgetState extends State<FilterWidget> {
+  bool _isOpen = false;
+  final TextEditingController _textFieldController1 = TextEditingController();
+  final TextEditingController _textFieldController2 = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isOpen = !_isOpen;
+              });
+            },
+            child: Row(
+              children: [
+                Text(
+                  _isOpen ? 'Close Filter' : 'Filter',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+                Icon(
+                  _isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                ),
+              ],
+            ),
+          ),
+          if (_isOpen) ...[
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _textFieldController1,
+              decoration: const InputDecoration(
+                labelText: 'Filter 1',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _textFieldController2,
+              decoration: const InputDecoration(
+                labelText: 'Filter 2',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
 
 class Event extends StatelessWidget {
   final String action;
@@ -204,12 +269,64 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedListView<int, Event>(
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth > screenSizeTreshold) {
+      return Column(
+        children: [
+          const FilterWidget(),
+          _buildGridView(),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const FilterWidget(),
+          _buildListView(),
+        ],
+      );
+    }
+  }
+
+  Widget _buildListView() {
+    return Expanded(
+      child: PagedListView<int, Event>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Event>(
           itemBuilder: (context, item, index) => item,
         ),
-      );
+      ),
+    );
+  }
+
+  Widget _buildGridView() {
+    return Expanded(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const itemWidth = 250; // Adjust the width of each grid item as needed
+          final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
+          return PagedGridView<int, Event>(
+            pagingController: _pagingController,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+            ),
+            builderDelegate: PagedChildBuilderDelegate<Event>(
+              itemBuilder: (context, item, index) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: item,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   void dispose() {
