@@ -31,6 +31,7 @@ class _SetServerState extends State<SetServer> {
       String url = _backendController.text;
       url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
       _env.http.setBackendUrl("$url/api/");
+      _env.prefs.setString("serverURL", "$url/api/");
       final response =
           await _env.http.get('info/ping').timeout(const Duration(seconds: 3));
       if (!mounted) return;

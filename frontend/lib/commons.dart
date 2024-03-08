@@ -111,8 +111,10 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
     );
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
+      final String key = responseBody["value"];
       env.http.removeJwt();
-      await env.prefs.setString('key', responseBody["value"]);
+      env.http.addAuthorizationHeader(key);
+      await env.prefs.setString('serverKey', key);
       if (!context.mounted) return;
       Navigator.pushReplacement(
         context,
@@ -124,7 +126,8 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
       final response = await env.http.post('api-key/', {"name": appKeyName});
       if (response.statusCode == 200) {
         env.http.removeJwt();
-        await env.prefs.setString('key', response.body);
+        env.http.addAuthorizationHeader(response.body);
+        await env.prefs.setString('serverKey', response.body);
         if (!context.mounted) return;
         Navigator.pushReplacement(
           context,
