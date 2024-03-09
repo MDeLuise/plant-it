@@ -61,6 +61,7 @@ class _TempletePageState extends State<TempletePage> {
 
   Widget _mobileTemplate() {
     return Scaffold(
+        extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
           onPressed: () {},

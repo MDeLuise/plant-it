@@ -4,6 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 
+import 'multiple_dropdown.dart';
+
 class FilterWidget extends StatefulWidget {
   const FilterWidget({super.key});
 
@@ -13,8 +15,6 @@ class FilterWidget extends StatefulWidget {
 
 class _FilterWidgetState extends State<FilterWidget> {
   bool _isOpen = false;
-  final TextEditingController _textFieldController1 = TextEditingController();
-  final TextEditingController _textFieldController2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,29 +46,52 @@ class _FilterWidgetState extends State<FilterWidget> {
           ),
           if (_isOpen) ...[
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _textFieldController1,
-                    decoration: const InputDecoration(
-                      labelText: 'Plant',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16.0),
-                Expanded(
-                  child: TextField(
-                    controller: _textFieldController2,
-                    decoration: const InputDecoration(
-                      labelText: 'Event',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: MultipleSearchSelection<String>.creatable(
+            //         createOptions: CreateOptions(
+            //           create: (text) {
+            //             return text;
+            //           },
+            //           createBuilder: (text) => Align(
+            //             alignment: Alignment.centerLeft,
+            //             child: Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: Text('Create "$text"'),
+            //             ),
+            //           ),
+            //         ),
+            //         items: ["a", "b", "c"],
+            //         fieldToCheck: (c) {
+            //           return c;
+            //         },
+            //         itemBuilder: (country, index) {
+            //           return Text(country);
+            //         },
+            //         pickedItemBuilder: (country) {
+            //           return Container(
+            //             decoration: BoxDecoration(
+            //                 color: Colors.white,
+            //                 border: Border.all(color: Colors.grey[400]!),
+            //                 borderRadius: BorderRadius.circular(4)),
+            //             child: Padding(
+            //               padding: const EdgeInsets.all(8),
+            //               child: Text(country),
+            //             ),
+            //           );
+            //         },
+            //         searchField: TextField(),
+            //         caseSensitiveSearch: false,
+            //       ),
+            //     ),
+            //     const SizedBox(width: 16.0),
+            //     Expanded(
+            //       child: EditableTextField(),
+            //     ),
+            //   ],
+            // ),
+            const TextFieldWithDropDown()
           ],
         ],
       ),
