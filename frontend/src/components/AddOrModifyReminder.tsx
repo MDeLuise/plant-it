@@ -21,13 +21,12 @@ export function AddOrModifyReminder(props: {
     const [eventTypes, setEventTypes] = useState<string[]>([]);
     const [selectedEndDate, setSelectedEndDate] = useState<Dayjs>(dayjs(new Date()));
     const [useEndDate, setUseEndDate] = useState<boolean>(false);
-    const [enabled, setEnabled] = useState<boolean>(true);
     const [plantId, setPlantId] = useState<number>();
 
     useEffect(() => {
+        console.debug(props.entity)
         if (props.entity) {
             setUpdatedReminder(props.entity);
-            setEnabled(props.entity.enabled);
             setUseEndDate(props.entity.end != undefined);
         } else {
             cleanup();
@@ -68,7 +67,7 @@ export function AddOrModifyReminder(props: {
                 unit: "DAYS",
             },
         });
-        setEnabled(true);
+        //setEnabled(true);
         setUseEndDate(false);
     };
 
@@ -95,8 +94,8 @@ export function AddOrModifyReminder(props: {
                 <Select
                     fullWidth
                     required
-                    defaultValue={updatedReminder.action || "SEEDING"}
-                    onChange={event => updatedReminder.action = event.target.value}
+                    value={updatedReminder.action || "SEEDING"}
+                    onChange={event => setUpdatedReminder({...updatedReminder, action: event.target.value})}
                     input={<OutlinedInput label="Event type" />}
                 >
                     {
@@ -115,8 +114,8 @@ export function AddOrModifyReminder(props: {
                     <InputLabel>Start date</InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         <DatePicker
-                            defaultValue={dayjs(updatedReminder.start)}
-                            onChange={newValue => updatedReminder.start = newValue?.toDate()}
+                            value={dayjs(updatedReminder.start)}
+                            onChange={newValue => setUpdatedReminder({...updatedReminder, start: newValue?.toDate()})}
                             slotProps={{ textField: { fullWidth: true } }}
                             format="DD/MM/YYYY"
                         />
@@ -147,10 +146,10 @@ export function AddOrModifyReminder(props: {
                         <Select
                             fullWidth
                             required
-                            defaultValue={updatedReminder.frequency?.unit}
+                            value={updatedReminder.frequency?.unit}
                             onChange={event => {
                                 const value = event.target.value as "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
-                                updatedReminder.frequency!.unit = value;
+                                setUpdatedReminder({...updatedReminder, frequency: {quantity: updatedReminder.frequency?.quantity || 0, unit: value}});
                             }}
                             sx={{
                                 width: "45%",
@@ -209,10 +208,10 @@ export function AddOrModifyReminder(props: {
                         <Select
                             fullWidth
                             required
-                            defaultValue={updatedReminder.repeatAfter?.unit}
+                            value={updatedReminder.repeatAfter?.unit}
                             onChange={event => {
                                 const value = event.target.value as "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
-                                updatedReminder.repeatAfter!.unit = value;
+                                setUpdatedReminder({...updatedReminder, repeatAfter: {quantity: updatedReminder.repeatAfter?.quantity || 0, unit: value}});
                             }}
                             sx={{
                                 width: "45%",
@@ -253,7 +252,7 @@ export function AddOrModifyReminder(props: {
                         <Switch
                             onChange={e => {
                                 setUseEndDate(e.target.checked);
-                                updatedReminder.end = e.target.checked ? selectedEndDate?.toDate() : undefined;
+                                setUpdatedReminder({...updatedReminder, end: e.target.checked ? selectedEndDate.toDate() : undefined}); 
                             }}
                             checked={useEndDate}
                         />
@@ -266,7 +265,7 @@ export function AddOrModifyReminder(props: {
                             onChange={newValue => {
                                 if (newValue) {
                                     setSelectedEndDate(newValue);
-                                    updatedReminder.end = newValue.toDate();
+                                    setUpdatedReminder({...updatedReminder, end: newValue.toDate()});
                                 }
                             }}
                             slotProps={{ textField: { fullWidth: true } }}
@@ -280,10 +279,10 @@ export function AddOrModifyReminder(props: {
                     <InputLabel>Enabled</InputLabel>
                     <Switch
                         onChange={e => {
-                            setEnabled(e.target.checked);
-                            updatedReminder.enabled = e.target.checked
+                            //setEnabled(e.target.checked);
+                            setUpdatedReminder({...updatedReminder, enabled: e.target.checked});
                         }}
-                        checked={enabled}
+                        checked={updatedReminder.enabled}
                     />
                 </Box>
             </FormGroup>
