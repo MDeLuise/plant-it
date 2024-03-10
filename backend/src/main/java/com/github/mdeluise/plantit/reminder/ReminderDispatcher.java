@@ -57,8 +57,14 @@ public class ReminderDispatcher {
             return false;
         }
 
+        if (lastEntry.isPresent() &&
+                (new Date(lastEntry.get().getDate().getTime() + calculateMilliseconds(reminder.getFrequency())))
+                    .before(new Date())) {
+            return false;
+        }
+
         // Case 1: No last entry, start date is before now, and no last notification
-        if (lastEntry.isEmpty() && reminder.getStart().before(now) && reminder.getLastNotified() == null) {
+        if (lastEntry.isEmpty() && reminder.getLastNotified() == null) {
             return true;
         }
 
