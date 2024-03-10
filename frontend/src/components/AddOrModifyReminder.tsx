@@ -24,7 +24,6 @@ export function AddOrModifyReminder(props: {
     const [plantId, setPlantId] = useState<number>();
 
     useEffect(() => {
-        console.debug(props.entity)
         if (props.entity) {
             setUpdatedReminder(props.entity);
             setUseEndDate(props.entity.end != undefined);
