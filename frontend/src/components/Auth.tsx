@@ -14,17 +14,18 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
-import { FormHelperText, useTheme } from "@mui/material";
+import { FormHelperText } from "@mui/material";
 import ErrorDialog from "./ErrorDialog";
 import { getErrMessage, isBackendReachable } from "../common";
 
 export default function Auth(props: { requestor: AxiosInstance; }) {
     const navigate: NavigateFunction = useNavigate();
-    const [authMode, setAuthMode] = useState<"register" | "login" | "forgot" | undefined>();
+    const [authMode, setAuthMode] = useState<"register" | "login" | "forgot" | "otp" | undefined>();
     const [credentials, setCredentials] = useState<{ username?: string, email?: string, password?: string; }>();
     const [errors, setErrors] = useState<{ username?: string, email?: string, password?: string; }>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [errorDialog, setErrorDialog] = useState<{ text: string, shown: boolean, title?: string; }>();
+    const [otpCode, setOtpCode] = useState<string>();
 
     const doLogin = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -70,6 +71,22 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
     const signUp = (event: React.SyntheticEvent) => {
         event.preventDefault();
         props.requestor.post("authentication/signup", credentials)
+            .then(res => {
+                if (res.status === 200) {
+                    doLogin(event)
+                } else if (res.status === 202) {
+                    setAuthMode("otp");
+                }
+            })
+            .catch(err => {
+                setErrorDialog({ text: getErrMessage(err), shown: true });
+            });
+    };
+
+
+    const signUpWithOTP = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        props.requestor.post(`authentication/signup/otp/${otpCode}`, credentials)
             .then(_res => doLogin(event))
             .catch(err => {
                 setErrorDialog({ text: getErrMessage(err), shown: true });
@@ -80,19 +97,19 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
     const resetPassword = (event: React.SyntheticEvent): void => {
         event.preventDefault();
         props.requestor.post(`authentication/password/reset/${credentials?.username}`)
-        .then(res => {
-            setErrorDialog({
-                title: "Success",
-                text: res.data,
-                shown: true
-            });
-        })
-        .catch((err: AxiosError) => {
-            setErrorDialog({
-                text: getErrMessage(err),
-                shown: true
-            });
-        })
+            .then(res => {
+                setErrorDialog({
+                    title: "Success",
+                    text: res.data,
+                    shown: true
+                });
+            })
+            .catch((err: AxiosError) => {
+                setErrorDialog({
+                    text: getErrMessage(err),
+                    shown: true
+                });
+            })
     };
 
 
@@ -260,7 +277,19 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                 authMode != undefined &&
                 <Box
                     component="form"
-                    onSubmit={authMode === "login" ? doLogin : (authMode === "forgot" ? resetPassword : signUp)}
+                    onSubmit={
+                        authMode === "login" ?
+                            doLogin
+                            :
+                            (authMode === "forgot" ?
+                                resetPassword
+                                :
+                                (authMode === "register" ?
+                                    signUp
+                                    :
+                                    signUpWithOTP)
+                            )
+                    }
                     noValidate
                     sx={{
                         mt: 1,
@@ -281,7 +310,18 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                             variant={authMode === "forgot" ? "h6" : "h4"}
                             fontWeight={600}
                         >
-                            {authMode === "login" ? "Login to" : (authMode === "register" ? "Register to" : "Reset password for")}
+                            {
+                                authMode === "login" ?
+                                    "Login to"
+                                    :
+                                    (authMode === "register" ?
+                                        "Register to"
+                                        :
+                                        (authMode === "forgot" ?
+                                            "Reset password for"
+                                            :
+                                            "Verify email for")
+                                    )}
                         </Typography>
                         <Typography
                             variant={authMode === "forgot" ? "h6" : "h4"}
@@ -292,19 +332,22 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                             Plant-it
                         </Typography>
                     </Box>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                        onChange={e => changeUsername(e.target.value)}
-                        error={errors?.username !== undefined}
-                        helperText={errors?.username}
-                    />
+                    {
+                        authMode != "otp" &&
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
+                            autoFocus
+                            onChange={e => changeUsername(e.target.value)}
+                            error={errors?.username !== undefined}
+                            helperText={errors?.username}
+                        />
+                    }
                     {
                         authMode === "register" &&
                         <TextField
@@ -323,14 +366,14 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                     }
                     <>
                         {
-                            authMode !== "forgot" &&
+                            authMode !== "forgot" && authMode !== "otp" &&
                             <>
                                 <FormControl fullWidth margin="normal" variant="outlined" required>
                                     <InputLabel htmlFor="password-input">Password</InputLabel>
                                     <OutlinedInput
                                         id="password-input"
                                         type={showPassword ? 'text' : 'password'}
-                                        onChange={(e) => changePassword(e.target.value)}
+                                        onChange={e => changePassword(e.target.value)}
                                         endAdornment={
                                             <InputAdornment position="end">
                                                 <IconButton
@@ -357,6 +400,21 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                             </>
                         }
                         {
+                            authMode === "otp" &&
+                            <Box sx={{ padding: 1 }}>
+                                <Typography>{`Please insert the code sent at ${credentials?.email}`}</Typography>
+                                <FormControl fullWidth margin="normal" variant="outlined" required>
+                                    <InputLabel htmlFor="otp-input">OTP Code</InputLabel>
+                                    <OutlinedInput
+                                        id="otp-input"
+                                        type='text'
+                                        onChange={e => setOtpCode(e.target.value)}
+                                        label="OTP Code"
+                                    />
+                                </FormControl>
+                            </Box>
+                        }
+                        {
                             errors?.password != undefined &&
                             <FormHelperText error>
                                 {errors.password}
@@ -371,8 +429,36 @@ export default function Auth(props: { requestor: AxiosInstance; }) {
                         sx={{ mt: 3, mb: 2 }}
                         disabled={!isSubmitButtonEnabled()}
                     >
-                        {authMode == "login" ? "Login" : (authMode === "forgot" ? "Reset password" : "Register")}
+                        {
+                            authMode == "login" ?
+                                "Login"
+                                :
+                                (authMode === "forgot" ?
+                                    "Reset password"
+                                    :
+                                    (authMode === "register" ?
+                                        "Register"
+                                        :
+                                        "Verify"
+                                    )
+                                )
+                        }
                     </Button>
+                    {
+                        authMode == "otp" &&
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            onClick={e => {
+                                setOtpCode("");
+                                signUp(e);
+                            }}
+                        >
+                            Resend
+                        </Button>
+                    }
                     <Link
                         href="#"
                         variant="body2"
