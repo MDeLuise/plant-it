@@ -32,7 +32,7 @@ class _FilterWidgetState extends State<FilterWidget> {
             child: Row(
               children: [
                 Text(
-                  _isOpen ? 'Close Filter' : 'Filter',
+                  _isOpen ? 'Close filter' : 'Filter',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
@@ -46,52 +46,20 @@ class _FilterWidgetState extends State<FilterWidget> {
           ),
           if (_isOpen) ...[
             const SizedBox(height: 16.0),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: MultipleSearchSelection<String>.creatable(
-            //         createOptions: CreateOptions(
-            //           create: (text) {
-            //             return text;
-            //           },
-            //           createBuilder: (text) => Align(
-            //             alignment: Alignment.centerLeft,
-            //             child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Text('Create "$text"'),
-            //             ),
-            //           ),
-            //         ),
-            //         items: ["a", "b", "c"],
-            //         fieldToCheck: (c) {
-            //           return c;
-            //         },
-            //         itemBuilder: (country, index) {
-            //           return Text(country);
-            //         },
-            //         pickedItemBuilder: (country) {
-            //           return Container(
-            //             decoration: BoxDecoration(
-            //                 color: Colors.white,
-            //                 border: Border.all(color: Colors.grey[400]!),
-            //                 borderRadius: BorderRadius.circular(4)),
-            //             child: Padding(
-            //               padding: const EdgeInsets.all(8),
-            //               child: Text(country),
-            //             ),
-            //           );
-            //         },
-            //         searchField: TextField(),
-            //         caseSensitiveSearch: false,
-            //       ),
-            //     ),
-            //     const SizedBox(width: 16.0),
-            //     Expanded(
-            //       child: EditableTextField(),
-            //     ),
-            //   ],
-            // ),
-            const TextFieldWithDropDown()
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFieldWithDropDown(
+                  options: ["watering", "fertilizing"],
+                  text: "Plant",
+                ),
+                SizedBox(width: 16.0),
+                TextFieldWithDropDown(
+                  options: ["watering", "fertilizing"],
+                  text: "Event",
+                ),
+              ],
+            ),
           ],
         ],
       ),
