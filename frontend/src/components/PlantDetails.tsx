@@ -1091,7 +1091,7 @@ function PlantInfoDetails(props: {
                     </Typography>
                     <EditableTextField
                         editable={props.editModeEnabled}
-                        text={String(props.plant?.info.seller)}
+                        text={props.plant?.info.seller || ""}
                         onChange={val => props.setInfo({ ...props.plant?.info!, seller: val })}
                     />
                 </Box>
@@ -1104,7 +1104,7 @@ function PlantInfoDetails(props: {
                     </Typography>
                     <EditableTextField
                         editable={props.editModeEnabled}
-                        text={String(props.plant?.info.location)}
+                        text={props.plant?.info.location || ""}
                         onChange={val => props.setInfo({ ...props.plant?.info!, location: val })}
                     />
                 </Box>

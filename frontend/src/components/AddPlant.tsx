@@ -409,29 +409,25 @@ function SpecieInfoDetails(props: {
 
 
 function PlantInfoDetails(props: {
-    plantName: string,
-    setPlantName: (arg: string) => void,
-    plantNameError?: string,
-    setPlantNameError: (arg?: string) => void,
-    note: string,
-    setNote: (arg: string) => void,
-    setDate: (arg: Dayjs) => void,
-    useDate: boolean,
-    setUseDate: (arg: boolean) => void,
-    date?: Dayjs,
-    info?: plantInfo,
-    setInfo: (arg: plantInfo) => void;
+    entity: Partial<plant>,
+    setEntity: (arg: Partial<plant>) => void,
+    plantNameError?: string;
 }) {
-    const changePlantName = (name: string): void => {
-        props.setPlantNameError(undefined);
-        props.setPlantName(name);
-    };
-
+    const [startDate, setStartDate] = useState<Date>(new Date());
+    const [useStartDate, setUseStartDate] = useState<boolean>(true);
 
     useEffect(() => {
-        props.setUseDate(true);
-        props.setDate(dayjs(new Date()));
-    }, []);
+        if (props.entity.info?.startDate) {
+            setStartDate(props.entity.info?.startDate);
+            setUseStartDate(true);
+        } else if (props.entity.info && !props.entity.info.startDate) {
+            setStartDate(new Date());
+            setUseStartDate(false);
+        } else {
+            setStartDate(new Date());
+            setUseStartDate(true);
+        }
+    }, [props.entity]);
 
     return <Box>
         <Box
@@ -445,9 +441,8 @@ function PlantInfoDetails(props: {
                 </Typography>
                 <TextField
                     variant="standard"
-                    value={props.plantName}
-                    onChange={e => changePlantName(e.currentTarget.value)}
-                    error={props.plantNameError !== undefined}
+                    value={props.entity.info?.personalName}
+                    onChange={e => props.setEntity({ ...props.entity, info: { ...props.entity.info!, personalName: e.currentTarget.value } })}
                     helperText={props.plantNameError}
                 />
             </Box>
@@ -456,8 +451,14 @@ function PlantInfoDetails(props: {
                     Purchased date
                 </Typography>
                 <Switch
-                    defaultChecked={props.useDate}
-                    onChange={event => props.setUseDate(event.target.checked)}
+                    checked={props.entity.info?.startDate != undefined}
+                    onChange={event => props.setEntity({
+                        ...props.entity,
+                        info: {
+                            ...props.entity.info!,
+                            startDate: event.target.checked ? startDate : undefined
+                        }
+                    })}
                 />
             </Box>
             <Box className="plant-detail-entry" >
@@ -466,9 +467,22 @@ function PlantInfoDetails(props: {
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                        defaultValue={props.date}
-                        disabled={!props.useDate}
-                        onChange={newValue => props.setDate(newValue != undefined ? newValue : dayjs(new Date()))}
+                        value={dayjs(props.entity.info!.startDate)}
+                        disabled={!useStartDate}
+                        onChange={newValue => {
+                            if (!newValue) {
+                                return;
+                            }
+                            setStartDate(newValue.toDate());
+                            props.setEntity({
+                                ...props.entity,
+                                info: {
+                                    ...props.entity.info!,
+                                    startDate: newValue.toDate()
+                                }
+                            });
+                        }
+                        }
                         slotProps={{ textField: { variant: 'standard', } }}
                         format="DD/MM/YYYY"
                     />
@@ -483,9 +497,15 @@ function PlantInfoDetails(props: {
                         variant="standard"
                         InputProps={{ disableUnderline: false }}
                         onChange={e => {
-                            props.setInfo({ ...props.info!, purchasedPrice: Number(e.target.value) });
+                            props.setEntity({
+                                ...props.entity,
+                                info: {
+                                    ...props.entity.info!,
+                                    purchasedPrice: Number(e.target.value)
+                                }
+                            });
                         }}
-                        value={props.info?.purchasedPrice}
+                        value={props.entity.info?.purchasedPrice}
                         sx={{
                             color: "black",
                             width: "40%",
@@ -493,10 +513,16 @@ function PlantInfoDetails(props: {
                         type="number"
                     />
                     <Select
-                        defaultValue={props.info?.currencySymbol || ""}
+                        defaultValue={props.entity.info?.currencySymbol || ""}
                         variant="standard"
                         onChange={e => {
-                            props.setInfo({ ...props.info!, currencySymbol: e.target.value as (string | undefined) });
+                            props.setEntity({
+                                ...props.entity!,
+                                info: {
+                                    ...props.entity.info!,
+                                    currencySymbol: e.target.value as (string | undefined)
+                                }
+                            });
                         }}
                     >
                         {
@@ -514,8 +540,14 @@ function PlantInfoDetails(props: {
                 <TextField
                     variant="standard"
                     InputProps={{ disableUnderline: false }}
-                    value={props.info?.seller || ""}
-                    onChange={e => props.setInfo({ ...props.info!, seller: e.currentTarget.value })}
+                    value={props.entity.info?.seller || ""}
+                    onChange={e => props.setEntity({
+                        ...props.entity,
+                        info: {
+                            ...props.entity.info!,
+                            seller: e.currentTarget.value
+                        }
+                    })}
                 />
             </Box>
             <Box className="plant-detail-entry">
@@ -525,8 +557,13 @@ function PlantInfoDetails(props: {
                 <TextField
                     variant="standard"
                     InputProps={{ disableUnderline: false }}
-                    value={props.info?.location || ""}
-                    onChange={e => props.setInfo({ ...props?.info!, location: e.currentTarget.value })}
+                    value={props.entity.info?.location || ""}
+                    onChange={e => props.setEntity({
+                        ...props.entity,
+                        info: {
+                            ...props.entity.info!, location: e.currentTarget.value
+                        }
+                    })}
                 />
             </Box>
             <Box style={{ display: "flex", flexDirection: "column", alignItems: "baseline", gap: "5px", justifyContent: "space-between", }}>
@@ -536,9 +573,15 @@ function PlantInfoDetails(props: {
                 <TextField
                     fullWidth
                     multiline
-                    value={props.note}
+                    value={props.entity.info?.note}
                     rows={4}
-                    onChange={e => props.setNote(e.currentTarget.value)}
+                    onChange={e => props.setEntity({
+                        ...props.entity,
+                        info: {
+                            ...props.entity.info!,
+                            note: e.currentTarget.value
+                        }
+                    })}
                 >
                 </TextField>
             </Box>
@@ -559,12 +602,13 @@ function AddPlantInfo(props: {
     editModeEnabled: boolean,
     toggleEditMode: () => void,
     refreshBotanicalInfosAndPlants: () => void,
-    setUpdatedImgUrl: (src: string) => void;
+    setUpdatedImgUrl: (src: string) => void,
+    entity: Partial<plant>,
+    setEntity: (arg: Partial<plant>) => void,
 }) {
     const [updatedBotanicalInfo, setUpdatedBotanicalInfo] = useState<Partial<botanicalInfo>>();
     const [plantNameError, setPlantNameError] = useState<string>();
     const [useDate, setUseDate] = useState<boolean>(true);
-    const [info, setInfo] = useState<plantInfo>();
     const [tabValue, setTabValue] = useState<0 | 1>(0);
     const theme = useTheme();
     const [updatedBotanicalInfoThumbnail, setUpdatedBotanicalInfoThumbnail] = useState<{
@@ -585,15 +629,15 @@ function AddPlantInfo(props: {
         return new Promise((resolve, reject) => {
             if (props.botanicalInfoToAdd === undefined) {
                 if (props.searchedName === undefined) {
-                    setInfo({ ...info!, personalName: "" });
+                    props.setEntity({ ...props.entity, info: { ...props.entity.info!, personalName: "" } });
                     return resolve("");
                 } else {
-                    setInfo({ ...info!, personalName: props.searchedName });
+                    props.setEntity({ ...props.entity, info: { ...props.entity.info!, personalName: props.searchedName } });
                     return resolve(props.searchedName);
                 }
             }
             if (props.botanicalInfoToAdd.id === null) {
-                setInfo({ ...info!, personalName: props.botanicalInfoToAdd.scientificName });
+                props.setEntity({ ...props.entity, info: { ...props.entity.info!, personalName: props.botanicalInfoToAdd.scientificName } });
                 return resolve(props.botanicalInfoToAdd.scientificName);
             }
             props.requestor.get(`botanical-info/${props.botanicalInfoToAdd.id}/_count`)
@@ -602,12 +646,10 @@ function AddPlantInfo(props: {
                     if (res.data > 0) {
                         incrementalName += ` ${res.data}`;
                     }
-                    setInfo({ ...info!, personalName: incrementalName });
+                    props.setEntity({ ...props.entity, info: { ...props.entity.info!, personalName: incrementalName } });
                     return resolve(incrementalName);
                 })
-                .catch(err => {
-                    return reject(err);
-                });
+                .catch(reject);
         });
     };
 
@@ -628,7 +670,7 @@ function AddPlantInfo(props: {
     };
 
     const addPlant = (): void => {
-        if (!info?.personalName || info?.personalName.length == 0) {
+        if (!props.entity.info?.personalName || props.entity.info?.personalName.length == 0) {
             props.printError("Plant name size must be between 1 and 30 characters");
             return;
         }
@@ -636,7 +678,7 @@ function AddPlantInfo(props: {
             props.printError("Specie name cannot be empty");
             return;
         }
-        isNameAvailable(info.personalName)
+        isNameAvailable(props.entity.info.personalName)
             .then(res => {
                 if (!res) {
                     props.printError("Duplicated plant name");
@@ -655,10 +697,11 @@ function AddPlantInfo(props: {
                         .then(addedBotanicalInfo => {
                             setUpdatedBotanicalInfo(addedBotanicalInfo);
                             const plantToCreate = {
+                                ...props.entity,
                                 botanicalInfoId: addedBotanicalInfo.id,
                                 info: {
-                                    ...info,
-                                    startDate: useDate ? info.startDate : undefined,
+                                    ...props.entity.info,
+                                    startDate: useDate ? props.entity.info!.startDate : undefined,
                                     state: "ALIVE",
                                 },
                                 avatarMode: "NONE",
@@ -674,8 +717,8 @@ function AddPlantInfo(props: {
                     const plantToCreate = {
                         botanicalInfoId: props.botanicalInfoToAdd.id,
                         info: {
-                            ...info,
-                            startDate: useDate ? info.startDate : undefined,
+                            ...props.entity.info,
+                            startDate: useDate ? props.entity.info!.startDate : undefined,
                             state: "ALIVE",
                         },
                         avatarMode: "NONE",
@@ -771,7 +814,7 @@ function AddPlantInfo(props: {
 
     const cleanup = (): void => {
         setUpdatedBotanicalInfo(undefined);
-        setInfo(undefined)
+        //setInfo(undefined)
         setUseDate(true);
         setPlantNameError(undefined);
     };
@@ -899,6 +942,7 @@ function AddPlantInfo(props: {
         <TabPanel value={tabValue} index={0} dir={theme.direction}>
             <SpecieInfoDetails
                 editModeEnabled={props.editModeEnabled}
+                botanicalInfoToAdd={props.botanicalInfoToAdd}
                 updatedBotanicalInfo={updatedBotanicalInfo}
                 updatedBotanicalInfoThumbnail={updatedBotanicalInfoThumbnail}
                 setUpdatedBotanicalInfoThumbnail={setUpdatedBotanicalInfoThumbnail}
@@ -908,18 +952,9 @@ function AddPlantInfo(props: {
             props.editModeEnabled ||
             <TabPanel value={tabValue} index={1} dir={theme.direction}>
                 <PlantInfoDetails
-                    info={info}
-                    setInfo={setInfo}
-                    plantName={info?.personalName || ""}
-                    setPlantName={(arg: string) => setInfo({ ...info!, personalName: arg })}
+                    entity={props.entity}
+                    setEntity={props.setEntity}
                     plantNameError={plantNameError}
-                    setPlantNameError={setPlantNameError}
-                    note={info?.note || ""}
-                    setNote={(arg: string) => setInfo({ ...info!, note: arg })}
-                    setDate={(arg: Dayjs) => setInfo({ ...info!, startDate: useDate ? arg.toDate() : undefined })}
-                    useDate={useDate}
-                    setUseDate={setUseDate}
-                    date={useDate ? dayjs(info?.startDate) : undefined}
                 />
             </TabPanel>
         }
@@ -1047,6 +1082,7 @@ export default function AddPlant(props: {
 }) {
     const [updatedImageUrl, setUpdatedImageUrl] = useState<string>();
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
+    const [toCreate, setToCreate] = useState<Partial<plant>>({});
 
     useEffect(() => {
         setUpdatedImageUrl(undefined);
@@ -1095,6 +1131,8 @@ export default function AddPlant(props: {
                     }}
                 />
                 <AddPlantInfo
+                    entity={toCreate}
+                    setEntity={setToCreate}
                     requestor={props.requestor}
                     plants={props.plants}
                     open={props.open}

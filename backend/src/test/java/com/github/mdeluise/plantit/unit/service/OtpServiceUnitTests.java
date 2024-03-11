@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.authentication.UserRepository;
-import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.notification.otp.Otp;
 import com.github.mdeluise.plantit.notification.otp.OtpGenerator;
 import com.github.mdeluise.plantit.notification.otp.OtpRepository;
@@ -55,17 +54,6 @@ class OtpServiceUnitTests {
 
 
     @Test
-    @DisplayName("Should throw error when generating OTP for non-existing email")
-    void shouldThrowResourceNotFoundExceptionWhenGeneratingOtpForNonExistingEmail() {
-        final String email = "nonexisting@example.com";
-        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-
-        Assertions.assertThatThrownBy(() -> otpService.generateNew(email))
-                  .isInstanceOf(ResourceNotFoundException.class);
-    }
-
-
-    @Test
     @DisplayName("Should check existence and expiration of OTP then remove")
     void shouldCheckExistenceAndExpirationThenRemove() {
         final String otpCode = "123456";
@@ -73,7 +61,7 @@ class OtpServiceUnitTests {
         otp.setCode(otpCode);
         otp.setExpiration(new Date(System.currentTimeMillis() + 10000));
 
-        Mockito.when(otpRepository.findById(otpCode)).thenReturn(Optional.of(otp));
+        Mockito.when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(otp));
 
         boolean result = otpService.checkExistenceAndExpirationThenRemove(otpCode);
 
@@ -124,6 +112,6 @@ class OtpServiceUnitTests {
 
         otpService.remove(otpCode);
 
-        Mockito.verify(otpRepository, Mockito.times(1)).deleteById(otpCode);
+        Mockito.verify(otpRepository, Mockito.times(1)).deleteByCode(otpCode);
     }
 }
