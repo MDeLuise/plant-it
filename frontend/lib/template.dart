@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:plant_it/homepage.dart';
@@ -46,6 +50,37 @@ class _TempletePageState extends State<TempletePage> {
         env: _env,
       ),
     ];
+    _fetchEventTypes();
+    _fetchPlants();
+  }
+
+  Future<void> _fetchEventTypes() async {
+    try {
+      final response = await _env.http.get("diary/entry/type");
+      if (response.statusCode == 200) {
+        final List<dynamic> responseBody = json.decode(response.body);
+        final List<String> eventTypes = List<String>.from(responseBody);
+        _env.eventTypes = eventTypes;
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      showSnackbar(context, ContentType.failure, e.toString());
+    }
+  }
+
+  Future<void> _fetchPlants() async {
+    try {
+      final response = await _env.http.get("plant");
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        final List<dynamic> plantJsonList = responseBody["content"];
+        _env.plants =
+            plantJsonList.map((json) => PlantDTO.fromJson(json)).toList();
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      showSnackbar(context, ContentType.failure, e.toString());
+    }
   }
 
   @override
@@ -61,6 +96,7 @@ class _TempletePageState extends State<TempletePage> {
 
   Widget _mobileTemplate() {
     return Scaffold(
+        key: _env.scaffoldMessengerKey,
         extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
@@ -94,6 +130,7 @@ class _TempletePageState extends State<TempletePage> {
 
   Widget _desktopTemplate() {
     return Scaffold(
+      key: _env.scaffoldMessengerKey,
       body: Row(
         children: [
           SideMenu(

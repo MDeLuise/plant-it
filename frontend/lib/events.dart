@@ -7,7 +7,15 @@ import 'package:plant_it/environment.dart';
 import 'multiple_dropdown.dart';
 
 class FilterWidget extends StatefulWidget {
-  const FilterWidget({super.key});
+  final Environment env;
+  final Function(List<String>) onSelectedEventsChanged;
+  final Function(List<String>) onSelectedPlantsChanged;
+
+  const FilterWidget(
+      {super.key,
+      required this.env,
+      required this.onSelectedEventsChanged,
+      required this.onSelectedPlantsChanged});
 
   @override
   State<FilterWidget> createState() => _FilterWidgetState();
@@ -31,9 +39,9 @@ class _FilterWidgetState extends State<FilterWidget> {
             },
             child: Row(
               children: [
-                Text(
-                  _isOpen ? 'Close filter' : 'Filter',
-                  style: const TextStyle(
+                const Text(
+                  'Filter',
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
                   ),
@@ -46,17 +54,29 @@ class _FilterWidgetState extends State<FilterWidget> {
           ),
           if (_isOpen) ...[
             const SizedBox(height: 16.0),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextFieldWithDropDown(
-                  options: ["watering", "fertilizing"],
-                  text: "Plant",
+                Expanded(
+                  child: TextFieldWithDropDown(
+                    onSelectedItemsChanged: widget.onSelectedPlantsChanged,
+                    options: widget.env.plants == null
+                        ? []
+                        : widget.env.plants!
+                            .map((e) => e.info.personalName)
+                            .toList(),
+                    text: "Plant",
+                  ),
                 ),
-                SizedBox(width: 16.0),
-                TextFieldWithDropDown(
-                  options: ["watering", "fertilizing"],
-                  text: "Event",
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: TextFieldWithDropDown(
+                    onSelectedItemsChanged: widget.onSelectedEventsChanged,
+                    options: widget.env.eventTypes
+                        ?.map((e) => formatEventType(e))
+                        .toList() as List<String>,
+                    text: "Event",
+                  ),
                 ),
               ],
             ),
@@ -103,7 +123,6 @@ class Event extends StatelessWidget {
   Widget build(BuildContext context) {
     Color backgroundColor = Colors.grey[200]!; // Default color
 
-    // Map action types to colors
     Map<String, Color> typeColors = {
       'SEEDING': const Color.fromRGBO(23, 122, 105, .4),
       'WATERING': const Color.fromRGBO(10, 86, 217, .4),
@@ -119,7 +138,6 @@ class Event extends StatelessWidget {
       'REPOTTING': const Color.fromRGBO(144, 85, 67, .4),
     };
 
-    // Use the color from the map if available
     if (typeColors.containsKey(action)) {
       backgroundColor = typeColors[action]!;
     }
@@ -130,7 +148,6 @@ class Event extends StatelessWidget {
     final formattedTimePassed = _formatTimePassed(timePassed);
 
     IconData actionIcon = Icons.info; // Default icon
-    // Map action types to icons
     Map<String, IconData> typeIcons = {
       'SEEDING': Icons.grass_outlined,
       'WATERING': Icons.water_drop_outlined,
@@ -146,7 +163,6 @@ class Event extends StatelessWidget {
       'REPOTTING': Icons.vpn_key_outlined,
     };
 
-    // Use the icon from the map if available
     if (typeIcons.containsKey(action)) {
       actionIcon = typeIcons[action]!;
     }
@@ -219,18 +235,17 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  late final Environment _env;
   final _pageSize = 10;
-  String? filteredEventType;
   final PagingController<int, Event> _pagingController =
       PagingController(firstPageKey: 0);
+  List<String> _selectedPlants = [];
+  List<String> _selectedEventTypes = [];
 
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
-    _env = widget.env;
     super.initState();
   }
 
@@ -251,8 +266,19 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   Future<List<Event>> _getEventsPage(int pageNo) async {
-    final response =
-        await _env.http.get("diary/entry?pageNo=$pageNo&pageSize=$_pageSize");
+    String url = "diary/entry?pageNo=$pageNo&pageSize=$_pageSize";
+    if (_selectedEventTypes.isNotEmpty) {
+      url +=
+          "&eventTypes=${_selectedEventTypes.map((e) => encodeEventType(e)).join(',')}";
+    }
+    if (_selectedPlants.isNotEmpty && widget.env.plants != null) {
+      final List<int> selectedPlantIds = widget.env.plants!
+          .where((p) => _selectedPlants.contains(p.info.personalName))
+          .map((p) => p.id!)
+          .toList();
+      url += "&plantIds=${selectedPlantIds.join(',')}";
+    }
+    final response = await widget.env.http.get(url);
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
       final List<dynamic> entries = responseBody["content"];
@@ -282,8 +308,18 @@ class _EventsPageState extends State<EventsPage> {
   Widget _buildListView() {
     return CustomScrollView(
       slivers: <Widget>[
-        const SliverToBoxAdapter(
-          child: FilterWidget(),
+        SliverToBoxAdapter(
+          child: FilterWidget(
+            onSelectedEventsChanged: (x) {
+              _selectedEventTypes = x;
+              _pagingController.refresh();
+            },
+            onSelectedPlantsChanged: (x) {
+              _selectedPlants = x;
+              _pagingController.refresh();
+            },
+            env: widget.env,
+          ),
         ),
         PagedSliverList<int, Event>(
           pagingController: _pagingController,
@@ -302,8 +338,18 @@ class _EventsPageState extends State<EventsPage> {
           const itemWidth = 250; // Adjust the width of each grid item as needed
           final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
           return CustomScrollView(slivers: <Widget>[
-            const SliverToBoxAdapter(
-              child: FilterWidget(),
+            SliverToBoxAdapter(
+              child: FilterWidget(
+                onSelectedEventsChanged: (x) {
+                  _selectedEventTypes = x;
+                  _pagingController.refresh();
+                },
+                onSelectedPlantsChanged: (x) {
+                  _selectedPlants = x;
+                  _pagingController.refresh();
+                },
+                env: widget.env,
+              ),
             ),
             PagedSliverGrid<int, Event>(
               pagingController: _pagingController,

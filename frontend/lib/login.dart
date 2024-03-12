@@ -106,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   // Username
                   TextFormField(
+                    autofocus: true,
                     controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context).username,
@@ -145,6 +146,15 @@ class _LoginPageState extends State<LoginPage> {
                             return AppLocalizations.of(context).enterValue;
                           }
                           return null;
+                        },
+                        onFieldSubmitted: (value) {
+                          if (_formKey.currentState!.validate()) {
+                            loginAndSetAppKey(
+                                _env,
+                                context,
+                                _usernameController.text,
+                                _passwordController.text);
+                          }
                         },
                       ),
                       Padding(

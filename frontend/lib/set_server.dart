@@ -108,6 +108,7 @@ class _SetServerState extends State<SetServer> {
                     )),
               ),
               TextFormField(
+                autofocus: true,
                 controller: _backendController,
                 decoration: InputDecoration(
                     labelText: AppLocalizations.of(context).serverURL,
@@ -121,6 +122,11 @@ class _SetServerState extends State<SetServer> {
                     return AppLocalizations.of(context).enterValidURL;
                   }
                   return null;
+                },
+                onFieldSubmitted: (value) {
+                  if (_formKey.currentState!.validate()) {
+                    _ping();
+                  }
                 },
               ),
               const SizedBox(height: 20),

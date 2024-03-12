@@ -28,6 +28,14 @@ class SignupRequest {
   }
 }
 
+String formatEventType(String eventType) {
+  return eventType.toLowerCase().replaceAll("_", " ");
+}
+
+String encodeEventType(String formattedEventType) {
+  return formattedEventType.toUpperCase().replaceAll(" ", "_");
+}
+
 void showSnackbar(
     BuildContext context, ContentType contentType, String message) {
   String title = "Oh Snap!";
@@ -40,15 +48,12 @@ void showSnackbar(
   }
 
   final snackBar = SnackBar(
-    /// need to set following properties for best effect of awesome_snackbar_content
     elevation: 0,
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.transparent,
     content: AwesomeSnackbarContent(
       title: title,
       message: message,
-
-      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
       contentType: contentType,
     ),
   );
@@ -57,47 +62,6 @@ void showSnackbar(
     ..hideCurrentSnackBar()
     ..showSnackBar(snackBar);
 }
-
-// Future<void> showErrorDialog(
-//     BuildContext context, String message, String details) async {
-//   return showDialog<void>(
-//     context: context,
-//     barrierDismissible: false,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: Text(AppLocalizations.of(context).error),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               message,
-//               style: const TextStyle(fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 8),
-//             ExpansionTile(
-//               title: Text(
-//                 AppLocalizations.of(context).details,
-//                 style: const TextStyle(fontWeight: FontWeight.bold),
-//               ),
-//               children: [
-//                 Text(details),
-//               ],
-//             ),
-//           ],
-//         ),
-//         actions: <Widget>[
-//           TextButton(
-//             child: Text(AppLocalizations.of(context).ok),
-//             onPressed: () {
-//               Navigator.of(context).pop();
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
 
 Future<void> loginAndSetAppKey(Environment env, BuildContext context,
     String username, String password) async {
