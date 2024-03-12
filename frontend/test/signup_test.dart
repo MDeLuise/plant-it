@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
@@ -61,7 +62,7 @@ void main() {
     // Act
     await tester.pumpWidget(LocalizationsInjector(
         navigatorObserver: navigatorObserver, child: SignupPage(env: env)));
-    await tester.tap(find.byType(ElevatedButton));
+    await tester.tap(find.byType(ElevatedLoadingButton));
     await tester.pump();
 
     // Assert and verify
@@ -81,7 +82,7 @@ void main() {
           navigatorObserver: navigatorObserver, child: SignupPage(env: env)));
       final textField = find.byType(TextFormField).at(1);
       await tester.enterText(textField, invalidEmail);
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(ElevatedLoadingButton));
       await tester.pump();
 
       // Assert and verify
@@ -103,7 +104,7 @@ void main() {
           navigatorObserver: navigatorObserver, child: SignupPage(env: env)));
       final textField = find.byType(TextFormField).at(1);
       await tester.enterText(textField, invalidEmail);
-      await tester.tap(find.byType(ElevatedButton));
+      await tester.tap(find.byType(ElevatedLoadingButton));
       await tester.pump();
 
       // Assert and verify
@@ -158,7 +159,7 @@ void main() {
     await tester.enterText(usernameField, request.username);
     await tester.enterText(emailField, request.email);
     await tester.enterText(passwordField, request.password);
-    final signupButton = find.byType(ElevatedButton);
+    final signupButton = find.byType(ElevatedLoadingButton);
     await tester.tap(signupButton);
     await tester.pumpAndSettle();
 
@@ -192,7 +193,7 @@ void main() {
     await tester.enterText(usernameField, request.username);
     await tester.enterText(emailField, request.email);
     await tester.enterText(passwordField, request.password);
-    final signupButton = find.byType(ElevatedButton);
+    final signupButton = find.byType(ElevatedLoadingButton);
     await tester.tap(signupButton);
     await tester.pumpAndSettle();
 

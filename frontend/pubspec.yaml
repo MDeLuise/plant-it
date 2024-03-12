@@ -41,6 +41,7 @@ dependencies:
   flutter_side_menu: ^0.4.0
   infinite_scroll_pagination: ^4.0.0
   dropdown_button2: ^2.3.9
+  material_loading_buttons: ^1.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

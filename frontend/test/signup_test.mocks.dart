@@ -3,15 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
+import 'dart:async' as _i9;
 
 import 'package:flutter/foundation.dart' as _i6;
 import 'package:flutter/src/widgets/framework.dart' as _i5;
-import 'package:flutter/src/widgets/navigator.dart' as _i10;
-import 'package:flutter/src/widgets/notification_listener.dart' as _i9;
+import 'package:flutter/src/widgets/navigator.dart' as _i11;
+import 'package:flutter/src/widgets/notification_listener.dart' as _i10;
 import 'package:http/http.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:plant_it/app_http_client.dart' as _i3;
+import 'package:plant_it/dto/plant_dto.dart' as _i8;
 import 'package:plant_it/environment.dart' as _i7;
 import 'package:shared_preferences/shared_preferences.dart' as _i2;
 
@@ -131,6 +132,24 @@ class MockEnvironment extends _i1.Mock implements _i7.Environment {
           Invocation.getter(#http),
         ),
       ) as _i3.AppHttpClient);
+
+  @override
+  set eventTypes(List<String>? _eventTypes) => super.noSuchMethod(
+        Invocation.setter(
+          #eventTypes,
+          _eventTypes,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set plants(List<_i8.PlantDTO>? _plants) => super.noSuchMethod(
+        Invocation.setter(
+          #plants,
+          _plants,
+        ),
+        returnValueForMissingStub: null,
+      );
 }
 
 /// A class which mocks [AppHttpClient].
@@ -169,22 +188,22 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
       );
 
   @override
-  _i8.Future<_i4.Response> get(String? url) => (super.noSuchMethod(
+  _i9.Future<_i4.Response> get(String? url) => (super.noSuchMethod(
         Invocation.method(
           #get,
           [url],
         ),
-        returnValue: _i8.Future<_i4.Response>.value(_FakeResponse_2(
+        returnValue: _i9.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #get,
             [url],
           ),
         )),
-      ) as _i8.Future<_i4.Response>);
+      ) as _i9.Future<_i4.Response>);
 
   @override
-  _i8.Future<_i4.Response> post(
+  _i9.Future<_i4.Response> post(
     String? url,
     Map<String, String>? body,
   ) =>
@@ -196,7 +215,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
             body,
           ],
         ),
-        returnValue: _i8.Future<_i4.Response>.value(_FakeResponse_2(
+        returnValue: _i9.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #post,
@@ -206,10 +225,10 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
             ],
           ),
         )),
-      ) as _i8.Future<_i4.Response>);
+      ) as _i9.Future<_i4.Response>);
 
   @override
-  _i8.Future<_i4.Response> put(
+  _i9.Future<_i4.Response> put(
     String? url,
     Map<String, String>? body,
   ) =>
@@ -221,7 +240,7 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
             body,
           ],
         ),
-        returnValue: _i8.Future<_i4.Response>.value(_FakeResponse_2(
+        returnValue: _i9.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #put,
@@ -231,22 +250,22 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
             ],
           ),
         )),
-      ) as _i8.Future<_i4.Response>);
+      ) as _i9.Future<_i4.Response>);
 
   @override
-  _i8.Future<_i4.Response> delete(String? url) => (super.noSuchMethod(
+  _i9.Future<_i4.Response> delete(String? url) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [url],
         ),
-        returnValue: _i8.Future<_i4.Response>.value(_FakeResponse_2(
+        returnValue: _i9.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #delete,
             [url],
           ),
         )),
-      ) as _i8.Future<_i4.Response>);
+      ) as _i9.Future<_i4.Response>);
 
   @override
   void close() => super.noSuchMethod(
@@ -346,7 +365,7 @@ class MockBuildContext extends _i1.Mock implements _i5.BuildContext {
       );
 
   @override
-  void dispatchNotification(_i9.Notification? notification) =>
+  void dispatchNotification(_i10.Notification? notification) =>
       super.noSuchMethod(
         Invocation.method(
           #dispatchNotification,
@@ -490,7 +509,7 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
       )) as List<String>?);
 
   @override
-  _i8.Future<bool> setBool(
+  _i9.Future<bool> setBool(
     String? key,
     bool? value,
   ) =>
@@ -502,11 +521,11 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
             value,
           ],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> setInt(
+  _i9.Future<bool> setInt(
     String? key,
     int? value,
   ) =>
@@ -518,11 +537,11 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
             value,
           ],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> setDouble(
+  _i9.Future<bool> setDouble(
     String? key,
     double? value,
   ) =>
@@ -534,11 +553,11 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
             value,
           ],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> setString(
+  _i9.Future<bool> setString(
     String? key,
     String? value,
   ) =>
@@ -550,11 +569,11 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
             value,
           ],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> setStringList(
+  _i9.Future<bool> setStringList(
     String? key,
     List<String>? value,
   ) =>
@@ -566,59 +585,59 @@ class MockSharedPreferences extends _i1.Mock implements _i2.SharedPreferences {
             value,
           ],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> remove(String? key) => (super.noSuchMethod(
+  _i9.Future<bool> remove(String? key) => (super.noSuchMethod(
         Invocation.method(
           #remove,
           [key],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> commit() => (super.noSuchMethod(
+  _i9.Future<bool> commit() => (super.noSuchMethod(
         Invocation.method(
           #commit,
           [],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<bool> clear() => (super.noSuchMethod(
+  _i9.Future<bool> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
           [],
         ),
-        returnValue: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
-  _i8.Future<void> reload() => (super.noSuchMethod(
+  _i9.Future<void> reload() => (super.noSuchMethod(
         Invocation.method(
           #reload,
           [],
         ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
 }
 
 /// A class which mocks [NavigatorObserver].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNavigatorObserver extends _i1.Mock implements _i10.NavigatorObserver {
+class MockNavigatorObserver extends _i1.Mock implements _i11.NavigatorObserver {
   MockNavigatorObserver() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
   void didPush(
-    _i10.Route<dynamic>? route,
-    _i10.Route<dynamic>? previousRoute,
+    _i11.Route<dynamic>? route,
+    _i11.Route<dynamic>? previousRoute,
   ) =>
       super.noSuchMethod(
         Invocation.method(
@@ -633,8 +652,8 @@ class MockNavigatorObserver extends _i1.Mock implements _i10.NavigatorObserver {
 
   @override
   void didPop(
-    _i10.Route<dynamic>? route,
-    _i10.Route<dynamic>? previousRoute,
+    _i11.Route<dynamic>? route,
+    _i11.Route<dynamic>? previousRoute,
   ) =>
       super.noSuchMethod(
         Invocation.method(
@@ -649,8 +668,8 @@ class MockNavigatorObserver extends _i1.Mock implements _i10.NavigatorObserver {
 
   @override
   void didRemove(
-    _i10.Route<dynamic>? route,
-    _i10.Route<dynamic>? previousRoute,
+    _i11.Route<dynamic>? route,
+    _i11.Route<dynamic>? previousRoute,
   ) =>
       super.noSuchMethod(
         Invocation.method(
@@ -665,8 +684,8 @@ class MockNavigatorObserver extends _i1.Mock implements _i10.NavigatorObserver {
 
   @override
   void didReplace({
-    _i10.Route<dynamic>? newRoute,
-    _i10.Route<dynamic>? oldRoute,
+    _i11.Route<dynamic>? newRoute,
+    _i11.Route<dynamic>? oldRoute,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -682,8 +701,8 @@ class MockNavigatorObserver extends _i1.Mock implements _i10.NavigatorObserver {
 
   @override
   void didStartUserGesture(
-    _i10.Route<dynamic>? route,
-    _i10.Route<dynamic>? previousRoute,
+    _i11.Route<dynamic>? route,
+    _i11.Route<dynamic>? previousRoute,
   ) =>
       super.noSuchMethod(
         Invocation.method(

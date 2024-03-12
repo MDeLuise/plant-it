@@ -91,6 +91,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
     if (!context.mounted) return;
     showSnackbar(
         context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
+    rethrow;
   }
 }
 
@@ -116,5 +117,6 @@ Future<void> _login(Environment env, BuildContext context, String username,
     if (!context.mounted) return;
     showSnackbar(
         context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
+    rethrow;
   }
 }

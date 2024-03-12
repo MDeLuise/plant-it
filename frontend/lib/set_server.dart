@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
@@ -15,31 +16,29 @@ class SetServer extends StatefulWidget {
 }
 
 class _SetServerState extends State<SetServer> {
-  late final Environment _env;
   final TextEditingController _backendController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool insertedBackendController = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _env = widget.env;
-  }
+  bool _isLoading = false;
 
   Future<void> _ping() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String url = _backendController.text;
       url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
-      _env.http.setBackendUrl("$url/api/");
-      _env.prefs.setString("serverURL", "$url/api/");
-      final response =
-          await _env.http.get('info/ping').timeout(const Duration(seconds: 3));
+      widget.env.http.setBackendUrl("$url/api/");
+      widget.env.prefs.setString("serverURL", "$url/api/");
+      final response = await widget.env.http
+          .get('info/ping')
+          .timeout(const Duration(seconds: 3));
       if (!mounted) return;
       if (response.statusCode == 200 && response.body == "pong") {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginPage(env: _env),
+            builder: (context) => LoginPage(env: widget.env),
             // builder: (context) => OTPInsertPage(
             //     env: _env,
             //     request: SignupRequest(
@@ -49,12 +48,16 @@ class _SetServerState extends State<SetServer> {
           ),
         );
       } else {
-        showSnackbar(context, SnackBarType.fail,
-            AppLocalizations.of(context).noBackend);
+        showSnackbar(
+            context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
       }
     } catch (e) {
       if (!mounted) return;
       showSnackbar(context, SnackBarType.fail, e.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -130,19 +133,12 @@ class _SetServerState extends State<SetServer> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
+              ElevatedLoadingButton(
+                isLoading: _isLoading,
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _ping();
                   }
-
-                  // to delete below, just for testing
-                  // _httpClient.setBackendUrl("${_backendController.text}/api/");
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => const LoginPage(),
-                  //     ));
                 },
                 child: Text(AppLocalizations.of(context).go),
               ),

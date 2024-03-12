@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
@@ -18,39 +19,36 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  late final Environment _env;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _env = widget.env;
-  }
+  bool _isLoading = false;
 
   Future<void> _signup() async {
     final SignupRequest request = SignupRequest(
         username: _usernameController.text,
         password: _passwordController.text,
         email: _emailController.text);
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      final response = await _env.http.post(
+      final response = await widget.env.http.post(
         'authentication/signup',
         request.toMap(),
       );
       if (!mounted) return;
       if (response.statusCode == 200) {
-        await loginAndSetAppKey(
-            _env, context, _usernameController.text, _passwordController.text);
+        await loginAndSetAppKey(widget.env, context, _usernameController.text,
+            _passwordController.text);
       } else if (response.statusCode == 202) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => OTPInsertPage(
-              env: _env,
+              env: widget.env,
               request: request,
             ),
           ),
@@ -64,6 +62,10 @@ class _SignupPageState extends State<SignupPage> {
       if (!mounted) return;
       showSnackbar(
           context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -197,7 +199,8 @@ class _SignupPageState extends State<SignupPage> {
 
                   // Button
                   const SizedBox(height: 20),
-                  ElevatedButton(
+                  ElevatedLoadingButton(
+                    isLoading: _isLoading,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _signup();
@@ -231,7 +234,7 @@ class _SignupPageState extends State<SignupPage> {
             ),
 
             // Signup
-            Login(env: _env)
+            Login(env: widget.env)
           ],
         ),
       ),

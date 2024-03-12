@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/signup.dart';
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -164,11 +166,24 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Button
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
+                  ElevatedLoadingButton(
+                    isLoading: _isLoading,
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        loginAndSetAppKey(widget.env, context,
-                            _usernameController.text, _passwordController.text);
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await loginAndSetAppKey(
+                              widget.env,
+                              context,
+                              _usernameController.text,
+                              _passwordController.text);
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
                     },
                     child: Text(AppLocalizations.of(context).login),
@@ -287,8 +302,7 @@ class HeaderMessage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-              height: 10),
+          const SizedBox(height: 10),
           Text(
             AppLocalizations.of(context).loginTagline,
             style: Theme.of(context).textTheme.bodyMedium,

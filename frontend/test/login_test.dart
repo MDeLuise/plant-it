@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
@@ -58,7 +59,7 @@ void main() {
     // Act
     await tester.pumpWidget(LocalizationsInjector(
         navigatorObserver: navigatorObserver, child: LoginPage(env: env)));
-    await tester.tap(find.byType(ElevatedButton));
+    await tester.tap(find.byType(ElevatedLoadingButton));
     await tester.pump();
 
     // Assert and verify
@@ -97,7 +98,7 @@ void main() {
     final passwordField = find.byType(TextFormField).last;
     await tester.enterText(usernameField, username);
     await tester.enterText(passwordField, password);
-    final loginButton = find.byType(ElevatedButton);
+    final loginButton = find.byType(ElevatedLoadingButton);
     await tester.tap(loginButton);
     await tester.pumpAndSettle();
 
@@ -135,7 +136,7 @@ void main() {
     final passwordField = find.byType(TextFormField).last;
     await tester.enterText(usernameField, username);
     await tester.enterText(passwordField, password);
-    final loginButton = find.byType(ElevatedButton);
+    final loginButton = find.byType(ElevatedLoadingButton);
     await tester.tap(loginButton);
     await tester.pumpAndSettle();
 

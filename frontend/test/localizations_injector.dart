@@ -5,7 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 class LocalizationsInjector extends StatelessWidget {
   final Widget child;
   final NavigatorObserver navigatorObserver;
-  const LocalizationsInjector({super.key, required this.child, required this.navigatorObserver});
+  const LocalizationsInjector(
+      {super.key, required this.child, required this.navigatorObserver});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class LocalizationsInjector extends StatelessWidget {
         Locale('en', ''),
       ],
       navigatorObservers: [navigatorObserver],
-      home: child,
+      home: Scaffold(
+        body: child,
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/commons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/environment.dart';
@@ -28,6 +29,7 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
   late final TextEditingController _fourthController = TextEditingController();
   late final TextEditingController _fifthController = TextEditingController();
   late final TextEditingController _sixthController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -74,21 +76,32 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
   }
 
   void _verify() async {
-    final response = await widget.env.http.post(
-        "authentication/signup/otp/${_getInsertedOTP()}", widget.request.toMap());
-    if (response.statusCode == 200) {
-      if (!mounted) return;
-      loginAndSetAppKey(widget.env, context, widget.request.username, widget.request.password);
-    } else {
-      if (!mounted) return;
-      final responseBody = json.decode(response.body);
-      showSnackbar(context, SnackBarType.fail, responseBody["message"]);
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final response = await widget.env.http.post(
+          "authentication/signup/otp/${_getInsertedOTP()}",
+          widget.request.toMap());
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        loginAndSetAppKey(widget.env, context, widget.request.username,
+            widget.request.password);
+      } else {
+        if (!mounted) return;
+        final responseBody = json.decode(response.body);
+        showSnackbar(context, SnackBarType.fail, responseBody["message"]);
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   void _resendCode() async {
-    final response =
-        await widget.env.http.post("authentication/signup", widget.request.toMap());
+    final response = await widget.env.http
+        .post("authentication/signup", widget.request.toMap());
     if (response.statusCode == 202) {
       resetCode();
     } else {
@@ -146,7 +159,8 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              ElevatedLoadingButton(
+                isLoading: _isLoading,
                 onPressed: () {
                   _verify();
                 },

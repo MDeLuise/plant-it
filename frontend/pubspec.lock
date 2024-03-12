@@ -461,6 +461,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.0"
+  material_loading_buttons:
+    dependency: "direct main"
+    description:
+      name: material_loading_buttons
+      sha256: "4cea00c745b027772f20af8df497400cc15c24d1b95a3f1399efe573dfbaa867"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   meta:
     dependency: transitive
     description:

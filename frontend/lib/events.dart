@@ -87,12 +87,12 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 }
 
-class Event extends StatelessWidget {
+class EventCard extends StatelessWidget {
   final String action;
   final String plant;
   final DateTime date;
 
-  const Event({
+  const EventCard({
     super.key,
     required this.action,
     required this.plant,
@@ -148,7 +148,7 @@ class Event extends StatelessWidget {
     final formattedTimePassed = _formatTimePassed(timePassed);
 
     IconData actionIcon = Icons.info; // Default icon
-    Map<String, IconData> typeIcons = {
+    final Map<String, IconData> typeIcons = {
       'SEEDING': Icons.grass_outlined,
       'WATERING': Icons.water_drop_outlined,
       'FERTILIZING': Icons.eco_outlined,
@@ -236,7 +236,7 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPageState extends State<EventsPage> {
   final _pageSize = 10;
-  final PagingController<int, Event> _pagingController =
+  final PagingController<int, EventCard> _pagingController =
       PagingController(firstPageKey: 0);
   List<String> _selectedPlants = [];
   List<String> _selectedEventTypes = [];
@@ -265,7 +265,7 @@ class _EventsPageState extends State<EventsPage> {
     }
   }
 
-  Future<List<Event>> _getEventsPage(int pageNo) async {
+  Future<List<EventCard>> _getEventsPage(int pageNo) async {
     String url = "diary/entry?pageNo=$pageNo&pageSize=$_pageSize";
     if (_selectedEventTypes.isNotEmpty) {
       url +=
@@ -283,7 +283,7 @@ class _EventsPageState extends State<EventsPage> {
       final responseBody = json.decode(response.body);
       final List<dynamic> entries = responseBody["content"];
       return entries.map((entry) {
-        return Event(
+        return EventCard(
           action: entry["type"],
           plant: entry["diaryTargetPersonalName"],
           date: DateTime.parse(entry["date"]),
@@ -321,9 +321,9 @@ class _EventsPageState extends State<EventsPage> {
             env: widget.env,
           ),
         ),
-        PagedSliverList<int, Event>(
+        PagedSliverList<int, EventCard>(
           pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<Event>(
+          builderDelegate: PagedChildBuilderDelegate<EventCard>(
             itemBuilder: (context, item, index) => item,
           ),
         )
@@ -332,44 +332,42 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   Widget _buildGridView() {
-    return Expanded(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const itemWidth = 250; // Adjust the width of each grid item as needed
-          final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
-          return CustomScrollView(slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: FilterWidget(
-                onSelectedEventsChanged: (x) {
-                  _selectedEventTypes = x;
-                  _pagingController.refresh();
-                },
-                onSelectedPlantsChanged: (x) {
-                  _selectedPlants = x;
-                  _pagingController.refresh();
-                },
-                env: widget.env,
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const itemWidth = 250; // Adjust the width of each grid item as needed
+        final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
+        return CustomScrollView(slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: FilterWidget(
+              onSelectedEventsChanged: (x) {
+                _selectedEventTypes = x;
+                _pagingController.refresh();
+              },
+              onSelectedPlantsChanged: (x) {
+                _selectedPlants = x;
+                _pagingController.refresh();
+              },
+              env: widget.env,
             ),
-            PagedSliverGrid<int, Event>(
-              pagingController: _pagingController,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-              ),
-              builderDelegate: PagedChildBuilderDelegate<Event>(
-                itemBuilder: (context, item, index) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: item,
-                  ),
+          ),
+          PagedSliverGrid<int, EventCard>(
+            pagingController: _pagingController,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+            ),
+            builderDelegate: PagedChildBuilderDelegate<EventCard>(
+              itemBuilder: (context, item, index) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: item,
                 ),
               ),
-            )
-          ]);
-        },
-      ),
+            ),
+          )
+        ]);
+      },
     );
   }
 
