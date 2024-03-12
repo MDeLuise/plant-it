@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/commons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/environment.dart';
@@ -28,14 +28,10 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
   late final TextEditingController _fourthController = TextEditingController();
   late final TextEditingController _fifthController = TextEditingController();
   late final TextEditingController _sixthController = TextEditingController();
-  late final Environment _env;
-  late final SignupRequest _request;
 
   @override
   void initState() {
     super.initState();
-    _env = widget.env;
-    _request = widget.request;
     _firstFieldFocus.requestFocus();
   }
 
@@ -78,27 +74,27 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
   }
 
   void _verify() async {
-    final response = await _env.http.post(
-        "authentication/signup/otp/${_getInsertedOTP()}", _request.toMap());
+    final response = await widget.env.http.post(
+        "authentication/signup/otp/${_getInsertedOTP()}", widget.request.toMap());
     if (response.statusCode == 200) {
       if (!mounted) return;
-      loginAndSetAppKey(_env, context, _request.username, _request.password);
+      loginAndSetAppKey(widget.env, context, widget.request.username, widget.request.password);
     } else {
       if (!mounted) return;
       final responseBody = json.decode(response.body);
-      showSnackbar(context, ContentType.failure, responseBody["message"]);
+      showSnackbar(context, SnackBarType.fail, responseBody["message"]);
     }
   }
 
   void _resendCode() async {
     final response =
-        await _env.http.post("authentication/signup", _request.toMap());
+        await widget.env.http.post("authentication/signup", widget.request.toMap());
     if (response.statusCode == 202) {
       resetCode();
     } else {
       if (!mounted) return;
       final responseBody = json.decode(response.body);
-      showSnackbar(context, ContentType.failure, responseBody["message"]);
+      showSnackbar(context, SnackBarType.fail, responseBody["message"]);
     }
   }
 
@@ -129,7 +125,7 @@ class _OTPInsertPageState extends State<OTPInsertPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      _request.email,
+                      widget.request.email,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.bold),

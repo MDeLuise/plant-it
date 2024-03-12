@@ -1,6 +1,6 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
@@ -49,12 +49,12 @@ class _SetServerState extends State<SetServer> {
           ),
         );
       } else {
-        showSnackbar(context, ContentType.failure,
+        showSnackbar(context, SnackBarType.fail,
             AppLocalizations.of(context).noBackend);
       }
     } catch (e) {
       if (!mounted) return;
-      showSnackbar(context, ContentType.failure, e.toString());
+      showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }
 

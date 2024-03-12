@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
@@ -58,12 +58,12 @@ class _SignupPageState extends State<SignupPage> {
       } else {
         final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
-        showSnackbar(context, ContentType.failure, errorMessage);
+        showSnackbar(context, SnackBarType.fail, errorMessage);
       }
     } catch (e) {
       if (!mounted) return;
       showSnackbar(
-          context, ContentType.failure, AppLocalizations.of(context).noBackend);
+          context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
     }
   }
 

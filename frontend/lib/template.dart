@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -12,16 +12,16 @@ import 'package:plant_it/more.dart';
 import 'package:plant_it/search.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 
-class TempletePage extends StatefulWidget {
+class TemplatePage extends StatefulWidget {
   final Environment env;
 
-  const TempletePage({super.key, required this.env});
+  const TemplatePage({super.key, required this.env});
 
   @override
-  State<TempletePage> createState() => _TempletePageState();
+  State<TemplatePage> createState() => _TemplatePageState();
 }
 
-class _TempletePageState extends State<TempletePage> {
+class _TemplatePageState extends State<TemplatePage> {
   late final Environment _env;
   final _bottombarIconList = [
     Icons.home_outlined,
@@ -50,8 +50,10 @@ class _TempletePageState extends State<TempletePage> {
         env: _env,
       ),
     ];
-    _fetchEventTypes();
-    _fetchPlants();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _fetchEventTypes();
+      _fetchPlants();
+    });
   }
 
   Future<void> _fetchEventTypes() async {
@@ -64,7 +66,7 @@ class _TempletePageState extends State<TempletePage> {
       }
     } catch (e) {
       if (!context.mounted) return;
-      showSnackbar(context, ContentType.failure, e.toString());
+      showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }
 
@@ -79,7 +81,7 @@ class _TempletePageState extends State<TempletePage> {
       }
     } catch (e) {
       if (!context.mounted) return;
-      showSnackbar(context, ContentType.failure, e.toString());
+      showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }
 
@@ -96,7 +98,6 @@ class _TempletePageState extends State<TempletePage> {
 
   Widget _mobileTemplate() {
     return Scaffold(
-        key: _env.scaffoldMessengerKey,
         extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
@@ -130,7 +131,6 @@ class _TempletePageState extends State<TempletePage> {
 
   Widget _desktopTemplate() {
     return Scaffold(
-      key: _env.scaffoldMessengerKey,
       body: Row(
         children: [
           SideMenu(

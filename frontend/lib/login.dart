@@ -15,17 +15,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late final Environment _env;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _env = widget.env;
-  }
 
   @override
   void dispose() {
@@ -150,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                         onFieldSubmitted: (value) {
                           if (_formKey.currentState!.validate()) {
                             loginAndSetAppKey(
-                                _env,
+                                widget.env,
                                 context,
                                 _usernameController.text,
                                 _passwordController.text);
@@ -174,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        loginAndSetAppKey(_env, context,
+                        loginAndSetAppKey(widget.env, context,
                             _usernameController.text, _passwordController.text);
                       }
                     },
@@ -206,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
 
             // Signup
-            Signup(env: _env)
+            Signup(env: widget.env)
           ],
         ),
       ),
@@ -295,7 +288,7 @@ class HeaderMessage extends StatelessWidget {
             ),
           ),
           const SizedBox(
-              height: 10), // Add spacing between the RichText and the tagline
+              height: 10),
           Text(
             AppLocalizations.of(context).loginTagline,
             style: Theme.of(context).textTheme.bodyMedium,

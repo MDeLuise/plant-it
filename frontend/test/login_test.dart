@@ -5,8 +5,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/homepage.dart';
 import 'package:plant_it/login.dart';
+import 'package:plant_it/template.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'localizations_injector.dart';
@@ -102,9 +102,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Assert and verify
-    verify(prefs.setString('key', appKey)).called(1);
+    verify(prefs.setString('serverKey', appKey)).called(1);
     verify(navigatorObserver.didPush(any, any));
-    expect(find.byType(HomePage), findsOneWidget);
+    expect(find.byType(TemplatePage), findsOneWidget);
   });
 
   testWidgets('Correct username and password with no previous key, then login',
@@ -140,8 +140,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Assert and verify
-    verify(prefs.setString('key', appKey)).called(1);
+    verify(prefs.setString('serverKey', appKey)).called(1);
     verify(navigatorObserver.didPush(any, any));
-    expect(find.byType(HomePage), findsOneWidget);
+    expect(find.byType(TemplatePage), findsOneWidget);
   });
 }

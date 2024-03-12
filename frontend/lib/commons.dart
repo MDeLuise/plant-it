@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/homepage.dart';
+import 'package:plant_it/template.dart';
 
 const int screenSizeTreshold = 600;
 
@@ -36,31 +36,12 @@ String encodeEventType(String formattedEventType) {
   return formattedEventType.toUpperCase().replaceAll(" ", "_");
 }
 
-void showSnackbar(
-    BuildContext context, ContentType contentType, String message) {
-  String title = "Oh Snap!";
-  if (contentType == ContentType.help) {
-    title = "Hi there!";
-  } else if (contentType == ContentType.warning) {
-    title = "Warning!";
-  } else if (contentType == ContentType.success) {
-    title = "Well done!";
-  }
-
-  final snackBar = SnackBar(
-    elevation: 0,
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: Colors.transparent,
-    content: AwesomeSnackbarContent(
-      title: title,
-      message: message,
-      contentType: contentType,
-    ),
-  );
-
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(snackBar);
+void showSnackbar(BuildContext context, SnackBarType type, String message) {
+  IconSnackBar.show(context,
+      snackBarType: type,
+      label: message,
+      snackBarStyle: const SnackBarStyle(maxLines: 4),
+      duration: const Duration(seconds: 3));
 }
 
 Future<void> loginAndSetAppKey(Environment env, BuildContext context,
@@ -83,7 +64,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(env: env),
+          builder: (context) => TemplatePage(env: env),
         ),
       );
     } else if (response.statusCode == 404) {
@@ -96,20 +77,20 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(env: env),
+            builder: (context) => TemplatePage(env: env),
           ),
         );
       } else {
         if (!context.mounted) return;
         final responseBody = json.decode(response.body);
         final errorMessage = responseBody['message'];
-        showSnackbar(context, ContentType.failure, errorMessage);
+        showSnackbar(context, SnackBarType.fail, errorMessage);
       }
     }
   } catch (e) {
     if (!context.mounted) return;
     showSnackbar(
-        context, ContentType.failure, AppLocalizations.of(context).noBackend);
+        context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
   }
 }
 
@@ -129,11 +110,11 @@ Future<void> _login(Environment env, BuildContext context, String username,
     } else {
       if (!context.mounted) return;
       final errorMessage = responseBody['message'];
-      showSnackbar(context, ContentType.failure, errorMessage);
+      showSnackbar(context, SnackBarType.fail, errorMessage);
     }
   } catch (e) {
     if (!context.mounted) return;
     showSnackbar(
-        context, ContentType.failure, AppLocalizations.of(context).noBackend);
+        context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
   }
 }
