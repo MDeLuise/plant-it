@@ -16,8 +16,6 @@ public class BotanicalInfoImage extends EntityImageImpl {
     private BotanicalInfo target;
     @Transient
     private byte[] content;
-    @Transient
-    private String contentType;
 
 
     public BotanicalInfoImage() {
@@ -42,15 +40,5 @@ public class BotanicalInfoImage extends EntityImageImpl {
 
     public void setContent(byte[] content) {
         this.content = content;
-    }
-
-
-    public String getContentType() {
-        return contentType;
-    }
-
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 }

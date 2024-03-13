@@ -15,6 +15,10 @@ public interface EntityImage {
 
     String getUrl();
 
+    void setContentType(String type);
+
+    String getContentType();
+
     void setCreateOn(Date createOn);
 
     Date getCreateOn();

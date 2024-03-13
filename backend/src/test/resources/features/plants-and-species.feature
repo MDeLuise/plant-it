@@ -194,15 +194,15 @@ Feature: Integration tests regards botanical info managements
       | light | humidity | minTemp | maxTemp | phMax | phMin |
       | 6     | 5        |         |         | 2     | 1     |
     When user updates botanical info "foo"
-      | synonyms | family | genus | species | creator | externalId | image_id | image_url      | image_content |
-      | synonym1 | fam    | gen   | foo     | USER    |            |          | http://foo.com |               |
+      | synonyms | family | genus | species | creator | externalId | image_id | image_url                | image_content |
+      | synonym1 | fam    | gen   | foo     | USER    |            |          | https://dummyimage.com/1 |               |
     Then response is ok
     * species "foo" is
       | scientific_name | synonyms | family | genus | species | creator | externalId |
       | foo             | synonym1 | fam    | gen   | foo     | USER    |            |
     * species "foo" has this image
-      | image_id | image_url      | image_content |
-      |          | http://foo.com |               |
+      | image_id | image_url                | image_content |
+      |          | https://dummyimage.com/1 |               |
     * species "foo" has this care
       | light | humidity | minTemp | maxTemp | phMax | phMin |
       | 6     | 5        |         |         | 2     | 1     |
@@ -214,8 +214,8 @@ Feature: Integration tests regards botanical info managements
       | scientific_name | synonyms | family | genus | species | creator | externalId |
       | bar             |          |        |       | bar     | USER    |            |
     * species "bar" has this image
-      | image_id | image_url | image_content                                                                                |
-      |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= |
+      | image_id | image_url | image_content                                                                                | image_content_type |
+      |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/jpeg         |
     * species "bar" has this care
       | light | humidity | minTemp | maxTemp | phMax | phMin |
       | 6     | 5        |         |         | 2     | 1     |

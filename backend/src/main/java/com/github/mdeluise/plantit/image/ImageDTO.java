@@ -10,8 +10,6 @@ public class ImageDTO {
     private String id;
     @Schema(description = "Creation date of the image.", accessMode = Schema.AccessMode.READ_ONLY)
     private Date createOn;
-    @Schema(description = "URL to retrieve the content of the image.", accessMode = Schema.AccessMode.READ_ONLY)
-    private String url;
     @Schema(description = "Description of the image.", accessMode = Schema.AccessMode.READ_ONLY)
     private String description;
     @Schema(description = "Target ID of the image.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -35,16 +33,6 @@ public class ImageDTO {
 
     public void setCreateOn(Date createOn) {
         this.createOn = createOn;
-    }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 

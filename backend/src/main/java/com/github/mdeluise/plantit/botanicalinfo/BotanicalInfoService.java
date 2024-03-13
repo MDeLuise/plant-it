@@ -116,7 +116,7 @@ public class BotanicalInfoService {
         if (toSave.getContent() != null) {
             logger.debug("Species {} have a linked image's content, updating...", toUpdate.getSpecies());
             final BotanicalInfoImage saved =
-                (BotanicalInfoImage) imageStorageService.save(toSave.getContent(), toSave.getContentType(), toUpdate);
+                (BotanicalInfoImage) imageStorageService.saveBotanicalInfoThumbnailImage(toSave.getContent(), toSave.getContentType(), toUpdate);
             toUpdate.setImage(saved);
         } else if (toSave.getUrl() != null && !toSave.getUrl().isBlank()) {
             logger.debug("Species {} have a linked image's url, updating...", toUpdate.getSpecies());

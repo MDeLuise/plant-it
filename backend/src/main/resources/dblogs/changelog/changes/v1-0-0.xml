@@ -248,7 +248,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="url" type="varchar(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
+            </column>
+            <column name="type" type="varchar(10)">
+                <constraints nullable="true"/>
             </column>
             <column name="path" type="varchar(255)">
             </column>

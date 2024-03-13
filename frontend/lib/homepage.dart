@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
@@ -30,7 +29,7 @@ class HomePage extends StatelessWidget {
         itemCount: 10,
         //pagination: const SwiperPagination(),
         scale: isSmallScreen(context) ? .7 : .4,
-        viewportFraction: isSmallScreen(context) ? .6 : .2,
+        viewportFraction: isSmallScreen(context) ? .5 : .2,
         containerWidth: 200,
         containerHeight: 400,
         //control: const SwiperControl(),
