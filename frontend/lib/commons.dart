@@ -8,6 +8,11 @@ import 'package:plant_it/template.dart';
 
 const int screenSizeTreshold = 600;
 
+bool isSmallScreen(BuildContext context) {
+  final double width = MediaQuery.of(context).size.width;
+  return width < screenSizeTreshold;
+}
+
 class SignupRequest {
   final String username;
   final String password;

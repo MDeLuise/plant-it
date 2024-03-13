@@ -296,12 +296,10 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth > screenSizeTreshold) {
-      return _buildGridView();
-    } else {
+    if (isSmallScreen(context)) {
       return _buildListView();
+    } else {
+      return _buildGridView();
     }
   }
 

@@ -173,11 +173,8 @@ class _SetServerState extends State<SetServer> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final isSmallScreen = screenSize.width < screenSizeTreshold;
-
     Widget body;
-    if (isSmallScreen) {
+    if (isSmallScreen(context)) {
       body = _buildMobileView(context);
     } else {
       body = Row(

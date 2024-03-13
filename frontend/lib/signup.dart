@@ -243,11 +243,8 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final isSmallScreen = screenSize.width < screenSizeTreshold;
-
     Widget body;
-    if (isSmallScreen) {
+    if (isSmallScreen(context)) {
       body = _buildMobileView(context);
     } else {
       body = Row(

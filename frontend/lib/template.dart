@@ -87,9 +87,7 @@ class _TemplatePageState extends State<TemplatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final isSmallScreen = width < screenSizeTreshold;
-    if (isSmallScreen) {
+    if (isSmallScreen(context)) {
       return _mobileTemplate();
     } else {
       return _desktopTemplate();
