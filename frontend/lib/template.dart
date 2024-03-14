@@ -36,10 +36,29 @@ class _TemplatePageState extends State<TemplatePage> {
   void initState() {
     super.initState();
     _env = widget.env;
+    // _fetchEventTypes()
+    //     .whenComplete(_fetchPlants)
+    //     .whenComplete(() => _bottombarPages = [
+    //           HomePage(
+    //             env: _env,
+    //           ),
+    //           //_buildHomePage(),
+    //           EventsPage(
+    //             env: _env,
+    //           ),
+    //           SeachPage(
+    //             env: _env,
+    //           ),
+    //           MorePage(
+    //             env: _env,
+    //           ),
+    //         ])
+    //     .whenComplete(() => setState(() {}));
     _bottombarPages = [
-      HomePage(
-        env: _env,
-      ),
+      // HomePage(
+      //   env: _env,
+      // ),
+      _buildHomePage(),
       EventsPage(
         env: _env,
       ),
@@ -50,9 +69,11 @@ class _TemplatePageState extends State<TemplatePage> {
         env: _env,
       ),
     ];
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _fetchEventTypes();
-      _fetchPlants();
+      await _fetchEventTypes();
+      await _fetchPlants();
+      setState(() {});
     });
   }
 
@@ -83,6 +104,21 @@ class _TemplatePageState extends State<TemplatePage> {
       if (!context.mounted) return;
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
+  }
+
+  Widget _buildHomePage() {
+    return FutureBuilder<void>(
+      future: Future.wait([_fetchEventTypes(), _fetchPlants()]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return HomePage(env: _env);
+        }
+      },
+    );
   }
 
   @override

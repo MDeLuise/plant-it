@@ -41,7 +41,6 @@ public class PlantDTOConverter extends AbstractDTOConverter<Plant, PlantDTO> {
         final EntityImage plantAvatar = plantAvatarGetter.getPlantAvatar(data);
         if (plantAvatar != null) {
             result.setAvatarImageId(plantAvatarGetter.getPlantAvatar(data).getId());
-            result.setAvatarImageUrl(plantAvatarGetter.getPlantAvatar(data).getUrl());
         }
         return result;
     }

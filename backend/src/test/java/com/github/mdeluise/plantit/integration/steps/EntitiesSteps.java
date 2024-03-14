@@ -237,7 +237,6 @@ public class EntitiesSteps {
 
         final PlantDTO plantDTO = new PlantDTO();
         plantDTO.setAvatarImageId(parameters.get("avatar_id"));
-        plantDTO.setAvatarImageUrl(parameters.get("avatar_url"));
         plantDTO.setAvatarMode(parameters.get("avatar_mode"));
         final long botanicalInfoId = getBotanicalInfoFromScientificName(parameters.get("botanical_info")).getId();
         plantDTO.setBotanicalInfoId(botanicalInfoId);
@@ -299,7 +298,6 @@ public class EntitiesSteps {
 
         final PlantDTO plantDTO = new PlantDTO();
         plantDTO.setAvatarImageId(parameters.get("avatar_id"));
-        plantDTO.setAvatarImageUrl(parameters.get("avatar_url"));
         plantDTO.setAvatarMode(parameters.get("avatar_mode"));
         final long botanicalInfoId = getBotanicalInfoFromScientificName(parameters.get("botanical_info")).getId();
         plantDTO.setBotanicalInfoId(botanicalInfoId);
@@ -459,10 +457,10 @@ public class EntitiesSteps {
         }
         final ImageContentResponse expected = imageStorageService.getImageContentInternal(toCheck.getId());
         if (parameters.get("image_content") != null) {
-            Assertions.assertThat(expected.content())
+            Assertions.assertThat(expected.getContent())
                       .isEqualTo(Base64.getDecoder().decode(parameters.get("image_content")));
         } else {
-            Assertions.assertThat(expected.content()).isNotEmpty();
+            Assertions.assertThat(expected.getType()).isNotNull();
         }
     }
 

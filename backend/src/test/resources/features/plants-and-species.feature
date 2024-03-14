@@ -54,8 +54,8 @@ Feature: Integration tests regards botanical info managements
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
       |           | plant1       |         | PURCHASED |      |                |                |        |          |
     When user adds new plant
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            |             | foo            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           |             | foo            |
     Then response is ok
     When user requests count of all botanical info
     Then response is "1"
@@ -76,8 +76,8 @@ Feature: Integration tests regards botanical info managements
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
       |           | plant1       |         | PURCHASED |      |                |                |        |          |
     When user adds new plant
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            |             | foo            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           |             | foo            |
     Then response is ok
     When user requests count of all botanical info
     Then response is "1"
@@ -97,8 +97,8 @@ Feature: Integration tests regards botanical info managements
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
       |           | plant1       |         | PURCHASED |      |                |                |        |          |
     * user adds new plant
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            |             | foo            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           |             | foo            |
     * response is ok
     * user requests count of all botanical info
     * response is "1"
@@ -128,22 +128,22 @@ Feature: Integration tests regards botanical info managements
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
       |           | plant1       |         | PURCHASED |      |                |                |        |          |
     * user adds new plant
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            |             | foo            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           |             | foo            |
     * response is ok
     * using this plant info
       | startDate  | personalName | endDate    | state | note        | purchasedPrice | currencySymbol | seller       | location |
       | 2000-01-01 | plant2       | 2001-01-01 | ALIVE | Lorem Ipsum | 42             | $              | Green Market | Garden   |
     When user updates plant "plant1"
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            | RANDOM      | bar            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           | RANDOM      | bar            |
     Then response is ok
     * plant "plant2" has this info
       | startDate  | personalName | endDate    | state | note        | purchasedPrice | currencySymbol | seller       | location |
       | 2000-01-01 | plant2       | 2001-01-01 | ALIVE | Lorem Ipsum | 42             | $              | Green Market | Garden   |
     * plant "plant2" is
-      | avatar_id | avatar_url | avatar_mode | botanical_info |
-      |           |            | RANDOM      | bar            |
+      | avatar_id | avatar_mode | botanical_info |
+      |           | RANDOM      | bar            |
     When user requests count of all plants
     Then response is "1"
     When user requests count of all botanical info

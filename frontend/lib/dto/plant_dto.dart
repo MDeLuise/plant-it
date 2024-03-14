@@ -3,18 +3,20 @@ class PlantDTO {
   final PlantInfoDTO info;
   final int? ownerId;
   final String? avatarImageId;
-  final String? avatarImageUrl;
   final String? avatarMode;
   final int? diaryId;
+  final int? speciesId;
+  final String? species;
 
   PlantDTO({
     this.id,
     required this.info,
     this.ownerId,
     this.avatarImageId,
-    this.avatarImageUrl,
     this.avatarMode,
     this.diaryId,
+    this.speciesId,
+    this.species,
   });
 
   factory PlantDTO.fromJson(Map<String, dynamic> json) {
@@ -23,9 +25,10 @@ class PlantDTO {
       info: PlantInfoDTO.fromJson(json['info']),
       ownerId: json['ownerId'],
       avatarImageId: json['avatarImageId'],
-      avatarImageUrl: json['avatarImageUrl'],
       avatarMode: json['avatarMode'],
       diaryId: json['diaryId'],
+      speciesId: json['botanicalInfoId'],
+      species: json['botanicalInfoSpecies'],
     );
   }
 }

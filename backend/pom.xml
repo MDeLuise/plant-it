@@ -176,7 +176,7 @@
                                     <tasks>
                                         <echo>Copying files...</echo>
                                         <copy file="${project.basedir}/src/main/resources/upload-dir/dummy-image.jpg"
-                                              tofile="/tmp/plant-it/dummy-image.jpg"/>
+                                              tofile="/tmp/plant-it/3531aae7-486f-4650-a4e3-047d3755a759.jpeg"/>
                                     </tasks>
                                 </configuration>
                             </execution>

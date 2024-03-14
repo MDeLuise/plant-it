@@ -18,13 +18,13 @@ void main() async {
     if (prefs.containsKey('serverURL')) {
       final String? serverURL = prefs.getString("serverURL");
       if (serverURL != null) {
-        http.setBackendUrl(serverURL);
+        http.backendUrl = serverURL;
       }
     }
     if (prefs.containsKey('serverKey')) {
       final String? serverKey = prefs.getString("serverKey");
       if (serverKey != null) {
-        http.addAuthorizationHeader(serverKey);
+        http.key = serverKey;
       }
     }
   }

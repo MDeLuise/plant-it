@@ -15,14 +15,14 @@ public class PlantDTO {
     private Long ownerId;
     @Schema(description = "ID of the plant's avatar.")
     private String avatarImageId;
-    @Schema(description = "URL of the plant's avatar.")
-    private String avatarImageUrl;
     @Schema(description = "Avatar mode of the plant.")
     private String avatarMode;
     @Schema(description = "ID of the plant's diary.", accessMode = Schema.AccessMode.READ_ONLY)
     private Long diaryId;
     @Schema(description = "Botanical info ID of the plant.", accessMode = Schema.AccessMode.WRITE_ONLY)
     private Long botanicalInfoId;
+    @Schema(description = "Botanical info species of the plant.", accessMode = Schema.AccessMode.READ_ONLY)
+    private String botanicalInfoSpecies;
 
 
     public PlantDTO() {
@@ -80,16 +80,6 @@ public class PlantDTO {
     }
 
 
-    public String getAvatarImageUrl() {
-        return avatarImageUrl;
-    }
-
-
-    public void setAvatarImageUrl(String avatarImageUrl) {
-        this.avatarImageUrl = avatarImageUrl;
-    }
-
-
     public Long getDiaryId() {
         return diaryId;
     }
@@ -110,6 +100,16 @@ public class PlantDTO {
     }
 
 
+    public String getBotanicalInfoSpecies() {
+        return botanicalInfoSpecies;
+    }
+
+
+    public void setBotanicalInfoSpecies(String botanicalInfoSpecies) {
+        this.botanicalInfoSpecies = botanicalInfoSpecies;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,7 +121,6 @@ public class PlantDTO {
         final PlantDTO plantDTO = (PlantDTO) o;
         return Objects.equals(id, plantDTO.id) && Objects.equals(info, plantDTO.info) &&
                    Objects.equals(ownerId, plantDTO.ownerId) && Objects.equals(avatarImageId, plantDTO.avatarImageId) &&
-                   Objects.equals(avatarImageUrl, plantDTO.avatarImageUrl) &&
                    Objects.equals(avatarMode, plantDTO.avatarMode) && Objects.equals(diaryId, plantDTO.diaryId) &&
                    Objects.equals(botanicalInfoId, plantDTO.botanicalInfoId);
     }
@@ -130,6 +129,6 @@ public class PlantDTO {
     @Override
     public int hashCode() {
         return Objects.hash(
-            id, info, ownerId, avatarImageId, avatarImageUrl, avatarMode, diaryId, botanicalInfoId);
+            id, info, ownerId, avatarImageId, avatarMode, diaryId, botanicalInfoId);
     }
 }

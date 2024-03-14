@@ -71,10 +71,9 @@ public class ImageController {
     public ResponseEntity<Resource> getContent(@PathVariable("id") String id) {
         try {
             final ImageContentResponse imageContent = imageStorageService.getImageContent(id);
-            final EntityImage entityImage = imageStorageService.get(id);
             final HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(entityImage.getContentType()));
-            final ByteArrayResource resource = new ByteArrayResource(imageContent.content());
+            headers.setContentType(imageContent.getType());
+            final ByteArrayResource resource = new ByteArrayResource(imageContent.getContent());
             return ResponseEntity.ok()
                                  .headers(headers)
                                  .contentLength(resource.contentLength())

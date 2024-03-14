@@ -144,9 +144,9 @@
             <column name="id" value="3531aae7-486f-4650-a4e3-047d3755a759"/>
             <column name="image_type" value="1"/>
             <column name="create_on" value="${now}"/>
-            <column name="type" value="jpg"/>
-            <column name="path" value="/tmp/plant-it/3531aae7-486f-4650-a4e3-047d3755a759.jpg"/>
+            <column name="path" value="/tmp/plant-it/3531aae7-486f-4650-a4e3-047d3755a759.jpeg"/>
             <column name="botanical_info_entity_id" value="97"/>
+            <column name="content_type" value="image/jpeg"/>
         </insert>
     </changeSet>
 

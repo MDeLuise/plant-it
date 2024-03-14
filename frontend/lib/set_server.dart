@@ -28,7 +28,7 @@ class _SetServerState extends State<SetServer> {
     try {
       String url = _backendController.text;
       url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
-      widget.env.http.setBackendUrl("$url/api/");
+      widget.env.http.backendUrl = "$url/api/";
       widget.env.prefs.setString("serverURL", "$url/api/");
       final response = await widget.env.http
           .get('info/ping')

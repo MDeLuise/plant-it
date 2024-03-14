@@ -250,7 +250,7 @@
             <column name="url" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
-            <column name="type" type="varchar(10)">
+            <column name="content_type" type="varchar(10)">
                 <constraints nullable="true"/>
             </column>
             <column name="path" type="varchar(255)">

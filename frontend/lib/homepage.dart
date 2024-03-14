@@ -1,7 +1,9 @@
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
-import 'package:plant_it/environment.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:plant_it/environment.dart';
 
 class HomePage extends StatelessWidget {
   final Environment env;
@@ -15,18 +17,15 @@ class HomePage extends StatelessWidget {
       height: height * (isSmallScreen(context) ? .7 : .5),
       child: Swiper(
         itemBuilder: (context, index) {
-          // return Image.network(
-          //   "https://via.placeholder.com/350x150",
-          //   fit: BoxFit.fill,
-          // );
           return PlantCard(
-            name: "Plant $index",
-            species: "Species $index",
-            imageUrl: "https://picsum.photos/${600 + index}",
+            name: env.plants![index].info.personalName,
+            species: env.plants![index].species!,
+            imageId: env.plants![index].avatarImageId!,
+            env: env,
           );
         },
         loop: false,
-        itemCount: 10,
+        itemCount: env.plants?.length ?? 0,
         //pagination: const SwiperPagination(),
         scale: isSmallScreen(context) ? .7 : .4,
         viewportFraction: isSmallScreen(context) ? .5 : .2,
@@ -38,16 +37,43 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class PlantCard extends StatelessWidget {
+class PlantCard extends StatefulWidget {
   final String name;
   final String species;
-  final String? imageUrl;
+  final Environment env;
+  final String imageId;
+  late final String _imageUrl;
 
-  const PlantCard(
-      {super.key,
-      required this.name,
-      required this.species,
-      required this.imageUrl});
+  PlantCard({
+    super.key,
+    required this.name,
+    required this.species,
+    required this.env,
+    required this.imageId,
+  }) {
+    _imageUrl = "image/content/$imageId";
+  }
+
+  @override
+  State<PlantCard> createState() => _PlantCard();
+}
+
+class _PlantCard extends State<PlantCard> {
+  String? _url;
+
+  @override
+  void initState() {
+    super.initState();
+    loadImageV1(widget._imageUrl, widget.env.http.key!);
+  }
+
+  void loadImageV1(String url, String key) async {
+    final response = await widget.env.http.get(url);
+    final blob = response.bodyBytes;
+    setState(() {
+      _url = 'data:image/jpg;base64,${base64Encode(blob)}';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +84,9 @@ class PlantCard extends StatelessWidget {
           child: Container(
               decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: imageUrl != null
+            image: _url != null
                 ? DecorationImage(
-                    image: NetworkImage(imageUrl!),
+                    image: CachedNetworkImageProvider(_url!),
                     fit: BoxFit.cover,
                   )
                 : null,
@@ -72,10 +98,10 @@ class PlantCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  widget.name,
                 ),
                 Text(
-                  species,
+                  widget.species,
                   style: const TextStyle(color: Colors.grey),
                 ),
               ],

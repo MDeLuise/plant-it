@@ -179,9 +179,9 @@ class FileSystemImageStorageServiceUnitTests {
         Mockito.when(imageRepository.findById(imageId)).thenReturn(Optional.of(toGet));
 
         final ImageContentResponse result = fileSystemImageStorageService.getImageContent(imageId);
-        Assertions.assertThat(result.content()).as("content is correct")
+        Assertions.assertThat(result.getContent()).as("content is correct")
                   .isEqualTo(content);
-        Assertions.assertThat(result.type().toString()).as("content is correct")
+        Assertions.assertThat(result.getType().toString()).as("content is correct")
                   .isEqualTo("image/" + type);
     }
 
