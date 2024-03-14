@@ -31,5 +31,6 @@
   "sentOTPCode": "Please insert the code sent by email at: ",
   "verify": "Verify",
   "resendCode": "Resend code",
-  "otpCode": "OTP code"
+  "otpCode": "OTP code",
+  "splashLoading": "Beep boop beep... Loading data from the server!"
 }

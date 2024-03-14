@@ -3,8 +3,39 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/template.dart';
+import 'package:plant_it/splash_screen.dart';
+
+Future<void> fetchAndSetEventTypes(
+    BuildContext context, Environment env) async {
+  try {
+    final response = await env.http.get("diary/entry/type");
+    if (response.statusCode == 200) {
+      final List<dynamic> responseBody = json.decode(response.body);
+      final List<String> eventTypes = List<String>.from(responseBody);
+      env.eventTypes = eventTypes;
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    showSnackbar(context, SnackBarType.fail, e.toString());
+  }
+}
+
+Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
+  try {
+    final response = await env.http.get("plant");
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      final List<dynamic> plantJsonList = responseBody["content"];
+      env.plants =
+          plantJsonList.map((json) => PlantDTO.fromJson(json)).toList();
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    showSnackbar(context, SnackBarType.fail, e.toString());
+  }
+}
 
 const int screenSizeTreshold = 600;
 
@@ -69,7 +100,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => TemplatePage(env: env),
+          builder: (context) => SplashPage(env: env),
         ),
       );
     } else if (response.statusCode == 404) {
@@ -82,7 +113,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TemplatePage(env: env),
+            builder: (context) => SplashPage(env: env),
           ),
         );
       } else {

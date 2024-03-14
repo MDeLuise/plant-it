@@ -6,8 +6,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/homepage.dart';
 import 'package:plant_it/login.dart';
-import 'package:plant_it/template.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'localizations_injector.dart';
@@ -90,6 +90,11 @@ void main() {
     when(http.get('api-key/name/$appKey')).thenAnswer((_) => Future.value(Response(
         '{"id": 1, "name": "user_key_1709710168787", "value": "$appKey", "createdOn": "2024-03-06T07:29:28.787+00:00"}',
         200)));
+    when(http.get('diary/entry/type'))
+        .thenAnswer((_) => Future.value(Response("{[]}", 200)));
+    when(http.get('plant'))
+        .thenAnswer((_) => Future.value(Response('{"content": []}', 200)));
+    when(env.plants).thenReturn([]);
 
     // Act
     await tester.pumpWidget(LocalizationsInjector(
@@ -105,7 +110,7 @@ void main() {
     // Assert and verify
     verify(prefs.setString('serverKey', appKey)).called(1);
     verify(navigatorObserver.didPush(any, any));
-    expect(find.byType(TemplatePage), findsOneWidget);
+    expect(find.byType(HomePage), findsOneWidget);
   });
 
   testWidgets('Correct username and password with no previous key, then login',
@@ -128,6 +133,11 @@ void main() {
         404)));
     when(http.post("api-key/", {"name": appKey}))
         .thenAnswer((_) => Future.value(Response(appKey, 200)));
+        when(http.get('diary/entry/type'))
+        .thenAnswer((_) => Future.value(Response("{[]}", 200)));
+    when(http.get('plant'))
+        .thenAnswer((_) => Future.value(Response('{"content": []}', 200)));
+    when(env.plants).thenReturn([]);
 
     // Act
     await tester.pumpWidget(LocalizationsInjector(
@@ -143,6 +153,6 @@ void main() {
     // Assert and verify
     verify(prefs.setString('serverKey', appKey)).called(1);
     verify(navigatorObserver.didPush(any, any));
-    expect(find.byType(TemplatePage), findsOneWidget);
+    expect(find.byType(HomePage), findsOneWidget);
   });
 }

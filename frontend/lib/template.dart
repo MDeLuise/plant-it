@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:plant_it/commons.dart';
-import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:plant_it/homepage.dart';
@@ -36,29 +32,10 @@ class _TemplatePageState extends State<TemplatePage> {
   void initState() {
     super.initState();
     _env = widget.env;
-    // _fetchEventTypes()
-    //     .whenComplete(_fetchPlants)
-    //     .whenComplete(() => _bottombarPages = [
-    //           HomePage(
-    //             env: _env,
-    //           ),
-    //           //_buildHomePage(),
-    //           EventsPage(
-    //             env: _env,
-    //           ),
-    //           SeachPage(
-    //             env: _env,
-    //           ),
-    //           MorePage(
-    //             env: _env,
-    //           ),
-    //         ])
-    //     .whenComplete(() => setState(() {}));
     _bottombarPages = [
-      // HomePage(
-      //   env: _env,
-      // ),
-      _buildHomePage(),
+      HomePage(
+        env: _env,
+      ),
       EventsPage(
         env: _env,
       ),
@@ -69,56 +46,6 @@ class _TemplatePageState extends State<TemplatePage> {
         env: _env,
       ),
     ];
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _fetchEventTypes();
-      await _fetchPlants();
-      setState(() {});
-    });
-  }
-
-  Future<void> _fetchEventTypes() async {
-    try {
-      final response = await _env.http.get("diary/entry/type");
-      if (response.statusCode == 200) {
-        final List<dynamic> responseBody = json.decode(response.body);
-        final List<String> eventTypes = List<String>.from(responseBody);
-        _env.eventTypes = eventTypes;
-      }
-    } catch (e) {
-      if (!context.mounted) return;
-      showSnackbar(context, SnackBarType.fail, e.toString());
-    }
-  }
-
-  Future<void> _fetchPlants() async {
-    try {
-      final response = await _env.http.get("plant");
-      if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        final List<dynamic> plantJsonList = responseBody["content"];
-        _env.plants =
-            plantJsonList.map((json) => PlantDTO.fromJson(json)).toList();
-      }
-    } catch (e) {
-      if (!context.mounted) return;
-      showSnackbar(context, SnackBarType.fail, e.toString());
-    }
-  }
-
-  Widget _buildHomePage() {
-    return FutureBuilder<void>(
-      future: Future.wait([_fetchEventTypes(), _fetchPlants()]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return HomePage(env: _env);
-        }
-      },
-    );
   }
 
   @override

@@ -31,5 +31,6 @@
   "sentOTPCode": "Inserisci il codice inviato all'indirizzo: ",
   "verify": "Verify",
   "resendCode": "Resend code",
-  "otpCode": "Codice OTP"
+  "otpCode": "Codice OTP",
+  "splashLoading": "Beep boop beep... Sto scaricando i dati dal server!"
 }

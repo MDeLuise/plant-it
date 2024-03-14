@@ -161,28 +161,28 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
   }
 
   @override
-  void addAuthorizationHeader(String? key) => super.noSuchMethod(
-        Invocation.method(
-          #addAuthorizationHeader,
-          [key],
+  set backendUrl(String? _backendUrl) => super.noSuchMethod(
+        Invocation.setter(
+          #backendUrl,
+          _backendUrl,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeAuthorizationHeader() => super.noSuchMethod(
-        Invocation.method(
-          #removeAuthorizationHeader,
-          [],
+  set key(String? _key) => super.noSuchMethod(
+        Invocation.setter(
+          #key,
+          _key,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void setBackendUrl(String? url) => super.noSuchMethod(
-        Invocation.method(
-          #setBackendUrl,
-          [url],
+  set jwt(String? _jwt) => super.noSuchMethod(
+        Invocation.setter(
+          #jwt,
+          _jwt,
         ),
         returnValueForMissingStub: null,
       );
@@ -271,24 +271,6 @@ class MockAppHttpClient extends _i1.Mock implements _i3.AppHttpClient {
   void close() => super.noSuchMethod(
         Invocation.method(
           #close,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void addJwt(String? jwt) => super.noSuchMethod(
-        Invocation.method(
-          #addJwt,
-          [jwt],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void removeJwt() => super.noSuchMethod(
-        Invocation.method(
-          #removeJwt,
           [],
         ),
         returnValueForMissingStub: null,
