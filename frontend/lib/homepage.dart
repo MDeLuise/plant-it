@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_it/commons.dart';
-import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/horizontal_list.dart';
 
 class HomePage extends StatelessWidget {
   final Environment env;
@@ -11,29 +10,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    //return const Center(child: Text("Home"));
-    return SizedBox(
-      height: height * (isSmallScreen(context) ? .7 : .5),
-      child: Swiper(
-        itemBuilder: (context, index) {
-          return PlantCard(
-            name: env.plants![index].info.personalName,
-            species: env.plants![index].species!,
-            imageId: env.plants![index].avatarImageId!,
-            env: env,
-          );
-        },
-        loop: false,
-        itemCount: env.plants?.length ?? 0,
-        //pagination: const SwiperPagination(),
-        scale: isSmallScreen(context) ? .7 : .4,
-        viewportFraction: isSmallScreen(context) ? .5 : .2,
-        containerWidth: 200,
-        containerHeight: 400,
-        //control: const SwiperControl(),
-      ),
-    );
+    return HorizontalList(
+        cards: env.plants!
+            .map((e) => PlantCard(
+                  name: e.info.personalName,
+                  species: e.species!,
+                  env: env,
+                  imageId: e.avatarImageId!,
+                ))
+            .toList());
   }
 }
 
@@ -75,6 +60,66 @@ class _PlantCard extends State<PlantCard> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Expanded(
+  //         child: Container(
+  //           decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(10),
+  //             image: _url != null
+  //                 ? DecorationImage(
+  //                     image: CachedNetworkImageProvider(_url!),
+  //                     fit: BoxFit.cover,
+  //                   )
+  //                 : null,
+  //           ),
+  //           child: Align(
+  //             alignment: Alignment.bottomLeft,
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(8.0),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   Container(
+  //                     width: double.infinity,
+  //                     decoration: BoxDecoration(
+  //                       borderRadius: BorderRadius.circular(10),
+  //                       color: Colors.black.withOpacity(0.3),
+  //                     ),
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         Text(
+  //                           widget.name,
+  //                           softWrap: false,
+  //                           overflow: TextOverflow.ellipsis,
+  //                           style: TextStyle(color: Colors.white),
+  //                         ),
+  //                         Text(
+  //                           widget.species,
+  //                           softWrap: false,
+  //                           overflow: TextOverflow.ellipsis,
+  //                           style: const TextStyle(color: Colors.white),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -99,9 +144,13 @@ class _PlantCard extends State<PlantCard> {
               children: [
                 Text(
                   widget.name,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   widget.species,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.grey),
                 ),
               ],
