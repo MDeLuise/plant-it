@@ -124,18 +124,18 @@ class EventCard extends StatelessWidget {
     Color backgroundColor = Colors.grey[200]!; // Default color
 
     Map<String, Color> typeColors = {
-      'SEEDING': const Color.fromRGBO(23, 122, 105, .4),
-      'WATERING': const Color.fromRGBO(10, 86, 217, .4),
-      'FERTILIZING': const Color.fromRGBO(240, 50, 46, .4),
-      'BIOSTIMULATING': const Color.fromRGBO(232, 122, 37, .4),
+      'SEEDING': const Color.fromRGBO(23, 122, 105, 1),
+      'WATERING': Color.fromARGB(255, 55, 91, 159),
+      'FERTILIZING': Color.fromARGB(255, 199, 26, 24),
+      'BIOSTIMULATING': Color.fromARGB(255, 203, 106, 32),
       'MISTING': const Color.fromRGBO(0, 62, 185, 0.4),
-      'TRANSPLANTING': const Color.fromRGBO(201, 135, 102, .4),
-      'WATER_CHANGING': const Color.fromRGBO(40, 108, 169, .4),
-      'OBSERVATION': const Color.fromRGBO(105, 105, 105, 0.4),
-      'TREATMENT': const Color.fromRGBO(185, 23, 50, .4),
-      'PROPAGATING': const Color.fromRGBO(17, 96, 50, .4),
-      'PRUNING': const Color.fromARGB(102, 2, 64, 28),
-      'REPOTTING': const Color.fromRGBO(144, 85, 67, .4),
+      'TRANSPLANTING': Color.fromARGB(255, 175, 118, 89),
+      'WATER_CHANGING': const Color.fromRGBO(40, 108, 169, 1),
+      'OBSERVATION': const Color.fromRGBO(105, 105, 105, 1),
+      'TREATMENT': const Color.fromRGBO(185, 23, 50, 1),
+      'PROPAGATING': const Color.fromRGBO(17, 96, 50, 1),
+      'PRUNING': Color.fromARGB(102, 62, 6, 183),
+      'REPOTTING': const Color.fromRGBO(144, 85, 67, 1),
     };
 
     if (typeColors.containsKey(action)) {
@@ -151,16 +151,16 @@ class EventCard extends StatelessWidget {
     final Map<String, IconData> typeIcons = {
       'SEEDING': Icons.grass_outlined,
       'WATERING': Icons.water_drop_outlined,
-      'FERTILIZING': Icons.eco_outlined,
-      'BIOSTIMULATING': Icons.eco_outlined,
-      'MISTING': Icons.water_damage_outlined,
-      'TRANSPLANTING': Icons.swap_vert_outlined,
+      'FERTILIZING': Icons.lunch_dining_outlined,
+      'BIOSTIMULATING': Icons.battery_charging_full_outlined,
+      'MISTING': Icons.shower_outlined,
+      'TRANSPLANTING': Icons.add_home_outlined,
       'WATER_CHANGING': Icons.waves_outlined,
       'OBSERVATION': Icons.visibility_outlined,
-      'TREATMENT': Icons.healing_outlined,
-      'PROPAGATING': Icons.crop_outlined,
+      'TREATMENT': Icons.science_outlined,
+      'PROPAGATING': Icons.child_friendly_outlined,
       'PRUNING': Icons.cut_outlined,
-      'REPOTTING': Icons.vpn_key_outlined,
+      'REPOTTING': Icons.cached_outlined,
     };
 
     if (typeIcons.containsKey(action)) {
@@ -168,7 +168,7 @@ class EventCard extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(7.0), // Increased padding
+      padding: const EdgeInsets.all(8.0), // Increased padding
       child: SizedBox(
         width: double.infinity, // Limit the width of the card
         child: Card(
@@ -176,47 +176,49 @@ class EventCard extends StatelessWidget {
           color: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.circular(15.0), // Increased border radius
+                BorderRadius.circular(10.0), // Increased border radius
           ),
           child: Padding(
-            padding: const EdgeInsets.all(9.0), // Increased padding
+            padding: const EdgeInsets.all(20.0), // Increased padding
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    actionIcon,
-                    size: 40,
-                    color: const Color.fromARGB(255, 237, 237, 237),
-                  ),
-                ), // Icon representing the action
-                const SizedBox(
-                    width: 20), // Add some space between icon and text
+                // Add some space between icon and text
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '$formattedDate, $formattedTimePassed',
+                        '$formattedDate ($formattedTimePassed)',
                         style: const TextStyle(
-                            fontSize: 16, color: Colors.black), // Larger text
+                            fontSize: 16,
+                            color: Color.fromARGB(
+                                255, 216, 216, 216)), // Larger text
                       ),
                       const SizedBox(
                           height: 3), // Add some space between text elements
                       Text(
                         plant,
                         style: const TextStyle(
-                            fontSize: 16, color: Colors.black), // Larger text
+                            fontSize: 13,
+                            color: Color.fromARGB(
+                                255, 180, 180, 180)), // Larger text
                       ),
                     ],
                   ),
                 ),
-                const Align(
+
+                Align(
                   alignment: Alignment.center,
-                  child: Icon(Icons.arrow_forward_ios,
-                      color: Colors.black), // Right arrow icon
-                ),
+                  child: Opacity(
+                    opacity: .5,
+                    child: Icon(
+                      actionIcon,
+                      size: 40,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ),
+                ), // Icon representing the action
               ],
             ),
           ),
