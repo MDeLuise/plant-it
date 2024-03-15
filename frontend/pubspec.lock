@@ -286,6 +286,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_advanced_avatar:
+    dependency: "direct main"
+    description:
+      name: flutter_advanced_avatar
+      sha256: "29f5d1586075a2ee5ce462fe25b9aa7179a157697260f542a05c5293a5bda8cc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   flutter_cache_manager:
     dependency: transitive
     description:

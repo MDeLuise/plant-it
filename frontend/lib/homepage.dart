@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/homepage_header.dart';
 import 'package:plant_it/plant_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,8 +9,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlantList(
-      env: env,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        HomePageHeader(),
+        PlantList(
+          env: env,
+        ),
+      ],
     );
   }
 }

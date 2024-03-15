@@ -63,7 +63,7 @@ class _PlantList extends State<PlantList> {
           const SizedBox(height: 16),
           SizedBox(
             height: screenSize.width *
-                .8, // height: screenSize.width * .8 // screenSize.height * .55
+                .7, // height: screenSize.width * .8 // screenSize.height * .55
             child: PageView.builder(
               itemCount: widget.env.plants?.length ?? 0,
               controller: controller,
@@ -157,22 +157,24 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
         Expanded(
           child: Skeletonizer(
             enabled: _loading,
-            containersColor: Colors.red,
             effect: const PulseEffect(
               from: Colors.grey,
               to: Color.fromARGB(255, 207, 207, 207),
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: imageToDisplay,
-                  //alignment: Alignment(
-                  //    widget.horizontalSlide, 0), // this does the parallax
-                  fit: BoxFit.cover,
+            child: AspectRatio(
+              aspectRatio: 2 / 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: imageToDisplay,
+                    //alignment: Alignment(
+                    //    widget.horizontalSlide, 0), // this does the parallax
+                    fit: BoxFit.cover,
+                  ),
                 ),
+                //alignment: Alignment(widget.horizontalSlide, 0),
               ),
-              //alignment: Alignment(widget.horizontalSlide, 0),
             ),
           ),
         ),
