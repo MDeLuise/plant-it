@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/plant_details.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PlantList extends StatefulWidget {
@@ -29,6 +30,28 @@ class _PlantList extends State<PlantList> {
     super.initState();
   }
 
+  Route _goToDetails(int plantIndex) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => PlantDetails(
+        env: widget.env,
+        plant: widget.env.plants![plantIndex],
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -42,17 +65,19 @@ class _PlantList extends State<PlantList> {
                 .8, // height: screenSize.width * .8 // screenSize.height * .55
             child: PageView.builder(
               itemCount: widget.env.plants?.length ?? 0,
-              // controller: PageController(
-              //   viewportFraction: isSmallScreen(context) ? .8 : .3,
-              // ),
               controller: controller,
               itemBuilder: (_, index) {
-                return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ParallaxPlantCard(
-                        horizontalSlide: (index - page).clamp(-1, 1).toDouble(),
-                        plant: widget.env.plants![index],
-                        http: widget.env.http));
+                return GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => Navigator.of(context).push(_goToDetails(index)),
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ParallaxPlantCard(
+                          horizontalSlide:
+                              (index - page).clamp(-1, 1).toDouble(),
+                          plant: widget.env.plants![index],
+                          http: widget.env.http)),
+                );
               },
             ),
           ),
@@ -127,8 +152,8 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
               image: _url != null
                   ? DecorationImage(
                       image: CachedNetworkImageProvider(_url!),
-                      alignment: Alignment(
-                          widget.horizontalSlide, 0), // this does the parallax
+                      //alignment: Alignment(
+                      //    widget.horizontalSlide, 0), // this does the parallax
                       fit: BoxFit.cover,
                     )
                   : null,

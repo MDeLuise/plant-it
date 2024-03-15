@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.3.1
   easy_splash_screen: ^1.0.4
   smooth_page_indicator: ^1.1.0
+  #nested_scroll_view_plus: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
