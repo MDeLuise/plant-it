@@ -8,7 +8,7 @@ class MorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('More'),
+      child: Text("More"),
     );
   }
 }

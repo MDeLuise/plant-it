@@ -123,19 +123,19 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color backgroundColor = Colors.grey[200]!; // Default color
 
-    Map<String, Color> typeColors = {
-      'SEEDING': const Color.fromRGBO(23, 122, 105, 1),
+    const Map<String, Color> typeColors = {
+      'SEEDING': Color.fromRGBO(23, 122, 105, 1),
       'WATERING': Color.fromARGB(255, 55, 91, 159),
       'FERTILIZING': Color.fromARGB(255, 199, 26, 24),
       'BIOSTIMULATING': Color.fromARGB(255, 203, 106, 32),
-      'MISTING': const Color.fromRGBO(0, 62, 185, 0.4),
+      'MISTING': Color.fromRGBO(0, 62, 185, 0.4),
       'TRANSPLANTING': Color.fromARGB(255, 175, 118, 89),
-      'WATER_CHANGING': const Color.fromRGBO(40, 108, 169, 1),
-      'OBSERVATION': const Color.fromRGBO(105, 105, 105, 1),
-      'TREATMENT': const Color.fromRGBO(185, 23, 50, 1),
-      'PROPAGATING': const Color.fromRGBO(17, 96, 50, 1),
+      'WATER_CHANGING': Color.fromRGBO(40, 108, 169, 1),
+      'OBSERVATION': Color.fromRGBO(105, 105, 105, 1),
+      'TREATMENT': Color.fromRGBO(185, 23, 50, 1),
+      'PROPAGATING': Color.fromRGBO(17, 96, 50, 1),
       'PRUNING': Color.fromARGB(102, 62, 6, 183),
-      'REPOTTING': const Color.fromRGBO(144, 85, 67, 1),
+      'REPOTTING': Color.fromRGBO(144, 85, 67, 1),
     };
 
     if (typeColors.containsKey(action)) {
@@ -187,6 +187,7 @@ class EventCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         '$formattedDate ($formattedTimePassed)',
