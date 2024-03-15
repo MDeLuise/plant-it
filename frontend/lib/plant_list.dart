@@ -6,6 +6,7 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PlantList extends StatefulWidget {
@@ -125,6 +126,7 @@ class ParallaxPlantCard extends StatefulWidget {
 
 class _ParallaxPlantCard extends State<ParallaxPlantCard> {
   String? _url;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -137,28 +139,41 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
     final blob = response.bodyBytes;
     setState(() {
       _url = 'data:image/jpg;base64,${base64Encode(blob)}';
+      _loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider<Object> imageToDisplay =
+        const AssetImage("assets/images/no-image.png");
+    if (_url != null) {
+      imageToDisplay = CachedNetworkImageProvider(_url!);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: _url != null
-                  ? DecorationImage(
-                      image: CachedNetworkImageProvider(_url!),
-                      //alignment: Alignment(
-                      //    widget.horizontalSlide, 0), // this does the parallax
-                      fit: BoxFit.cover,
-                    )
-                  : null,
+          child: Skeletonizer(
+            enabled: _loading,
+            containersColor: Colors.red,
+            effect: const PulseEffect(
+              from: Colors.grey,
+              to: Color.fromARGB(255, 207, 207, 207),
             ),
-            //alignment: Alignment(widget.horizontalSlide, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: imageToDisplay,
+                  //alignment: Alignment(
+                  //    widget.horizontalSlide, 0), // this does the parallax
+                  fit: BoxFit.cover,
+                ),
+              ),
+              //alignment: Alignment(widget.horizontalSlide, 0),
+            ),
           ),
         ),
         Padding(

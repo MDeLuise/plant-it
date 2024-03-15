@@ -35,7 +35,6 @@ dependencies:
   http: ^1.2.1
   shared_preferences: ^2.2.2
   flutter_svg: ^2.0.10+1
-  #awesome_snackbar_content: ^0.1.3
   flutter_icon_snackbar: ^1.1.6
   animated_bottom_navigation_bar: ^1.3.3
   flutter_side_menu: ^0.4.0
@@ -45,6 +44,8 @@ dependencies:
   cached_network_image: ^3.3.1
   easy_splash_screen: ^1.0.4
   smooth_page_indicator: ^1.1.0
+  skeletonizer: ^1.1.0
+  #awesome_snackbar_content: ^0.1.3
   #nested_scroll_view_plus: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
