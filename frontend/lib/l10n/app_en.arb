@@ -32,5 +32,75 @@
   "verify": "Verify",
   "resendCode": "Resend code",
   "otpCode": "OTP code",
-  "splashLoading": "Beep boop beep... Loading data from the server!"
+  "splashLoading": "Beep boop beep... Loading data from the server!",
+  "welcomeBack": "Welcome back",
+  "hello": "Hello, {userName}",
+  "@hello": {
+    "description": "A greeting to the user",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "search": "Search",
+  "today": "today",
+  "yesterday": "yesterday",
+  "nDaysAgo": "{count} {count, plural, =1{day} other{days}} ago",
+  "@nDaysAgo": {
+    "description": "Describle how many days ago an event happened",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "{count} {count, plural, =1{day} other{days}} in future (whaaat?)",
+  "@nDaysInFuture": {
+    "description": "Describle how many days in future an event happened",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "{count} {count, plural, =1{month} other{months}} ago",
+  "@nMonthsAgo": {
+    "description": "Describle how many months ago an event happened",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "{count} {count, plural, =1{year} other{years}} ago",
+  "@nYearsAgo": {
+    "description": "Describle how many years ago an event happened",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "event": "Event",
+  "plant": "Plant",
+  "or": "or",
+  "filter": "Filter",
+  "seeding": "seeding",
+  "watering": "watering",
+  "fertilizing": "fertilizing",
+  "biostimulating": "biostimulating",
+  "misting": "misting",
+  "transplanting": "transplanting",
+  "water_changing": "water changing",
+  "observation": "observation",
+  "treatment": "treatment",
+  "propagating": "propagating",
+  "pruning": "pruning",
+  "repotting": "repotting"
 }

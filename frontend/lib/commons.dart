@@ -7,6 +7,35 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/splash_screen.dart';
 
+String getLocaleEvent(BuildContext context, String event) {
+  final String lowercasedEvent = event.toLowerCase();
+  if (lowercasedEvent == "seeding") {
+    return AppLocalizations.of(context).seeding;
+  } else if (lowercasedEvent == "watering") {
+    return AppLocalizations.of(context).watering;
+  } else if (lowercasedEvent == "fertilizing") {
+    return AppLocalizations.of(context).fertilizing;
+  } else if (lowercasedEvent == "biostimulating") {
+    return AppLocalizations.of(context).biostimulating;
+  } else if (lowercasedEvent == "misting") {
+    return AppLocalizations.of(context).misting;
+  } else if (lowercasedEvent == "transplanting") {
+    return AppLocalizations.of(context).transplanting;
+  } else if (lowercasedEvent == "water_changing") {
+    return AppLocalizations.of(context).water_changing;
+  } else if (lowercasedEvent == "observation") {
+    return AppLocalizations.of(context).observation;
+  } else if (lowercasedEvent == "treatment") {
+    return AppLocalizations.of(context).treatment;
+  } else if (lowercasedEvent == "propagating") {
+    return AppLocalizations.of(context).propagating;
+  } else if (lowercasedEvent == "pruning") {
+    return AppLocalizations.of(context).treatment;
+  } else {
+    return AppLocalizations.of(context).repotting;
+  }
+}
+
 Future<void> fetchAndSetEventTypes(
     BuildContext context, Environment env) async {
   try {
@@ -144,6 +173,7 @@ Future<void> _login(Environment env, BuildContext context, String username,
     final responseBody = json.decode(response.body);
     if (response.statusCode == 200) {
       env.http.jwt = responseBody["jwt"]["value"];
+      await env.prefs.setString('username', username);
     } else {
       if (!context.mounted) return;
       final errorMessage = responseBody['message'];

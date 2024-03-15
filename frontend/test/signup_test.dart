@@ -170,6 +170,7 @@ void main() {
 
     // Assert and verify
     verify(prefs.setString('serverKey', appKey)).called(1);
+    verify(prefs.setString('username', request.username)).called(1);
     verify(navigatorObserver.didPush(any, any));
     expect(find.byType(HomePage), findsOneWidget);
   });

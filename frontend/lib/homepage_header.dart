@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePageHeader extends StatelessWidget {
-  const HomePageHeader({super.key});
+  final String username;
+  const HomePageHeader({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +18,8 @@ class HomePageHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Hello, user"),
-                Text(
-                  "Welcome back",
+                Text(AppLocalizations.of(context).hello(username)),
+                Text(AppLocalizations.of(context).welcomeBack,
                   style: TextStyle(color: Colors.grey),
                 ),
               ],
@@ -28,7 +29,7 @@ class HomePageHeader extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: AdvancedAvatar(
-                name: 'John Doe',
+                name: username,
                 style: TextStyle(color: Color.fromARGB(255, 156, 192, 172)),
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(24, 44, 37, 1),

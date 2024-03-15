@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldWithDropDown extends StatefulWidget {
@@ -166,7 +167,7 @@ class _TextFieldWithDropDownState extends State<TextFieldWithDropDown> {
                     horizontal: 10,
                     vertical: 8,
                   ),
-                  hintText: 'Search...',
+                  hintText: "${AppLocalizations.of(context).search}...",
                   hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),

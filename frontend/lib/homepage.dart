@@ -9,10 +9,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String username = env.prefs.getString("username") ?? "anonymous user";
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomePageHeader(),
+        HomePageHeader(username: username,),
         PlantList(
           env: env,
         ),

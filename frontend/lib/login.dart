@@ -191,20 +191,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
 
             // Divider
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                const Expanded(
                   child: Divider(),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    'or',
+                    AppLocalizations.of(context).or,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Divider(),
                 ),
               ],

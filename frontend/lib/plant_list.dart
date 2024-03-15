@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_http_client.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details.dart';
@@ -53,8 +54,7 @@ class _PlantList extends State<PlantList> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMobileView(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -102,6 +102,61 @@ class _PlantList extends State<PlantList> {
         ],
       ),
     );
+  }
+
+  Widget _buildDesktopView(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.all(22.0),
+      child: SizedBox(
+        height: screenSize.height * .5,
+        width: screenSize.width * .5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 200,
+              child: GridView.builder(
+                scrollDirection: Axis.horizontal,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent:
+                      200, // Change this value as per your requirement
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: widget.env.plants?.length ?? 0,
+                controller: controller,
+                itemBuilder: (_, index) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () =>
+                        Navigator.of(context).push(_goToDetails(index)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ParallaxPlantCard(
+                        horizontalSlide: (index - page).clamp(-1, 1).toDouble(),
+                        plant: widget.env.plants![index],
+                        http: widget.env.http,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isSmallScreen(context)) {
+      return _buildMobileView(context);
+    } else {
+      return _buildDesktopView(context);
+    }
   }
 }
 

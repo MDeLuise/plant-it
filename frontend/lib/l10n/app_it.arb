@@ -9,7 +9,7 @@
   "username": "Username",
   "password": "Password",
   "login": "Accedi",
-  "badCredentials": "Credenziali errate",
+  "badCredentials": "Password o utente errati",
   "loginMessage": "Bentornato su",
   "signupMessage": "Benvenuto su",
   "appName": "Plant-it",
@@ -32,5 +32,73 @@
   "verify": "Verify",
   "resendCode": "Resend code",
   "otpCode": "Codice OTP",
-  "splashLoading": "Beep boop beep... Sto scaricando i dati dal server!"
+  "splashLoading": "Beep boop beep... Sto scaricando i dati dal server!",
+  "welcomeBack": "Bentornato",
+  "hello": "Ciao, {userName}",
+  "@hello": {
+    "description": "Saluto all'utente",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Mario"
+      }
+    }
+  },
+  "search": "Cerca",
+  "nDaysAgo": "{count} {count, plural, =1{giorno} other{giorni}} fa",
+  "@nDaysAgo": {
+    "description": "Quanti giorni fa un evento è accaduto",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "{count} {count, plural, =1{giorno} other{giorni}} nel futuro (cosaaa?)",
+  "@nDaysInFuture": {
+    "description": "Quanti giorni nel futuro un evento è accaduto",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "{count} {count, plural, =1{mese} other{mesi}} fa",
+  "@nMonthsAgo": {
+    "description": "Quanti mesi fa un evento è accaduto",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "{count} {count, plural, =1{anno} other{anni}} fa",
+  "@nYearsAgo": {
+    "description": "Quanti anni fa un evento è accaduto",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "event": "Evento",
+  "plant": "Pianta",
+  "or": "oppure",
+  "filter": "Filtra",
+  "seeding": "seminazione",
+  "watering": "innaffiatura",
+  "fertilizing": "fertilizzazione",
+  "biostimulating": "biostimulazione",
+  "misting": "nebulizzato",
+  "transplanting": "trapianto",
+  "water_changing": "cambio acqua",
+  "observation": "osservazione",
+  "treatment": "trattamento",
+  "propagating": "propagazione",
+  "pruning": "potatura",
+  "repotting": "rinvaso"
 }

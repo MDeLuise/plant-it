@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'multiple_dropdown.dart';
 
@@ -39,9 +40,9 @@ class _FilterWidgetState extends State<FilterWidget> {
             },
             child: Row(
               children: [
-                const Text(
-                  'Filter',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context).filter,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
                   ),
@@ -65,7 +66,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                         : widget.env.plants!
                             .map((e) => e.info.personalName)
                             .toList(),
-                    text: "Plant",
+                    text: AppLocalizations.of(context).plant,
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -73,9 +74,9 @@ class _FilterWidgetState extends State<FilterWidget> {
                   child: TextFieldWithDropDown(
                     onSelectedItemsChanged: widget.onSelectedEventsChanged,
                     options: widget.env.eventTypes
-                        ?.map((e) => formatEventType(e))
+                        ?.map((e) => getLocaleEvent(context, e))
                         .toList() as List<String>,
-                    text: "Event",
+                    text: AppLocalizations.of(context).event,
                   ),
                 ),
               ],
@@ -99,23 +100,24 @@ class EventCard extends StatelessWidget {
     required this.date,
   });
 
-  String _formatTimePassed(Duration timePassed) {
+  String _formatTimePassed(BuildContext context, Duration timePassed) {
     if (timePassed.inDays == 0) {
-      return 'today';
+      return AppLocalizations.of(context).today;
     } else if (timePassed.inDays == 1) {
-      return 'yesterday';
+      return AppLocalizations.of(context).yesterday;
     } else if (timePassed.inDays < 30) {
       if (timePassed.inDays > 0) {
-        return '${timePassed.inDays} days ago';
+        return AppLocalizations.of(context).nDaysAgo(timePassed.inDays);
       } else {
-        return '${timePassed.inDays.abs()} days in future (whaaat?)';
+        return AppLocalizations.of(context)
+            .nDaysInFuture(timePassed.inDays.abs());
       }
     } else if (timePassed.inDays < 365) {
       final months = (timePassed.inDays / 30).floor();
-      return '$months months ago';
+      return AppLocalizations.of(context).nMonthsAgo(months);
     } else {
       final years = (timePassed.inDays / 365).floor();
-      return '$years years ago';
+      return AppLocalizations.of(context).nYearsAgo(years);
     }
   }
 
@@ -145,7 +147,7 @@ class EventCard extends StatelessWidget {
     final timePassed = DateTime.now().difference(date);
     final formattedDate =
         '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-    final formattedTimePassed = _formatTimePassed(timePassed);
+    final formattedTimePassed = _formatTimePassed(context, timePassed);
 
     IconData actionIcon = Icons.info; // Default icon
     final Map<String, IconData> typeIcons = {

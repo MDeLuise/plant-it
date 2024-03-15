@@ -214,20 +214,20 @@ class _SignupPageState extends State<SignupPage> {
             ),
 
             // Divider
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                const Expanded(
                   child: Divider(),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    'or',
-                    style: TextStyle(fontSize: 16),
+                    AppLocalizations.of(context).or,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Divider(),
                 ),
               ],
