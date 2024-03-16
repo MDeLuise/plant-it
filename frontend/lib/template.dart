@@ -104,7 +104,8 @@ class _TemplatePageState extends State<TemplatePage> {
                   // can not be in a separate _sideMenuPages = [...]. I think because _currentIndex == x is evaluated at declaration time?
                   SideMenuItemDataTile(
                       isSelected: _currentIndex == 0,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10)),
                       hasSelectedLine: false,
                       highlightSelectedColor: Colors.transparent,
                       onTap: () => setState(() => _currentIndex = 0),
