@@ -121,5 +121,7 @@
   "addNote": "Add note",
   "enterNote": "Enter note",
   "selectAtLeastOnePlant": "Select at least one plant",
-  "selectAtLeastOneEvent": "Select at least one event"
+  "selectAtLeastOneEvent": "Select at least one event",
+  "eventSuccessfullyUpdated": "Event updated successfully",
+  "editEvent": "Edit event"
 }

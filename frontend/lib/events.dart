@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/dto/event_dto.dart';
+import 'package:plant_it/edit_event.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'multiple_dropdown.dart';
+import 'dropdown.dart';
 
 class FilterWidget extends StatefulWidget {
   final Environment env;
@@ -59,7 +61,7 @@ class _FilterWidgetState extends State<FilterWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: TextFieldWithDropDown(
+                  child: TextFieldMultipleDropDown(
                     onSelectedItemsChanged: widget.onSelectedPlantsChanged,
                     options: widget.env.plants == null
                         ? []
@@ -71,7 +73,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                 ),
                 const SizedBox(width: 16.0),
                 Expanded(
-                  child: TextFieldWithDropDown(
+                  child: TextFieldMultipleDropDown(
                     onSelectedItemsChanged: widget.onSelectedEventsChanged,
                     options: widget.env.eventTypes
                         ?.map((e) => getLocaleEvent(context, e))
@@ -89,15 +91,19 @@ class _FilterWidgetState extends State<FilterWidget> {
 }
 
 class EventCard extends StatelessWidget {
+  final Environment env;
   final String action;
   final String plant;
   final DateTime date;
+  final EventDTO eventDTO;
 
   const EventCard({
     super.key,
+    required this.env,
     required this.action,
     required this.plant,
     required this.date,
+    required this.eventDTO,
   });
 
   String _formatTimePassed(BuildContext context, Duration timePassed) {
@@ -169,60 +175,64 @@ class EventCard extends StatelessWidget {
       actionIcon = typeIcons[action]!;
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0), // Increased padding
-      child: SizedBox(
-        width: double.infinity, // Limit the width of the card
-        child: Card(
-          elevation: 6,
-          color: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(10.0), // Increased border radius
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0), // Increased padding
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Add some space between icon and text
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$formattedDate ($formattedTimePassed)',
-                        style: const TextStyle(
-                            fontSize: 16,
-                            color: Color.fromARGB(
-                                255, 216, 216, 216)), // Larger text
-                      ),
-                      const SizedBox(
-                          height: 3), // Add some space between text elements
-                      Text(
-                        plant,
-                        style: const TextStyle(
-                            fontSize: 13,
-                            color: Color.fromARGB(
-                                255, 180, 180, 180)), // Larger text
-                      ),
-                    ],
-                  ),
-                ),
-
-                Align(
-                  alignment: Alignment.center,
-                  child: Opacity(
-                    opacity: .5,
-                    child: Icon(
-                      actionIcon,
-                      size: 40,
-                      color: Color.fromARGB(255, 255, 255, 255),
+    return GestureDetector(
+      onTap: () => goToPageSlidingUp(
+          context, EditEventPage(env: env, eventDTO: eventDTO)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0), // Increased padding
+        child: SizedBox(
+          width: double.infinity, // Limit the width of the card
+          child: Card(
+            elevation: 6,
+            color: backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(10.0), // Increased border radius
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0), // Increased padding
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Add some space between icon and text
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$formattedDate ($formattedTimePassed)',
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(
+                                  255, 216, 216, 216)), // Larger text
+                        ),
+                        const SizedBox(
+                            height: 3), // Add some space between text elements
+                        Text(
+                          plant,
+                          style: const TextStyle(
+                              fontSize: 13,
+                              color: Color.fromARGB(
+                                  255, 180, 180, 180)), // Larger text
+                        ),
+                      ],
                     ),
                   ),
-                ), // Icon representing the action
-              ],
+
+                  Align(
+                    alignment: Alignment.center,
+                    child: Opacity(
+                      opacity: .5,
+                      child: Icon(
+                        actionIcon,
+                        size: 40,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
+                  ), // Icon representing the action
+                ],
+              ),
             ),
           ),
         ),
@@ -292,6 +302,8 @@ class _EventsPageState extends State<EventsPage> {
           action: entry["type"],
           plant: entry["diaryTargetPersonalName"],
           date: DateTime.parse(entry["date"]),
+          eventDTO: EventDTO.fromJson(entry),
+          env: widget.env,
         );
       }).toList();
     } else {

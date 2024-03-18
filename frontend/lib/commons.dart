@@ -7,6 +7,18 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/splash_screen.dart';
 
+List<int> plantNamesToDiaryIds(List<PlantDTO> plants, List<String> names) {
+  final List<int> plantIds = [];
+  for (var i = 0; i < names.length; i++) {
+    for (var j = 0; j < plants.length; j++) {
+      if (plants[j].info.personalName == names[i]) {
+        plantIds.add(plants[j].diaryId!);
+      }
+    }
+  }
+  return plantIds;
+}
+
 void goToPageSlidingUp(BuildContext context, Widget widget) {
   Navigator.of(context).push(PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => widget,
@@ -27,28 +39,35 @@ void goToPageSlidingUp(BuildContext context, Widget widget) {
 
 String formatEvent(BuildContext context, String localeEvent) {
   String result;
-  if (localeEvent == AppLocalizations.of(context).seeding) {
+  String lowercasedLocaleEvent = localeEvent.toLowerCase();
+  if (lowercasedLocaleEvent == AppLocalizations.of(context).seeding) {
     result = "seeding";
-  } else if (localeEvent == AppLocalizations.of(context).watering) {
+  } else if (lowercasedLocaleEvent == AppLocalizations.of(context).watering) {
     result = "watering";
-  } else if (localeEvent == AppLocalizations.of(context).fertilizing) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).fertilizing) {
     result = "fertilizing";
-  } else if (localeEvent == AppLocalizations.of(context).biostimulating) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).biostimulating) {
     result = "biostimulating";
-  } else if (localeEvent == AppLocalizations.of(context).misting) {
+  } else if (lowercasedLocaleEvent == AppLocalizations.of(context).misting) {
     result = "misting";
-  } else if (localeEvent == AppLocalizations.of(context).transplanting) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).transplanting) {
     result = "transplanting";
-  } else if (localeEvent == AppLocalizations.of(context).water_changing) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).water_changing) {
     result = "water_changing";
-  } else if (localeEvent == AppLocalizations.of(context).observation) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).observation) {
     result = "observation";
-  } else if (localeEvent == AppLocalizations.of(context).treatment) {
+  } else if (lowercasedLocaleEvent == AppLocalizations.of(context).treatment) {
     result = "treatment";
-  } else if (localeEvent == AppLocalizations.of(context).propagating) {
+  } else if (lowercasedLocaleEvent ==
+      AppLocalizations.of(context).propagating) {
     result = "propagating";
-  } else if (localeEvent == AppLocalizations.of(context).treatment) {
-    result = "treatment";
+  } else if (lowercasedLocaleEvent == AppLocalizations.of(context).pruning) {
+    result = "pruning";
   } else {
     result = AppLocalizations.of(context).repotting;
   }

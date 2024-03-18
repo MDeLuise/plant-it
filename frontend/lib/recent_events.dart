@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -44,6 +45,8 @@ class _RecentEvents extends State<RecentEvents> {
           action: entry["type"],
           plant: entry["diaryTargetPersonalName"],
           date: DateTime.parse(entry["date"]),
+          eventDTO: EventDTO.fromJson(entry),
+          env: widget.env,
         );
       }).toList();
     } else {
@@ -64,6 +67,12 @@ class _RecentEvents extends State<RecentEvents> {
               action: "",
               plant: "",
               date: DateTime.now(),
+              eventDTO: EventDTO(
+                date: DateTime.now(),
+                diaryId: 42,
+                type: "42",
+              ),
+              env: widget.env,
             )));
   }
 

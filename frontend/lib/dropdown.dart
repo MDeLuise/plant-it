@@ -2,22 +2,23 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-class TextFieldWithDropDown extends StatefulWidget {
+class TextFieldMultipleDropDown extends StatefulWidget {
   final List<String> options;
   final String text;
   final Function(List<String>) onSelectedItemsChanged;
 
-  const TextFieldWithDropDown(
+  const TextFieldMultipleDropDown(
       {super.key,
       required this.options,
       required this.text,
       required this.onSelectedItemsChanged});
 
   @override
-  State<TextFieldWithDropDown> createState() => _TextFieldWithDropDownState();
+  State<TextFieldMultipleDropDown> createState() =>
+      _TextFieldMultipleDropDownState();
 }
 
-class _TextFieldWithDropDownState extends State<TextFieldWithDropDown> {
+class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
   final List<String> _selectedItems = [];
   final TextEditingController _textEditingController = TextEditingController();
 
@@ -188,6 +189,91 @@ class _TextFieldWithDropDownState extends State<TextFieldWithDropDown> {
               _textEditingController.clear();
             }
           },
+        ),
+      ),
+    );
+  }
+}
+
+class TextFieldSingleDropDown extends StatefulWidget {
+  final List<String> options;
+  final String text;
+  final Function(String) onSelectedItemsChanged;
+  final String? initialValue;
+
+  const TextFieldSingleDropDown({
+    super.key,
+    required this.options,
+    required this.text,
+    required this.onSelectedItemsChanged,
+    required this.initialValue,
+  });
+
+  @override
+  State<TextFieldSingleDropDown> createState() =>
+      _TextFieldSingleDropDownState();
+}
+
+class _TextFieldSingleDropDownState extends State<TextFieldSingleDropDown> {
+  String? selectedValue;
+
+  @override
+  void initState() {
+    selectedValue = widget.initialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          hint: Text(
+            widget.text,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+          items: widget.options
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ))
+              .toList(),
+          value: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value;
+              if (value != null) {
+                widget.onSelectedItemsChanged(value);
+              }
+            });
+          },
+          buttonStyleData: const ButtonStyleData(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            height: 50,
+            //width: 200,
+          ),
+          iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.arrow_drop_down,
+              ),
+              iconSize: 14,
+              iconEnabledColor: Colors.grey),
+          dropdownStyleData: const DropdownStyleData(
+            maxHeight: 300,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(24, 44, 37, 1),
+            ),
+          ),
+          menuItemStyleData:
+              const MenuItemStyleData(height: 40, padding: EdgeInsets.all(8)),
         ),
       ),
     );

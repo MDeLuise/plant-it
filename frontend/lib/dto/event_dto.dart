@@ -18,15 +18,18 @@ class EventDTO {
   });
 
   factory EventDTO.fromJson(Map<String, dynamic> json) {
-    return EventDTO(
+    final EventDTO result = EventDTO(
       id: json['id'],
       type: json['type'],
-      note: json['note'],
-      date: DateTime.parse(json['avatarImageId']),
+      date: DateTime.parse(json['date']),
       diaryId: json['diaryId'],
       plantId: json['diaryTargetId'],
-      plantName: json['diaryTargetInfoPersonalName'],
+      plantName: json['diaryTargetPersonalName'],
     );
+    if (json.containsKey("note")) {
+      result.note = json["note"];
+    }
+    return result;
   }
 
   Map<String, String> toMap() {
@@ -45,7 +48,7 @@ class EventDTO {
       map['plantId'] = diaryId.toString();
     }
     if (plantName != null) {
-      map['plantName'] = plantName!;
+      map['diaryTargetInfoPersonalName'] = plantName!;
     }
     return map;
   }

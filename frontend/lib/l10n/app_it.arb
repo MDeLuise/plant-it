@@ -119,5 +119,7 @@
   "addNote": "Aggiungi una nota",
   "enterNote": "Inserisci la nota",
   "selectAtLeastOnePlant": "Seleziona almeno una pianta",
-  "selectAtLeastOneEvent": "Seleziona almeno un evento"
+  "selectAtLeastOneEvent": "Seleziona almeno un evento",
+  "eventSuccessfullyUpdated": "Evento modificato correttamente",
+  "editEvent": "Modifica evento"
 }

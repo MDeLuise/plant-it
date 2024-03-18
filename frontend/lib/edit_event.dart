@@ -9,79 +9,71 @@ import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
 
-class AddNewEventPage extends StatefulWidget {
+class EditEventPage extends StatefulWidget {
   final Environment env;
+  final EventDTO eventDTO;
 
-  const AddNewEventPage({super.key, required this.env});
+  const EditEventPage({super.key, required this.env, required this.eventDTO});
 
   @override
-  State<StatefulWidget> createState() => _AddNewEventPage();
+  State<EditEventPage> createState() => _EditEventPage();
 }
 
-class _AddNewEventPage extends State<AddNewEventPage> {
+class _EditEventPage extends State<EditEventPage> {
   final DateFormat dateFormat = DateFormat('dd/MM/yy');
-  List<String> _linkedPlants = [];
-  List<String> _eventTypesToCreate = [];
-  DateTime _selectedDate = DateTime.now();
-  String? _note;
+  late String _linkedPlant;
+  late String _eventType;
+  final TextEditingController _noteController = TextEditingController();
+  late DateTime _selectedDate;
 
-  void _addEvent() async {
-    if (!_validate()) {
-      return;
+  @override
+  void initState() {
+    super.initState();
+    _linkedPlant = widget.eventDTO.plantName!;
+    _eventType = widget.eventDTO.type;
+    if (widget.eventDTO.note != null) {
+      _noteController.text = widget.eventDTO.note!;
     }
-    final List<int> plantIds =
-        plantNamesToDiaryIds(widget.env.plants!, _linkedPlants);
-    for (var i = 0; i < _eventTypesToCreate.length; i++) {
-      for (var j = 0; j < plantIds.length; j++) {
-        final EventDTO toCreate = EventDTO(
-            date: _selectedDate,
-            diaryId: plantIds[j],
-            type: formatEvent(context, _eventTypesToCreate[i]),
-            note: _note);
-        try {
-          final response =
-              await widget.env.http.post("diary/entry", toCreate.toMap());
-          final responseBody = json.decode(response.body);
-          if (response.statusCode != 200) {
-            showSnackbar(context, SnackBarType.fail, responseBody["message"]);
-            return;
-          }
-        } catch (e) {
-          showSnackbar(context, SnackBarType.fail, e.toString());
-        }
-      }
-    }
-    final int createdEventsNum =
-        _eventTypesToCreate.length * _linkedPlants.length;
-    showSnackbar(context, SnackBarType.save,
-        AppLocalizations.of(context).nEventsCreated(createdEventsNum));
-    Navigator.of(context).pop();
+    _selectedDate = widget.eventDTO.date;
   }
 
-  bool _validate() {
-    String? error;
-    if (_linkedPlants.isEmpty) {
-      error = AppLocalizations.of(context).selectAtLeastOnePlant;
-    } else if (_eventTypesToCreate.isEmpty) {
-      error = AppLocalizations.of(context).selectAtLeastOneEvent;
+  void _updateEvent() async {
+    final int plantDiaryId =
+        plantNamesToDiaryIds(widget.env.plants!, [_linkedPlant]).first;
+    final EventDTO updated = EventDTO(
+      id: widget.eventDTO.id,
+      date: _selectedDate,
+      diaryId: plantDiaryId,
+      type: formatEvent(context, _eventType),
+      note: _noteController.text,
+    );
+    try {
+      final response = await widget.env.http
+          .put("diary/entry/${updated.id}", updated.toMap());
+      final responseBody = json.decode(response.body);
+      if (response.statusCode != 200) {
+        showSnackbar(context, SnackBarType.fail, responseBody["message"]);
+        return;
+      }
+    } catch (e) {
+      showSnackbar(context, SnackBarType.fail, e.toString());
     }
-    if (error != null) {
-      showSnackbar(context, SnackBarType.fail, error);
-      return false;
-    }
-    return true;
+
+    showSnackbar(context, SnackBarType.save,
+        AppLocalizations.of(context).eventSuccessfullyUpdated);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).addNewEvent),
+        title: Text(AppLocalizations.of(context).editEvent),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addEvent(),
+        onPressed: () => _updateEvent(),
         tooltip: AppLocalizations.of(context).addNewEvent,
-        child: const Icon(Icons.add_outlined),
+        child: const Icon(Icons.save_outlined),
       ),
       body: Column(
         children: [
@@ -103,13 +95,14 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextFieldMultipleDropDown(
+                  child: TextFieldSingleDropDown(
+                    initialValue: _linkedPlant,
                     text: AppLocalizations.of(context).plants,
                     options: widget.env.plants!
                         .map((e) => e.info.personalName)
                         .toList(),
-                    onSelectedItemsChanged: (plants) {
-                      _linkedPlants = plants;
+                    onSelectedItemsChanged: (plant) {
+                      _linkedPlant = plant;
                     },
                   ),
                 ),
@@ -123,13 +116,14 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextFieldMultipleDropDown(
+                  child: TextFieldSingleDropDown(
+                    initialValue: formatEventType(_eventType),
                     text: AppLocalizations.of(context).events,
                     options: widget.env.eventTypes!
                         .map((e) => formatEventType(e))
                         .toList(),
-                    onSelectedItemsChanged: (events) {
-                      _eventTypesToCreate = events;
+                    onSelectedItemsChanged: (event) {
+                      _eventType = event;
                     },
                   ),
                 ),
@@ -175,8 +169,9 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
+                    controller: _noteController,
                     maxLines: 4,
-                    onChanged: (value) => _note = value,
+                    onChanged: (value) => _noteController.text = value,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: AppLocalizations.of(context).enterNote,
