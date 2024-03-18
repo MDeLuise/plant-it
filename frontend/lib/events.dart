@@ -66,7 +66,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                         : widget.env.plants!
                             .map((e) => e.info.personalName)
                             .toList(),
-                    text: AppLocalizations.of(context).plant,
+                    text: AppLocalizations.of(context).plants,
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -76,7 +76,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                     options: widget.env.eventTypes
                         ?.map((e) => getLocaleEvent(context, e))
                         .toList() as List<String>,
-                    text: AppLocalizations.of(context).event,
+                    text: AppLocalizations.of(context).events,
                   ),
                 ),
               ],

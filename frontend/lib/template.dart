@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:plant_it/add_new_event.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
@@ -62,7 +63,9 @@ class _TemplatePageState extends State<TemplatePage> {
         extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            goToPageSlidingUp(context, AddNewEventPage(env: _env));
+          },
           shape: const CircleBorder(),
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
           child: const Icon(Icons.add),
@@ -104,8 +107,7 @@ class _TemplatePageState extends State<TemplatePage> {
                   // can not be in a separate _sideMenuPages = [...]. I think because _currentIndex == x is evaluated at declaration time?
                   SideMenuItemDataTile(
                       isSelected: _currentIndex == 0,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       hasSelectedLine: false,
                       highlightSelectedColor: Colors.transparent,
                       onTap: () => setState(() => _currentIndex = 0),

@@ -85,8 +85,8 @@
       }
     }
   },
-  "event": "Evento",
-  "plant": "Pianta",
+  "events": "Eventi",
+  "plants": "Piante",
   "or": "oppure",
   "filter": "Filtra",
   "seeding": "seminazione",
@@ -101,5 +101,23 @@
   "propagating": "propagazione",
   "pruning": "potatura",
   "repotting": "rinvaso",
-  "recents": "Recenti"
+  "recents": "Recenti",
+  "addNewEvent": "Crea un evento",
+  "selectDate": "Seleziona la data",
+  "selectEvents": "Seleziona gli eventi",
+  "selectPlants": "Seleziona le piante",
+  "nEventsCreated": "{count} {count, plural, =1{nuovo} other{nuovi}} {count, plural, =1{evento} other{eventi}} {count, plural, =1{creato} other{creati}}",
+  "@nEventsCreated": {
+    "description": "Quanti nuovi eventi sono stati creati",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "Aggiungi una nota",
+  "enterNote": "Inserisci la nota",
+  "selectAtLeastOnePlant": "Seleziona almeno una pianta",
+  "selectAtLeastOneEvent": "Seleziona almeno un evento"
 }

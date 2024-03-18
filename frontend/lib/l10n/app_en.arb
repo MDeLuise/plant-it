@@ -87,8 +87,8 @@
       }
     }
   },
-  "event": "Event",
-  "plant": "Plant",
+  "events": "Events",
+  "plants": "Plants",
   "or": "or",
   "filter": "Filter",
   "seeding": "seeding",
@@ -103,5 +103,23 @@
   "propagating": "propagating",
   "pruning": "pruning",
   "repotting": "repotting",
-  "recents": "Recents"
+  "recents": "Recents",
+  "addNewEvent": "Add new event",
+  "selectDate": "Select date",
+  "selectEvents": "Select events",
+  "selectPlants": "Select plants",
+  "nEventsCreated": "Created {count} new {count, plural, =1{event} other{events}}",
+  "@nEventsCreated": {
+    "description": "How many new events created",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "Add note",
+  "enterNote": "Enter note",
+  "selectAtLeastOnePlant": "Select at least one plant",
+  "selectAtLeastOneEvent": "Select at least one event"
 }

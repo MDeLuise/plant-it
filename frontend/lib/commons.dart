@@ -7,6 +7,54 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/splash_screen.dart';
 
+void goToPageSlidingUp(BuildContext context, Widget widget) {
+  Navigator.of(context).push(PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widget,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  ));
+}
+
+String formatEvent(BuildContext context, String localeEvent) {
+  String result;
+  if (localeEvent == AppLocalizations.of(context).seeding) {
+    result = "seeding";
+  } else if (localeEvent == AppLocalizations.of(context).watering) {
+    result = "watering";
+  } else if (localeEvent == AppLocalizations.of(context).fertilizing) {
+    result = "fertilizing";
+  } else if (localeEvent == AppLocalizations.of(context).biostimulating) {
+    result = "biostimulating";
+  } else if (localeEvent == AppLocalizations.of(context).misting) {
+    result = "misting";
+  } else if (localeEvent == AppLocalizations.of(context).transplanting) {
+    result = "transplanting";
+  } else if (localeEvent == AppLocalizations.of(context).water_changing) {
+    result = "water_changing";
+  } else if (localeEvent == AppLocalizations.of(context).observation) {
+    result = "observation";
+  } else if (localeEvent == AppLocalizations.of(context).treatment) {
+    result = "treatment";
+  } else if (localeEvent == AppLocalizations.of(context).propagating) {
+    result = "propagating";
+  } else if (localeEvent == AppLocalizations.of(context).treatment) {
+    result = "treatment";
+  } else {
+    result = AppLocalizations.of(context).repotting;
+  }
+  return result.toUpperCase();
+}
+
 String getLocaleEvent(BuildContext context, String event) {
   final String lowercasedEvent = event.toLowerCase();
   if (lowercasedEvent == "seeding") {

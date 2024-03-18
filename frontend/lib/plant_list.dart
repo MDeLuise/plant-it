@@ -32,28 +32,6 @@ class _PlantList extends State<PlantList> {
     super.initState();
   }
 
-  Route _goToDetails(int plantIndex) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => PlantDetails(
-        env: widget.env,
-        plant: widget.env.plants![plantIndex],
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
-
   Widget _buildMobileView(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
@@ -70,7 +48,13 @@ class _PlantList extends State<PlantList> {
               itemBuilder: (_, index) {
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.of(context).push(_goToDetails(index)),
+                  onTap: () => goToPageSlidingUp(
+                    context,
+                    PlantDetails(
+                      env: widget.env,
+                      plant: widget.env.plants![index],
+                    ),
+                  ),
                   child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ParallaxPlantCard(
@@ -130,8 +114,13 @@ class _PlantList extends State<PlantList> {
                 itemBuilder: (_, index) {
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () =>
-                        Navigator.of(context).push(_goToDetails(index)),
+                    onTap: () => goToPageSlidingUp(
+                      context,
+                      PlantDetails(
+                        env: widget.env,
+                        plant: widget.env.plants![index],
+                      ),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ParallaxPlantCard(

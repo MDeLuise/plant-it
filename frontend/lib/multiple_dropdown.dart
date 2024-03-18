@@ -134,11 +134,11 @@ class _TextFieldWithDropDownState extends State<TextFieldWithDropDown> {
           },
           buttonStyleData: const ButtonStyleData(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            height: 40,
-            width: 200,
+            height: 50,
+            //width: 200,
           ),
           dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
+            maxHeight: 300,
             decoration: BoxDecoration(
               color: Color.fromRGBO(24, 44, 37, 1),
             ),
