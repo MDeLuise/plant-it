@@ -65,7 +65,6 @@ class _TemplatePageState extends State<TemplatePage> {
         env: _env,
       ),
     ];
-    print("template build");
     if (isSmallScreen(context)) {
       return _mobileTemplate();
     } else {
@@ -78,15 +77,8 @@ class _TemplatePageState extends State<TemplatePage> {
         extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final bool toRefresh =
-                await goToPageSlidingUp(context, AddNewEventPage(env: _env));
-            if (toRefresh) {
-              setState(
-                  () {}); // FIXME this is for refresh the events when one is added/updated, but it's expensive
-              print("ugu");
-            }
-          },
+          onPressed: () =>
+              goToPageSlidingUp(context, AddNewEventPage(env: _env)),
           shape: const CircleBorder(),
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
           child: const Icon(Icons.add),

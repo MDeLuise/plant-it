@@ -8,7 +8,14 @@ class EventsNotifier extends ChangeNotifier {
   final List<EventCard> _events = [];
 
   UnmodifiableListView<EventCard> get recent =>
-      UnmodifiableListView(_events.getRange(0, min(_events.length, 5)));
+      UnmodifiableListView(_events.sublist(0, min(_events.length, 5)));
+
+  UnmodifiableListView<EventCard> getEventPage(int pageNo, int pageSize) {
+    final startIndex = pageNo * pageSize;
+    final endIndex = min(startIndex + pageSize, _events.length);
+    final pageEvents = _events.sublist(startIndex, endIndex);
+    return UnmodifiableListView(pageEvents);
+  }
 
   void add(EventCard item) {
     _events.add(item);
@@ -17,6 +24,7 @@ class EventsNotifier extends ChangeNotifier {
 
   void addAll(List<EventCard> items) {
     _events.addAll(items);
+    notifyListeners();
   }
 
   void remove(int id) {

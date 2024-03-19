@@ -137,7 +137,7 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
 
 Future<List<EventCard>> fetchRecentEvents(
     BuildContext context, Environment env) async {
-  final response = await env.http.get("diary/entry?pageNo=0&pageSize=5");
+  final response = await env.http.get("diary/entry?pageNo=0&pageSize=10");
   if (response.statusCode == 200) {
     final responseBody = json.decode(response.body);
     final List<dynamic> entries = responseBody["content"];

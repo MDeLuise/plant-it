@@ -6,6 +6,8 @@ import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/edit_event.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/events_notifier.dart';
+import 'package:provider/provider.dart';
 
 import 'dropdown.dart';
 
@@ -261,6 +263,9 @@ class _EventsPageState extends State<EventsPage> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+    Provider.of<EventsNotifier>(context, listen: false).addListener(() {
+      _pagingController.refresh(); // FIXME expensive
+    });
     super.initState();
   }
 
@@ -275,6 +280,7 @@ class _EventsPageState extends State<EventsPage> {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
+      //Provider.of<EventsNotifier>(context, listen: true).addAll(newItems);
     } catch (error) {
       _pagingController.error = error;
     }
@@ -297,15 +303,7 @@ class _EventsPageState extends State<EventsPage> {
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
       final List<dynamic> entries = responseBody["content"];
-      return entries.map((entry) {
-        return EventCard(
-          action: entry["type"],
-          plant: entry["diaryTargetPersonalName"],
-          date: DateTime.parse(entry["date"]),
-          eventDTO: EventDTO.fromJson(entry),
-          env: widget.env,
-        );
-      }).toList();
+      return entries.map((entry) => dtoToCard(entry, widget.env)).toList();
     } else {
       throw Exception('Failed to load events');
     }
