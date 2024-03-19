@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_interop_unsafe';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -64,7 +63,8 @@ class _EditEventPage extends State<EditEventPage> {
 
     showSnackbar(context, SnackBarType.save,
         AppLocalizations.of(context).eventSuccessfullyUpdated);
-    Navigator.of(context).pop(true);
+    Provider.of<EventsNotifier>(context, listen: false).notify();
+    Navigator.of(context).pop();
   }
 
   void _removeEventWithConfirm() async {
@@ -107,8 +107,7 @@ class _EditEventPage extends State<EditEventPage> {
 
     showSnackbar(context, SnackBarType.save,
         AppLocalizations.of(context).eventSuccessfullyDeleted);
-    Provider.of<EventsNotifier>(context, listen: false)
-        .remove(widget.eventDTO.id!);
+    Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);
   }
 

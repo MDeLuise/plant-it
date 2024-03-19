@@ -1,18 +1,86 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/dto/event_dto.dart';
+import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/events_notifier.dart';
+import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class RecentEvents extends StatefulWidget {
-  final List<EventCard> recent;
-
-  const RecentEvents({super.key, required this.recent});
+  final Environment env;
+  const RecentEvents({super.key, required this.env});
 
   @override
   State<StatefulWidget> createState() => _RecentEvents();
 }
 
 class _RecentEvents extends State<RecentEvents> {
+  final int _pageSize = 5;
+  bool _isLoading = true;
+  List<Widget> _recentEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<EventsNotifier>(context, listen: false).addListener(() {
+      _fetchRecentEvents();
+    });
+    _fetchRecentEvents();
+  }
+
+  Future<void> _fetchRecentEvents() async {
+    _createDummyEventSkeletons();
+    final response =
+        await widget.env.http.get("diary/entry?pageNo=0&pageSize=$_pageSize");
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      final List<dynamic> entries = responseBody["content"];
+      setState(() {
+        _recentEvents = entries.map((entry) {
+          return EventCard(
+            action: entry["type"],
+            plant: entry["diaryTargetPersonalName"],
+            date: DateTime.parse(entry["date"]),
+            eventDTO: EventDTO.fromJson(entry),
+            env: widget.env,
+          );
+        }).toList();
+        _isLoading = false;
+      });
+    } else {
+      throw Exception('Failed to load events');
+    }
+  }
+
+  void _createDummyEventSkeletons() {
+    _isLoading = true;
+    _recentEvents = List.generate(
+      _pageSize,
+      (index) => Skeletonizer(
+        enabled: _isLoading,
+        effect: const PulseEffect(
+          from: Colors.grey,
+          to: Color.fromARGB(255, 207, 207, 207),
+        ),
+        child: EventCard(
+          action: "",
+          plant: "",
+          date: DateTime.now(),
+          eventDTO: EventDTO(
+            date: DateTime.now(),
+            diaryId: 42,
+            type: "42",
+          ),
+          env: widget.env,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body;
@@ -39,7 +107,7 @@ class _RecentEvents extends State<RecentEvents> {
   Widget _buildListView(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: widget.recent,
+      children: _recentEvents,
     );
   }
 
@@ -49,7 +117,7 @@ class _RecentEvents extends State<RecentEvents> {
       child: GridView.count(
         scrollDirection: Axis.horizontal,
         crossAxisCount: 2,
-        children: widget.recent,
+        children: _recentEvents,
       ),
     );
   }

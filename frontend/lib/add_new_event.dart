@@ -62,7 +62,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
         _eventTypesToCreate.length * _linkedPlants.length;
     showSnackbar(context, SnackBarType.save,
         AppLocalizations.of(context).nEventsCreated(createdEventsNum));
-    Provider.of<EventsNotifier>(context, listen: false).addAll(created);
+    Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);
   }
 

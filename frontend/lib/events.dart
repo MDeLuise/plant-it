@@ -264,7 +264,7 @@ class _EventsPageState extends State<EventsPage> {
       _fetchPage(pageKey);
     });
     Provider.of<EventsNotifier>(context, listen: false).addListener(() {
-      _pagingController.refresh(); // FIXME expensive
+      _pagingController.refresh();
     });
     super.initState();
   }
@@ -280,7 +280,6 @@ class _EventsPageState extends State<EventsPage> {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
-      //Provider.of<EventsNotifier>(context, listen: true).addAll(newItems);
     } catch (error) {
       _pagingController.error = error;
     }

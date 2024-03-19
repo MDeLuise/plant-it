@@ -122,7 +122,7 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
             return widget.options.map(
               (item) {
                 return Container(
-                  alignment: AlignmentDirectional.center,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Text(_selectedItems.join(', '),
                       style: const TextStyle(
                         fontSize: 14,
@@ -159,6 +159,7 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                 left: 8,
               ),
               child: TextFormField(
+                autofocus: true,
                 expands: true,
                 maxLines: null,
                 controller: _textEditingController,
