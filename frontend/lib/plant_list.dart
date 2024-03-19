@@ -6,7 +6,7 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/plant_details.dart';
+import 'package:plant_it/plant_details/plant_details_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -50,7 +50,7 @@ class _PlantList extends State<PlantList> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () => goToPageSlidingUp(
                     context,
-                    PlantDetails(
+                    PlantDetailsPage(
                       env: widget.env,
                       plant: widget.env.plants![index],
                     ),
@@ -116,7 +116,7 @@ class _PlantList extends State<PlantList> {
                     behavior: HitTestBehavior.translucent,
                     onTap: () => goToPageSlidingUp(
                       context,
-                      PlantDetails(
+                      PlantDetailsPage(
                         env: widget.env,
                         plant: widget.env.plants![index],
                       ),
@@ -175,10 +175,13 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
   @override
   void initState() {
     super.initState();
-    loadImageV1(widget._imageUrl, widget.http.key!);
+    loadImage(widget._imageUrl, widget.http.key!);
   }
 
-  void loadImageV1(String url, String key) async {
+  void loadImage(String url, String key) async {
+    if (widget.plant.avatarImageId == null) {
+      return;
+    }
     final response = await widget.http.get(url);
     final blob = response.bodyBytes;
     setState(() {

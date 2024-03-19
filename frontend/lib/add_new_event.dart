@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -22,7 +21,6 @@ class AddNewEventPage extends StatefulWidget {
 }
 
 class _AddNewEventPage extends State<AddNewEventPage> {
-  final DateFormat dateFormat = DateFormat('dd/MM/yy');
   List<String> _linkedPlants = [];
   List<String> _eventTypesToCreate = [];
   DateTime _selectedDate = DateTime.now();
@@ -40,7 +38,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
         final EventDTO toCreate = EventDTO(
             date: _selectedDate,
             diaryId: plantIds[j],
-            type: formatEvent(context, _eventTypesToCreate[i]),
+            type: getBackendEvent(context, _eventTypesToCreate[i]),
             note: _note);
         try {
           final response =
@@ -60,7 +58,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
     }
     final int createdEventsNum =
         _eventTypesToCreate.length * _linkedPlants.length;
-    showSnackbar(context, SnackBarType.save,
+    showSnackbar(context, SnackBarType.success,
         AppLocalizations.of(context).nEventsCreated(createdEventsNum));
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);
@@ -88,6 +86,8 @@ class _AddNewEventPage extends State<AddNewEventPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addEvent(),
+        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        shape: const CircleBorder(),
         tooltip: AppLocalizations.of(context).addNewEvent,
         child: const Icon(Icons.add_outlined),
       ),
@@ -106,7 +106,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectPlants,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -126,7 +126,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectEvents,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -134,7 +134,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                   child: TextFieldMultipleDropDown(
                     text: AppLocalizations.of(context).events,
                     options: widget.env.eventTypes!
-                        .map((e) => formatEventType(e))
+                        .map((e) => getLocaleEvent(context, e))
                         .toList(),
                     onSelectedItemsChanged: (events) {
                       _eventTypesToCreate = events;
@@ -146,7 +146,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectDate,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -155,8 +155,8 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                   ),
                   child: TextField(
                     readOnly: true,
-                    controller: TextEditingController(
-                        text: dateFormat.format(_selectedDate)),
+                    controller:
+                        TextEditingController(text: formatDate(_selectedDate)),
                     onTap: () async {
                       final DateTime? pickedDate = await showDatePicker(
                         context: context,
@@ -177,7 +177,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     AppLocalizations.of(context).addNote,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -186,7 +186,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                     maxLines: 4,
                     onChanged: (value) => _note = value,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       hintText: AppLocalizations.of(context).enterNote,
                     ),
                   ),

@@ -124,5 +124,149 @@
   "selectAtLeastOneEvent": "Select at least one event",
   "eventSuccessfullyUpdated": "Event updated successfully",
   "editEvent": "Edit event",
-  "eventSuccessfullyDeleted": "Event deleted successfully"
+  "eventSuccessfullyDeleted": "Event deleted successfully",
+  "noInfoAvailable": "No info available",
+  "species": "Species",
+  "plant": "Plant",
+  "scientificClassification": "Scientific classification",
+  "family": "Family",
+  "genus": "Genus",
+  "synonyms": "Synonyms",
+  "care": "Care",
+  "light": "Light",
+  "humidity": "Humidity",
+  "maxTemp": "Maximum temperature",
+  "minTemp": "Minimum temperature",
+  "minPh": "Minimum ph",
+  "maxPh": "Maximum ph",
+  "info": "Info",
+  "addPhotos": "Add photos",
+  "addEvents": "Add events",
+  "modifyPlant": "Modify plant",
+  "removePlant": "Remove plant",
+  "useBirthday": "Use birtday",
+  "birthday": "Birthday",
+  "avatar": "Avatar",
+  "note": "Note",
+  "stats": "Stats",
+  "eventStats": "Events stats",
+  "age": "Age",
+  "newBorn": "New born",
+  "nDays": "{count} {count, plural, =1{day} other{days}}",
+  "@nDays": {
+    "description": "How many days andentity has",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonths": "{count} {count, plural, =1{month} other{months}}",
+  "@nMonths": {
+    "description": "How many months an entity has",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYears": "{count} {count, plural, =1{year} other{years}}",
+  "@nYears": {
+    "description": "How many years an entity has",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAndDays": "{months} {months, plural, =1{month} other{months}}, {days} {days, plural, =1{day} other{days}}",
+  "@nMonthsAndDays": {
+    "description": "How many months and days an entity has",
+    "placeholders": {
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndDays": "{years} {years, plural, =1{year} other{years}}, {days} {days, plural, =1{day} other{days}}",
+  "@nYearsAndDays": {
+    "description": "How many years and days an entity has",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonths": "{years} {years, plural, =1{year} other{years}}, {months} {months, plural, =1{month} other{months}}",
+  "@nYearsAndMonths": {
+    "description": "How many years and months an entity has",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{year} other{years}}, {months} {months, plural, =1{month} other{months}}, {days} {days, plural, =1{day} other{days}}",
+  "@nYearsAndMonthsAndDays": {
+    "description": "How many years and months and days an entity has",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "name": "Name",
+  "nOutOf": "{value} out of {max}",
+  "@nOutOf": {
+    "description": "Value inside a scale",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "description": "Temperature",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "numberOfPhotos": "Number of photos",
+  "numberOfEvents": "Number of events"
 }

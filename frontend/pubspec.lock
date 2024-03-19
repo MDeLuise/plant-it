@@ -306,10 +306,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_icon_snackbar
-      sha256: b959b871a2123f5d86681837854f00a54a8210e07bd7c86975323314e5777146
+      sha256: "477ca581a4be38f41ef66ec8d6c16d7bbb16fff0b414df6ccbf02dbbd271351b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.6"
+    version: "1.1.7"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -406,7 +406,7 @@ packages:
     source: hosted
     version: "4.0.2"
   icon_animated:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: icon_animated
       sha256: "0847039648c98e53ac9be16cac170c025461caeb4d890cf4f88c78578ef9e7aa"
@@ -549,6 +549,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nested_scroll_view_plus:
+    dependency: "direct main"
+    description:
+      name: nested_scroll_view_plus
+      sha256: e7aa4ee1607df02c4a51e819b3239dc4eb863002eb2186ef4434a1bcf0049b53
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   node_preamble:
     dependency: transitive
     description:

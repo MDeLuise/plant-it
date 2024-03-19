@@ -3,11 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:intl/intl.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:plant_it/splash_screen.dart';
+import 'package:icon_animated/icon_animated.dart';
+
+String formatDate(DateTime toFormat) {
+  final DateFormat dateFormat = DateFormat('dd/MM/yy');
+  return dateFormat.format(toFormat);
+}
 
 List<int> plantNamesToDiaryIds(List<PlantDTO> plants, List<String> names) {
   final List<int> plantIds = [];
@@ -39,7 +46,7 @@ Future<dynamic> goToPageSlidingUp(BuildContext context, Widget widget) {
   ));
 }
 
-String formatEvent(BuildContext context, String localeEvent) {
+String getBackendEvent(BuildContext context, String localeEvent) {
   String result;
   String lowercasedLocaleEvent = localeEvent.toLowerCase();
   if (lowercasedLocaleEvent == AppLocalizations.of(context).seeding) {
@@ -181,11 +188,73 @@ String encodeEventType(String formattedEventType) {
 }
 
 void showSnackbar(BuildContext context, SnackBarType type, String message) {
-  IconSnackBar.show(context,
-      snackBarType: type,
-      label: message,
-      snackBarStyle: const SnackBarStyle(maxLines: 4),
-      duration: const Duration(seconds: 3));
+  // IconSnackBar.show(context,
+  //     snackBarType: type,
+  //     label: message,
+  //     snackBarStyle: const SnackBarStyle(maxLines: 4),
+  //     duration: const Duration(seconds: 3));
+  const duration = Duration(seconds: 3);
+  final margin = EdgeInsets.only(
+      bottom: MediaQuery.of(context).size.height - 170, right: 20, left: 20);
+  switch (type) {
+    case SnackBarType.success:
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: duration,
+        dismissDirection: DismissDirection.up,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: SnackBarWidget(
+          onPressed: () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          },
+          label: message,
+          backgroundColor: Colors.green,
+          //labelTextStyle: snackBarStyle.labelTextStyle,
+          iconType: IconType.check,
+          maxLines: 4,
+        ),
+        margin: margin,
+      ));
+    case SnackBarType.fail:
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: duration,
+        dismissDirection: DismissDirection.up,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: SnackBarWidget(
+          onPressed: () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          },
+          label: message,
+          backgroundColor: Colors.red,
+          //labelTextStyle: snackBarStyle.labelTextStyle,
+          iconType: IconType.fail,
+          maxLines: 4,
+        ),
+        margin: margin,
+      ));
+    case SnackBarType.alert:
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: duration,
+        dismissDirection: DismissDirection.up,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: SnackBarWidget(
+          onPressed: () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          },
+          label: message,
+          backgroundColor: Colors.black,
+          //labelTextStyle: snackBarStyle.labelTextStyle,
+          iconType: IconType.alert,
+          maxLines: 4,
+        ),
+        margin: margin,
+      ));
+  }
 }
 
 Future<void> loginAndSetAppKey(Environment env, BuildContext context,

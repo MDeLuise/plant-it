@@ -323,7 +323,8 @@ class _EventsPageState extends State<EventsPage> {
         SliverToBoxAdapter(
           child: FilterWidget(
             onSelectedEventsChanged: (x) {
-              _selectedEventTypes = x;
+              _selectedEventTypes =
+                  x.map((e) => getBackendEvent(context, e)).toList();
               _pagingController.refresh();
             },
             onSelectedPlantsChanged: (x) {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -22,7 +21,6 @@ class EditEventPage extends StatefulWidget {
 }
 
 class _EditEventPage extends State<EditEventPage> {
-  final DateFormat dateFormat = DateFormat('dd/MM/yy');
   late String _linkedPlant;
   late String _eventType;
   final TextEditingController _noteController = TextEditingController();
@@ -46,7 +44,7 @@ class _EditEventPage extends State<EditEventPage> {
       id: widget.eventDTO.id,
       date: _selectedDate,
       diaryId: plantDiaryId,
-      type: formatEvent(context, _eventType),
+      type: getBackendEvent(context, _eventType),
       note: _noteController.text,
     );
     try {
@@ -61,7 +59,7 @@ class _EditEventPage extends State<EditEventPage> {
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
 
-    showSnackbar(context, SnackBarType.save,
+    showSnackbar(context, SnackBarType.success,
         AppLocalizations.of(context).eventSuccessfullyUpdated);
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop();
@@ -105,7 +103,7 @@ class _EditEventPage extends State<EditEventPage> {
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
 
-    showSnackbar(context, SnackBarType.save,
+    showSnackbar(context, SnackBarType.success,
         AppLocalizations.of(context).eventSuccessfullyDeleted);
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);
@@ -126,6 +124,8 @@ class _EditEventPage extends State<EditEventPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _updateEvent(),
+        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        shape: const CircleBorder(),
         tooltip: AppLocalizations.of(context).addNewEvent,
         child: const Icon(Icons.save_outlined),
       ),
@@ -144,7 +144,7 @@ class _EditEventPage extends State<EditEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectPlants,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -165,7 +165,7 @@ class _EditEventPage extends State<EditEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectEvents,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -186,7 +186,7 @@ class _EditEventPage extends State<EditEventPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     AppLocalizations.of(context).selectDate,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -195,8 +195,8 @@ class _EditEventPage extends State<EditEventPage> {
                   ),
                   child: TextField(
                     readOnly: true,
-                    controller: TextEditingController(
-                        text: dateFormat.format(_selectedDate)),
+                    controller:
+                        TextEditingController(text: formatDate(_selectedDate)),
                     onTap: () async {
                       final DateTime? pickedDate = await showDatePicker(
                         context: context,
@@ -217,7 +217,7 @@ class _EditEventPage extends State<EditEventPage> {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     AppLocalizations.of(context).addNote,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -227,7 +227,7 @@ class _EditEventPage extends State<EditEventPage> {
                     maxLines: 4,
                     onChanged: (value) => _noteController.text = value,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       hintText: AppLocalizations.of(context).enterNote,
                     ),
                   ),
