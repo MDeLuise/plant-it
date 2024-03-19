@@ -123,5 +123,6 @@
   "selectAtLeastOnePlant": "Select at least one plant",
   "selectAtLeastOneEvent": "Select at least one event",
   "eventSuccessfullyUpdated": "Event updated successfully",
-  "editEvent": "Edit event"
+  "editEvent": "Edit event",
+  "eventSuccessfullyDeleted": "Event deleted successfully"
 }

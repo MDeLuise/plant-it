@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/events_notifier.dart';
 import 'package:plant_it/homepage_header.dart';
 import 'package:plant_it/plant_list.dart';
 import 'package:plant_it/recent_events.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   final Environment env;
-  const HomePage({super.key, required this.env});
+  const HomePage({
+    super.key,
+    required this.env,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,10 @@ class HomePage extends StatelessWidget {
           const SizedBox(
             height: 25,
           ),
-          RecentEvents(env: env),
+          Consumer<EventsNotifier>(
+            builder: (context, events, child) =>
+                RecentEvents(recent: events.recent),
+          )
         ],
       ),
     );

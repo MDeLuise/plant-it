@@ -26,13 +26,31 @@ class _TemplatePageState extends State<TemplatePage> {
     Icons.search_outlined,
     Icons.menu_outlined,
   ];
-  late final List<Widget> _bottombarPages;
+  late List<Widget> _bottombarPages;
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _env = widget.env;
+    // _bottombarPages = [
+    //   HomePage(
+    //     env: _env,
+    //   ),
+    //   EventsPage(
+    //     env: _env,
+    //   ),
+    //   SeachPage(
+    //     env: _env,
+    //   ),
+    //   MorePage(
+    //     env: _env,
+    //   ),
+    // ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     _bottombarPages = [
       HomePage(
         env: _env,
@@ -47,10 +65,7 @@ class _TemplatePageState extends State<TemplatePage> {
         env: _env,
       ),
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    print("template build");
     if (isSmallScreen(context)) {
       return _mobileTemplate();
     } else {
@@ -63,8 +78,14 @@ class _TemplatePageState extends State<TemplatePage> {
         extendBody: true,
         body: _bottombarPages[_currentIndex],
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            goToPageSlidingUp(context, AddNewEventPage(env: _env));
+          onPressed: () async {
+            final bool toRefresh =
+                await goToPageSlidingUp(context, AddNewEventPage(env: _env));
+            if (toRefresh) {
+              setState(
+                  () {}); // FIXME this is for refresh the events when one is added/updated, but it's expensive
+              print("ugu");
+            }
           },
           shape: const CircleBorder(),
           backgroundColor: const Color.fromRGBO(76, 175, 80, 1),

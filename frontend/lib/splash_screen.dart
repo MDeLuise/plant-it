@@ -4,7 +4,9 @@ import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/events_notifier.dart';
 import 'package:plant_it/template.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   final Environment env;
@@ -21,6 +23,8 @@ class _SplashPageState extends State<SplashPage> {
       await Future.wait([
         fetchAndSetEventTypes(context, env),
         fetchAndSetPlants(context, env),
+        fetchRecentEvents(context, env).then((value) =>
+            Provider.of<EventsNotifier>(context, listen: false).addAll(value))
       ]);
       return Future.value(TemplatePage(env: env));
     } catch (e) {

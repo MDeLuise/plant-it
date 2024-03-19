@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/events.dart';
 import 'package:plant_it/splash_screen.dart';
 
 List<int> plantNamesToDiaryIds(List<PlantDTO> plants, List<String> names) {
@@ -19,8 +21,8 @@ List<int> plantNamesToDiaryIds(List<PlantDTO> plants, List<String> names) {
   return plantIds;
 }
 
-void goToPageSlidingUp(BuildContext context, Widget widget) {
-  Navigator.of(context).push(PageRouteBuilder(
+Future<dynamic> goToPageSlidingUp(BuildContext context, Widget widget) {
+  return Navigator.of(context).push(PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => widget,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
@@ -131,6 +133,28 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
     if (!context.mounted) return;
     showSnackbar(context, SnackBarType.fail, e.toString());
   }
+}
+
+Future<List<EventCard>> fetchRecentEvents(
+    BuildContext context, Environment env) async {
+  final response = await env.http.get("diary/entry?pageNo=0&pageSize=5");
+  if (response.statusCode == 200) {
+    final responseBody = json.decode(response.body);
+    final List<dynamic> entries = responseBody["content"];
+    return entries.map((event) => dtoToCard(event, env)).toList();
+  } else {
+    throw Exception('Failed to load recent events');
+  }
+}
+
+EventCard dtoToCard(dynamic dto, Environment env) {
+  return EventCard(
+    action: dto["type"],
+    plant: dto["diaryTargetPersonalName"],
+    date: DateTime.parse(dto["date"]),
+    eventDTO: EventDTO.fromJson(dto),
+    env: env,
+  );
 }
 
 const int screenSizeTreshold = 600;

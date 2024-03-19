@@ -121,5 +121,6 @@
   "selectAtLeastOnePlant": "Seleziona almeno una pianta",
   "selectAtLeastOneEvent": "Seleziona almeno un evento",
   "eventSuccessfullyUpdated": "Evento modificato correttamente",
-  "editEvent": "Modifica evento"
+  "editEvent": "Modifica evento",
+  "eventSuccessfullyDeleted": "Evento eliminato correttamente"
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop_unsafe';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,6 +9,8 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
+import 'package:plant_it/events_notifier.dart';
+import 'package:provider/provider.dart';
 
 class EditEventPage extends StatefulWidget {
   final Environment env;
@@ -61,7 +64,52 @@ class _EditEventPage extends State<EditEventPage> {
 
     showSnackbar(context, SnackBarType.save,
         AppLocalizations.of(context).eventSuccessfullyUpdated);
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
+  }
+
+  void _removeEventWithConfirm() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Please Confirm'),
+            content: const Text('Are you sure to remove the reminder?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    _removeEvent();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Yes')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'))
+            ],
+          );
+        });
+  }
+
+  void _removeEvent() async {
+    try {
+      final response = await widget.env.http.delete(
+        "diary/entry/${widget.eventDTO.id}",
+      );
+      final responseBody = json.decode(response.body);
+      if (response.statusCode != 200) {
+        showSnackbar(context, SnackBarType.fail, responseBody["message"]);
+        return;
+      }
+    } catch (e) {
+      showSnackbar(context, SnackBarType.fail, e.toString());
+    }
+
+    showSnackbar(context, SnackBarType.save,
+        AppLocalizations.of(context).eventSuccessfullyDeleted);
+    Provider.of<EventsNotifier>(context, listen: false)
+        .remove(widget.eventDTO.id!);
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -69,6 +117,13 @@ class _EditEventPage extends State<EditEventPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).editEvent),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_forever_outlined),
+            tooltip: 'Remove reminder',
+            onPressed: _removeEventWithConfirm,
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _updateEvent(),

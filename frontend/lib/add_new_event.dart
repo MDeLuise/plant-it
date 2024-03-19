@@ -8,6 +8,9 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
+import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/events.dart';
+import 'package:provider/provider.dart';
 
 class AddNewEventPage extends StatefulWidget {
   final Environment env;
@@ -31,6 +34,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
     }
     final List<int> plantIds =
         plantNamesToDiaryIds(widget.env.plants!, _linkedPlants);
+    final List<EventCard> created = [];
     for (var i = 0; i < _eventTypesToCreate.length; i++) {
       for (var j = 0; j < plantIds.length; j++) {
         final EventDTO toCreate = EventDTO(
@@ -42,12 +46,15 @@ class _AddNewEventPage extends State<AddNewEventPage> {
           final response =
               await widget.env.http.post("diary/entry", toCreate.toMap());
           final responseBody = json.decode(response.body);
-          if (response.statusCode != 200) {
+          if (response.statusCode == 200) {
+            created.add(dtoToCard(responseBody, widget.env));
+          } else {
             showSnackbar(context, SnackBarType.fail, responseBody["message"]);
             return;
           }
         } catch (e) {
           showSnackbar(context, SnackBarType.fail, e.toString());
+          return;
         }
       }
     }
@@ -55,7 +62,8 @@ class _AddNewEventPage extends State<AddNewEventPage> {
         _eventTypesToCreate.length * _linkedPlants.length;
     showSnackbar(context, SnackBarType.save,
         AppLocalizations.of(context).nEventsCreated(createdEventsNum));
-    Navigator.of(context).pop();
+    Provider.of<EventsNotifier>(context, listen: false).addAll(created);
+    Navigator.of(context).pop(true);
   }
 
   bool _validate() {
