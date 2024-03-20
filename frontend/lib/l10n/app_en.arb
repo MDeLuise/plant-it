@@ -268,5 +268,6 @@
     }
   },
   "numberOfPhotos": "Number of photos",
-  "numberOfEvents": "Number of events"
+  "numberOfEvents": "Number of events",
+  "searchInYourPlants": "Search in your plants"
 }

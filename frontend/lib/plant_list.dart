@@ -9,6 +9,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details/plant_details_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlantList extends StatefulWidget {
   final Environment env;
@@ -20,16 +21,23 @@ class PlantList extends StatefulWidget {
 
 class _PlantList extends State<PlantList> {
   final controller = PageController(viewportFraction: .8, keepPage: true);
-  double page = 0.0;
+  double _page = 0.0;
+  final TextEditingController _searchController = TextEditingController();
+  List<PlantDTO> _filteredPlants = [];
 
   @override
   void initState() {
     controller.addListener(() {
       setState(() {
-        page = controller.page!;
+        _page = controller.page!;
       });
     });
+    _filteredPlants = widget.env.plants ?? [];
     super.initState();
+  }
+
+  bool _matchName(String plantName, String matchingTerm) {
+    return plantName.toLowerCase().contains(matchingTerm.toLowerCase());
   }
 
   Widget _buildMobileView(BuildContext context) {
@@ -39,11 +47,44 @@ class _PlantList extends State<PlantList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context).searchInYourPlants,
+                prefixIcon: const Icon(Icons.search_outlined),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _searchController.clear();
+                            _filteredPlants = widget.env.plants ?? [];
+                          });
+                        },
+                        child: const Icon(Icons.close_outlined),
+                      )
+                    : null,
+                border: const OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  if (value.isEmpty) {
+                    _filteredPlants = widget.env.plants ?? [];
+                  } else {
+                    _filteredPlants = _filteredPlants
+                        .where((p) => _matchName(p.info.personalName, value))
+                        .toList();
+                  }
+                });
+              },
+            ),
+          ),
           SizedBox(
             height: screenSize.width *
                 .7, // height: screenSize.width * .8 // screenSize.height * .55
             child: PageView.builder(
-              itemCount: widget.env.plants?.length ?? 0,
+              itemCount: _filteredPlants.length,
               controller: controller,
               itemBuilder: (_, index) {
                 return GestureDetector(
@@ -52,23 +93,25 @@ class _PlantList extends State<PlantList> {
                     context,
                     PlantDetailsPage(
                       env: widget.env,
-                      plant: widget.env.plants![index],
+                      plant: _filteredPlants[index],
                     ),
                   ),
                   child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ParallaxPlantCard(
-                          horizontalSlide:
-                              (index - page).clamp(-1, 1).toDouble(),
-                          plant: widget.env.plants![index],
-                          http: widget.env.http)),
+                        horizontalSlide:
+                            (index - _page).clamp(-1, 1).toDouble(),
+                        plant: _filteredPlants[index],
+                        http: widget.env.http,
+                        filteredPlants: _filteredPlants,
+                      )),
                 );
               },
             ),
           ),
           SmoothPageIndicator(
             controller: controller,
-            count: widget.env.plants?.length ?? 0,
+            count: _filteredPlants.length,
             effect: const ScrollingDotsEffect(
               dotWidth: 5.0,
               dotHeight: 5.0,
@@ -103,13 +146,13 @@ class _PlantList extends State<PlantList> {
               height: 200,
               child: GridView.builder(
                 scrollDirection: Axis.horizontal,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent:
                       200, // Change this value as per your requirement
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: widget.env.plants?.length ?? 0,
+                itemCount: _filteredPlants.length,
                 controller: controller,
                 itemBuilder: (_, index) {
                   return GestureDetector(
@@ -124,9 +167,11 @@ class _PlantList extends State<PlantList> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ParallaxPlantCard(
-                        horizontalSlide: (index - page).clamp(-1, 1).toDouble(),
-                        plant: widget.env.plants![index],
+                        horizontalSlide:
+                            (index - _page).clamp(-1, 1).toDouble(),
+                        plant: _filteredPlants[index],
                         http: widget.env.http,
+                        filteredPlants: _filteredPlants,
                       ),
                     ),
                   );
@@ -154,12 +199,14 @@ class ParallaxPlantCard extends StatefulWidget {
   final double horizontalSlide;
   final AppHttpClient http;
   late final String _imageUrl;
+  final List<PlantDTO> filteredPlants;
 
   ParallaxPlantCard({
     super.key,
     required this.plant,
     required this.horizontalSlide,
     required this.http,
+    required this.filteredPlants,
   }) {
     _imageUrl = "image/content/${plant.avatarImageId}";
   }
@@ -188,6 +235,17 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
       _url = 'data:image/jpg;base64,${base64Encode(blob)}';
       _loading = false;
     });
+  }
+
+  @override
+  void didUpdateWidget(ParallaxPlantCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.filteredPlants != widget.filteredPlants) {
+      setState(() {
+        _loading = true;
+      });
+      loadImage(widget._imageUrl, widget.http.key!);
+    }
   }
 
   @override
