@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MySliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  MySliverPersistentHeaderDelegate(this._tabBar);
+class PlantDetailsPersistentHeaderDelegate
+    extends SliverPersistentHeaderDelegate {
+  PlantDetailsPersistentHeaderDelegate(this._tabBar);
 
   final TabBar _tabBar;
 
@@ -19,7 +20,7 @@ class MySliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(MySliverPersistentHeaderDelegate oldDelegate) {
+  bool shouldRebuild(PlantDetailsPersistentHeaderDelegate oldDelegate) {
     return false;
   }
 }

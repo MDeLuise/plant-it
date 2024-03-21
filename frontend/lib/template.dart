@@ -6,7 +6,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/events.dart';
 import 'package:plant_it/homepage.dart';
 import 'package:plant_it/more.dart';
-import 'package:plant_it/search.dart';
+import 'package:plant_it/search/search_page.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 
 class TemplatePage extends StatefulWidget {

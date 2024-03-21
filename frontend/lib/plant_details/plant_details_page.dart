@@ -7,7 +7,7 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
-import 'package:plant_it/plant_details/bottom_bar.dart';
+import 'package:plant_it/plant_details/plant_details_bottom_bar.dart';
 import 'package:plant_it/plant_details/header.dart';
 import 'package:plant_it/plant_details/plant_tab.dart';
 import 'package:plant_it/plant_details/sliver_persistent_header_delegate.dart';
@@ -59,7 +59,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: const BottomActionBar(),
+        bottomNavigationBar: const PlantDetailsBottomActionBar(),
         body: DefaultTabController(
           length: 2,
           child: NestedScrollViewPlus(
@@ -90,7 +90,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                   //collapsedHeight: 100,
                 ),
                 SliverPersistentHeader(
-                  delegate: MySliverPersistentHeaderDelegate(
+                  delegate: PlantDetailsPersistentHeaderDelegate(
                     TabBar(
                       dividerColor: Colors.transparent,
                       tabs: [

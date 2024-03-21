@@ -269,5 +269,15 @@
   },
   "numberOfPhotos": "Number of photos",
   "numberOfEvents": "Number of events",
-  "searchInYourPlants": "Search in your plants"
+  "searchInYourPlants": "Search in your plants",
+  "searchNewGreenFriends": "Search new green friends",
+  "custom": "Custom",
+  "addPlant": "Add Plant",
+  "yes": "Yes",
+  "no": "No",
+  "confirm": "Please confirm",
+  "areYouSureToRemoveEvent": "Are you sure to remove the event?",
+  "areYouSureToRemoveReminder": "Are you sure to remove the reminder?",
+  "areYouSureToRemoveSpecies": "Are you sure to remove the species?",
+  "areYouSureToRemovePlant": "Are you sure to remove the plant?"
 }

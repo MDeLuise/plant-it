@@ -269,5 +269,15 @@
   },
   "numberOfPhotos": "Numero di foto",
   "numberOfEvents": "Numbero di eventi",
-  "searchInYourPlants": "Cerca le tue piante"
+  "searchInYourPlants": "Cerca le tue piante",
+  "searchNewGreenFriends": "Cerca nuovi amici verdi",
+  "custom": "Creato",
+  "addPlant": "Aggiungi pianta",
+  "yes": "Sì",
+  "no": "No",
+  "confirm": "Richista conferma",
+  "areYouSureToRemoveEvent": "Sicuro di voler eliminare l'evento?",
+  "areYouSureToRemoveReminder": "Sicuro di voler eliminare il reminder?",
+  "areYouSureToRemoveSpecies": "Sicuro di voler eliminare la specie?",
+  "areYouSureToRemovePlant": "sicuro di voler eliminare la pianta?"
 }

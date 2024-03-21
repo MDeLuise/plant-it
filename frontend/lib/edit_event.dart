@@ -65,25 +65,25 @@ class _EditEventPage extends State<EditEventPage> {
     Navigator.of(context).pop();
   }
 
-  void _removeEventWithConfirm() async {
+  void _removeEventWithConfirm(BuildContext context) async {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
-            title: const Text('Please Confirm'),
-            content: const Text('Are you sure to remove the reminder?'),
+            title: Text(AppLocalizations.of(context).confirm),
+            content:
+                Text(AppLocalizations.of(context).areYouSureToRemoveEvent),
             actions: [
               TextButton(
-                  onPressed: () {
-                    _removeEvent();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Yes')),
+                onPressed: () {
+                  _removeEvent();
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context).yes),
+              ),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('No'))
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(AppLocalizations.of(context).no)),
             ],
           );
         });
@@ -118,7 +118,7 @@ class _EditEventPage extends State<EditEventPage> {
           IconButton(
             icon: const Icon(Icons.delete_forever_outlined),
             tooltip: 'Remove reminder',
-            onPressed: _removeEventWithConfirm,
+            onPressed: () => _removeEventWithConfirm(context),
           )
         ],
       ),
