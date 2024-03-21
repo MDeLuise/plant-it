@@ -153,7 +153,7 @@ class _EditEventPage extends State<EditEventPage> {
                     initialValue: _linkedPlant,
                     text: AppLocalizations.of(context).plants,
                     options: widget.env.plants!
-                        .map((e) => e.info.personalName)
+                        .map((e) => e.info.personalName!)
                         .toList(),
                     onSelectedItemsChanged: (plant) {
                       _linkedPlant = plant;

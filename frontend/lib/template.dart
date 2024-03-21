@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:plant_it/add_new_event.dart';
+import 'package:plant_it/event/add_new_event.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/events.dart';
-import 'package:plant_it/homepage.dart';
+import 'package:plant_it/event/events.dart';
+import 'package:plant_it/homepage/homepage.dart';
 import 'package:plant_it/more.dart';
 import 'package:plant_it/search/search_page.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';

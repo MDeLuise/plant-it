@@ -172,3 +172,57 @@ class FullWidthInfoEntry extends StatelessWidget implements InfoEntry {
     );
   }
 }
+
+class EditableSimpleInfoEntry extends SimpleInfoEntry {
+  final Function(String)? onChanged;
+  const EditableSimpleInfoEntry({
+    super.key,
+    required super.title,
+    required super.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+      child: Row(
+        children: [
+          Text(title),
+          const Spacer(),
+          TextField(
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EditableSwitchInfoEntry extends SwitchInfoEntry {
+  final Function(bool)? onChanged;
+
+  const EditableSwitchInfoEntry({
+    super.key,
+    required super.title,
+    required super.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+      child: Row(
+        children: [
+          Text(title),
+          const Spacer(),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}

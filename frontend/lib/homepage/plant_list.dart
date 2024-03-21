@@ -76,7 +76,7 @@ class _PlantList extends State<PlantList> {
                       _filteredPlants = widget.env.plants ?? [];
                     } else {
                       _filteredPlants = _filteredPlants
-                          .where((p) => _matchName(p.info.personalName, value))
+                          .where((p) => _matchName(p.info.personalName!, value))
                           .toList();
                     }
                   });
@@ -293,7 +293,7 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.plant.info.personalName,
+                  widget.plant.info.personalName!,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                 ),

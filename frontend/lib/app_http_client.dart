@@ -17,10 +17,10 @@ class AppHttpClient {
     final request = http.Request('GET', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
     request.headers['Accept'] = '*/*';
-    if (key != null) {
+    if (url.startsWith(backendUrl ?? "") && key != null) {
       request.headers['Key'] = key!;
     }
-    if (jwt != null) {
+    if (url.startsWith(backendUrl ?? "") && jwt != null) {
       request.headers['Authorization'] = "Bearer $jwt";
     }
     return await _inner.send(request).then(http.Response.fromStream);

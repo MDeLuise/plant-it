@@ -1,12 +1,12 @@
 class PlantDTO {
-  final int? id;
-  final PlantInfoDTO info;
-  final int? ownerId;
-  final String? avatarImageId;
-  final String? avatarMode;
-  final int? diaryId;
-  final int? speciesId;
-  final String? species;
+  int? id;
+  PlantInfoDTO info;
+  int? ownerId;
+  String? avatarImageId;
+  String? avatarMode;
+  int? diaryId;
+  int? speciesId;
+  String? species;
 
   PlantDTO({
     this.id,
@@ -34,21 +34,21 @@ class PlantDTO {
 }
 
 class PlantInfoDTO {
-  final String? startDate;
-  final String personalName;
-  final String? endDate;
-  final String state;
-  final String? note;
-  final double? purchasedPrice;
-  final String? currencySymbol;
-  final String? seller;
-  final String? location;
+  String? startDate;
+  String? personalName;
+  String? endDate;
+  String? state;
+  String? note;
+  double? purchasedPrice;
+  String? currencySymbol;
+  String? seller;
+  String? location;
 
   PlantInfoDTO({
     this.startDate,
-    required this.personalName,
+    this.personalName,
     this.endDate,
-    required this.state,
+    this.state,
     this.note,
     this.purchasedPrice,
     this.currencySymbol,

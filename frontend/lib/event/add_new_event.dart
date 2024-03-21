@@ -8,7 +8,7 @@ import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
 import 'package:plant_it/events_notifier.dart';
-import 'package:plant_it/events.dart';
+import 'package:plant_it/event/events.dart';
 import 'package:provider/provider.dart';
 
 class AddNewEventPage extends StatefulWidget {
@@ -114,7 +114,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
                   child: TextFieldMultipleDropDown(
                     text: AppLocalizations.of(context).plants,
                     options: widget.env.plants!
-                        .map((e) => e.info.personalName)
+                        .map((e) => e.info.personalName!)
                         .toList(),
                     onSelectedItemsChanged: (plants) {
                       _linkedPlants = plants;

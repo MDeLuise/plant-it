@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
-import 'package:plant_it/edit_event.dart';
+import 'package:plant_it/event/edit_event.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/events_notifier.dart';
 import 'package:provider/provider.dart';
 
-import 'dropdown.dart';
+import '../dropdown.dart';
 
 class FilterWidget extends StatefulWidget {
   final Environment env;
@@ -68,7 +68,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                     options: widget.env.plants == null
                         ? []
                         : widget.env.plants!
-                            .map((e) => e.info.personalName)
+                            .map((e) => e.info.personalName!)
                             .toList(),
                     text: AppLocalizations.of(context).plants,
                   ),

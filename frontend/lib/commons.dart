@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/events.dart';
+import 'package:plant_it/event/events.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:icon_animated/icon_animated.dart';
 
@@ -106,7 +106,7 @@ String getLocaleEvent(BuildContext context, String event) {
   } else if (lowercasedEvent == "propagating") {
     return AppLocalizations.of(context).propagating;
   } else if (lowercasedEvent == "pruning") {
-    return AppLocalizations.of(context).treatment;
+    return AppLocalizations.of(context).pruning;
   } else {
     return AppLocalizations.of(context).repotting;
   }

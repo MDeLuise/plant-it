@@ -6,7 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/homepage.dart';
+import 'package:plant_it/homepage/homepage.dart';
 import 'package:plant_it/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

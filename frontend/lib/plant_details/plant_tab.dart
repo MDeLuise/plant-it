@@ -6,7 +6,7 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:plant_it/plant_details/info_entries.dart';
+import 'package:plant_it/info_entries.dart';
 
 class PlantDetailsTab extends StatefulWidget {
   final PlantDTO plant;

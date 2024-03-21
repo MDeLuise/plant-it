@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/events.dart';
+import 'package:plant_it/event/events.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/events_notifier.dart';
 import 'package:provider/provider.dart';
