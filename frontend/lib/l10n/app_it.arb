@@ -275,9 +275,17 @@
   "addPlant": "Aggiungi pianta",
   "yes": "Sì",
   "no": "No",
-  "confirm": "Richista conferma",
+  "confirm": "Richiesta conferma",
   "areYouSureToRemoveEvent": "Sicuro di voler eliminare l'evento?",
   "areYouSureToRemoveReminder": "Sicuro di voler eliminare il reminder?",
   "areYouSureToRemoveSpecies": "Sicuro di voler eliminare la specie?",
-  "areYouSureToRemovePlant": "sicuro di voler eliminare la pianta?"
+  "areYouSureToRemovePlant": "Sicuro di voler eliminare la pianta?",
+  "purchasedPrice": "Prezzo",
+  "seller": "Venditore",
+  "location": "Posizione",
+  "currency": "Valua",
+  "plantUpdatedSuccessfully": "Pianta aggiornata correttamente",
+  "plantCreatedSuccessfully": "Pianta creata correttamente",
+  "insertPrice": "Inserisci il prezzo",
+  "noBirthday": "Nessun compleanno"
 }

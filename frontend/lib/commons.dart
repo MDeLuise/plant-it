@@ -11,6 +11,43 @@ import 'package:plant_it/event/events.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:icon_animated/icon_animated.dart';
 
+const List<String> currencySymbols = [
+  "€", // Euro Sign
+  "\$", // Dollar sign
+  "¢", // Cent sign
+  "₠", // European Currency
+  "₡", // Colon Sign
+  "₢", // Cruzeiro Sign
+  "₣", // French Franc Sign
+  "₤", // Lira Sign
+  "₥", // Mill Sign
+  "₦", // Naira Sign
+  "₧", // Peseta Sign
+  "₨", // Rupee Sign
+  "₩", // Won Sign
+  "₪", // New Sheqel Sign
+  "₫", // Dong Sign
+  "₭", // Kip Sign
+  "₮", // Tugrik Sign
+  "₯", // Drachma Sign
+  "₰", // German Penny Sign
+  "₱", // Peso Sign
+  "₲", // Guarani Sign
+  "₳", // Austral Sign
+  "₴", // Hryvnia Sign
+  "₵", // Cedi Sign
+  "₶", // Old Turkish Lira Sign
+  "₷", // Lira Sign
+  "₸", // Rupee Sign
+  "₹", // Indian Rupee Sign
+  "₺", // Turkish Lira Sign
+  "₻", // Tamil Rupee Sign
+  "₼", // Azerbaijani Manat Sign
+  "₽", // Russian Ruble Sign
+  "₾", // Lari Sign
+  "₿", // Bitcoin Sign
+];
+
 String formatDate(DateTime toFormat) {
   final DateFormat dateFormat = DateFormat('dd/MM/yy');
   return dateFormat.format(toFormat);
@@ -131,7 +168,7 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
   try {
     final response = await env.http.get("plant");
     if (response.statusCode == 200) {
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       final List<dynamic> plantJsonList = responseBody["content"];
       env.plants =
           plantJsonList.map((json) => PlantDTO.fromJson(json)).toList();

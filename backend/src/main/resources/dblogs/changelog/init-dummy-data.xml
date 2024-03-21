@@ -121,6 +121,7 @@
             <column name="location" value="garden"/>
             <column name="seller" value="Green Market Super Mega"/>
             <column name="purchased_price" value="12.5"/>
+            <column name="currency_symbol" value="€"/>
         </insert>
     </changeSet>
 

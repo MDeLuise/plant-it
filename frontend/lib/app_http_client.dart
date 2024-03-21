@@ -17,16 +17,24 @@ class AppHttpClient {
     final request = http.Request('GET', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
     request.headers['Accept'] = '*/*';
-    if (url.startsWith(backendUrl ?? "") && key != null) {
+    if (key != null) {
       request.headers['Key'] = key!;
     }
-    if (url.startsWith(backendUrl ?? "") && jwt != null) {
+    if (jwt != null) {
       request.headers['Authorization'] = "Bearer $jwt";
     }
     return await _inner.send(request).then(http.Response.fromStream);
   }
 
-  Future<http.Response> post(String url, Map<String, String>? body) async {
+  Future<http.Response> getNoAuth(String url) async {
+    final modifiedUrl = _prependBackendURL(url);
+    final request = http.Request('GET', modifiedUrl);
+    request.headers['Content-type'] = 'application/json';
+    request.headers['Accept'] = '*/*';
+    return await _inner.send(request).then(http.Response.fromStream);
+  }
+
+  Future<http.Response> post(String url, Map<String, dynamic>? body) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('POST', modifiedUrl);
     request.headers['Content-type'] = 'application/json';
@@ -41,7 +49,7 @@ class AppHttpClient {
     return _inner.send(request).then(http.Response.fromStream);
   }
 
-  Future<http.Response> put(String url, Map<String, String>? body) async {
+  Future<http.Response> put(String url, Map<String, dynamic>? body) async {
     final modifiedUrl = _prependBackendURL(url);
     final request = http.Request('PUT', modifiedUrl);
     request.headers['Content-type'] = 'application/json';

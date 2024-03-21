@@ -279,5 +279,13 @@
   "areYouSureToRemoveEvent": "Are you sure to remove the event?",
   "areYouSureToRemoveReminder": "Are you sure to remove the reminder?",
   "areYouSureToRemoveSpecies": "Are you sure to remove the species?",
-  "areYouSureToRemovePlant": "Are you sure to remove the plant?"
+  "areYouSureToRemovePlant": "Are you sure to remove the plant?",
+  "purchasedPrice": "Purchased price",
+  "seller": "Seller",
+  "location": "Location",
+  "currency": "Currency",
+  "plantUpdatedSuccessfully": "Plant updated successfully",
+  "plantCreatedSuccessfully": "Plant created successfully",
+  "insertPrice": "Insert price",
+  "noBirthday": "No birthday"
 }

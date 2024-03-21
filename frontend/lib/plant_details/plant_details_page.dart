@@ -38,6 +38,11 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
     _fetchAndSetSpecies();
   }
 
+  void _updatePlantLocally() {
+    setState(() {
+    });
+  }
+
   void _fetchAndSetSpecies() async {
     try {
       final response =
@@ -59,7 +64,11 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: const PlantDetailsBottomActionBar(),
+        bottomNavigationBar: PlantDetailsBottomActionBar(
+          plant: widget.plant,
+          env: widget.env,
+          updatePlantLocally: _updatePlantLocally,
+        ),
         body: DefaultTabController(
           length: 2,
           child: NestedScrollViewPlus(
@@ -68,13 +77,6 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
-                  // actions: [
-                  //   IconButton(
-                  //     icon: const Icon(Icons.delete_forever_outlined),
-                  //     tooltip: 'Remove plant',
-                  //     onPressed: () {},
-                  //   )
-                  // ],
                   pinned: true,
                   stretch: true,
                   expandedHeight: MediaQuery.of(context).size.height * .5,
@@ -83,11 +85,9 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                       StretchMode.zoomBackground,
                       StretchMode.blurBackground,
                     ],
-                    //title: Text('Goa', textScaleFactor: 1),
                     background:
                         PlantImageHeader(plant: widget.plant, env: widget.env),
                   ),
-                  //collapsedHeight: 100,
                 ),
                 SliverPersistentHeader(
                   delegate: PlantDetailsPersistentHeaderDelegate(

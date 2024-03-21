@@ -177,9 +177,6 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
               SimpleInfoEntry(
                   title: AppLocalizations.of(context).name,
                   value: widget.plant.info.personalName),
-              SwitchInfoEntry(
-                  title: AppLocalizations.of(context).useBirthday,
-                  value: widget.plant.info.startDate != null),
               SimpleInfoEntry(
                   title: AppLocalizations.of(context).birthday,
                   value: widget.plant.info.startDate != null
@@ -197,7 +194,19 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
               FullWidthInfoEntry(
                 title: AppLocalizations.of(context).note,
                 value: widget.plant.info.note,
-              )
+              ),
+              SimpleInfoEntry(
+                  title: AppLocalizations.of(context).purchasedPrice,
+                  value: widget.plant.info.purchasedPrice == null
+                      ? null
+                      : (widget.plant.info.purchasedPrice!.toString() +
+                          (widget.plant.info.currencySymbol ?? ""))),
+              SimpleInfoEntry(
+                  title: AppLocalizations.of(context).seller,
+                  value: widget.plant.info.seller.toString()),
+              SimpleInfoEntry(
+                  title: AppLocalizations.of(context).location,
+                  value: widget.plant.info.location.toString()),
             ],
           ),
           InfoGroup(
