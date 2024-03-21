@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -24,6 +25,7 @@ class _PlantList extends State<PlantList> {
   double _page = 0.0;
   final TextEditingController _searchController = TextEditingController();
   List<PlantDTO> _filteredPlants = [];
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -67,14 +69,17 @@ class _PlantList extends State<PlantList> {
                 border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
-                setState(() {
-                  if (value.isEmpty) {
-                    _filteredPlants = widget.env.plants ?? [];
-                  } else {
-                    _filteredPlants = _filteredPlants
-                        .where((p) => _matchName(p.info.personalName, value))
-                        .toList();
-                  }
+                if (_debounce?.isActive ?? false) _debounce!.cancel();
+                _debounce = Timer(const Duration(milliseconds: 500), () {
+                  setState(() {
+                    if (value.isEmpty) {
+                      _filteredPlants = widget.env.plants ?? [];
+                    } else {
+                      _filteredPlants = _filteredPlants
+                          .where((p) => _matchName(p.info.personalName, value))
+                          .toList();
+                    }
+                  });
                 });
               },
             ),

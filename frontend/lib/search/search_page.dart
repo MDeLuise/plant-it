@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _SeachPageState extends State<SeachPage> {
   final TextEditingController _searchController = TextEditingController();
   final controller = PageController(viewportFraction: .8, keepPage: true);
   List<SpeciesDTO> _result = [];
+  Timer? _debounce;
 
   void _fetchAndSetResult(String seatchTerm) async {
     final String url = seatchTerm.isEmpty
@@ -75,8 +77,11 @@ class _SeachPageState extends State<SeachPage> {
                 border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
-                setState(() {
-                  _fetchAndSetResult(value);
+                if (_debounce?.isActive ?? false) _debounce!.cancel();
+                _debounce = Timer(const Duration(milliseconds: 500), () {
+                  setState(() {
+                    _fetchAndSetResult(value);
+                  });
                 });
               },
             ),
