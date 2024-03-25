@@ -4,6 +4,7 @@ import javax.naming.AuthenticationException;
 
 import com.github.mdeluise.plantit.authentication.payload.request.ChangeEmailRequest;
 import com.github.mdeluise.plantit.authentication.payload.request.ChangePasswordRequest;
+import com.github.mdeluise.plantit.authentication.payload.request.ChangeUsernameRequest;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,20 +46,6 @@ public class UserController {
     }
 
 
-    @PutMapping
-    @Operation(
-        summary = "Update a single User",
-        description = "Update the details of the authenticated User." +
-                          "Please note that some fields may be readonly for integrity purposes."
-    )
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO updated) {
-        final Long toUpdate = authenticatedUserService.getAuthenticatedUser().getId();
-        final User updatedUser = userDtoConverter.convertFromDTO(updated);
-        final User result = userService.update(toUpdate, updatedUser);
-        return new ResponseEntity<>(userDtoConverter.convertToDTO(result), HttpStatus.OK);
-    }
-
-
     @PutMapping("/_password")
     @Operation(
         summary = "Update a User's password", description = "Update the password of the authenticated User"
@@ -68,7 +54,8 @@ public class UserController {
         throws AuthenticationException {
         final Long idOfUserToUpdate = authenticatedUserService.getAuthenticatedUser().getId();
         userService.updatePassword(idOfUserToUpdate, changePasswordRequest.currentPassword(),
-                                   changePasswordRequest.newPassword());
+                                   changePasswordRequest.newPassword()
+        );
         return ResponseEntity.ok("updated");
     }
 
@@ -83,21 +70,16 @@ public class UserController {
     }
 
 
-    @GetMapping("/username/{username}/_available")
+    @PutMapping("/_username")
     @Operation(
-        summary = "Check if a username is available", description = "Check if the provided `username` is available"
+        summary = "Update a user's username", description = "Update the username of the authenticated User"
     )
-    public ResponseEntity<Boolean> checkUsernameAvailability(@PathVariable String username) {
-        return ResponseEntity.ok(!userService.existsByUsername(username));
-    }
-
-
-    @GetMapping("/email/{email}/_available")
-    @Operation(
-        summary = "Check if a email is available", description = "Check if the provided `email` is available"
-    )
-    public ResponseEntity<Boolean> checkEmailAvailability(@PathVariable String email) {
-        return ResponseEntity.ok(!userService.existsByEmail(email));
+    public ResponseEntity<String> updateUsername(@RequestBody ChangeUsernameRequest changeUsernameRequest)
+        throws AuthenticationException {
+        final Long idOfUserToUpdate = authenticatedUserService.getAuthenticatedUser().getId();
+        userService.updateUsername(
+            idOfUserToUpdate, changeUsernameRequest.password(), changeUsernameRequest.newUsername());
+        return ResponseEntity.ok("updated");
     }
 
 
@@ -108,8 +90,7 @@ public class UserController {
     public ResponseEntity<String> updateEmail(@RequestBody ChangeEmailRequest changeEmailRequest)
         throws AuthenticationException {
         final Long idOfUserToUpdate = authenticatedUserService.getAuthenticatedUser().getId();
-        userService.updateEmail(idOfUserToUpdate, changeEmailRequest.password(),
-                                changeEmailRequest.newEmail());
+        userService.updateEmail(idOfUserToUpdate, changeEmailRequest.password(), changeEmailRequest.newEmail());
         return ResponseEntity.ok("updated");
     }
 }

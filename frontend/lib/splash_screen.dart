@@ -21,6 +21,7 @@ class _SplashPageState extends State<SplashPage> {
       await Future.wait([
         fetchAndSetEventTypes(context, env),
         fetchAndSetPlants(context, env),
+        fetchAndSetBackendVersion(context, env),
       ]);
       return Future.value(TemplatePage(env: env));
     } catch (e) {

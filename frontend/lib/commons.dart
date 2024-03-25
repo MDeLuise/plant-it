@@ -179,6 +179,20 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
   }
 }
 
+Future<void> fetchAndSetBackendVersion(
+    BuildContext context, Environment env) async {
+  try {
+    final response = await env.http.get("info/version");
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      env.backendVersion = responseBody["currentVersion"];
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    showSnackbar(context, SnackBarType.fail, e.toString());
+  }
+}
+
 EventCard dtoToCard(dynamic dto, Environment env) {
   return EventCard(
     action: dto["type"],
@@ -299,7 +313,10 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
   const String appKeyName = "frontend";
 
   if (!context.mounted) return;
-  await _login(env, context, username, password);
+  final loggedIn = await _login(env, context, username, password);
+  if (!loggedIn) {
+    return;
+  }
   try {
     final response = await env.http.get(
       'api-key/name/$appKeyName',
@@ -345,7 +362,7 @@ Future<void> loginAndSetAppKey(Environment env, BuildContext context,
   }
 }
 
-Future<void> _login(Environment env, BuildContext context, String username,
+Future<bool> _login(Environment env, BuildContext context, String username,
     String password) async {
   try {
     final response = await env.http.post(
@@ -359,13 +376,18 @@ Future<void> _login(Environment env, BuildContext context, String username,
     if (response.statusCode == 200) {
       env.http.jwt = responseBody["jwt"]["value"];
       await env.prefs.setString('username', username);
+      env.credentials.username = username;
+      await env.prefs.setString('email', responseBody["email"]);
+      env.credentials.email = responseBody["email"];
+      return true;
     } else {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       final errorMessage = responseBody['message'];
       showSnackbar(context, SnackBarType.fail, errorMessage);
+      return false;
     }
   } catch (e) {
-    if (!context.mounted) return;
+    if (!context.mounted) return false;
     showSnackbar(
         context, SnackBarType.fail, AppLocalizations.of(context).noBackend);
     rethrow;

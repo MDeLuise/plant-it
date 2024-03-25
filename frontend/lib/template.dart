@@ -5,7 +5,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/events.dart';
 import 'package:plant_it/homepage/homepage.dart';
-import 'package:plant_it/more.dart';
+import 'package:plant_it/more/more_page.dart';
 import 'package:plant_it/search/search_page.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 
@@ -33,20 +33,6 @@ class _TemplatePageState extends State<TemplatePage> {
   void initState() {
     super.initState();
     _env = widget.env;
-    // _bottombarPages = [
-    //   HomePage(
-    //     env: _env,
-    //   ),
-    //   EventsPage(
-    //     env: _env,
-    //   ),
-    //   SeachPage(
-    //     env: _env,
-    //   ),
-    //   MorePage(
-    //     env: _env,
-    //   ),
-    // ];
   }
 
   @override
@@ -79,8 +65,6 @@ class _TemplatePageState extends State<TemplatePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () =>
               goToPageSlidingUp(context, AddNewEventPage(env: _env)),
-          shape: const CircleBorder(),
-          backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
           child: const Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -179,8 +163,6 @@ class _TemplatePageState extends State<TemplatePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        shape: const CircleBorder(),
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
         child: const Icon(Icons.add),
       ),
     );

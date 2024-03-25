@@ -86,7 +86,7 @@ class ReminderControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update reminder by ID")
+    @DisplayName("Test updateInternal reminder by ID")
     void testUpdateReminderById() {
         final ReminderDTO reminderDTO = new ReminderDTO();
         final Reminder reminder = new Reminder();
@@ -120,7 +120,7 @@ class ReminderControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update non-existing reminder")
+    @DisplayName("Test updateInternal non-existing reminder")
     void testUpdateNonExistingReminder() {
         final long id = 1;
         ReminderDTO reminderDTO = new ReminderDTO();

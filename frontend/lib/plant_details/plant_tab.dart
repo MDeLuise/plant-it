@@ -102,6 +102,7 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
           await widget.http.get("image/entity/all/${widget.plant.id}");
       final responseBody = json.decode(response.body);
       if (response.statusCode != 200) {
+        if (!mounted) return;
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
       }
@@ -109,6 +110,7 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
         _photos = responseBody.length;
       });
     } catch (e) {
+      if (!mounted) return;
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }
@@ -119,6 +121,7 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
           await widget.http.get("diary/entry/${widget.plant.id}/_count");
       final responseBody = json.decode(response.body);
       if (response.statusCode != 200) {
+        if (!mounted) return;
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
       }
@@ -126,6 +129,7 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
         _events = responseBody;
       });
     } catch (e) {
+      if (!mounted) return;
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }
@@ -137,9 +141,11 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
           await widget.http.get("diary/entry/${widget.plant.id}/stats");
       final responseBody = json.decode(response.body);
       if (response.statusCode != 200) {
+        if (!mounted) return;
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
       }
+      if (!mounted) return;
       for (var stat in responseBody) {
         result.putIfAbsent(
             getLocaleEvent(context, stat["type"]),

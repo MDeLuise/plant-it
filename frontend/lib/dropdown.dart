@@ -7,11 +7,12 @@ class TextFieldMultipleDropDown extends StatefulWidget {
   final String text;
   final Function(List<String>) onSelectedItemsChanged;
 
-  const TextFieldMultipleDropDown(
-      {super.key,
-      required this.options,
-      required this.text,
-      required this.onSelectedItemsChanged});
+  const TextFieldMultipleDropDown({
+    super.key,
+    required this.options,
+    required this.text,
+    required this.onSelectedItemsChanged,
+  });
 
   @override
   State<TextFieldMultipleDropDown> createState() =>
@@ -104,8 +105,13 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                           Expanded(
                             child: Text(
                               item,
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .hintStyle!
+                                    .color,
+                              ),
                             ),
                           ),
                         ],
@@ -124,18 +130,26 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                 return Container(
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(_selectedItems.join(', '),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         overflow: TextOverflow.ellipsis,
-                        color: Colors.grey,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                       )),
                 );
               },
             ).toList();
           },
-          buttonStyleData: const ButtonStyleData(
+          buttonStyleData: ButtonStyleData(
             padding: EdgeInsets.symmetric(horizontal: 16),
             height: 50,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context)
+                        .inputDecorationTheme
+                        .enabledBorder!
+                        .borderSide
+                        .color),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             //width: 200,
           ),
           dropdownStyleData: const DropdownStyleData(

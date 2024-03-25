@@ -119,27 +119,30 @@ class SimpleInfoEntry extends StatelessWidget implements InfoEntry {
 
   @override
   bool isNull() {
-    return value == null;
+    return value == null || value == "null";
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-      child: Row(
-        children: value == null || value == "null"
-            ? []
-            : [
+    return value == null || value == "null"
+        ? const SizedBox(
+            height: null,
+            width: null,
+          )
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+            child: Row(
+              children: [
                 Text(title),
                 const Spacer(),
                 Text(value!),
               ],
-      ),
-    );
+            ),
+          );
   }
 }
 
-class FullWidthInfoEntry extends StatelessWidget {
+class FullWidthInfoEntry extends StatelessWidget implements InfoEntry {
   final String title;
   final String? value;
 
@@ -150,32 +153,42 @@ class FullWidthInfoEntry extends StatelessWidget {
   });
 
   @override
+  bool isNull() {
+    return value == null || value == "null";
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: value == null || value == "null"
-            ? []
-            : [
-                Text(title),
-                const SizedBox(
-                  height: 5,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(24, 44, 37, 1),
-                        borderRadius: BorderRadius.circular(4),
+    return value == null || value == "null"
+        ? const SizedBox(
+            height: null,
+            width: null,
+          )
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: value == null || value == "null"
+                  ? []
+                  : [
+                      Text(title),
+                      const SizedBox(
+                        height: 5,
                       ),
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(value!)),
-                ),
-              ],
-      ),
-    );
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(24, 44, 37, 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(value!)),
+                      ),
+                    ],
+            ),
+          );
   }
 }
 

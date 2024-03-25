@@ -37,13 +37,6 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
-                  // actions: [
-                  //   IconButton(
-                  //     icon: const Icon(Icons.delete_forever_outlined),
-                  //     tooltip: 'Remove plant',
-                  //     onPressed: () {},
-                  //   )
-                  // ],
                   pinned: true,
                   stretch: true,
                   expandedHeight: MediaQuery.of(context).size.height * .5,
@@ -52,11 +45,9 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
                       StretchMode.zoomBackground,
                       StretchMode.blurBackground,
                     ],
-                    //title: Text('Goa', textScaleFactor: 1),
                     background: SpeciesImageHeader(
                         species: widget.species, env: widget.env),
                   ),
-                  //collapsedHeight: 100,
                 ),
               ];
             },

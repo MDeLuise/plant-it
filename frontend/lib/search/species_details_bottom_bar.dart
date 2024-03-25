@@ -50,6 +50,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
       final response = await http.delete(
         "botanical-info/${species.id}",
       );
+      if (!context.mounted) return;
       final responseBody = json.decode(response.body);
       if (response.statusCode != 200) {
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);

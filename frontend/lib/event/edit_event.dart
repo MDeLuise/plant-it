@@ -51,6 +51,7 @@ class _EditEventPage extends State<EditEventPage> {
       final response = await widget.env.http
           .put("diary/entry/${updated.id}", updated.toMap());
       final responseBody = json.decode(response.body);
+      if (!mounted) return;
       if (response.statusCode != 200) {
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
@@ -58,7 +59,6 @@ class _EditEventPage extends State<EditEventPage> {
     } catch (e) {
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
-
     showSnackbar(context, SnackBarType.success,
         AppLocalizations.of(context).eventSuccessfullyUpdated);
     Provider.of<EventsNotifier>(context, listen: false).notify();
@@ -71,8 +71,7 @@ class _EditEventPage extends State<EditEventPage> {
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text(AppLocalizations.of(context).confirm),
-            content:
-                Text(AppLocalizations.of(context).areYouSureToRemoveEvent),
+            content: Text(AppLocalizations.of(context).areYouSureToRemoveEvent),
             actions: [
               TextButton(
                 onPressed: () {
@@ -95,6 +94,7 @@ class _EditEventPage extends State<EditEventPage> {
         "diary/entry/${widget.eventDTO.id}",
       );
       final responseBody = json.decode(response.body);
+      if (!mounted) return;
       if (response.statusCode != 200) {
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
@@ -102,7 +102,6 @@ class _EditEventPage extends State<EditEventPage> {
     } catch (e) {
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
-
     showSnackbar(context, SnackBarType.success,
         AppLocalizations.of(context).eventSuccessfullyDeleted);
     Provider.of<EventsNotifier>(context, listen: false).notify();
@@ -117,15 +116,13 @@ class _EditEventPage extends State<EditEventPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever_outlined),
-            tooltip: 'Remove reminder',
+            tooltip: AppLocalizations.of(context).removeEvent,
             onPressed: () => _removeEventWithConfirm(context),
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _updateEvent(),
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-        shape: const CircleBorder(),
         tooltip: AppLocalizations.of(context).addNewEvent,
         child: const Icon(Icons.save_outlined),
       ),

@@ -13,7 +13,15 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.containsKey('serverKey');
   final AppHttpClient http = AppHttpClient();
-  final Environment env = Environment(prefs: prefs, http: http);
+  final Environment env = Environment(
+    prefs: prefs,
+    http: http,
+    backendVersion: "",
+    credentials: Credentials(
+      username: "anonymous",
+      email: "not@an.email",
+    ),
+  );
   if (isLoggedIn) {
     if (prefs.containsKey('serverURL')) {
       final String? serverURL = prefs.getString("serverURL");
@@ -25,6 +33,18 @@ void main() async {
       final String? serverKey = prefs.getString("serverKey");
       if (serverKey != null) {
         http.key = serverKey;
+      }
+    }
+    if (prefs.containsKey('username')) {
+      final String? username = prefs.getString("username");
+      if (username != null) {
+        env.credentials.username = username;
+      }
+    }
+    if (prefs.containsKey('email')) {
+      final String? email = prefs.getString("email");
+      if (email != null) {
+        env.credentials.email = email;
       }
     }
   }

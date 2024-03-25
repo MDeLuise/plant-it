@@ -47,6 +47,12 @@ final ThemeData theme = ThemeData(
     titleTextStyle: TextStyle(color: Colors.white), // Title text color
   ),
 
+  // FloatingActionButton styles
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor:  Color.fromRGBO(76, 175, 80, 1),
+    shape: CircleBorder(),
+  ),
+
   // Other element styles
   iconTheme: const IconThemeData(color: Colors.white), // Icon color
 );

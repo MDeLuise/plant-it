@@ -49,6 +49,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
           await widget.env.http.get("botanical-info/${widget.plant.speciesId}");
       final responseBody = json.decode(response.body);
       if (response.statusCode != 200) {
+        if (!mounted) return;
         showSnackbar(context, SnackBarType.fail, responseBody["message"]);
         return;
       }
@@ -57,6 +58,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       showSnackbar(context, SnackBarType.fail, e.toString());
     }
   }

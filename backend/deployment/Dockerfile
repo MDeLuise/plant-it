@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21
 
 # Download needed packages
-RUN apt-get update && apt-get install -y bash openssl wget
+RUN apt-get updateInternal && apt-get install -y bash openssl wget
 
 # Create environment
 RUN mkdir /opt/app

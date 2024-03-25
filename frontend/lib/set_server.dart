@@ -39,12 +39,6 @@ class _SetServerState extends State<SetServer> {
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(env: widget.env),
-            // builder: (context) => OTPInsertPage(
-            //     env: _env,
-            //     request: SignupRequest(
-            //         username: "max",
-            //         password: "user00000",
-            //         email: "homeservertest.mummy895@slmails.com")),
           ),
         );
       } else {

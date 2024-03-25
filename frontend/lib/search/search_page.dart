@@ -29,6 +29,7 @@ class _SeachPageState extends State<SeachPage> {
         : "botanical-info/partial/$seatchTerm";
     try {
       final response = await widget.env.http.get(url);
+      if (!mounted) return;
       if (response.statusCode != 200) {
         showSnackbar(
             context, SnackBarType.fail, json.decode(response.body)["message"]);
@@ -111,6 +112,9 @@ class _SeachPageState extends State<SeachPage> {
                 },
               );
             },
+          ),
+          const SizedBox(
+            height: 100,
           ),
         ],
       ),

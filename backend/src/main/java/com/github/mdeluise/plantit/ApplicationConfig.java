@@ -139,16 +139,16 @@ public class ApplicationConfig {
                                               @Value("${trefle.key}") String trefleKey, TrefleMigrator trefleMigrator) {
         return args -> {
             if (!update) {
-                logger.info("UPDATE_EXISTING flag set to false. Skipping update of existing species.");
+                logger.info("UPDATE_EXISTING flag set to false. Skipping updateInternal of existing species.");
                 return;
             }
             if (trefleKey == null || trefleKey.isBlank()) {
                 logger.info(
-                    "UPDATE_EXISTING flag set to true but trefle key not provided. Skipping update of existing " +
+                    "UPDATE_EXISTING flag set to true but trefle key not provided. Skipping updateInternal of existing " +
                         "species.");
                 return;
             }
-            logger.info("trefle key provided. Starting update of existing species...");
+            logger.info("trefle key provided. Starting updateInternal of existing species...");
             trefleMigrator.fillMissingExternalInfo();
         };
     }

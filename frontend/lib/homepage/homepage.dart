@@ -13,14 +13,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String username = env.prefs.getString("username") ?? "anonymous user";
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomePageHeader(
-            username: username,
+            username: env.credentials.username,
           ),
           PlantList(
             env: env,
@@ -29,6 +27,9 @@ class HomePage extends StatelessWidget {
             height: 25,
           ),
           RecentEvents(env: env),
+          const SizedBox(
+            height: 100,
+          ),
         ],
       ),
     );

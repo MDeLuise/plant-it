@@ -14,7 +14,10 @@ import 'package:provider/provider.dart';
 class AddNewEventPage extends StatefulWidget {
   final Environment env;
 
-  const AddNewEventPage({super.key, required this.env});
+  const AddNewEventPage({
+    super.key,
+    required this.env,
+  });
 
   @override
   State<StatefulWidget> createState() => _AddNewEventPage();
@@ -35,6 +38,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
     final List<EventCard> created = [];
     for (var i = 0; i < _eventTypesToCreate.length; i++) {
       for (var j = 0; j < plantIds.length; j++) {
+        if (!mounted) return;
         final EventDTO toCreate = EventDTO(
             date: _selectedDate,
             diaryId: plantIds[j],
@@ -43,6 +47,7 @@ class _AddNewEventPage extends State<AddNewEventPage> {
         try {
           final response =
               await widget.env.http.post("diary/entry", toCreate.toMap());
+          if (!mounted) return;
           final responseBody = json.decode(response.body);
           if (response.statusCode == 200) {
             created.add(dtoToCard(responseBody, widget.env));
@@ -86,8 +91,6 @@ class _AddNewEventPage extends State<AddNewEventPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addEvent(),
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-        shape: const CircleBorder(),
         tooltip: AppLocalizations.of(context).addNewEvent,
         child: const Icon(Icons.add_outlined),
       ),

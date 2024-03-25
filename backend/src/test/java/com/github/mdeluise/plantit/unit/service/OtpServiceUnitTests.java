@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.authentication.UserRepository;
 import com.github.mdeluise.plantit.notification.otp.Otp;
 import com.github.mdeluise.plantit.notification.otp.OtpGenerator;
@@ -42,7 +41,6 @@ class OtpServiceUnitTests {
         final Date expiration = new Date();
         generatedOtp.setExpiration(expiration);
 
-        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
         Mockito.when(otpGenerator.generateOTP(6, 30, email)).thenReturn(generatedOtp);
         Mockito.when(otpRepository.save(generatedOtp)).thenReturn(generatedOtp);
 

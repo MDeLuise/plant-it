@@ -439,7 +439,7 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.2.0 -->
+    <!-- can be removed after updateInternal to v0.2.0 -->
     <changeSet id="updateTo0.1.1" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -480,7 +480,7 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.3.0 -->
+    <!-- can be removed after updateInternal to v0.3.0 -->
     <changeSet id="updateTo0.3.0" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -510,14 +510,14 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.4.0 -->
+    <!-- can be removed after updateInternal to v0.4.0 -->
     <changeSet id="modifyReminderColumns" author="MDeLuise">
         <modifyDataType tableName="reminders" columnName="reminder_start" newDataType="date"/>
         <modifyDataType tableName="reminders" columnName="reminder_end" newDataType="date"/>
     </changeSet>
 
 
-    <!-- can be removed after update to v0.4.3 -->
+    <!-- can be removed after updateInternal to v0.4.3 -->
     <changeSet id="addDeleteCascadeToForeignKeys" author="MDeLuise">
         <!-- Drop and recreate foreign key constraint fk_apiKey_user -->
         <dropForeignKeyConstraint baseTableName="api_keys" constraintName="fk_apiKey_user"/>
@@ -638,7 +638,7 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.4.3 -->
+    <!-- can be removed after updateInternal to v0.4.3 -->
     <changeSet id="addExternalIdUniqueConstraintIfNotExists" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -657,7 +657,7 @@
     </changeSet>
 
 
-    <!-- can be removed after update to v0.4.3 -->
+    <!-- can be removed after updateInternal to v0.4.3 -->
     <changeSet id="remove_unique_constraint_and_column" author="your_name">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="botanical_infos" columnName="scientific_name"/>

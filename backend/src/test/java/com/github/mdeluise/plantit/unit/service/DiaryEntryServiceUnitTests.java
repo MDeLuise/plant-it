@@ -199,7 +199,7 @@ class DiaryEntryServiceUnitTests {
 
 
     @Test
-    @DisplayName("Should update diary entry successfully")
+    @DisplayName("Should updateInternal diary entry successfully")
     void shouldUpdateDiaryEntrySuccessfully() {
         final User authenticated = new User();
         authenticated.setId(1L);

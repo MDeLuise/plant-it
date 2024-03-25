@@ -30,6 +30,7 @@ class _AddOrEditPlantPage extends State<AddOrEditPlantPage> {
     final response = await widget.env.http
         .put("plant/${widget.plantDTO.id}", _updated.toMap());
     final responseBody = json.decode(response.body);
+    if (!mounted) return;
     if (response.statusCode != 200) {
       showSnackbar(context, SnackBarType.fail, responseBody["message"]);
       return;
@@ -42,6 +43,7 @@ class _AddOrEditPlantPage extends State<AddOrEditPlantPage> {
   void _createPlant() async {
     final response = await widget.env.http
         .post("plant/${widget.plantDTO.id}", _updated.toMap());
+    if (!mounted) return;
     final responseBody = json.decode(response.body);
     if (response.statusCode != 200) {
       showSnackbar(context, SnackBarType.fail, responseBody["message"]);
@@ -69,8 +71,6 @@ class _AddOrEditPlantPage extends State<AddOrEditPlantPage> {
               _updatePlant();
             }
           },
-          shape: const CircleBorder(),
-          backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
           child: Icon(widget.plantDTO.id == null
               ? Icons.add_outlined
               : Icons.save_outlined),
