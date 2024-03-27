@@ -58,29 +58,25 @@ class _FilterWidgetState extends State<FilterWidget> {
           ),
           if (_isOpen) ...[
             const SizedBox(height: 16.0),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: TextFieldMultipleDropDown(
-                    onSelectedItemsChanged: widget.onSelectedPlantsChanged,
-                    options: widget.env.plants == null
-                        ? []
-                        : widget.env.plants!
-                            .map((e) => e.info.personalName!)
-                            .toList(),
-                    text: AppLocalizations.of(context).plants,
-                  ),
+                TextFieldMultipleDropDown(
+                  onSelectedItemsChanged: widget.onSelectedPlantsChanged,
+                  options: widget.env.plants == null
+                      ? []
+                      : widget.env.plants!
+                          .map((e) => e.info.personalName!)
+                          .toList(),
+                  text: AppLocalizations.of(context).plants,
                 ),
-                const SizedBox(width: 16.0),
-                Expanded(
-                  child: TextFieldMultipleDropDown(
-                    onSelectedItemsChanged: widget.onSelectedEventsChanged,
-                    options: widget.env.eventTypes
-                        ?.map((e) => getLocaleEvent(context, e))
-                        .toList() as List<String>,
-                    text: AppLocalizations.of(context).events,
-                  ),
+                const SizedBox(height: 10),
+                TextFieldMultipleDropDown(
+                  onSelectedItemsChanged: widget.onSelectedEventsChanged,
+                  options: widget.env.eventTypes
+                      ?.map((e) => getLocaleEvent(context, e))
+                      .toList() as List<String>,
+                  text: AppLocalizations.of(context).events,
                 ),
               ],
             ),

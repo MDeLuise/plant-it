@@ -95,6 +95,10 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                     child: Container(
                       height: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      decoration: BoxDecoration(
+                          color: _selectedItems.contains(item)
+                              ? const Color.fromRGBO(31, 57, 48, 1)
+                              : null),
                       child: Row(
                         children: [
                           if (isSelected)
