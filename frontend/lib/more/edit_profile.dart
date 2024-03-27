@@ -172,7 +172,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }
                         }
                       },
-                      child: Text(AppLocalizations.of(context).updatePassword),
+                      child: Text(AppLocalizations.of(context).updateProfile),
                     ),
                     const SizedBox(height: 20),
                   ],

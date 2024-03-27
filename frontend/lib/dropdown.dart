@@ -140,7 +140,7 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
             ).toList();
           },
           buttonStyleData: ButtonStyleData(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 50,
             decoration: BoxDecoration(
                 border: Border.all(
@@ -149,7 +149,7 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                         .enabledBorder!
                         .borderSide
                         .color),
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
             //width: 200,
           ),
           dropdownStyleData: const DropdownStyleData(
@@ -256,7 +256,9 @@ class _TextFieldSingleDropDownState extends State<TextFieldSingleDropDown> {
                     value: item,
                     child: Text(
                       item,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).textTheme.bodyLarge!.color),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ))
@@ -270,9 +272,17 @@ class _TextFieldSingleDropDownState extends State<TextFieldSingleDropDown> {
               }
             });
           },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+          buttonStyleData: ButtonStyleData(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 50,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context)
+                        .inputDecorationTheme
+                        .enabledBorder!
+                        .borderSide
+                        .color),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
             //width: 200,
           ),
           iconStyleData: const IconStyleData(

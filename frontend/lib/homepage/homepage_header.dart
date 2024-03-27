@@ -19,8 +19,12 @@ class HomePageHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(AppLocalizations.of(context).hello(username)),
-                Text(AppLocalizations.of(context).welcomeBack,
-                  style: TextStyle(color: Colors.grey),
+                Text(
+                  AppLocalizations.of(context).welcomeBack,
+                  style: TextStyle(
+                    color:
+                        Theme.of(context).inputDecorationTheme.hintStyle!.color,
+                  ),
                 ),
               ],
             ),

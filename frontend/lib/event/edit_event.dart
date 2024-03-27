@@ -14,13 +14,17 @@ class EditEventPage extends StatefulWidget {
   final Environment env;
   final EventDTO eventDTO;
 
-  const EditEventPage({super.key, required this.env, required this.eventDTO});
+  const EditEventPage({
+    super.key,
+    required this.env,
+    required this.eventDTO,
+  });
 
   @override
-  State<EditEventPage> createState() => _EditEventPage();
+  State<EditEventPage> createState() => _EditEventPageState();
 }
 
-class _EditEventPage extends State<EditEventPage> {
+class _EditEventPageState extends State<EditEventPage> {
   late String _linkedPlant;
   late String _eventType;
   final TextEditingController _noteController = TextEditingController();
@@ -198,7 +202,7 @@ class _EditEventPage extends State<EditEventPage> {
                       final DateTime? pickedDate = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
+                        firstDate: DateTime(DateTime.now().year - 1, 1, 1),
                         lastDate: DateTime.now(),
                       );
 

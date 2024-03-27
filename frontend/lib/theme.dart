@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+const PaintingEffect skeletonizerEffect = PulseEffect(
+  from: Colors.grey,
+  to: Color.fromARGB(255, 207, 207, 207),
+);
 
 final ThemeData theme = ThemeData(
   scaffoldBackgroundColor: const Color(0xFF061913), // Background color
@@ -49,7 +55,7 @@ final ThemeData theme = ThemeData(
 
   // FloatingActionButton styles
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor:  Color.fromRGBO(76, 175, 80, 1),
+    backgroundColor: Color.fromRGBO(76, 175, 80, 1),
     shape: CircleBorder(),
   ),
 

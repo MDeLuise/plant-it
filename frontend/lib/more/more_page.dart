@@ -9,6 +9,7 @@ import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/edit_profile.dart';
 import 'package:plant_it/more/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MorePage extends StatefulWidget {
@@ -56,10 +57,7 @@ class _MorePageState extends State<MorePage> {
       return [1, 2, 3].map((element) {
         return Skeletonizer(
           enabled: true,
-          effect: const PulseEffect(
-            from: Colors.grey,
-            to: Color.fromARGB(255, 207, 207, 207),
-          ),
+          effect: skeletonizerEffect,
           child: SettingsInfo(
             title: element.toString() * (8 + element),
             value: element.toString() * (8 + element),

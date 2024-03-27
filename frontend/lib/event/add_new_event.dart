@@ -7,8 +7,8 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
+import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/events_notifier.dart';
-import 'package:plant_it/event/events.dart';
 import 'package:provider/provider.dart';
 
 class AddNewEventPage extends StatefulWidget {

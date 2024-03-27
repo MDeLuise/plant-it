@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/event/events.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -15,10 +16,10 @@ class RecentEvents extends StatefulWidget {
   const RecentEvents({super.key, required this.env});
 
   @override
-  State<StatefulWidget> createState() => _RecentEvents();
+  State<StatefulWidget> createState() => _RecentEventsState();
 }
 
-class _RecentEvents extends State<RecentEvents> {
+class _RecentEventsState extends State<RecentEvents> {
   final int _pageSize = 5;
   bool _isLoading = true;
   List<Widget> _recentEvents = [];
@@ -62,10 +63,7 @@ class _RecentEvents extends State<RecentEvents> {
       _pageSize,
       (index) => Skeletonizer(
         enabled: _isLoading,
-        effect: const PulseEffect(
-          from: Colors.grey,
-          to: Color.fromARGB(255, 207, 207, 207),
-        ),
+        effect: skeletonizerEffect,
         child: EventCard(
           action: "",
           plant: "",

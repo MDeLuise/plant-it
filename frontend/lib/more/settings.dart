@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -93,10 +94,7 @@ class SettingsInfo extends StatelessWidget {
             const Spacer(),
             Skeletonizer(
                 enabled: isValueLoading ?? false,
-                effect: const PulseEffect(
-                  from: Colors.grey,
-                  to: Color.fromARGB(255, 207, 207, 207),
-                ),
+                effect: skeletonizerEffect,
                 child: Text(value)),
           ],
         ),

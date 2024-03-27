@@ -8,6 +8,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/species_details_page.dart';
 import 'package:plant_it/search/tag.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class SearchResultCard extends StatefulWidget {
@@ -98,10 +99,7 @@ class _SearchResultCardState extends State<SearchResultCard> {
             Expanded(
               child: Skeletonizer(
                 enabled: _loading,
-                effect: const PulseEffect(
-                  from: Colors.grey,
-                  to: Color.fromARGB(255, 207, 207, 207),
-                ),
+                effect: skeletonizerEffect,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),

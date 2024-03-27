@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/event/events.dart';
+import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:icon_animated/icon_animated.dart';
 

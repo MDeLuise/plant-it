@@ -28,6 +28,8 @@ class _TemplatePageState extends State<TemplatePage> {
   ];
   late List<Widget> _bottombarPages;
   int _currentIndex = 0;
+  final Color _iconActiveColor = const Color.fromARGB(255, 55, 189, 6);
+  final Color _iconNotActiveColor = const Color.fromARGB(255, 156, 192, 172);
 
   @override
   void initState() {
@@ -74,9 +76,7 @@ class _TemplatePageState extends State<TemplatePage> {
             return Icon(
               _bottombarIconList[index],
               size: 24,
-              color: isActive
-                  ? const Color.fromARGB(255, 55, 189, 6)
-                  : const Color.fromARGB(255, 156, 192, 172),
+              color: isActive ? _iconActiveColor : _iconNotActiveColor,
             );
           },
           activeIndex: _currentIndex,
@@ -99,7 +99,6 @@ class _TemplatePageState extends State<TemplatePage> {
             hasResizer: false,
             builder: (data) {
               return SideMenuData(
-                //header: const Text('Header'),
                 items: [
                   // can not be in a separate _sideMenuPages = [...]. I think because _currentIndex == x is evaluated at declaration time?
                   SideMenuItemDataTile(
@@ -109,10 +108,9 @@ class _TemplatePageState extends State<TemplatePage> {
                       highlightSelectedColor: Colors.transparent,
                       onTap: () => setState(() => _currentIndex = 0),
                       title: 'Home',
-                      titleStyle: const TextStyle(
-                          color: Color.fromARGB(255, 156, 192, 172)),
-                      selectedTitleStyle: const TextStyle(
-                        color: Color.fromARGB(255, 55, 189, 6),
+                      titleStyle: TextStyle(color: _iconNotActiveColor),
+                      selectedTitleStyle: TextStyle(
+                        color: _iconActiveColor,
                       ),
                       icon: const Icon(Icons.home_outlined),
                       selectedIcon: const Icon(Icons.home),
@@ -125,10 +123,9 @@ class _TemplatePageState extends State<TemplatePage> {
                     onTap: () => setState(() => _currentIndex = 1),
                     title: 'Events',
                     tooltip: "Events",
-                    titleStyle: const TextStyle(
-                        color: Color.fromARGB(255, 156, 192, 172)),
-                    selectedTitleStyle: const TextStyle(
-                      color: Color.fromARGB(255, 55, 189, 6),
+                    titleStyle: TextStyle(color: _iconNotActiveColor),
+                    selectedTitleStyle: TextStyle(
+                      color: _iconActiveColor,
                     ),
                     icon: const Icon(Icons.calendar_month_outlined),
                     selectedIcon: const Icon(Icons.calendar_month),
@@ -141,10 +138,9 @@ class _TemplatePageState extends State<TemplatePage> {
                     onTap: () => setState(() => _currentIndex = 2),
                     title: 'Search',
                     tooltip: "Search",
-                    titleStyle: const TextStyle(
-                        color: Color.fromARGB(255, 156, 192, 172)),
-                    selectedTitleStyle: const TextStyle(
-                      color: Color.fromARGB(255, 55, 189, 6),
+                    titleStyle: TextStyle(color: _iconNotActiveColor),
+                    selectedTitleStyle: TextStyle(
+                      color: _iconActiveColor,
                     ),
                     icon: const Icon(Icons.search_outlined),
                     selectedIcon: const Icon(Icons.search),

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PlantImageHeader extends StatefulWidget {
@@ -49,10 +50,7 @@ class _PlantImageHeaderState extends State<PlantImageHeader> {
 
     return Skeletonizer(
       enabled: _loading,
-      effect: const PulseEffect(
-        from: Colors.grey,
-        to: Color.fromARGB(255, 207, 207, 207),
-      ),
+      effect: skeletonizerEffect,
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(

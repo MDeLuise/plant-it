@@ -8,6 +8,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details/plant_details_page.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -266,10 +267,7 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
         Expanded(
           child: Skeletonizer(
             enabled: _loading,
-            effect: const PulseEffect(
-              from: Colors.grey,
-              to: Color.fromARGB(255, 207, 207, 207),
-            ),
+            effect: skeletonizerEffect,
             child: AspectRatio(
               aspectRatio: 2 / 1,
               child: Container(

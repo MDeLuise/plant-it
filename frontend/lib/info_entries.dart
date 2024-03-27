@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/theme.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 List<Skeletonizer> generateSkeleton(int num, bool enabled) {
   final List<Skeletonizer> result = [];
   for (var i = 0; i < num; i++) {
     result.add(Skeletonizer(
-      effect: const PulseEffect(
-        from: Colors.grey,
-        to: Color.fromARGB(255, 207, 207, 207),
-      ),
+      effect: skeletonizerEffect,
       enabled: enabled,
       child: SimpleInfoEntry(title: "foo" * (i + 1), value: "bar" * (num - i)),
     ));
