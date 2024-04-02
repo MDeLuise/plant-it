@@ -159,3 +159,6 @@ Let's discuss first possible solutions for the development before start working 
 
 ### How to contribute
 If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.
+
+## Support the project
+If you find this project helpful and would like to supporting it, consider by [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
