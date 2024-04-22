@@ -96,6 +96,7 @@ public class DiaryEntryService {
         if (!diaryOwner.equals(authenticatedUserService.getAuthenticatedUser())) {
             throw new UnauthorizedException();
         }
+        diaryEntry.setDiary(diary); // if not, diaryEntry.diary has only the id and not other fields
         return diaryEntryRepository.save(diaryEntry);
     }
 

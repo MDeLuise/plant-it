@@ -121,7 +121,7 @@ class DiaryEntryControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update diary entry")
+    @DisplayName("Test updateInternal diary entry")
     void testUpdateDiaryEntry() {
         final Long id = 1L;
         final DiaryEntryDTO updatedDTO = new DiaryEntryDTO();
@@ -201,7 +201,7 @@ class DiaryEntryControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update non-existent diary entry")
+    @DisplayName("Test updateInternal non-existent diary entry")
     void testUpdateNonExistentDiaryEntry() {
         final Long id = 1L;
         final DiaryEntryDTO updatedDTO = new DiaryEntryDTO();
@@ -234,7 +234,7 @@ class DiaryEntryControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update invalid diary entry")
+    @DisplayName("Test updateInternal invalid diary entry")
     void testUpdateInvalidDiaryEntry() {
         final Long id = 1L;
         final DiaryEntryDTO updatedDTO = new DiaryEntryDTO();

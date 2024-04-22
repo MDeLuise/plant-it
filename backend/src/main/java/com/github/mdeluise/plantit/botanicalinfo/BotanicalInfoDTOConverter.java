@@ -25,6 +25,9 @@ public class BotanicalInfoDTOConverter extends AbstractDTOConverter<BotanicalInf
         final BotanicalInfo result = modelMapper.map(dto, BotanicalInfo.class);
         final PlantCareInfo plantCareInfo = plantCareInfoDtoConverter.convertFromDTO(dto.getPlantCareInfo());
         result.setPlantCareInfo(plantCareInfo);
+        if (dto.getImageContentType() != null) {
+            result.getImage().setContentType(dto.getImageContentType());
+        }
         return result;
     }
 

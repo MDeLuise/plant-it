@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit;
 import java.io.IOException;
 import java.net.http.HttpClient;
 
+import com.github.mdeluise.plantit.image.ImageRepository;
 import com.github.mdeluise.plantit.notification.otp.OtpService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
@@ -67,15 +68,17 @@ public class ApplicationConfig {
     private final TemporaryPasswordService temporaryPasswordService;
     private final ReminderDispatcher reminderDispatcher;
     private RedisServer redisServer;
+    private final ImageRepository imageRepository;
     private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
 
     @Autowired
     public ApplicationConfig(OtpService otpService, TemporaryPasswordService temporaryPasswordService,
-                             ReminderDispatcher reminderDispatcher) {
+                             ReminderDispatcher reminderDispatcher, ImageRepository imageRepository) {
         this.otpService = otpService;
         this.temporaryPasswordService = temporaryPasswordService;
         this.reminderDispatcher = reminderDispatcher;
+        this.imageRepository = imageRepository;
     }
 
 

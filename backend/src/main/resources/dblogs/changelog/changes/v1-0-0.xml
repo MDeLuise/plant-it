@@ -248,7 +248,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="url" type="varchar(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
+            </column>
+            <column name="content_type" type="varchar(50)">
+                <constraints nullable="true"/>
             </column>
             <column name="path" type="varchar(255)">
             </column>
@@ -636,7 +639,7 @@
 
 
     <!-- can be removed after update to v0.4.3 -->
-    <changeSet id="addExternalIdUniqueConstraintIfNotExists" author="MDeLuise">
+    <changeSet id="addExternalIdUniqueConstraintIfNotExists" author="MDeLuise" failOnError="false">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*)
@@ -655,7 +658,7 @@
 
 
     <!-- can be removed after update to v0.4.3 -->
-    <changeSet id="remove_unique_constraint_and_column" author="your_name">
+    <changeSet id="remove_unique_constraint_and_column" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="botanical_infos" columnName="scientific_name"/>
         </preConditions>
@@ -667,6 +670,23 @@
 
         <!-- Drop the scientific_name column -->
         <dropColumn tableName="botanical_infos" columnName="scientific_name"/>
+    </changeSet>
+
+
+    <!-- can be removed after update to v0.5.0 -->
+    <changeSet id="updateEntityImageTable" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="entity_images" columnName="content_type"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="entity_images">
+            <column name="content_type" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <dropNotNullConstraint tableName="entity_images" columnName="url" columnDataType="varchar(255)"/>
     </changeSet>
 
 

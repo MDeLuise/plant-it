@@ -220,7 +220,7 @@ class ReminderServiceUnitTests {
 
 
     @Test
-    @DisplayName("Should update reminder successfully")
+    @DisplayName("Should updateInternal reminder successfully")
     void shouldUpdateReminderSuccessfully() {
         final User authenticated = new User();
         authenticated.setId(1L);

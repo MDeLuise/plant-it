@@ -1,15 +1,10 @@
 <p align="center">
-  <img src="https://img.shields.io/github/checks-status/MDeLuise/plant-it/main?style=for-the-badge&label=build&color=%2228B22" width="120px" />
-<img src="https://img.shields.io/github/v/release/MDeLuise/plant-it?style=for-the-badge&color=%2228B22" width="120px" />
-</p>
-
-<p align="center">
   <img width="150px" src="images/plant-it-logo.png" title="Plant-it">
 </p>
 
 <h1 align="center">Plant-it</h1>
 
-<p align="center"><i><b>[Still under "initial" development, some features may be unstable or change in the future, although database schemas should be stable. A first release version is planned to be packed soon].</b></i></p>
+<p align="center"><i><b>[Project under "active" development, some features may be unstable or change in the future. A first release version is planned to be packed soon].</b></i></p>
 <p align="center">Plant-it is a <b>self-hosted gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
 <p align="center"><a href="https://docs.plant-it.org">Explore the documentation</a></p>
@@ -17,10 +12,7 @@
 <p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#quickstart">Quickstart</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
 
 <p align="center">
-  <img src="/images/screenshot-1.png" width="45%" />
-  <img src="/images/screenshot-2.png" width="45%" /> 
-  <img src="/images/screenshot-3.png" width="45%" />
-  <img src="/images/screenshot-4.png" width="45%" /> 
+  <img src="/images/banner.png" width="100%" />
 </p>
 
 ## Why?
@@ -44,109 +36,87 @@ Take a look at the [roadmap](https://github.com/users/MDeLuise/projects/3/views/
 ## Quickstart 
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
 
-1. Create a folder where you want to place all Plant-it related files.
-1. Inside that folder, create the following files:
-    * `docker-compose.yml`:
-    ```yaml
-    version: "3"
-    name: plant-it
-    services:
-      backend:
-        image: msdeluise/plant-it-backend:latest
-        env_file: backend.env
-        depends_on:
-          - db
-          - cache
-        restart: unless-stopped
-        volumes:
-          - "./upload-dir:/upload-dir"
-          - "certs:/certificates"
-        ports:
-          - "8080:8080"
+* Create a folder where you want to place all Plant-it related files.
+* Inside that folder, create a file named `docker-compose.yml` with this content:
+  ```yaml
+  version: "3"
+  name: plant-it
+  services:
+    server:
+      image: msdeluise/plant-it-server:latest
+      env_file: backend.env
+      depends_on:
+        - db
+        - cache
+      restart: unless-stopped
+      volumes:
+        - "./upload-dir:/upload-dir"
+        - "./certs:/certificates"
+      ports:
+        - "8080:8080"
+        - "3000:3000"
 
-      db:
-        image: mysql:8.0
-        restart: always
-        env_file: backend.env
-        volumes:
-          - "./db:/var/lib/mysql"
+    db:
+      image: mysql:8.0
+      restart: always
+      env_file: backend.env
+      volumes:
+        - "./db:/var/lib/mysql"
 
-      cache:
-        image: redis:7.2.1
-        restart: always
+    cache:
+      image: redis:7.2.1
+      restart: always
+  ```
+* Inside that folder, create a file named `backend.env` with this content:
+  ```properties
+  #
+  # DB
+  #
+  MYSQL_HOST=db
+  MYSQL_PORT=3306
+  MYSQL_USERNAME=root
+  MYSQL_PSW=root
+  MYSQL_DATABASE=bootdb
+  MYSQL_ROOT_PASSWORD=root
 
-      frontend:
-        image: msdeluise/plant-it-frontend:latest
-        env_file: frontend.env
-        links:
-          - backend
-        ports:
-          - "3000:3000"
-        volumes:
-          - "certs:/certificates"
-    volumes:
-      certs:
-        driver: local
-        driver_opts:
-          type: none
-          o: bind
-          device: ./certificates
-    ```
-    * `backend.env`:
-    ```properties
-    #
-    # DB
-    #
-    MYSQL_HOST=db
-    MYSQL_PORT=3306
-    MYSQL_USERNAME=root
-    MYSQL_PSW=root
-    MYSQL_ROOT_PASSWORD=root
-    MYSQL_DATABASE=bootdb
+  #
+  # JWT
+  #
+  JWT_SECRET=putTheSecretHere
+  JWT_EXP=1
 
-    #
-    # JWT
-    #
-    JWT_SECRET=putTheSecretHere
-    JWT_EXP=1
-    
-    #
-    # Server config
-    #
-    USERS_LIMIT=-1
-    UPLOAD_DIR=/upload-dir
-    API_PORT=8080
-    TREFLE_KEY=
-    ALLOWED_ORIGINS=*
-    LOG_LEVEL=DEBUG
-    UPDATE_EXISTING=false
-    
-    #
-    # Cache
-    #
-    CACHE_TTL=86400
-    CACHE_HOST=cache
-    CACHE_PORT=6379
+  #
+  # Server config
+  #
+  USERS_LIMIT=-1
+  UPLOAD_DIR=/upload-dir
+  API_PORT=8080
+  TREFLE_KEY=
+  LOG_LEVEL=DEBUG
+  ALLOWED_ORIGINS=*
 
-    #
-    # SSL
-    #
-    SSL_ENABLED=false
-    CERTIFICATE_PATH=/certificates/
-    ```
-    * `frontend.env`:
-    ```properties
-    PORT=3000
-    API_URL=http://localhost:8080/api
-    WAIT_TIMEOUT=10000
-    CACHE_TTL_DAYS=7
-    BROWSER=none
-    SSL_ENABLED=false
-    CERTIFICATE_PATH=/certificates/
-    ```
-1. Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
+  #
+  # Cache
+  #
+  CACHE_TTL=86400
+  CACHE_HOST=cache
+  CACHE_PORT=6379
 
-<a href="https://docs.plant-it.org/installation/configurations/">Take a look at the documentation</a> in order to understand the available configurations and let the service be available even from another machine.
+  #
+  # SSL
+  #
+  SSL_ENABLED=false
+  CERTIFICATE_PATH=/certificates/
+  ```
+* Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
+
+<a href="https://docs.plant-it.org/latest/installation/#configuration">Take a look at the documentation</a> in order to understand the available configurations.
+
+## Support the project
+If you find this project helpful and would like to supporting it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
+<p align="center">
+  <a href="https://www.buymeacoffee.com/mdeluise" target="_blank"><img width="150px" src="images/bmc-button.png"></a>
+</p>
 
 ## Contribute
 Feel free to contribute and help improve the repo.
@@ -158,7 +128,4 @@ You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml).
 
 ### How to contribute
-If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/local-environment/">take a look at the documentation</a>.
-
-## Support the project
-If you find this project helpful and would like to supporting it, consider by [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
+If you want to make some changes and test them locally <a href="https://docs.plant-it.org/latest/support/#contributing">take a look at the documentation</a>.

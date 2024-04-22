@@ -61,7 +61,7 @@ public class UserService {
 
 
     @Transactional
-    public User update(Long id, User updatedUser) {
+    public User updateInternal(Long id, User updatedUser) {
         final User toUpdate = get(id);
         if (updatedUser.getUsername() != null && !updatedUser.getUsername().isBlank() &&
                 !updatedUser.getUsername().equals(toUpdate.getUsername())) {
@@ -82,14 +82,14 @@ public class UserService {
                     "Error while updating password for user {}, incorrect current password.", toUpdate.getUsername());
                 throw new AuthenticationException("Current password does not match");
             } else {
-                logger.debug("User {} update his password using a temporary password", toUpdate.getUsername());
+                logger.debug("User {} updateInternal his password using a temporary password", toUpdate.getUsername());
             }
         }
         if (newPassword != null && !newPassword.isBlank() && !newPassword.equals(toUpdate.getPassword())) {
             final String encodedNewPassword = encoder.encode(newPassword);
             toUpdate.setPassword(encodedNewPassword);
             userRepository.save(toUpdate);
-            temporaryPasswordService.remove(toUpdate.getUsername());
+            temporaryPasswordService.removeIfExists(toUpdate.getUsername());
             logger.info("Password for user {} updated", toUpdate.getUsername());
             if (emailService.isEnabled()) {
                 try {
@@ -103,11 +103,31 @@ public class UserService {
     }
 
 
+    public void updateUsername(Long userId, String password, String newUsername) throws AuthenticationException {
+        final User toUpdate = get(userId);
+        if (!encoder.matches(password, toUpdate.getPassword())) {
+            logger.error("Error while updating username for user {}, incorrect current password.", toUpdate.getUsername());
+            throw new AuthenticationException("Incorrect password");
+        }
+        if (!newUsername.equals(toUpdate.getUsername()) && existsByUsername(newUsername)) {
+            logger.error("Error while updating username for user {}, new username already used.", toUpdate.getUsername());
+            throw new IllegalArgumentException("New username already used");
+        }
+        if (newUsername != null && !newUsername.isBlank() && !newUsername.equals(toUpdate.getUsername())) {
+            toUpdate.setUsername(newUsername);
+            userRepository.save(toUpdate);
+        }
+    }
+
     public void updateEmail(Long userId, String password, String newEmail) throws AuthenticationException {
         final User toUpdate = get(userId);
         if (!encoder.matches(password, toUpdate.getPassword())) {
             logger.error("Error while updating email for user {}, incorrect current password.", toUpdate.getUsername());
             throw new AuthenticationException("Incorrect password");
+        }
+        if (!newEmail.equals(toUpdate.getUsername()) && existsByEmail(newEmail)) {
+            logger.error("Error while updating email for user {}, new email already used.", toUpdate.getUsername());
+            throw new IllegalArgumentException("New email already used");
         }
         if (newEmail != null && !newEmail.isBlank() && !newEmail.equals(toUpdate.getPassword())) {
             toUpdate.setEmail(newEmail);
@@ -149,11 +169,6 @@ public class UserService {
 
     public long count() {
         return userRepository.count();
-    }
-
-
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("email", email));
     }
 
 

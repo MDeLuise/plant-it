@@ -264,7 +264,7 @@ class PlantServiceUnitTests {
 
 
     @Test
-    @DisplayName("Should update plant successfully")
+    @DisplayName("Should updateInternal plant successfully")
     void shouldUpdatePlantSuccessfully() {
         final Long plantId = 1L;
         final User authenticatedUser = new User();

@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.authentication;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -63,6 +64,7 @@ public class User implements Serializable {
     )
     @Column(name = "dispatcher_name")
     private Set<NotificationDispatcherName> notificationDispatchers = new HashSet<>();
+    private Date lastLogin;
 
 
     public User(Long id, String username, String password) {
@@ -184,6 +186,16 @@ public class User implements Serializable {
 
     public void setNotificationDispatchers(Set<NotificationDispatcherName> notificationDispatchers) {
         this.notificationDispatchers = notificationDispatchers;
+    }
+
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
 

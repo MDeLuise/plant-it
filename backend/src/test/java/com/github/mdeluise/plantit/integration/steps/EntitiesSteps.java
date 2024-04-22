@@ -1,6 +1,7 @@
 package com.github.mdeluise.plantit.integration.steps;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
 import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfo;
 import com.github.mdeluise.plantit.botanicalinfo.care.PlantCareInfoDTO;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
+import com.github.mdeluise.plantit.image.ImageContentResponse;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.integration.StepData;
 import com.github.mdeluise.plantit.plant.Plant;
@@ -43,7 +45,6 @@ public class EntitiesSteps {
     final int port;
     final String botanicalInfoPath = "/botanical-info";
     final String plantPath = "/plant";
-    final String imagePath = "/image";
     final MockMvc mockMvc;
     final StepData stepData;
     final ObjectMapper objectMapper;
@@ -236,7 +237,6 @@ public class EntitiesSteps {
 
         final PlantDTO plantDTO = new PlantDTO();
         plantDTO.setAvatarImageId(parameters.get("avatar_id"));
-        plantDTO.setAvatarImageUrl(parameters.get("avatar_url"));
         plantDTO.setAvatarMode(parameters.get("avatar_mode"));
         final long botanicalInfoId = getBotanicalInfoFromScientificName(parameters.get("botanical_info")).getId();
         plantDTO.setBotanicalInfoId(botanicalInfoId);
@@ -298,7 +298,6 @@ public class EntitiesSteps {
 
         final PlantDTO plantDTO = new PlantDTO();
         plantDTO.setAvatarImageId(parameters.get("avatar_id"));
-        plantDTO.setAvatarImageUrl(parameters.get("avatar_url"));
         plantDTO.setAvatarMode(parameters.get("avatar_mode"));
         final long botanicalInfoId = getBotanicalInfoFromScientificName(parameters.get("botanical_info")).getId();
         plantDTO.setBotanicalInfoId(botanicalInfoId);
@@ -446,7 +445,7 @@ public class EntitiesSteps {
 
 
     @Then("species {string} has this image")
-    public void botanicalInfoHasImage(String botanicalInfoName, DataTable table) {
+    public void botanicalInfoHasImage(String botanicalInfoName, DataTable table) throws IOException {
         final Map<String, String> parameters = table.transpose().asMap(String.class, String.class);
         final BotanicalInfoImage toCheck = getBotanicalInfoFromScientificName(botanicalInfoName).getImage();
 
@@ -456,18 +455,12 @@ public class EntitiesSteps {
         if (parameters.get("image_url") != null) {
             Assertions.assertThat(toCheck.getUrl()).isEqualTo(parameters.get("image_url"));
         }
+        final ImageContentResponse expected = imageStorageService.getImageContentInternal(toCheck.getId());
         if (parameters.get("image_content") != null) {
-            final byte[] expected = imageStorageService.getContentInternal(toCheck.getId());
-            Assertions.assertThat(expected)
+            Assertions.assertThat(expected.getContent())
                       .isEqualTo(Base64.getDecoder().decode(parameters.get("image_content")));
         } else {
-            try {
-                imageStorageService.getContentInternal(toCheck.getId());
-                Assertions.assertThat(false).isTrue();
-            } catch (UnsupportedOperationException ignored) {
-                Assertions.assertThat(true).isTrue();
-            }
-
+            Assertions.assertThat(expected.getType()).isNotNull();
         }
     }
 

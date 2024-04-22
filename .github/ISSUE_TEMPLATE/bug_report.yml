@@ -20,34 +20,11 @@ body:
 
   - type: textarea
     attributes:
-      label: Expected behaviour
-      description: Please describe precisely what you'd expect to happen. Be specific.
-    validations:
-      required: false
-
-  - type: textarea
-    attributes:
-      label: Steps to reproduce
-      description: Please describe the steps to reproduce the bug.
-      placeholder: |
-        1. ...
-        2. ...
-        3. ...
-    validations:
-      required: false
-  
-  - type: textarea
-    attributes:
       label: Local environment
-      description: Please provide additional information related to the environment you are using.
+      description: If applicable, please provide additional information related to the environment you are using.
       placeholder: |
-        1. Are you using docker deployment or not?
-        1. system version: x.y.z
-        2. content of docker-compose.yml file (remember to hide possible sensitive info):
-        3. content of backend.env file (remember to hide possible sensitive info):
-        4. content of frontend.env file (remember to hide possible sensitive info):
-
-  - type: textarea
-    attributes:
-      label: Additional info
-      description: Please provide any additional information that seem useful.
+        1. backend version and app version
+        2. content of docker-compose.yml file (remember to hide possible sensitive info)
+        3. content of backend.env file (remember to hide possible sensitive info)
+        4. app log
+        5. output of the docker compose log

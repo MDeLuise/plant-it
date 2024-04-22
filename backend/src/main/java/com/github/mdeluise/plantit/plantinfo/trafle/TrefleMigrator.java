@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * This class is used to add new info in the existing species on system version update.
+ * This class is used to add new info in the existing species on system version updateInternal.
  * v0.1.0: Botanical Info object has new `external_id` field.
  * v0.2.0: Botanical Info object has new `PlantCareInfo` field.
  * v0.2.0: Botanical Info object has new `synonyms` field.
@@ -33,7 +33,7 @@ public class TrefleMigrator {
 
     public void fillMissingExternalInfo() {
         botanicalInfoRepository.findAll().forEach(botanicalInfo -> {
-            logger.info(String.format("Checking update for species %s (id %s, creator: %s, external_id: %s)...",
+            logger.info(String.format("Checking updateInternal for species %s (id %s, creator: %s, external_id: %s)...",
                                       botanicalInfo.getSpecies(), botanicalInfo.getId(), botanicalInfo.getCreator(),
                                       botanicalInfo.getExternalId()
             ));

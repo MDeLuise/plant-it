@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
@@ -27,16 +26,14 @@ public class EntityImageImpl implements EntityImage, Serializable {
     private String description;
     @NotNull
     private Date createOn;
-    @NotBlank
     @Length(max = 255)
     private String url;
     private String path;
+    private String contentType;
 
 
     public EntityImageImpl() {
-        final String uuid = UUID.randomUUID().toString();
-        this.id = uuid;
-        this.url = "/" + uuid;
+        this.id = UUID.randomUUID().toString();
         this.createOn = new Date();
     }
 
@@ -84,6 +81,16 @@ public class EntityImageImpl implements EntityImage, Serializable {
     @Override
     public void setUrl(String url) {
         this.url = url;
+    }
+
+
+    public String getContentType() {
+        return contentType;
+    }
+
+
+    public void setContentType(String type) {
+        this.contentType = type;
     }
 
 

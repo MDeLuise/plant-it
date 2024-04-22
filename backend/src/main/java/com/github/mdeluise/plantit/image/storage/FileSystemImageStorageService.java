@@ -5,13 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
+import com.github.mdeluise.plantit.MigratorTo050;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -19,6 +23,7 @@ import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.EntityImage;
 import com.github.mdeluise.plantit.image.EntityImageImpl;
+import com.github.mdeluise.plantit.image.ImageContentResponse;
 import com.github.mdeluise.plantit.image.ImageRepository;
 import com.github.mdeluise.plantit.image.ImageTarget;
 import com.github.mdeluise.plantit.image.ImageUtility;
@@ -34,8 +39,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -74,7 +83,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
         }
         String fileExtension;
         try {
-            fileExtension = file.getContentType().split("/")[1];
+            fileExtension = file.getContentType();
         } catch (NullPointerException e) {
             logger.error("Error while extract file extension from file with content type " + file.getContentType());
             throw new StorageException("Could not retrieve file information", e);
@@ -96,7 +105,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
 
     private EntityImageImpl createImage(ImageTarget linkedEntity, Date creationDate, String description,
-                                        String fileExtension, InputStream fileInputStream) {
+                                        String contentType, InputStream fileInputStream) {
         try {
             EntityImageImpl entityImage;
             if (linkedEntity instanceof BotanicalInfo b) {
@@ -108,11 +117,9 @@ public class FileSystemImageStorageService implements ImageStorageService {
             } else {
                 throw new UnsupportedOperationException("Could not find suitable class for linkedEntity");
             }
-            if (creationDate != null) {
-                entityImage.setCreateOn(creationDate);
-            } else {
-                entityImage.setCreateOn(new Date());
-            }
+            entityImage.setCreateOn(Objects.requireNonNullElseGet(creationDate, Date::new));
+            entityImage.setContentType(contentType);
+            final String fileExtension = MediaType.parseMediaType(contentType).getSubtype();
             final String fileName = String.format("%s/%s.%s", rootLocation, entityImage.getId(), fileExtension);
             final Path pathToFile = Path.of(fileName);
             createDestinationDirectoryIfNotExist(Path.of(rootLocation));
@@ -128,9 +135,8 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
 
     @Override
-    public EntityImage save(byte[] content, String contentType, BotanicalInfo linkedEntity) {
-        final String fileExtension = contentType.split("/")[1];
-        return createImage(linkedEntity, new Date(), null, fileExtension, new ByteArrayInputStream(content));
+    public EntityImage saveBotanicalInfoThumbnailImage(byte[] content, String contentType, BotanicalInfo linkedEntity) {
+        return createImage(linkedEntity, new Date(), null, contentType, new ByteArrayInputStream(content));
     }
 
 
@@ -207,36 +213,43 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
 
     @Cacheable(value = "image-content", key = "{#id}")
-    @Override
-    public byte[] getContent(String id) {
-        final EntityImage getContentFrom = get(id);
-        return getBytes(id, getContentFrom);
-    }
+    public ImageContentResponse getImageContent(String id) throws IOException {
+        //get(id);
 
-
-    @Override
-    public byte[] getContentInternal(String id) {
-        final EntityImage getContentFrom =
-            imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        return getBytes(id, getContentFrom);
-    }
-
-
-    private byte[] getBytes(String id, EntityImage getContentFrom) {
-        if (getContentFrom.getPath() == null) {
-            logger.warn("Trying to read an image that has no content but only URL");
-            throw new UnsupportedOperationException(String.format("Image with id %s has no content (only URL)", id));
+        final EntityImageImpl entityImage = (EntityImageImpl) get(id);
+        if (entityImage.getContentType() == null && entityImage.getPath() != null) {
+            logger.debug("Image {} is to update due to missing content/type", entityImage.getId());
+            MigratorTo050.fillMissingImageType(entityImage);
+            imageRepository.save(entityImage);
         }
-        try {
-            final File entityImageFile = new File(getContentFrom.getPath());
-            if (!entityImageFile.exists() || !entityImageFile.canRead()) {
-                logger.error("Error while reading image " + id + " permission deny");
-                throw new StorageFileNotFoundException("Could not read image with id: " + id);
+
+        return getImageContentInternal(id);
+    }
+
+
+    @Override
+    public ImageContentResponse getImageContentInternal(String id) throws IOException {
+        final EntityImageImpl image =
+            imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        if (image.getUrl() != null) {
+            try {
+                final RestTemplate restTemplate = new RestTemplate();
+                final ResponseEntity<byte[]> response = restTemplate.getForEntity(new URI(image.getUrl()), byte[].class);
+
+                if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                    final MediaType contentType = restTemplate.headForHeaders(new URI(image.getUrl())).getContentType();
+                    return new ImageContentResponse(response.getBody(), contentType);
+                } else {
+                    throw new IOException("Failed to retrieve image content from URL: " + image.getUrl());
+                }
+            } catch (URISyntaxException e) {
+                throw new IOException("Invalid image URL: " + image.getUrl(), e);
             }
-            return Files.readAllBytes(entityImageFile.toPath());
-        } catch (IOException e) {
-            logger.error("Error while reading image " + id, e);
-            throw new StorageFileNotFoundException("Could not read image with id: " + id, e);
+        } else {
+            final MediaType contentType = MediaType.parseMediaType(image.getContentType());
+            final Path imagePath = Paths.get(rootLocation + "/" + image.getId() + "." + contentType.getSubtype());
+            final byte[] imageBytes = Files.readAllBytes(imagePath);
+            return new ImageContentResponse(imageBytes, contentType);
         }
     }
 
@@ -307,16 +320,6 @@ public class FileSystemImageStorageService implements ImageStorageService {
             }
         }
         imageRepository.deleteById(id);
-    }
-
-
-    @Override
-    public void init() {
-        try {
-            Files.createDirectories(Path.of(rootLocation));
-        } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
-        }
     }
 
 

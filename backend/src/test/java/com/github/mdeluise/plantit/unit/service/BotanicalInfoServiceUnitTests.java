@@ -345,7 +345,7 @@ class BotanicalInfoServiceUnitTests {
 
 
     @Test
-    @DisplayName("Should update botanical info")
+    @DisplayName("Should updateInternal botanical info")
     void shouldUpdateBotanicalInfo() throws MalformedURLException {
         final Long botanicalInfoId = 1L;
         final User authenticatedUser = new User();

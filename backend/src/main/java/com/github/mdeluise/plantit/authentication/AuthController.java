@@ -1,5 +1,7 @@
 package com.github.mdeluise.plantit.authentication;
 
+import java.util.Date;
+
 import com.github.mdeluise.plantit.authentication.payload.request.LoginRequest;
 import com.github.mdeluise.plantit.authentication.payload.request.SignupRequest;
 import com.github.mdeluise.plantit.authentication.payload.response.MessageResponse;
@@ -50,8 +52,8 @@ public class AuthController {
     @Autowired
     @SuppressWarnings("ParameterNumber")
     public AuthController(AuthenticationManager authManager, JwtWebUtil jwtWebUtil, UserService userService,
-                          @Value("${users.max}") int maxAllowedUsers, EmailService emailService,
-                          OtpService otpService, TemporaryPasswordService temporaryPasswordService) {
+                          @Value("${users.max}") int maxAllowedUsers, EmailService emailService, OtpService otpService,
+                          TemporaryPasswordService temporaryPasswordService) {
         this.authManager = authManager;
         this.jwtWebUtil = jwtWebUtil;
         this.userService = userService;
@@ -72,10 +74,15 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        final User user = userService.get(loginRequest.username());
         final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         final JwtTokenInfo jwtCookie = jwtWebUtil.generateJwt(userDetails);
         final UserInfoResponse response =
-            new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), jwtCookie);
+            new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), user.getEmail(), user.getLastLogin(),
+                                 jwtCookie
+            );
+        user.setLastLogin(new Date());
+        userService.updateInternal(user.getId(), user);
         return ResponseEntity.ok().body(response);
     }
 

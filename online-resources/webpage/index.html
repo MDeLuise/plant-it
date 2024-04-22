@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="assets/images/logo.png">
+    <title>Plant-it</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link href="assets/css/features.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary px-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                Plant-it
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo02">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active mx-3" aria-current="page" href="#features">
+                            Features
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active mx-3" aria-current="page" target="_blank" href="https://docs.plant-it.org">
+                            Docs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="px-4 pt-5 my-5 text-center vh-100" data-aos="fade-up">
+        <h1 class="display-4 fw-bold text-body-emphasis"><span style="color: green;">Gardening</span> Companion App</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Greenery, Simplified. Introducing the self-hosted, open-source gardening app that
+                redefines plant care. Stay on top of watering schedules, capture the beauty of your plants through image
+                uploads, and let your garden thrive effortlessly.</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                <a target="_blank" href="https://github.com/MDeLuise/plant-it"><button type="button"
+                        class="btn btn-primary btn-lg px-4 me-sm-3" style="background-color: green; border-color: green">Get started</button></a>
+                <a target="_blank" href="https://docs.plant-it.org/latest/install/#Quickstart"><button type="button"
+                    class="btn btn-outline-secondary btn-lg px-4">Install</button></a>
+            </div>
+        </div>
+        <div style="max-height: 30vh;">
+            <div class="container px-5">
+                <img src="assets/images/banner.png" class="img-fluid border rounded-3 shadow-lg mb-4"
+                    alt="Example image" width="700" height="500" loading="lazy">
+            </div>
+        </div>
+    </div>
+
+    <div class="container px-4 py-5 mt-4" data-aos="fade-up">
+        <h2 class="pb-2 text-center">Core Features</h2>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3 d-flex justify-content-center">
+            <div class="feature col">
+                <div
+                    class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <i class="bi bi-collection" style="font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Events</h3>
+                <p>Keep track of actions performed on your plants to understand when they were last watered, fertilized,
+                    and more.</p>
+            </div>
+            <div class="feature col">
+                <div
+                    class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <i class="bi bi-search" style="font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Search</h3>
+                <p>Quickly add existing plants to your collection with the search feature, using the Trefle dataset over
+                    then 400 thousand plants are already present.
+                </p>
+            </div>
+            <div class="feature col">
+                <div
+                    class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <i class="bi bi-app-indicator" style="font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Reminders</h3>
+                <p>Set reminders to notify you when it's time to perform specific actions on your plants, such as
+                    watering or fertilizing. Never miss a watering session again.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5 d-flex justify-content-center"
+            data-aos="fade-left">
+            <div class="col-10 col-sm-8 col-lg-6" style="height: 90vh; width: auto">
+                <img src="assets/images/homescreen.png" class="d-block mx-lg-auto img-fluid" alt="Plant-it homescreen"
+                    loading="lazy" style="height: 90vh; width: auto">
+            </div>
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">App Homepage</h1>
+                <p class="lead">The app's home screen is designed to provide users with a comprehensive view of their
+                    stored
+                    plants and associated events. On this screen, users can easily view the latest chronological events
+                    related to their plants and access a list of the plants they own.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row align-items-center g-5 py-5 d-flex justify-content-center" data-aos="fade-left">
+            <div class="col-10 col-sm-8 col-lg-6" style="height: 90vh; width: auto">
+                <img src="assets/images/search.png" class="d-block mx-lg-auto img-fluid" alt="Plant-it homescreen"
+                    loading="lazy" style="height: 90vh; width: auto">
+            </div>
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Search Plants</h1>
+                <p class="lead">Users can effortlessly expand their plant collection by adding existing species through
+                    the search feature. User can chose between a database of over 400 thousand plant species provided by
+                    Trefle, or
+                    can create custom species, tailoring their collection to their unique preferences and needs.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5 d-flex justify-content-center"
+            data-aos="fade-left">
+            <div class="col-10 col-sm-8 col-lg-6" style="height: 90vh; width: auto">
+                <img src="assets/images/events.png" class="d-block mx-lg-auto img-fluid" alt="Plant-it homescreen"
+                    loading="lazy" style="height: 90vh; width: auto">
+            </div>
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Events</h1>
+                <p class="lead">Users can effortlessly monitor all plant-related activities, eliminating the need
+                    to remember when tasks such as fertilizing were last completed. Additionally, users can set
+                    reminders to receive notifications if specific actions have not been completed within a designated
+                    time frame.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container px-4 py-5" data-aos="fade-up" id="features">
+        <h2 class="pb-2 text-center">Features</h2>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5 d-flex justify-content-center">
+            <div class="col d-flex align-items-start gap-3">
+                <i class="bi bi-collection" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Plant Collection Management</h3>
+                    <p>Easily add, organize, and manage plants in your collection.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start gap-3">
+                <i class="bi bi-database" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Species Database Integration</h3>
+                    <p>Access a vast database of over 400 plant species provided by Trefle for effortless species
+                        selection.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start gap-3">
+                <i class="bi bi-database-add" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Custom Species Creation</h3>
+                    <p>Create custom plant species entries for personalized tracking.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start gap-3">
+                <i class="bi bi-calendar4-event" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Event Tracking</h3>
+                    <p>Keep track of all plant-related events, such as watering, fertilizing, pruning, and more.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start gap-3">
+                <i class="bi bi-app-indicator" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Reminder System</h3>
+                    <p>Set reminders to ensure timely completion of plant care tasks and receive notifications for
+                        overdue actions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                    <svg class="bi" width="30" height="24">
+                        <use xlink:href="#bootstrap" />
+                    </svg>
+                </a>
+                <span class="mb-3 mb-md-0 text-body-secondary">&copy; 2024 - <span id="current-year"></span> <a href="https://massimilianodeluise.com"
+                        style="text-decoration: none; color: inherit;">Massimiliano De Luise</a></span>
+            </div>
+
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3"><a class="text-body-secondary" href="https://github.com/MDeLuise/plant-it">
+                        <i class="bi bi-github"></i>
+                    </a></li>
+                <li class="ms-3"><a class="text-body-secondary" href="https://buymeacoffee.com/mdeluise">
+                        <i class="bi bi-cup-hot-fill"></i>
+                    </a></li>
+            </ul>
+        </footer>
+    </div>
+
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        document.getElementById("current-year").textContent = (new Date).getUTCFullYear();
+    </script>
+</body>
+
+</html>

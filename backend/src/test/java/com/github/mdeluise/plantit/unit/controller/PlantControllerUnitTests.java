@@ -97,7 +97,7 @@ class PlantControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update plant with existing ID")
+    @DisplayName("Test updateInternal plant with existing ID")
     void testUpdatePlantWithExistingId() {
         PlantDTO plantDTO = new PlantDTO();
         Plant plant = new Plant();
@@ -111,7 +111,7 @@ class PlantControllerUnitTests {
 
 
     @Test
-    @DisplayName("Test update plant with non-existing ID")
+    @DisplayName("Test updateInternal plant with non-existing ID")
     void testUpdatePlantWithNonExistingId() {
         Mockito.when(plantService.update(anyLong(), any())).thenThrow(ResourceNotFoundException.class);
 

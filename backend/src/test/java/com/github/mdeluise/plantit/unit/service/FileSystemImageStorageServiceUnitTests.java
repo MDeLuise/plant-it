@@ -13,6 +13,7 @@ import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
+import com.github.mdeluise.plantit.image.ImageContentResponse;
 import com.github.mdeluise.plantit.image.ImageRepository;
 import com.github.mdeluise.plantit.image.ImageUtility;
 import com.github.mdeluise.plantit.image.PlantImage;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
@@ -157,7 +159,8 @@ class FileSystemImageStorageServiceUnitTests {
         final User authenticatedUser = new User();
         authenticatedUser.setId(1L);
         final String imageId = "42-42-42";
-        final String imageFileName = "foo-bar.jpg";
+        final String type = "jpeg";
+        final String imageFileName = imageId + "." + type;
         final Plant target = new Plant();
         target.setOwner(authenticatedUser);
         final PlantImage toGet = new PlantImage();
@@ -165,6 +168,7 @@ class FileSystemImageStorageServiceUnitTests {
         toGet.setId(imageId);
         toGet.setPath(tmpDir.resolve(imageFileName).toString());
         toGet.setTarget(target);
+        toGet.setContentType(MediaType.IMAGE_JPEG.toString());
 
         final Path created = Files.createFile(tmpDir.resolve(imageFileName));
         final FileOutputStream writer = new FileOutputStream(created.toFile());
@@ -174,8 +178,11 @@ class FileSystemImageStorageServiceUnitTests {
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(imageRepository.findById(imageId)).thenReturn(Optional.of(toGet));
 
-        Assertions.assertThat(fileSystemImageStorageService.getContent(imageId)).as("content is correct")
+        final ImageContentResponse result = fileSystemImageStorageService.getImageContent(imageId);
+        Assertions.assertThat(result.getContent()).as("content is correct")
                   .isEqualTo(content);
+        Assertions.assertThat(result.getType().toString()).as("content is correct")
+                  .isEqualTo("image/" + type);
     }
 
 
@@ -186,7 +193,7 @@ class FileSystemImageStorageServiceUnitTests {
 
         Mockito.when(imageRepository.findById(nonExistingImageId)).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(() -> fileSystemImageStorageService.getContent(nonExistingImageId)).as("exception is correct")
+        Assertions.assertThatThrownBy(() -> fileSystemImageStorageService.getImageContent(nonExistingImageId)).as("exception is correct")
                   .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -209,7 +216,7 @@ class FileSystemImageStorageServiceUnitTests {
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
         Mockito.when(imageRepository.findById(imageId)).thenReturn(Optional.of(toGet));
 
-        Assertions.assertThatThrownBy(() -> fileSystemImageStorageService.getContent(imageId)).as("exception is correct")
+        Assertions.assertThatThrownBy(() -> fileSystemImageStorageService.getImageContent(imageId)).as("exception is correct")
                   .isInstanceOf(UnauthorizedException.class);
     }
 

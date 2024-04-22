@@ -6,7 +6,7 @@ on:
     - main
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Maven Action
@@ -18,26 +18,31 @@ jobs:
         run: mvn clean install -DskipTests -Dcheckstyle.skip
         working-directory: ./backend
 
-  checkstyle:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.2.1
-        with:
-          java-version: 20
-
       - name: Verify the checkstyle
         run: mvn checkstyle:check
         working-directory: ./backend
 
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.2.1
-        with:
-          java-version: 20
-
       - name: Run the tests
         run: mvn test
         working-directory: ./backend
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Frontend
+        uses: actions/checkout@v2
+        with:
+          path: frontend
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.x'
+
+      - name: Flutter Analyze
+        run: flutter analyze
+        working-directory: ./frontend
+
+      - name: Flutter Test
+        run: flutter test
+        working-directory: ./frontend

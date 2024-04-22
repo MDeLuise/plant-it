@@ -55,6 +55,12 @@ public class TemporaryPasswordService {
         temporaryPasswordRepository.deleteById(username);
     }
 
+    public void removeIfExists(String username) {
+        try {
+            remove(username);
+        } catch (ResourceNotFoundException ignored) { }
+    }
+
 
     public Optional<TemporaryPassword> get(String id) {
         return temporaryPasswordRepository.findById(id);

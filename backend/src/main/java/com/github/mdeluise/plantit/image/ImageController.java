@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.image;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -13,6 +14,8 @@ import com.github.mdeluise.plantit.plant.PlantDTOConverter;
 import com.github.mdeluise.plantit.plant.PlantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,7 +50,7 @@ public class ImageController {
 
     @PostMapping("/plant/{plantId}/{imageId}")
     @Transactional
-    public ResponseEntity<PlantDTO> savePlantImage(@PathVariable Long plantId, @PathVariable String imageId) {
+    public ResponseEntity<PlantDTO> updatePlantAvatarImageId(@PathVariable Long plantId, @PathVariable String imageId) {
         final Plant linkedEntity = plantService.get(plantId);
         final PlantImage newAvatarImage = (PlantImage) imageStorageService.get(imageId);
         linkedEntity.setAvatarImage(newAvatarImage);
@@ -56,7 +59,7 @@ public class ImageController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/metadata/{id}")
     public ResponseEntity<ImageDTO> get(@PathVariable("id") String id) {
         final EntityImage result = imageStorageService.get(id);
         return ResponseEntity.ok(imageDtoConverter.convertToDTO(result));
@@ -64,11 +67,20 @@ public class ImageController {
 
 
     @GetMapping("/content/{id}")
-    public ResponseEntity<byte[]> getContent(@PathVariable("id") String id) {
-        final byte[] result = Base64.getEncoder().encode(imageStorageService.getContent(id));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        return new ResponseEntity<>(result, headers, HttpStatus.OK);
+    @SuppressWarnings("ReturnCount")
+    public ResponseEntity<Resource> getContent(@PathVariable("id") String id) {
+        try {
+            final ImageContentResponse imageContent = imageStorageService.getImageContent(id);
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(imageContent.getType());
+            final ByteArrayResource resource = new ByteArrayResource(imageContent.getContent());
+            return ResponseEntity.ok()
+                                 .headers(headers)
+                                 .contentLength(resource.contentLength())
+                                 .body(resource);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
@@ -111,7 +123,7 @@ public class ImageController {
     }
 
 
-    @GetMapping("/entity/_count") // FIXME remove "entity"
+    @GetMapping("/entity/_count")
     public ResponseEntity<Integer> countUserImage() {
         return ResponseEntity.ok(imageStorageService.count());
     }

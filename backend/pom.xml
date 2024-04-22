@@ -10,13 +10,15 @@
     </parent>
     <groupId>com.github.mdeluise</groupId>
     <artifactId>plant-it</artifactId>
-    <version>0.4.3</version>
+    <version>0.5.0</version>
     <name>Plant it</name>
     <description>Gardening companion app</description>
     <properties>
         <java.version>20</java.version>
         <start-class>com.github.mdeluise.plantit.Application</start-class>
     </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -154,12 +156,7 @@
 
     <profiles>
         <profile>
-            <id>copy-files</id>
-            <activation>
-                <property>
-                    <name>copyFiles</name>
-                </property>
-            </activation>
+            <id>copyFiles</id>
             <build>
                 <plugins>
                     <plugin>
@@ -176,7 +173,7 @@
                                     <tasks>
                                         <echo>Copying files...</echo>
                                         <copy file="${project.basedir}/src/main/resources/upload-dir/dummy-image.jpg"
-                                              tofile="/tmp/plant-it/dummy-image.jpg"/>
+                                              tofile="/tmp/plant-it/3531aae7-486f-4650-a4e3-047d3755a759.jpg"/>
                                     </tasks>
                                 </configuration>
                             </execution>
