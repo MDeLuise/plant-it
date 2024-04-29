@@ -23,6 +23,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+IFS=',' read -r -a versions_array <<< "$versions"; # Split versions by comma
+echo "Compiling and preparing images: ${versions_array[@]}"
+
 
 #######################
 #       Backend       #
@@ -53,9 +56,9 @@ fi
 #######################
 echo "Create docker image...";
 cd ..;
-IFS=',' read -r -a versions_array <<< "$versions"; # Split versions by comma
 for version in "${versions_array[@]}"
 do
+    echo "Creating and pushing image version: $version...";
     docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain;
 done
 if [ $? -ne 0 ]; then

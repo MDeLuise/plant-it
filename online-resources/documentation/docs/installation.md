@@ -11,39 +11,37 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
 
 * Create a folder where you want to place all Plant-it related files.
 * Inside that folder, create a file named `docker-compose.yml` with this content:
-
 ```yaml
 version: "3"
 name: plant-it
 services:
-    server:
-        image: msdeluise/plant-it-server:latest
-        env_file: backend.env
-        depends_on:
-            - db
-            - cache
-        restart: unless-stopped
-        volumes:
-            - "./upload-dir:/upload-dir"
-            - "./certs:/certificates"
-        ports:
-            - "8080:8080"
-            - "3000:3000"
+  server:
+    image: msdeluise/plant-it-server:latest
+    env_file: backend.env
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+    volumes:
+      - "./upload-dir:/upload-dir"
+      - "./certs:/certificates"
+    ports:
+      - "8080:8080"
+      - "3000:3000"
 
-    db:
-        image: mysql:8.0
-        restart: always
-        env_file: backend.env
-        volumes:
-            - "./db:/var/lib/mysql"
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file: backend.env
+    volumes:
+      - "./db:/var/lib/mysql"
 
-    cache:
-        image: redis:7.2.1
-        restart: always
+  cache:
+    image: redis:7.2.1
+    restart: always
 ```
 
 * Inside that folder, create a file named `backend.env` with this content:
-    
 ```properties
 #
 # DB
@@ -165,28 +163,28 @@ Then this will be you configuration for the `docker-compose.yml` file:
 version: "3"
 name: plant-it
 services:
-    server:
-        image: msdeluise/plant-it-server:latest
-        env_file: backend.env
-        depends_on:
-            - db
-            - cache
-        restart: unless-stopped
-        volumes:
-            - "./upload-dir:/upload-dir"
-            - "./certs:/certificates"
-        ports:
-            - "8089:8080"
-            - "3009:3000"
-    db:
-        image: mysql:8.0
-        restart: always
-        env_file: backend.env
-        volumes:
-            - "./db:/var/lib/mysql"
-    cache:
-        image: redis:7.2.1
-        restart: always
+  server:
+    image: msdeluise/plant-it-server:latest
+    env_file: backend.env
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+    volumes:
+      - "./upload-dir:/upload-dir"
+      - "./certs:/certificates"
+    ports:
+      - "8089:8080"
+      - "3009:3000"
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file: backend.env
+    volumes:
+      - "./db:/var/lib/mysql"
+  cache:
+    image: redis:7.2.1
+    restart: always
 ```
 And this will be you configuration for the `backend.env` file:
 ```properties
@@ -282,6 +280,7 @@ services:
       ## HTTP Services
       - "traefik.http.routers.plantit-api-rtr.service=plantit-api-svc"
       - "traefik.http.services.plantit-api-svc.loadbalancer.server.port=8080"
+      - "traefik.http.services.plantit-svc.loadbalancer.server.port=3000"
       ## CORS
       - "traefik.http.middlewares.plantit-cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://plantit.${DOMAINNAME0}"
 
@@ -318,7 +317,6 @@ An SMTP server can be used to send notifications to users, such as password rese
     Please note that some providers, such as Gmail, may require the use of an [application-specific password](https://support.google.com/mail/answer/185833?hl=en) for authentication.
 
 ##### Example Gmail Configuration
-
 ```properties
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
