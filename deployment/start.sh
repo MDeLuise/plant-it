@@ -52,9 +52,9 @@ echo "SSL enabled: $SSL_ENABLED";
 #######################
 #     Wait for DB     #
 #######################
-/opt/app/wait-for-it.sh db:3306 -t 120 --;
+/opt/app/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 120 --;
 if [ $? -ne 0 ]; then
-    echo "DB not available, exiting.";
+    echo "DB (service name: $MYSQL_HOST, port: $MYSQL_PORT) not available, exiting.";
     exit 1;
 fi
 

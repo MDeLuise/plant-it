@@ -3,19 +3,18 @@
 #######################
 #  Parameter parsing  #
 #######################
-version="latest";
+versions="latest";
 push="";
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
-        --version)
-        version="$2"
+        --versions)
+        versions="$2"
         shift
         shift
         ;;
         --push)
         push="--push"
-        shift
         shift
         ;;
         *)
@@ -54,7 +53,11 @@ fi
 #######################
 echo "Create docker image...";
 cd ..;
-docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server -f deployment/Dockerfile . --progress=plain;
+IFS=',' read -r -a versions_array <<< "$versions"; # Split versions by comma
+for version in "${versions_array[@]}"
+do
+    docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain;
+done
 if [ $? -ne 0 ]; then
     echo "Error while creating images, exiting.";
     exit 3;

@@ -308,23 +308,6 @@
   
 
       
-        
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../screenshots/" class="md-tabs__link">
-        
-  
-    
-  
-  Screenshots
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -658,26 +641,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../screenshots/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Screenshots
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -753,6 +716,7 @@
 <span class="na">MYSQL_USERNAME</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_PSW</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_DATABASE</span><span class="o">=</span><span class="s">bootdb</span>
+<span class="na">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="s">root</span>
 
 <span class="c1">#</span>
 <span class="c1"># JWT</span>
@@ -796,6 +760,7 @@
 <span class="na">MYSQL_USERNAME</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_PSW</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_DATABASE</span><span class="o">=</span><span class="s">bootdb</span>
+<span class="na">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="s">root</span>
 
 <span class="c1">#</span>
 <span class="c1"># JWT</span>
@@ -892,6 +857,7 @@ And this will be you configuration for the <code>backend.env</code> file:
 <span class="na">MYSQL_USERNAME</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_PSW</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_DATABASE</span><span class="o">=</span><span class="s">bootdb</span>
+<span class="na">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="s">root</span>
 
 <span class="c1">#</span>
 <span class="c1"># JWT</span>
@@ -948,6 +914,7 @@ services:
       - MYSQL_DATABASE=${PLANTIT_DB_NAME}
       - MYSQL_USERNAME=${PLANTIT_DB_USER}
       - MYSQL_PSW=${PLANTIT_DB_ROOT}
+      - MYSQL_ROOT_PASSWORD=${PLANTIT_DB_ROOT_PSW}
       - CACHE_HOST=plantit-cache
       - CACHE_TTL=86400
       - CACHE_PORT=6379
@@ -1060,6 +1027,7 @@ services:
 <span class="na">MYSQL_USERNAME</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_PSW</span><span class="o">=</span><span class="s">root</span>
 <span class="na">MYSQL_DATABASE</span><span class="o">=</span><span class="s">bootdb</span>
+<span class="na">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="s">root</span>
 <span class="na">JWT_SECRET</span><span class="o">=</span><span class="s">32characterscomplicatedsecret</span>
 <span class="na">JWT_EXP</span><span class="o">=</span><span class="s">1</span>
 <span class="na">USERS_LIMIT</span><span class="o">=</span><span class="s">2</span>

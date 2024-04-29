@@ -33,7 +33,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 
 Take a look at the [roadmap](https://github.com/users/MDeLuise/projects/3/views/1) for a more detailed list of future features and enhancements.
 
-## Quickstart 
+## Quickstart
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
 
 * Create a folder where you want to place all Plant-it related files.
@@ -120,6 +120,9 @@ If you find this project helpful and would like to supporting it, consider [buyi
 
 ## Contribute
 Feel free to contribute and help improve the repo.
+
+### Contributing Translations to the Project
+If you're interested in contributing transactions to enhance the app, you can get started by following the guide provided [here](https://github.com/MDeLuise/plant-it/discussions/148). Your support and contributions are greatly appreciated.
 
 ### Bug Report, Feature Request and Question
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
