@@ -147,7 +147,9 @@ class _TextFieldMultipleDropDownState extends State<TextFieldMultipleDropDown> {
                       style: TextStyle(
                         fontSize: 14,
                         overflow: TextOverflow.ellipsis,
-                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                        color: (widget.disabled ?? false)
+                            ? Colors.grey
+                            : Theme.of(context).textTheme.bodyLarge!.color,
                       )),
                 );
               },
