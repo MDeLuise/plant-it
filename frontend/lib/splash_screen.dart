@@ -34,6 +34,7 @@ class _SplashPageState extends State<SplashPage> {
         ],
         eagerError: true,
       );
+      await prefetchImages(context, env);
       return Future.value(TemplatePage(env: env));
     } catch (e, st) {
       if (!context.mounted) return const SizedBox();

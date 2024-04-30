@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -180,6 +181,15 @@ String getLocaleEvent(BuildContext context, String event) {
   }
 }
 
+Future<void> prefetchImages(BuildContext context, Environment env) {
+  env.plants.forEach((plant) {
+    final String plantImageUrl =
+        "${env.http.backendUrl}image/content/${plant.avatarImageId}";
+    precacheImage(CachedNetworkImageProvider(plantImageUrl), context);
+  });
+  return Future.value();
+}
+
 Future<void> fetchAndSetEventTypes(
     BuildContext context, Environment env) async {
   try {
@@ -206,7 +216,8 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
       final totalPlantsResponseBody = json.decode(totalPlantsResponse.body);
       throw AppException(totalPlantsResponseBody["message"]);
     }
-    final response = await env.http.get("plant?pageSize=${totalPlantsResponse.body}");
+    final response =
+        await env.http.get("plant?pageSize=${totalPlantsResponse.body}");
     if (response.statusCode == 200) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
       final List<dynamic> plantJsonList = responseBody["content"];
