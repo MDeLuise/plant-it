@@ -67,9 +67,12 @@ class _TemplatePageState extends State<TemplatePage> {
     return Scaffold(
         key: navigatorKey,
         extendBody: true,
-        body: SafeArea(
-          bottom: false,
-          child: _bottombarPages[_currentIndex],
+        body: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: SafeArea(
+            bottom: false,
+            child: _bottombarPages[_currentIndex],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () =>

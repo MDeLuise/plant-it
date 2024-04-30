@@ -58,7 +58,7 @@ class ReminderSnippet extends StatelessWidget {
   String _formatDatespan() {
     String result = "${formatDate(reminder.start!)}";
     if (reminder.end != null) {
-      result += "- ${formatDate(reminder.end!)}";
+      result += "-${formatDate(reminder.end!)}";
     } else {
       result = "from $result";
     }

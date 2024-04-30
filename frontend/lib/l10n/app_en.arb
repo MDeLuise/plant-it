@@ -372,5 +372,6 @@
   "reminderDeletedSuccessfully": "Reminder successfully deleted",
   "errorResettingPassword": "Error while resetting password",
   "resetPassword": "Reset password",
-  "resetPasswordHeader": "Insert the username below in order to send a reset password request"
+  "resetPasswordHeader": "Insert the username below in order to send a reset password request",
+  "editReminder": "Edit reminder"
 }

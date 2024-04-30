@@ -87,7 +87,8 @@ class ReminderDTO {
     if (end != null) map['end'] = end!.toIso8601String();
     if (frequency != null) map['frequency'] = frequency!.toMap();
     if (repeatAfter != null) map['repeatAfter'] = repeatAfter!.toMap();
-    if (lastNotified != null) map['lastNotified'] = lastNotified!.toString();
+    if (lastNotified != null)
+      map['lastNotified'] = lastNotified!.toIso8601String();
     if (enabled != null) map['enabled'] = enabled;
     return map;
   }

@@ -114,7 +114,7 @@ class _EditReminderState extends State<EditReminder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).addNewReminder),
+        title: Text(AppLocalizations.of(context).editReminder),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever_outlined),
@@ -126,7 +126,7 @@ class _EditReminderState extends State<EditReminder> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _updateReminder(),
         tooltip: AppLocalizations.of(context).addNewReminder,
-        child: const Icon(Icons.add_outlined),
+        child: const Icon(Icons.save_outlined),
       ),
       body: SingleChildScrollView(
         child: Column(
