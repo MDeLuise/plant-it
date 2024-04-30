@@ -12,6 +12,6 @@ body:
       placeholder: |
         1. backend version and app version
         2. content of docker-compose.yml file (remember to hide possible sensitive info)
-        3. content of backend.env file (remember to hide possible sensitive info)
+        3. content of server.env file (remember to hide possible sensitive info)
         4. app log
         5. output of the docker compose log

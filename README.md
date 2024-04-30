@@ -31,8 +31,6 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * Upload photos of your plants
 * Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 
-Take a look at the [roadmap](https://github.com/users/MDeLuise/projects/3/views/1) for a more detailed list of future features and enhancements.
-
 ## Quickstart
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
 
@@ -44,7 +42,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
   services:
     server:
       image: msdeluise/plant-it-server:latest
-      env_file: backend.env
+      env_file: server.env
       depends_on:
         - db
         - cache
@@ -59,7 +57,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
     db:
       image: mysql:8.0
       restart: always
-      env_file: backend.env
+      env_file: server.env
       volumes:
         - "./db:/var/lib/mysql"
 
@@ -67,7 +65,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
       image: redis:7.2.1
       restart: always
   ```
-* Inside that folder, create a file named `backend.env` with this content:
+* Inside that folder, create a file named `server.env` with this content:
   ```properties
   #
   # DB

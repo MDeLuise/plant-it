@@ -682,7 +682,7 @@
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">server</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msdeluise/plant-it-server:latest</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache</span>
@@ -697,7 +697,7 @@
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:8.0</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;./db:/var/lib/mysql&quot;</span>
 
@@ -707,7 +707,7 @@
 </code></pre></div></p>
 </li>
 <li>
-<p>Inside that folder, create a file named <code>backend.env</code> with this content:
+<p>Inside that folder, create a file named <code>server.env</code> with this content:
 <div class="highlight"><pre><span></span><code><span class="c1">#</span>
 <span class="c1"># DB</span>
 <span class="c1">#</span>
@@ -753,7 +753,7 @@
 </li>
 </ul>
 <h2 id="configuration">Configuration</h2>
-<p>The <code>backend.env</code> file is used to pass configurations to the server. An example of properties and descriptions is the following:
+<p>The <code>server.env</code> file is used to pass configurations to the server. An example of properties and descriptions is the following:
 <div class="highlight"><pre><span></span><code><span class="c1">#</span>
 <span class="c1"># DB</span>
 <span class="c1">#</span>
@@ -829,7 +829,7 @@
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">server</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msdeluise/plant-it-server:latest</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache</span>
@@ -843,14 +843,14 @@
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:8.0</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;./db:/var/lib/mysql&quot;</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2.1</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
 </code></pre></div>
-And this will be you configuration for the <code>backend.env</code> file:
+And this will be you configuration for the <code>server.env</code> file:
 <div class="highlight"><pre><span></span><code><span class="c1">#</span>
 <span class="c1"># DB</span>
 <span class="c1">#</span>
@@ -962,7 +962,7 @@ services:
       - internal
 </code></pre></div></p>
 <h4 id="smtp-configuration-for-email-notifications">SMTP Configuration for Email Notifications</h4>
-<p>An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the <code>backend.env</code> file:</p>
+<p>An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the <code>server.env</code> file:</p>
 <ul>
 <li><strong>SMTP_HOST</strong>: The host of the SMTP server.</li>
 <li><strong>SMTP_PORT</strong>: The port of the SMTP server.</li>
@@ -988,8 +988,8 @@ services:
 <h4 id="enable-ssl">Enable SSL</h4>
 <p>To enable SSL for your Plant-it deployment, follow these steps:</p>
 <ol>
-<li><strong>Set SSL Enabled Property</strong>: Ensure that SSL is enabled by adding the property <code>SSL_ENABLED=true</code> to the <code>backend.env</code> file.</li>
-<li><strong>Create Volume Binding</strong>: Add a volume binding <code>"./certs:/certificates"</code> to the <code>backend.env</code> services in your <code>docker-compose.yml</code> file. This allows the services to access SSL certificates stored in the <code>./certs</code> directory.</li>
+<li><strong>Set SSL Enabled Property</strong>: Ensure that SSL is enabled by adding the property <code>SSL_ENABLED=true</code> to the <code>server.env</code> file.</li>
+<li><strong>Create Volume Binding</strong>: Add a volume binding <code>"./certs:/certificates"</code> to the <code>server.env</code> services in your <code>docker-compose.yml</code> file. This allows the services to access SSL certificates stored in the <code>./certs</code> directory.</li>
 </ol>
 <h5 id="complete-example_1">Complete Example</h5>
 <p>Let's say that you want to run Plant-it on a server with IP <code>https://192.168.1.103</code> and want to have:</p>
@@ -1003,7 +1003,7 @@ services:
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">server</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msdeluise/plant-it-server:latest</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache</span>
@@ -1017,14 +1017,14 @@ services:
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:8.0</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
-<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend.env</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server.env</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;./db:/var/lib/mysql&quot;</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2.1</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
 </code></pre></div></p>
-<p><code>backend.env</code>:
+<p><code>server.env</code>:
 <div class="highlight"><pre><span></span><code><span class="na">MYSQL_HOST</span><span class="o">=</span><span class="s">db</span>
 <span class="na">MYSQL_PORT</span><span class="o">=</span><span class="s">3306</span>
 <span class="na">MYSQL_USERNAME</span><span class="o">=</span><span class="s">root</span>

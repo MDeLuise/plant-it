@@ -17,7 +17,7 @@ name: plant-it
 services:
   server:
     image: msdeluise/plant-it-server:latest
-    env_file: backend.env
+    env_file: server.env
     depends_on:
       - db
       - cache
@@ -32,7 +32,7 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    env_file: backend.env
+    env_file: server.env
     volumes:
       - "./db:/var/lib/mysql"
 
@@ -41,7 +41,7 @@ services:
     restart: always
 ```
 
-* Inside that folder, create a file named `backend.env` with this content:
+* Inside that folder, create a file named `server.env` with this content:
 ```properties
 #
 # DB
@@ -86,7 +86,7 @@ CERTIFICATE_PATH=/certificates/
 * Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
 
 ## Configuration
-The `backend.env` file is used to pass configurations to the server. An example of properties and descriptions is the following:
+The `server.env` file is used to pass configurations to the server. An example of properties and descriptions is the following:
 ```properties
 #
 # DB
@@ -165,7 +165,7 @@ name: plant-it
 services:
   server:
     image: msdeluise/plant-it-server:latest
-    env_file: backend.env
+    env_file: server.env
     depends_on:
       - db
       - cache
@@ -179,14 +179,14 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    env_file: backend.env
+    env_file: server.env
     volumes:
       - "./db:/var/lib/mysql"
   cache:
     image: redis:7.2.1
     restart: always
 ```
-And this will be you configuration for the `backend.env` file:
+And this will be you configuration for the `server.env` file:
 ```properties
 #
 # DB
@@ -302,7 +302,7 @@ services:
 ```
 
 #### SMTP Configuration for Email Notifications
-An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the `backend.env` file:
+An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the `server.env` file:
 
 - **SMTP_HOST**: The host of the SMTP server.
 - **SMTP_PORT**: The port of the SMTP server.
@@ -330,8 +330,8 @@ CONTACT_MAIL=your-email@gmail.com
 #### Enable SSL
 To enable SSL for your Plant-it deployment, follow these steps:
 
-1. **Set SSL Enabled Property**: Ensure that SSL is enabled by adding the property `SSL_ENABLED=true` to the `backend.env` file.
-1. **Create Volume Binding**: Add a volume binding `"./certs:/certificates"` to the `backend.env` services in your `docker-compose.yml` file. This allows the services to access SSL certificates stored in the `./certs` directory.
+1. **Set SSL Enabled Property**: Ensure that SSL is enabled by adding the property `SSL_ENABLED=true` to the `server.env` file.
+1. **Create Volume Binding**: Add a volume binding `"./certs:/certificates"` to the `server.env` services in your `docker-compose.yml` file. This allows the services to access SSL certificates stored in the `./certs` directory.
 
 ##### Complete Example
 Let's say that you want to run Plant-it on a server with IP `https://192.168.1.103` and want to have:
@@ -346,7 +346,7 @@ name: plant-it
 services:
   server:
     image: msdeluise/plant-it-server:latest
-    env_file: backend.env
+    env_file: server.env
     depends_on:
       - db
       - cache
@@ -360,7 +360,7 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    env_file: backend.env
+    env_file: server.env
     volumes:
       - "./db:/var/lib/mysql"
   cache:
@@ -368,7 +368,7 @@ services:
     restart: always
 ```
 
-`backend.env`:
+`server.env`:
 ```properties
 MYSQL_HOST=db
 MYSQL_PORT=3306

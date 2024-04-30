@@ -15,7 +15,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class TemplatePage extends StatefulWidget {
   final Environment env;
 
-  const TemplatePage({super.key, required this.env});
+  const TemplatePage({
+    super.key,
+    required this.env,
+  });
 
   @override
   State<TemplatePage> createState() => _TemplatePageState();
