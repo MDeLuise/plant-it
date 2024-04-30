@@ -65,8 +65,8 @@ class _FilterWidgetState extends State<FilterWidget> {
                 TextFieldMultipleDropDown(
                   onSelectedItemsChanged: widget.onSelectedPlantsChanged,
                   options: widget.env.plants
-                          .map((e) => e.info.personalName!)
-                          .toList(),
+                      .map((e) => e.info.personalName!)
+                      .toList(),
                   text: AppLocalizations.of(context).plants,
                 ),
                 const SizedBox(height: 10),
@@ -161,14 +161,6 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isSmallScreen(context)) {
-      return _buildListView();
-    } else {
-      return _buildGridView();
-    }
-  }
-
-  Widget _buildListView() {
     return CustomScrollView(
       slivers: <Widget>[
         SliverToBoxAdapter(
@@ -192,46 +184,6 @@ class _EventsPageState extends State<EventsPage> {
           ),
         )
       ],
-    );
-  }
-
-  Widget _buildGridView() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const itemWidth = 250;
-        final crossAxisCount = (constraints.maxWidth / itemWidth).floor();
-        return CustomScrollView(slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: FilterWidget(
-              onSelectedEventsChanged: (x) {
-                _selectedEventTypes = x;
-                _pagingController.refresh();
-              },
-              onSelectedPlantsChanged: (x) {
-                _selectedPlants = x;
-                _pagingController.refresh();
-              },
-              env: widget.env,
-            ),
-          ),
-          PagedSliverGrid<int, EventCard>(
-            pagingController: _pagingController,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-            ),
-            builderDelegate: PagedChildBuilderDelegate<EventCard>(
-              itemBuilder: (context, item, index) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: item,
-                ),
-              ),
-            ),
-          )
-        ]);
-      },
     );
   }
 }

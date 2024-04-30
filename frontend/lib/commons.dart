@@ -12,6 +12,8 @@ import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:toastification/toastification.dart';
 
+const double maxWidth = 550;
+
 String _getSnackbarTitle(ToastificationType type) {
   if (type == ToastificationType.success) {
     return "Success";

@@ -36,7 +36,6 @@ dependencies:
   shared_preferences: ^2.2.2
   flutter_svg: ^2.0.10+1
   animated_bottom_navigation_bar: ^1.3.3
-  flutter_side_menu: ^0.4.0
   infinite_scroll_pagination: ^4.0.0
   dropdown_button2: ^2.3.9
   material_loading_buttons: ^1.2.1
@@ -54,6 +53,7 @@ dependencies:
   talker_flutter: ^4.1.0
   toastification: ^1.2.1
   image_picker: ^1.0.7
+  # flutter_side_menu: ^0.4.0
   # colorful_safe_area: ^1.0.0
   # icon_animated: ^1.2.1
   # flutter_icon_snackbar: ^1.1.7

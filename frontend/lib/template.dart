@@ -7,8 +7,6 @@ import 'package:plant_it/event/events.dart';
 import 'package:plant_it/homepage/homepage.dart';
 import 'package:plant_it/more/more_page.dart';
 import 'package:plant_it/search/search_page.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -59,14 +57,10 @@ class _TemplatePageState extends State<TemplatePage> {
         env: _env,
       ),
     ];
-    if (isSmallScreen(context)) {
-      return _mobileTemplate();
-    } else {
-      return _desktopTemplate();
-    }
+    return _buildTemplate();
   }
 
-  Widget _mobileTemplate() {
+  Widget _buildTemplate() {
     return Scaffold(
         key: navigatorKey,
         extendBody: true,
@@ -101,84 +95,5 @@ class _TemplatePageState extends State<TemplatePage> {
           splashColor: const Color.fromRGBO(24, 44, 37, 1),
           onTap: (index) => setState(() => _currentIndex = index),
         ));
-  }
-
-  Widget _desktopTemplate() {
-    return Scaffold(
-      key: navigatorKey,
-      body: TalkerWrapper(
-        talker: widget.env.logger,
-        child: Row(
-          children: [
-            SideMenu(
-              backgroundColor: const Color.fromRGBO(24, 44, 37, 1),
-              hasResizer: false,
-              builder: (data) {
-                return SideMenuData(
-                  items: [
-                    // can not be in a separate _sideMenuPages = [...]. I think because _currentIndex == x is evaluated at declaration time?
-                    SideMenuItemDataTile(
-                        isSelected: _currentIndex == 0,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        hasSelectedLine: false,
-                        highlightSelectedColor: Colors.transparent,
-                        onTap: () => setState(() => _currentIndex = 0),
-                        title: 'Home',
-                        titleStyle: TextStyle(color: _iconNotActiveColor),
-                        selectedTitleStyle: TextStyle(
-                          color: _iconActiveColor,
-                        ),
-                        icon: const Icon(Icons.home_outlined),
-                        selectedIcon: const Icon(Icons.home),
-                        tooltip: "Home"),
-                    SideMenuItemDataTile(
-                      isSelected: _currentIndex == 1,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Colors.transparent,
-                      onTap: () => setState(() => _currentIndex = 1),
-                      title: 'Events',
-                      tooltip: "Events",
-                      titleStyle: TextStyle(color: _iconNotActiveColor),
-                      selectedTitleStyle: TextStyle(
-                        color: _iconActiveColor,
-                      ),
-                      icon: const Icon(Icons.calendar_month_outlined),
-                      selectedIcon: const Icon(Icons.calendar_month),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: _currentIndex == 2,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Colors.transparent,
-                      onTap: () => setState(() => _currentIndex = 2),
-                      title: 'Search',
-                      tooltip: "Search",
-                      titleStyle: TextStyle(color: _iconNotActiveColor),
-                      selectedTitleStyle: TextStyle(
-                        color: _iconActiveColor,
-                      ),
-                      icon: const Icon(Icons.search_outlined),
-                      selectedIcon: const Icon(Icons.search),
-                    ),
-                  ],
-                  //footer: const Text('Footer'),
-                );
-              },
-            ),
-            Expanded(
-              child: Center(
-                child: _bottombarPages[_currentIndex],
-              ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 }

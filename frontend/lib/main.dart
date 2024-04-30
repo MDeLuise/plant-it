@@ -65,12 +65,20 @@ void main() async {
     runApp(
       ChangeNotifierProvider(
         create: (context) => EventsNotifier(),
-        child: MaterialApp(
-          title: 'Plant-it',
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          theme: theme,
-          home: isLoggedIn ? SplashPage(env: env) : SetServer(env: env),
+        child: Container(
+          color: const Color(0xFF061913),
+          child: Center(
+            child: SizedBox(
+              width: maxWidth,
+              child: MaterialApp(
+                title: 'Plant-it',
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                theme: theme,
+                home: isLoggedIn ? SplashPage(env: env) : SetServer(env: env),
+              ),
+            ),
+          ),
         ),
       ),
     );

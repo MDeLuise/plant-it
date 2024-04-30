@@ -30,8 +30,8 @@ class _ResetPasswordState extends State<ResetPassword> {
       _isLoading = true;
     });
     try {
-      final response = await widget.env.http
-          .post("authentication/password/reset/${_usernameController.text}", {});
+      final response = await widget.env.http.post(
+          "authentication/password/reset/${_usernameController.text}", {});
       if (!mounted) return;
       if (response.statusCode != 200) {
         final responseBody = json.decode(response.body);
@@ -61,120 +61,81 @@ class _ResetPasswordState extends State<ResetPassword> {
     super.dispose();
   }
 
-  Widget _buildMobileView(BuildContext context) {
-    return Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: Image.asset(
-            'assets/images/logo.png',
-            width: 150,
-            height: 150,
-          )),
-      Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(AppLocalizations.of(context).resetPasswordHeader,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize:
-                          DefaultTextStyle.of(context).style.fontSize! * 0.35,
-                      decoration: TextDecoration.none,
-                    )),
-              ),
-              TextFormField(
-                autofocus: true,
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).username,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.length < 3 || value.length > 20) {
-                    return AppLocalizations.of(context).usernameSize;
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (value) {
-                  if (_formKey.currentState!.validate()) {
-                    _resetPassword();
-                  }
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedLoadingButton(
-                isLoading: _isLoading,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _resetPassword();
-                  }
-                },
-                child: Text(AppLocalizations.of(context).resetPassword),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      )
-    ]));
-  }
-
-  Widget _buildDesktopView(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final double imageWidth = screenSize.width * 0.8;
-    final double imageHeight = screenSize.height * 0.8;
-
-    return Container(
-      decoration: null,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Image.asset(
-            'assets/images/set_server.jpg',
-            width: imageWidth,
-            height: imageHeight,
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (isSmallScreen(context)) {
-      body = _buildMobileView(context);
-    } else {
-      body = Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 3,
-            child: _buildDesktopView(context),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: null,
-              child: _buildMobileView(context),
-            ),
-          ),
-        ],
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
-          child: body,
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 150,
+                      height: 150,
+                    )),
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                              AppLocalizations.of(context).resetPasswordHeader,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: DefaultTextStyle.of(context)
+                                        .style
+                                        .fontSize! *
+                                    0.35,
+                                decoration: TextDecoration.none,
+                              )),
+                        ),
+                        TextFormField(
+                          autofocus: true,
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context).username,
+                            border: const OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null ||
+                                value.length < 3 ||
+                                value.length > 20) {
+                              return AppLocalizations.of(context).usernameSize;
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {
+                            if (_formKey.currentState!.validate()) {
+                              _resetPassword();
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedLoadingButton(
+                          isLoading: _isLoading,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              _resetPassword();
+                            }
+                          },
+                          child:
+                              Text(AppLocalizations.of(context).resetPassword),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                )
+              ])),
         ),
       ),
     );

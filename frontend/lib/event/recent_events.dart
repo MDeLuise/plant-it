@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -83,12 +82,6 @@ class _RecentEventsState extends State<RecentEvents> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (isSmallScreen(context)) {
-      body = _buildListView(context);
-    } else {
-      body = _buildGridView(context);
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -99,26 +92,11 @@ class _RecentEventsState extends State<RecentEvents> {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        body
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _recentEvents,
+        )
       ],
-    );
-  }
-
-  Widget _buildListView(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _recentEvents,
-    );
-  }
-
-  Widget _buildGridView(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: GridView.count(
-        scrollDirection: Axis.horizontal,
-        crossAxisCount: 2,
-        children: _recentEvents,
-      ),
     );
   }
 }

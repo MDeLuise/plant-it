@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
@@ -46,7 +47,8 @@ class _PlantListState extends State<PlantList> {
     return plantName.toLowerCase().contains(matchingTerm.toLowerCase());
   }
 
-  Widget _buildMobileView(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -89,7 +91,7 @@ class _PlantListState extends State<PlantList> {
             ),
           ),
           SizedBox(
-            height: screenSize.width *
+            height: min(screenSize.width, maxWidth) *
                 .7, // height: screenSize.width * .8 // screenSize.height * .55
             child: PageView.builder(
               itemCount: _filteredPlants.length,
@@ -143,73 +145,6 @@ class _PlantListState extends State<PlantList> {
         ],
       ),
     );
-  }
-
-  Widget _buildDesktopView(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(22.0),
-      child: SizedBox(
-        height: screenSize.height * .5,
-        width: screenSize.width * .5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 200,
-              child: GridView.builder(
-                scrollDirection: Axis.horizontal,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: _filteredPlants.length,
-                controller: controller,
-                itemBuilder: (_, index) {
-                  return GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () async {
-                      goToPageSlidingUp(
-                        context,
-                        PlantDetailsPage(
-                          env: widget.env,
-                          plant: _filteredPlants[index],
-                        ),
-                      ).then((reload) {
-                        setState(() {
-                          _filteredPlants = widget.env.plants;
-                        });
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ParallaxPlantCard(
-                        horizontalSlide:
-                            (index - _page).clamp(-1, 1).toDouble(),
-                        plant: _filteredPlants[index],
-                        http: widget.env.http,
-                        filteredPlants: _filteredPlants,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isSmallScreen(context)) {
-      return _buildMobileView(context);
-    } else {
-      return _buildDesktopView(context);
-    }
   }
 }
 
