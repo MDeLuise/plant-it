@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.mdeluise.plantit.DummyNotificationDispatcher;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
-import com.github.mdeluise.plantit.notification.NotifyException;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherService;
-import com.github.mdeluise.plantit.reminder.Reminder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,34 +28,6 @@ class NotificationDispatcherServiceUnitTests {
     @Mock
     private UserService userService;
     private NotificationDispatcherService notificationDispatcherService;
-
-
-    private class DummyNotificationDispatcher implements NotificationDispatcher {
-        private final boolean isEnabled;
-
-
-        private DummyNotificationDispatcher(boolean isEnabled) {
-            this.isEnabled = isEnabled;
-        }
-
-
-        @Override
-        public void notifyReminder(Reminder reminder) throws NotifyException {
-
-        }
-
-
-        @Override
-        public NotificationDispatcherName getName() {
-            return null;
-        }
-
-
-        @Override
-        public boolean isEnabled() {
-            return isEnabled;
-        }
-    }
 
 
     @Test

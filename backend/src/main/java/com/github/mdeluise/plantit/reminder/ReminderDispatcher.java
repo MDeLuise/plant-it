@@ -59,7 +59,7 @@ public class ReminderDispatcher {
 
         if (lastEntry.isPresent() &&
                 (new Date(lastEntry.get().getDate().getTime() + calculateMilliseconds(reminder.getFrequency())))
-                    .before(new Date())) {
+                    .after(new Date())) {
             return false;
         }
 
