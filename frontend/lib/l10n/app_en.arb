@@ -49,7 +49,7 @@
   "yesterday": "yesterday",
   "nDaysAgo": "{count} {count, plural, =1{day} other{days}} ago",
   "@nDaysAgo": {
-    "description": "Describle how many days ago an event happened",
+    "description": "Describe how many days ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -59,7 +59,7 @@
   },
   "nDaysInFuture": "{count} {count, plural, =1{day} other{days}} in future (whaaat?)",
   "@nDaysInFuture": {
-    "description": "Describle how many days in future an event happened",
+    "description": "Describe how many days in future an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -69,7 +69,7 @@
   },
   "nMonthsAgo": "{count} {count, plural, =1{month} other{months}} ago",
   "@nMonthsAgo": {
-    "description": "Describle how many months ago an event happened",
+    "description": "Describe how many months ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -79,7 +79,7 @@
   },
   "nYearsAgo": "{count} {count, plural, =1{year} other{years}} ago",
   "@nYearsAgo": {
-    "description": "Describle how many years ago an event happened",
+    "description": "Describe how many years ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -144,7 +144,7 @@
   "addEvents": "Add events",
   "modifyPlant": "Modify plant",
   "removePlant": "Remove plant",
-  "useBirthday": "Use birtday",
+  "useBirthday": "Use birthday",
   "birthday": "Birthday",
   "avatar": "Avatar",
   "note": "Note",
@@ -154,7 +154,7 @@
   "newBorn": "New born",
   "nDays": "{count} {count, plural, =1{day} other{days}}",
   "@nDays": {
-    "description": "How many days andentity has",
+    "description": "How many days an entity has",
     "placeholders": {
       "count": {
         "type": "num",
