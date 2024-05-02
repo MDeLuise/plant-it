@@ -9,7 +9,7 @@
 
 <p align="center"><a href="https://docs.plant-it.org">Explore the documentation</a></p>
 
-<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#quickstart">Quickstart</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
+<p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#quickstart">Quickstart</a> • <a href="https://github.com/MDeLuise/plant-it/#support-the-project">Support</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
 
 <p align="center">
   <img src="/images/banner.png" width="100%" />
@@ -108,7 +108,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
   ```
 * Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
 
-<a href="https://docs.plant-it.org/latest/installation/#configuration">Take a look at the documentation</a> in order to understand the available configurations.
+<a href="https://docs.plant-it.org/installation/#configuration">Take a look at the documentation</a> in order to understand the available configurations.
 
 ## Support the project
 If you find this project helpful and would like to supporting it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
@@ -129,4 +129,4 @@ You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml).
 
 ### How to contribute
-If you want to make some changes and test them locally <a href="https://docs.plant-it.org/latest/support/#contributing">take a look at the documentation</a>.
+If you want to make some changes and test them locally <a href="https://docs.plant-it.org/support/#contributing">take a look at the documentation</a>.
