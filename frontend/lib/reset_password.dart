@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class ResetPassword extends StatefulWidget {
   final Environment env;
@@ -41,12 +40,13 @@ class _ResetPasswordState extends State<ResetPassword> {
       }
       final responseBody = response.body;
       widget.env.logger.info("Password reset request successfully sent");
-      showSnackbar(context, ToastificationType.success, responseBody);
+      widget.env.toastManager
+          .showToast(context, ToastNotificationType.success, responseBody);
       Navigator.pop(context);
     } catch (e, st) {
       if (!mounted) return;
       widget.env.logger.error(e, st);
-      showSnackbar(context, ToastificationType.error,
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).errorResettingPassword);
     } finally {
       setState(() {

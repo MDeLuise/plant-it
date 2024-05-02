@@ -5,8 +5,10 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/logger/logger.dart';
 import 'package:plant_it/login.dart';
 import 'package:plant_it/set_server.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'localizations_injector.dart';
@@ -17,7 +19,9 @@ import 'set_server_test.mocks.dart';
   AppHttpClient,
   BuildContext,
   SharedPreferences,
-  NavigatorObserver
+  NavigatorObserver,
+  Logger,
+  ToastManager,
 ])
 void main() {
   late MockEnvironment env;
@@ -25,6 +29,8 @@ void main() {
   late MockBuildContext context;
   late MockSharedPreferences prefs;
   late MockNavigatorObserver navigatorObserver;
+  late MockLogger logger;
+  late MockToastManager toastManager;
 
   setUp(() {
     // Arrange
@@ -33,6 +39,8 @@ void main() {
     context = MockBuildContext();
     prefs = MockSharedPreferences();
     navigatorObserver = MockNavigatorObserver();
+    logger = MockLogger();
+    toastManager = MockToastManager();
 
     // Mock behavior
     when(env.prefs).thenReturn(prefs);
@@ -40,6 +48,8 @@ void main() {
     when(prefs.setString(any, any)).thenAnswer((_) => Future.value(true));
     when(context.mounted).thenReturn(true);
     when(navigatorObserver.navigator).thenReturn(null);
+    when(env.logger).thenReturn(logger);
+    when(env.toastManager).thenReturn(toastManager);
   });
 
   void testInvalidUrl(String invalidUrl) {
@@ -103,8 +113,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert and verify
+      verify(logger.error(any)).called(1);
+      verify(toastManager.showToast(any, any, any)).called(1);
       expect(find.byType(LoginPage), findsNothing);
-      expect(find.byType(SnackBar), findsWidgets);
     });
   }
 
@@ -125,8 +136,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert and verify
+      verify(logger.error(any, any, any)).called(1);
+      verify(toastManager.showToast(any, any, any)).called(1);
       expect(find.byType(LoginPage), findsNothing);
-      expect(find.byType(SnackBar), findsWidgets);
     });
   }
 

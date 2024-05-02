@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/species_edit/edit_species_body.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/species_edit/header.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class EditSpeciesPage extends StatefulWidget {
   final SpeciesDTO species;
@@ -50,9 +49,9 @@ class _EditSpeciesPageState extends State<EditSpeciesPage> {
       }
       final SpeciesDTO updatedSpecies = SpeciesDTO.fromJson(responseBody);
       widget.env.logger.info("Species successfully updated");
-      showSnackbar(
+      widget.env.toastManager.showToast(
         context,
-        ToastificationType.success,
+        ToastNotificationType.success,
         AppLocalizations.of(context).speciesUpdatedSuccessfully,
       );
       Navigator.pop(context, updatedSpecies);

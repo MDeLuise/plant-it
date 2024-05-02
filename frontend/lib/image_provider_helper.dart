@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_it/logger/logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class ImageProviderHelper {
   static Future<ImageProvider<Object>> getImageProvider(
-      XFile file, Talker logger) async {
+      XFile file, Logger logger) async {
     try {
       final bytes = await file.readAsBytes();
       return MemoryImage(bytes);

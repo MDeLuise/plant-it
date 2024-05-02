@@ -9,7 +9,7 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/add_new_event.dart';
 import 'package:plant_it/plant_edit/edit_plant_page.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class PlantDetailsBottomActionBar extends StatelessWidget {
   final PlantDTO plant;
@@ -61,7 +61,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
       env.plants = env.plants.where((p) => p.id != plant.id).toList();
       env.logger.info("Plant successfully deleted");
       if (!context.mounted) return;
-      showSnackbar(context, ToastificationType.success,
+      env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).plantDeletedSuccessfully);
     } catch (e, st) {
       env.logger.error(e, st);
@@ -87,7 +87,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
           throw AppException.withInnerException(e as Exception);
         }
       }
-      showSnackbar(context, ToastificationType.success,
+      env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).nPhoto(pickedImages.length));
       refreshGallery();
     }

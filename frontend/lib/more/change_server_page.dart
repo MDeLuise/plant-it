@@ -2,10 +2,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class ChangeServerPage extends StatefulWidget {
   final Environment env;
@@ -56,7 +55,9 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
       if (response.statusCode == 200 && response.body == "pong") {
         widget.env.prefs.setString("serverURL", "$url/api/");
         widget.env.logger.info("Server URL correctly updated");
-        showSnackbar(context, ToastificationType.success,
+        widget.env.toastManager.showToast(
+            context,
+            ToastNotificationType.success,
             AppLocalizations.of(context).serverUpdated);
         Navigator.push(
           context,
@@ -71,7 +72,7 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
     } catch (e, st) {
       if (!mounted) return;
       widget.env.logger.error(e, st);
-      showSnackbar(context, ToastificationType.error,
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).noBackend);
     } finally {
       widget.env.http.backendUrl = currentUrl;

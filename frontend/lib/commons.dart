@@ -10,39 +10,9 @@ import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/splash_screen.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 const double maxWidth = 550;
-
-String _getSnackbarTitle(ToastificationType type) {
-  if (type == ToastificationType.success) {
-    return "Success";
-  } else if (type == ToastificationType.warning) {
-    return "Warning";
-  } else {
-    return "Ops!";
-  }
-}
-
-void showSnackbar(
-    BuildContext context, ToastificationType type, String message) {
-  toastification.show(
-    context: context,
-    type: type,
-    style: ToastificationStyle.fillColored,
-    title: Text(_getSnackbarTitle(type)),
-    icon: const Icon(Icons.check),
-    description: Text(message),
-    alignment: Alignment.topCenter,
-    autoCloseDuration: const Duration(seconds: 5),
-    borderRadius: BorderRadius.circular(12.0),
-    boxShadow: highModeShadow,
-    applyBlurEffect: false,
-    showProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-  );
-}
 
 const List<String> currencySymbols = [
   "",
@@ -244,7 +214,8 @@ Future<void> fetchAndSetBackendVersion(
   } catch (e, st) {
     if (!context.mounted) return;
     env.logger.error(e, st);
-    showSnackbar(context, ToastificationType.error, e.toString());
+    env.toastManager
+        .showToast(context, ToastNotificationType.error, e.toString());
     throw AppException.withInnerException(e as Exception);
   }
 }
@@ -265,7 +236,8 @@ Future<List<String>> _fetchAvailableNotificationDispatchers(
   } catch (e, st) {
     if (!context.mounted) return [];
     env.logger.error(e, st);
-    showSnackbar(context, ToastificationType.error, e.toString());
+    env.toastManager
+        .showToast(context, ToastNotificationType.error, e.toString());
     throw AppException.withInnerException(e as Exception);
   }
 }
@@ -425,13 +397,14 @@ Future<bool> _login(Environment env, BuildContext context, String username,
       if (!context.mounted) return false;
       final errorMessage = responseBody['message'];
       env.logger.error(errorMessage);
-      showSnackbar(context, ToastificationType.error, errorMessage);
+      env.toastManager
+          .showToast(context, ToastNotificationType.error, errorMessage);
       return false;
     }
   } catch (e, st) {
     if (!context.mounted) return false;
     env.logger.error(e, st);
-    showSnackbar(context, ToastificationType.error,
+    env.toastManager.showToast(context, ToastNotificationType.error,
         AppLocalizations.of(context).noBackend);
     return false;
   }

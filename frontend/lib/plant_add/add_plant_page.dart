@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_add/add_plant_body.dart';
 import 'package:plant_it/plant_add/header.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class AddPlantPage extends StatefulWidget {
   final SpeciesDTO species;
@@ -46,7 +45,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
       }
       widget.env.plants.add(PlantDTO.fromJson(responseBody));
       widget.env.logger.info("Plant successfully created");
-      showSnackbar(context, ToastificationType.success,
+      widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).plantCreatedSuccessfully);
       Navigator.pop(context, true);
     } catch (e, st) {

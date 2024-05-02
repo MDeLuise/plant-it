@@ -8,7 +8,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/set_server.dart';
 import 'package:plant_it/template.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class SplashPage extends StatefulWidget {
   final Environment env;
@@ -50,7 +50,7 @@ class _SplashPageState extends State<SplashPage> {
       if (!mounted) return;
       widget.env.http.jwt = null;
       widget.env.http.key = null;
-      showSnackbar(context, ToastificationType.error,
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).noBackend);
       Navigator.pushReplacement(
         context,

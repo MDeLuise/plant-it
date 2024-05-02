@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/info_entries.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Environment env;
@@ -79,12 +78,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     if (!mounted) return;
     if (!changed) {
-      showSnackbar(context, ToastificationType.warning,
+      widget.env.toastManager.showToast(context, ToastNotificationType.warning,
           AppLocalizations.of(context).noChangesDetected);
       return;
     }
     widget.env.logger.info("User correctly updated");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).userUpdated);
     Navigator.pop(context, changed);
   }

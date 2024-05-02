@@ -6,7 +6,7 @@ import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class ChangeNotificationsPage extends StatefulWidget {
   final Environment env;
@@ -40,7 +40,7 @@ class _ChangeNotificationsPageState extends State<ChangeNotificationsPage> {
       widget.env.logger.info("Notification dispatchers correctly updated");
       if (!context.mounted) return;
       await fetchAndSetNotificationDispatchers(context, widget.env);
-      showSnackbar(context, ToastificationType.success,
+      widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).notificationUpdated);
       Navigator.of(context).pop();
     } finally {

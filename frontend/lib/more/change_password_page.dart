@@ -4,9 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   final Environment env;
@@ -42,7 +41,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         throw AppException(responseBody);
       }
       widget.env.logger.info("Password successfully updated");
-      showSnackbar(context, ToastificationType.success,
+      widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).passwordUpdated);
       Navigator.pop(context);
     } catch (e, st) {

@@ -9,7 +9,7 @@ import 'package:plant_it/dto/reminder_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/info_entries.dart';
 import 'package:plant_it/theme.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class AddReminder extends StatefulWidget {
   final Environment env;
@@ -46,7 +46,7 @@ class _AddReminderState extends State<AddReminder> {
       throw AppException.withInnerException(e as Exception);
     }
     if (!context.mounted) return;
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).reminderCreatedSuccessfully);
     Navigator.of(context).pop(true);
   }

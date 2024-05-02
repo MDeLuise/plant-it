@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/species_details_page.dart';
 import 'package:plant_it/species_add/add_species_body.dart';
 import 'package:plant_it/species_add/header.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class AddSpeciesPage extends StatefulWidget {
   final String? name;
@@ -54,9 +53,9 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
       }
       final SpeciesDTO updatedSpecies = SpeciesDTO.fromJson(responseBody);
       widget.env.logger.info("Species successfully created");
-      showSnackbar(
+      widget.env.toastManager.showToast(
         context,
-        ToastificationType.success,
+        ToastNotificationType.success,
         AppLocalizations.of(context).speciesCreatedSuccessfully,
       );
       Navigator.pushReplacement(

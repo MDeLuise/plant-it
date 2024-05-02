@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
     - main
+  push:
+    branches:
+    - main
 
 jobs:
   backend:
@@ -34,15 +37,15 @@ jobs:
         with:
           path: frontend
 
-      - name: Setup Flutter
+      - name: Setup Flutter Action
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '2.x'
 
-      - name: Flutter Analyze
+      - name: Analyze
         run: flutter analyze
         working-directory: ./frontend
 
-      - name: Flutter Test
+      - name: Run the tests
         run: flutter test
         working-directory: ./frontend

@@ -9,8 +9,8 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
 import 'package:plant_it/events_notifier.dart';
 import 'package:plant_it/theme.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 
 class EditEventPage extends StatefulWidget {
   final Environment env;
@@ -67,7 +67,7 @@ class _EditEventPageState extends State<EditEventPage> {
       throw AppException.withInnerException(e as Exception);
     }
     widget.env.logger.info("Event successfully updated");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).eventSuccessfullyUpdated);
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop();
@@ -112,7 +112,7 @@ class _EditEventPageState extends State<EditEventPage> {
       throw AppException.withInnerException(e as Exception);
     }
     widget.env.logger.info("Event successfully deleted");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).eventSuccessfullyDeleted);
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);

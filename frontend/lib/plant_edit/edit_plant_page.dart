@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_edit/edit_plant_body.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/plant_edit/header.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class EditPlantPage extends StatefulWidget {
   final PlantDTO plantDTO;
@@ -37,7 +36,7 @@ class _EditPlantPageState extends State<EditPlantPage> {
       throw AppException(responseBody["message"]);
     }
     widget.env.logger.info("Plant successfully updated");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantUpdatedSuccessfully);
     Navigator.of(context).pop(PlantDTO.fromJson(responseBody));
   }
@@ -52,7 +51,7 @@ class _EditPlantPageState extends State<EditPlantPage> {
       throw AppException(responseBody["message"]);
     }
     widget.env.logger.info("Plant successfully created");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantCreatedSuccessfully);
     Navigator.of(context).pop(responseBody);
   }

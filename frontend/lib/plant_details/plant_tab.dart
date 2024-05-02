@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/commons.dart';
@@ -15,7 +14,7 @@ import 'package:plant_it/plant_details/gallery.dart';
 import 'package:plant_it/reminders/reminder_add.dart';
 import 'package:plant_it/reminders/reminder_edit.dart';
 import 'package:plant_it/reminders/reminder_snippet.dart';
-import 'package:toastification/toastification.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class PlantDetailsTab extends StatefulWidget {
   final PlantDTO plant;
@@ -223,12 +222,12 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
     if (response.statusCode != 200) {
       widget.env.logger.error(
           "Error while setting image id $imageId as plant avatar: ${responseBody["message"]}");
-      showSnackbar(context, ToastificationType.error,
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).errorUpdatingPlant);
       return false;
     }
     widget.env.logger.info("Plant avatar successfully updated");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantUpdatedSuccessfully);
     setState(() {
       widget.plant.avatarMode = "SPECIFIED";
@@ -247,12 +246,12 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
     if (response.statusCode != 200) {
       widget.env.logger.error(
           "Error while removing plant avatar: ${responseBody["message"]}");
-      showSnackbar(context, ToastificationType.error,
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).errorUpdatingPlant);
       return false;
     }
     widget.env.logger.info("Plant avatar successfully updated");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantUpdatedSuccessfully);
     setState(() {
       widget.plant.avatarMode = "NONE";
@@ -310,7 +309,7 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
       throw AppException.withInnerException(e as Exception);
     }
     widget.env.logger.info("Photo successfully deleted");
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).photoSuccessfullyDeleted);
     setState(() {
       _photos--;

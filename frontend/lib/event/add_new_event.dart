@@ -11,8 +11,8 @@ import 'package:plant_it/dropdown.dart';
 import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/events_notifier.dart';
 import 'package:plant_it/theme.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 
 class AddNewEventPage extends StatefulWidget {
   final Environment env;
@@ -68,7 +68,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
         _eventTypesToCreate.length * _linkedPlants.length;
     widget.env.logger.info("Created $createdEventsNum new event(s)");
     if (!context.mounted) return;
-    showSnackbar(context, ToastificationType.success,
+    widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).nEventsCreated(createdEventsNum));
     Provider.of<EventsNotifier>(context, listen: false).notify();
     Navigator.of(context).pop(true);

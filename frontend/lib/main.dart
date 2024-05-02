@@ -10,11 +10,10 @@ import 'package:plant_it/set_server.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:plant_it/template.dart';
 import 'package:plant_it/theme.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:talker_flutter/talker_flutter.dart';
-import 'package:toastification/toastification.dart';
 
 void main() async {
   runZonedGuarded(() async {
@@ -30,7 +29,6 @@ void main() async {
         username: "anonymous",
         email: "not@an.email",
       ),
-      logger: TalkerFlutter.init(),
       notificationDispatcher: [],
       eventTypes: [],
       plants: [],
@@ -84,8 +82,8 @@ void main() async {
     );
   }, (error, stack) {
     if (error is AppException) {
-      showSnackbar(
-          navigatorKey.currentContext!, ToastificationType.error, error.cause);
+      ToastificationToastManager().showToast(navigatorKey.currentContext!,
+          ToastNotificationType.error, error.cause);
     }
   });
 }
