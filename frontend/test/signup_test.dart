@@ -8,8 +8,9 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/homepage/homepage.dart';
-//import 'package:plant_it/otp.dart';
+import 'package:plant_it/logger/logger.dart';
 import 'package:plant_it/signup.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'localizations_injector.dart';
@@ -20,7 +21,10 @@ import 'signup_test.mocks.dart';
   AppHttpClient,
   BuildContext,
   SharedPreferences,
-  NavigatorObserver
+  NavigatorObserver,
+  Logger,
+  ToastManager,
+  Credentials,
 ])
 void main() {
   late MockEnvironment env;
@@ -28,6 +32,9 @@ void main() {
   late MockBuildContext context;
   late MockSharedPreferences prefs;
   late MockNavigatorObserver navigatorObserver;
+  late MockLogger logger;
+  late MockToastManager toastManager;
+  late MockCredentials credentials;
 
   setUp(() {
     // Arrange
@@ -36,6 +43,9 @@ void main() {
     context = MockBuildContext();
     prefs = MockSharedPreferences();
     navigatorObserver = MockNavigatorObserver();
+    logger = MockLogger();
+    toastManager = MockToastManager();
+    credentials = MockCredentials();
 
     // Mock behavior
     when(env.prefs).thenReturn(prefs);
@@ -43,6 +53,9 @@ void main() {
     when(prefs.setString(any, any)).thenAnswer((_) => Future.value(true));
     when(context.mounted).thenReturn(true);
     when(navigatorObserver.navigator).thenReturn(null);
+    when(env.credentials).thenReturn(credentials);
+    when(env.logger).thenReturn(logger);
+    when(env.toastManager).thenReturn(toastManager);
   });
 
   testWidgets('Signup widget has a username and password and email labels',
@@ -129,20 +142,22 @@ void main() {
       (WidgetTester tester) async {
     // Arrange
     final SignupRequest request = SignupRequest(
-        username: "test_username",
-        email: "test@email.com",
-        password: "test_password");
+      username: "test_username",
+      email: "test@email.com",
+      password: "test_password",
+    );
     const jwt = 'test_jwt';
     const appKey = 'frontend';
 
     // Mock behavior
+    when(credentials.username).thenReturn(request.username);
     when(http.post('authentication/signup', request.toMap())).thenAnswer(
         (_) => Future.value(Response('User registered successfully.', 200)));
     when(http.post('authentication/login', {
       'username': request.username,
       'password': request.password,
     })).thenAnswer((_) => Future.value(Response(
-        '{"id": 99, "username": "${request.username}", "jwt": {"value": "$jwt", "expiresOn": "06-03-2024 11:00:00"}}',
+        '{"id": 99, "username": "${request.username}", "email": "${request.email}", "jwt": {"value": "$jwt", "lastLogin": "06-03-2024 11:00:00", "expiresOn": "06-03-2024 11:00:00"}}',
         200)));
     when(http.get('api-key/name/$appKey')).thenAnswer((_) => Future.value(Response(
         '{"statusCode": 404, "errorCode": "RESOURCE_NOT_FOUND", "message": ""}',
@@ -154,6 +169,21 @@ void main() {
     when(http.get('plant'))
         .thenAnswer((_) => Future.value(Response('{"content": []}', 200)));
     when(env.plants).thenReturn([]);
+    when(http.get("diary/entry/type")).thenAnswer((_) => Future.delayed(
+        Duration(seconds: 5), () => Response('["SEEDING"]', 200)));
+    when(http.get("plant/_count"))
+        .thenAnswer((_) => Future.value(Response('0', 200)));
+    when(http.get("info/version")).thenAnswer((_) => Future.value(Response(
+        '{"currentVersion": "42", "latestVersion": "42", "latestReleaseNote": "42", "latest": true}',
+        200)));
+    when(http.get("info/notification-dispatchers"))
+        .thenAnswer((_) => Future.value(Response('["CONSOLE"]', 200)));
+    when(http.get("notification-dispatcher"))
+        .thenAnswer((_) => Future.value(Response('["CONSOLE"]', 200)));
+    when(http.get("diary/entry?pageNo=0&pageSize=5")).thenAnswer((_) =>
+        Future.value(Response(
+            '{ "totalPages": 0, "totalElements": 0, "first": true, "last": true, "size": 0, "content": [ { "id": 0, "type": "string", "note": "string", "date": "2024-05-03T09:30:55.883Z", "diaryId": 0, "diaryTargetId": 0, "diaryTargetPersonalName": "string" } ], "number": 0, "sort": { "empty": true, "sorted": true, "unsorted": true }, "pageable": { "offset": 0, "sort": { "empty": true, "sorted": true, "unsorted": true }, "pageNumber": 0, "pageSize": 0, "paged": true, "unpaged": true }, "numberOfElements": 0, "empty": true }',
+            200)));
 
     // Act
     await tester.pumpWidget(LocalizationsInjector(
@@ -171,6 +201,7 @@ void main() {
     // Assert and verify
     verify(prefs.setString('serverKey', appKey)).called(1);
     verify(prefs.setString('username', request.username)).called(1);
+    verify(prefs.setString('email', request.email)).called(1);
     verify(navigatorObserver.didPush(any, any));
     expect(find.byType(HomePage), findsOneWidget);
   });

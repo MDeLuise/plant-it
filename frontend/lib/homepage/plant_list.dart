@@ -125,23 +125,24 @@ class _PlantListState extends State<PlantList> {
               },
             ),
           ),
-          SmoothPageIndicator(
-            controller: controller,
-            count: _filteredPlants.length,
-            effect: const ScrollingDotsEffect(
-              dotWidth: 5.0,
-              dotHeight: 5.0,
-              activeDotScale: 2,
-              activeDotColor: Color(
-                0xFF6DD075,
+          if (_filteredPlants.isNotEmpty)
+            SmoothPageIndicator(
+              controller: controller,
+              count: _filteredPlants.length,
+              effect: const ScrollingDotsEffect(
+                dotWidth: 5.0,
+                dotHeight: 5.0,
+                activeDotScale: 2,
+                activeDotColor: Color(
+                  0xFF6DD075,
+                ),
               ),
-            ),
-            onDotClicked: (index) => controller.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.ease,
-            ),
-          )
+              onDotClicked: (index) => controller.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+              ),
+            )
         ],
       ),
     );

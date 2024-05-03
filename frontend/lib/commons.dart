@@ -188,6 +188,9 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
       final totalPlantsResponseBody = json.decode(totalPlantsResponse.body);
       throw AppException(totalPlantsResponseBody["message"]);
     }
+    if (totalPlantsResponse.body == "0") {
+      return;
+    }
     final response =
         await env.http.get("plant?pageSize=${totalPlantsResponse.body}");
     if (response.statusCode == 200) {

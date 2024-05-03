@@ -13,7 +13,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class RecentEvents extends StatefulWidget {
   final Environment env;
-  const RecentEvents({super.key, required this.env});
+  const RecentEvents({
+    super.key,
+    required this.env,
+  });
 
   @override
   State<StatefulWidget> createState() => _RecentEventsState();
@@ -40,18 +43,20 @@ class _RecentEventsState extends State<RecentEvents> {
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
       final List<dynamic> entries = responseBody["content"];
-      setState(() {
-        _recentEvents = entries.map((entry) {
-          return EventCard(
-            action: entry["type"],
-            plant: entry["diaryTargetPersonalName"],
-            date: DateTime.parse(entry["date"]),
-            eventDTO: EventDTO.fromJson(entry),
-            env: widget.env,
-          );
-        }).toList();
-        _isLoading = false;
-      });
+      if (entries.isNotEmpty) {
+        setState(() {
+          _recentEvents = entries.map((entry) {
+            return EventCard(
+              action: entry["type"],
+              plant: entry["diaryTargetPersonalName"],
+              date: DateTime.parse(entry["date"]),
+              eventDTO: EventDTO.fromJson(entry),
+              env: widget.env,
+            );
+          }).toList();
+        });
+      }
+      setState(() => _isLoading = false);
     } else {
       widget.env.logger.error("Failed to load events");
       throw AppException('Failed to load events');

@@ -6,8 +6,8 @@
 import 'dart:async' as _i12;
 
 import 'package:flutter/foundation.dart' as _i9;
+import 'package:flutter/material.dart' as _i15;
 import 'package:flutter/src/widgets/framework.dart' as _i8;
-import 'package:flutter/src/widgets/navigator.dart' as _i15;
 import 'package:flutter/src/widgets/notification_listener.dart' as _i14;
 import 'package:http/http.dart' as _i7;
 import 'package:image_picker/image_picker.dart' as _i13;
@@ -885,6 +885,114 @@ class MockNavigatorObserver extends _i1.Mock implements _i15.NavigatorObserver {
         Invocation.method(
           #didStopUserGesture,
           [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [Logger].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLogger extends _i1.Mock implements _i4.Logger {
+  MockLogger() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void debug(
+    dynamic msg, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #debug,
+          [
+            msg,
+            exception,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void error(
+    dynamic msg, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #error,
+          [
+            msg,
+            exception,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void info(
+    dynamic msg, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #info,
+          [
+            msg,
+            exception,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void warning(
+    dynamic msg, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #warning,
+          [
+            msg,
+            exception,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [ToastManager].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockToastManager extends _i1.Mock implements _i5.ToastManager {
+  MockToastManager() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void showToast(
+    _i8.BuildContext? context,
+    _i5.ToastNotificationType? type,
+    String? msg,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #showToast,
+          [
+            context,
+            type,
+            msg,
+          ],
         ),
         returnValueForMissingStub: null,
       );

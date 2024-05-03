@@ -7,6 +7,8 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/event/events.dart';
+import 'package:plant_it/logger/logger.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'localizations_injector.dart';
@@ -17,7 +19,9 @@ import 'events_test.mocks.dart';
   AppHttpClient,
   BuildContext,
   SharedPreferences,
-  NavigatorObserver
+  NavigatorObserver,
+  Logger,
+  ToastManager,
 ])
 void main() {
   late MockEnvironment env;
@@ -25,6 +29,8 @@ void main() {
   late MockBuildContext context;
   late MockSharedPreferences prefs;
   late MockNavigatorObserver navigatorObserver;
+  late MockLogger logger;
+  late MockToastManager toastManager;
 
   setUp(() {
     // Arrange
@@ -33,6 +39,10 @@ void main() {
     context = MockBuildContext();
     prefs = MockSharedPreferences();
     navigatorObserver = MockNavigatorObserver();
+    logger = MockLogger();
+    toastManager = MockToastManager();
+    logger = MockLogger();
+    toastManager = MockToastManager();
 
     // Mock behavior
     when(env.prefs).thenReturn(prefs);
@@ -42,6 +52,8 @@ void main() {
     when(prefs.setString(any, any)).thenAnswer((_) => Future.value(true));
     when(context.mounted).thenReturn(true);
     when(navigatorObserver.navigator).thenReturn(null);
+    when(env.logger).thenReturn(logger);
+    when(env.toastManager).thenReturn(toastManager);
   });
 
   testWidgets('Events widget has correct fields', (tester) async {
@@ -57,8 +69,8 @@ void main() {
     // Assert and verify
     expect(find.byIcon(Icons.keyboard_arrow_up), findsOneWidget);
     expect(find.text("Filter"), findsOneWidget);
-    expect(find.text("Event"), findsOneWidget);
-    expect(find.text("Plant"), findsOneWidget);
+    expect(find.text("Events"), findsOneWidget);
+    expect(find.text("Plants"), findsOneWidget);
   });
 
   testWidgets('Events widget has correct events', (tester) async {

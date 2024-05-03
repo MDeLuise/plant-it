@@ -4,7 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePageHeader extends StatelessWidget {
   final String username;
-  const HomePageHeader({super.key, required this.username});
+  const HomePageHeader({
+    super.key,
+    required this.username,
+  });
 
   @override
   Widget build(BuildContext context) {
