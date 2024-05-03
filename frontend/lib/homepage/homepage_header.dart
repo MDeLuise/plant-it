@@ -37,9 +37,9 @@ class HomePageHeader extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: AdvancedAvatar(
                 name: username,
-                style: TextStyle(color: Color.fromARGB(255, 156, 192, 172)),
+                style: const TextStyle(color: Color.fromARGB(255, 156, 192, 172)),
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(24, 44, 37, 1),
+                  color: const Color.fromRGBO(24, 44, 37, 1),
                   borderRadius: BorderRadius.circular(50),
                 ),
               ),

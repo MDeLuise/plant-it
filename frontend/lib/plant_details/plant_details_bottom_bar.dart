@@ -87,6 +87,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
           throw AppException.withInnerException(e as Exception);
         }
       }
+      if (!context.mounted) return;
       env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).nPhoto(pickedImages.length));
       refreshGallery();
@@ -96,14 +97,14 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
       child: BottomAppBar(
           color: const Color.fromRGBO(24, 44, 37, 1),
           child: Row(children: [
             IconButton(
               onPressed: () => _uploadPhotos(context),
               icon: const Icon(Icons.add_a_photo_outlined),
-              color: Color.fromARGB(255, 156, 192, 172),
+              color: const Color.fromARGB(255, 156, 192, 172),
               tooltip: AppLocalizations.of(context).addPhotos,
             ),
             IconButton(
@@ -115,7 +116,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
                 ),
               ),
               icon: const Icon(Icons.calendar_month_outlined),
-              color: Color.fromARGB(255, 156, 192, 172),
+              color: const Color.fromARGB(255, 156, 192, 172),
               tooltip: AppLocalizations.of(context).addEvents,
             ),
             IconButton(
@@ -132,14 +133,14 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
                 }
               },
               icon: const Icon(Icons.edit_outlined),
-              color: Color.fromARGB(255, 156, 192, 172),
+              color: const Color.fromARGB(255, 156, 192, 172),
               tooltip: AppLocalizations.of(context).modifyPlant,
             ),
             const Spacer(),
             IconButton(
               onPressed: () => _removePlantWithConfirm(context),
               icon: const Icon(Icons.delete_forever_outlined),
-              color: Color.fromARGB(255, 156, 192, 172),
+              color: const Color.fromARGB(255, 156, 192, 172),
               tooltip: AppLocalizations.of(context).removePlant,
             ),
           ])),

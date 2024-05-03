@@ -12,7 +12,7 @@ class ImageProviderHelper {
       return MemoryImage(bytes);
     } catch (e, st) {
       logger.error("Error loading image: ", e, st);
-      return AssetImage("assets/images/no-image.png");
+      return const AssetImage("assets/images/no-image.png");
     }
   }
 
@@ -24,7 +24,7 @@ class ImageProviderHelper {
       return MemoryImage(bytes);
     } else {
       logger.error("Error loading image from URL $imageUrl");
-      return AssetImage("assets/images/no-image.png");
+      return const AssetImage("assets/images/no-image.png");
     }
   }
 }

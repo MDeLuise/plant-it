@@ -25,7 +25,7 @@ class GalleryImageViewWrapper extends StatefulWidget {
   final String? avatarImageId;
 
   const GalleryImageViewWrapper({
-    Key? key,
+    super.key,
     required this.titleGallery,
     required this.backgroundColor,
     required this.initialIndex,
@@ -44,7 +44,7 @@ class GalleryImageViewWrapper extends StatefulWidget {
     required this.removePhoto,
     required this.setAvatar,
     required this.avatarImageId,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -104,15 +104,16 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
               setState(() {
                 _galleryItems = newGalleryItems;
               });
-              if (_galleryItems.length == 0) {
+              if (_galleryItems.isEmpty) {
+                if (!context.mounted) return;
                 Navigator.of(context).pop();
               }
             },
-            child: Icon(
+            child: const Icon(
               Icons.delete_forever_outlined,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _DynamicSetAvatarFab(
@@ -132,7 +133,7 @@ class _GalleryImageViewWrapperState extends State<GalleryImageViewWrapper> {
               }
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           )
         ],
@@ -237,12 +238,11 @@ class _DynamicSetAvatarFab extends StatefulWidget {
   final Function(String) onPressed;
 
   const _DynamicSetAvatarFab({
-    Key? key,
     required this.currentPageIndex,
     required this.galleryItems,
     required this.avatarImageId,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   _DynamicSetAvatarFabState createState() => _DynamicSetAvatarFabState();

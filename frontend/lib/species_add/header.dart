@@ -27,7 +27,7 @@ class AddSpeciesImageHeader extends StatefulWidget {
 class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
   bool _loading = true;
   ImageProvider<Object> _imageToDisplay =
-      AssetImage("assets/images/no-image.png");
+      const AssetImage("assets/images/no-image.png");
 
   @override
   void initState() {
@@ -58,26 +58,24 @@ class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
         context: context,
         builder: (BuildContext bc) {
           return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.add_photo_alternate_outlined),
-                      title: new Text(AppLocalizations.of(context).uploadPhoto),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        _uploadImage();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.add_link_outlined),
-                    title: new Text(AppLocalizations.of(context).linkURL),
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: const Icon(Icons.add_photo_alternate_outlined),
+                    title: Text(AppLocalizations.of(context).uploadPhoto),
                     onTap: () {
                       Navigator.of(context).pop();
-                      _showUrlDialog(context);
-                    },
-                  ),
-                ],
-              ),
+                      _uploadImage();
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.add_link_outlined),
+                  title: Text(AppLocalizations.of(context).linkURL),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showUrlDialog(context);
+                  },
+                ),
+              ],
             ),
           );
         });
@@ -127,7 +125,7 @@ class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
               onPressed: () async {
                 try {
                   final response = await widget.env.http
-                      .get("${widget.env.http.backendUrl}proxy?url=${url}");
+                      .get("${widget.env.http.backendUrl}proxy?url=$url");
                   if (response.statusCode == 200) {
                     final imageBytes = response.bodyBytes;
                     widget.species.imageContent = null;
@@ -138,6 +136,7 @@ class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
                       _imageToDisplay = MemoryImage(imageBytes);
                       _loading = false;
                     });
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
                   } else {
                     final String errorMsg =
@@ -178,7 +177,7 @@ class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
         Positioned.fill(
           child: Center(
             child: IconButton(
-              icon: Icon(Icons.add_photo_alternate_outlined),
+              icon: const Icon(Icons.add_photo_alternate_outlined),
               onPressed: () {
                 _showPicker(context);
               },

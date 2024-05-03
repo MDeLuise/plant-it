@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/logger/logger.dart' as myLogger;
+import 'package:plant_it/logger/logger.dart' as my_logger;
 import 'package:plant_it/more/change_notifications.dart';
 import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/change_server_page.dart';
@@ -218,7 +218,7 @@ class _MorePageState extends State<MorePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => TalkerScreen(
-                      talker: (widget.env.logger as myLogger.TalkerLogger).talker,
+                      talker: (widget.env.logger as my_logger.TalkerLogger).talker,
                       appBarTitle: AppLocalizations.of(context).appLog,
                       theme: TalkerScreenTheme(
                         backgroundColor:

@@ -45,10 +45,12 @@ class _EditSpeciesPageState extends State<EditSpeciesPage> {
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while updating species: ${responseBody["message"]}");
+        if (!mounted) return;
         throw AppException(AppLocalizations.of(context).errorUpdatingSpecies);
       }
       final SpeciesDTO updatedSpecies = SpeciesDTO.fromJson(responseBody);
       widget.env.logger.info("Species successfully updated");
+      if (!mounted) return;
       widget.env.toastManager.showToast(
         context,
         ToastNotificationType.success,
@@ -66,7 +68,7 @@ class _EditSpeciesPageState extends State<EditSpeciesPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _editSpecies,
-        child: Icon(
+        child: const Icon(
           Icons.save_outlined,
         ),
       ),

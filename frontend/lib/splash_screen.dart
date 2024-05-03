@@ -34,10 +34,10 @@ class _SplashPageState extends State<SplashPage> {
         ],
         eagerError: true,
       );
+      if (!context.mounted) return const SizedBox();
       await prefetchImages(context, env);
       return Future.value(TemplatePage(env: env));
     } catch (e, st) {
-      if (!context.mounted) return const SizedBox();
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
     }
@@ -46,7 +46,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
       widget.env.http.jwt = null;
       widget.env.http.key = null;
@@ -72,7 +72,7 @@ class _SplashPageState extends State<SplashPage> {
       loadingText: Text(AppLocalizations.of(context).splashLoading),
       futureNavigator: fetchData(context, widget.env),
       loaderColor: Colors.grey,
-      title: Text("Plant-it"),
+      title: const Text("Plant-it"),
     );
   }
 }

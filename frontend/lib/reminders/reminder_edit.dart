@@ -43,7 +43,7 @@ class _EditReminderState extends State<EditReminder> {
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
     }
-    if (!context.mounted) return;
+    if (!mounted) return;
     widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).reminderUpdatedSuccessfully);
     Navigator.of(context).pop(true);

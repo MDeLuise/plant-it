@@ -36,7 +36,7 @@ class GalleryImage extends StatefulWidget {
   final String? avatarImageId;
 
   const GalleryImage({
-    Key? key,
+    super.key,
     required this.imageUrls,
     required this.imageIds,
     this.titleGallery,
@@ -64,8 +64,7 @@ class GalleryImage extends StatefulWidget {
     required this.setAvatar,
     required this.avatarImageId,
   })  : assert(numOfShowImages <= imageUrls.length),
-        assert(imageIds.length == imageUrls.length),
-        super(key: key);
+        assert(imageIds.length == imageUrls.length);
   @override
   State<GalleryImage> createState() => _GalleryImageState();
 }

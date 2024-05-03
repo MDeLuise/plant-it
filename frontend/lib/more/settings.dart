@@ -175,9 +175,9 @@ class SettingsHeader extends StatelessWidget {
               AdvancedAvatar(
                 name: username,
                 size: 70,
-                style: TextStyle(color: Color.fromARGB(255, 156, 192, 172)),
+                style: const TextStyle(color: Color.fromARGB(255, 156, 192, 172)),
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(53, 98, 82, 1),
+                  color: const Color.fromRGBO(53, 98, 82, 1),
                   borderRadius: BorderRadius.circular(50),
                 ),
               ),

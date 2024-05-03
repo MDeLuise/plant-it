@@ -1,4 +1,4 @@
-enum Unit { DAYS, WEEKS, MONTHS, YEARS }
+enum Unit { days, weeks, months, years }
 
 class FrequencyDTO {
   int quantity;
@@ -12,13 +12,13 @@ class FrequencyDTO {
   static Unit _stringToUnit(String unitString) {
     switch (unitString.toLowerCase()) {
       case 'days':
-        return Unit.DAYS;
+        return Unit.days;
       case 'weeks':
-        return Unit.WEEKS;
+        return Unit.weeks;
       case 'months':
-        return Unit.MONTHS;
+        return Unit.months;
       case 'years':
-        return Unit.YEARS;
+        return Unit.years;
       default:
         throw Exception('Invalid unit string: $unitString');
     }
@@ -87,8 +87,9 @@ class ReminderDTO {
     if (end != null) map['end'] = end!.toIso8601String();
     if (frequency != null) map['frequency'] = frequency!.toMap();
     if (repeatAfter != null) map['repeatAfter'] = repeatAfter!.toMap();
-    if (lastNotified != null)
+    if (lastNotified != null) {
       map['lastNotified'] = lastNotified!.toIso8601String();
+    }
     if (enabled != null) map['enabled'] = enabled;
     return map;
   }

@@ -2,7 +2,6 @@
   "enterValue": "Please enter a value",
   "enterValidURL": "Please enter a valid URL",
   "go": "Continue",
-  "helloWorld": "Hello World!",
   "noBackend": "Cannot connect to the server",
   "ok": "Ok",
   "serverURL": "Server URL",

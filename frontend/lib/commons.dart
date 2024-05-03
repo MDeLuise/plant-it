@@ -154,11 +154,11 @@ String getLocaleEvent(BuildContext context, String event) {
 }
 
 Future<void> prefetchImages(BuildContext context, Environment env) {
-  env.plants.forEach((plant) {
+  for (var plant in env.plants) {
     final String plantImageUrl =
         "${env.http.backendUrl}image/content/${plant.avatarImageId}";
     precacheImage(CachedNetworkImageProvider(plantImageUrl), context);
-  });
+  }
   return Future.value();
 }
 
@@ -269,13 +269,14 @@ Future<void> fetchAndSetNotificationDispatchers(
     BuildContext context, Environment env) async {
   final List<String> available =
       await _fetchAvailableNotificationDispatchers(context, env);
+  if (!context.mounted) return;
   final List<String> enabled =
       await _fetchEnabledNotificationDispatchers(context, env);
   final List<NotificationDispatcher> result = [];
-  available.forEach((element) {
+  for (var element in available) {
     result.add(NotificationDispatcher(
         name: element, enabled: enabled.contains(element)));
-  });
+  }
   env.notificationDispatcher = result;
 }
 

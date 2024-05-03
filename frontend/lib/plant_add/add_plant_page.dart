@@ -41,10 +41,12 @@ class _AddPlantPageState extends State<AddPlantPage> {
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating plant: ${responseBody["message"]}");
+        if (!mounted) return;
         throw AppException(AppLocalizations.of(context).errorCreatingPlant);
       }
       widget.env.plants.add(PlantDTO.fromJson(responseBody));
       widget.env.logger.info("Plant successfully created");
+      if (!mounted) return;
       widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).plantCreatedSuccessfully);
       Navigator.pop(context, true);
@@ -62,6 +64,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating species: ${responseBody["message"]}");
+        if (!mounted) throw AppException("Context not mounted, error.");
         throw AppException(AppLocalizations.of(context).errorCreatingSpecies);
       }
       widget.env.logger.info("Species successfully created");
@@ -83,7 +86,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _createPlant,
-        child: Icon(
+        child: const Icon(
           Icons.add_outlined,
         ),
       ),

@@ -51,13 +51,10 @@ class _AddSpeciesBodyState extends State<AddSpeciesBody> {
             ),
             InfoGroup(
               title: AppLocalizations.of(context).info,
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               children: [
                 EditableFullWidthInfoEntry(
-                  value: widget.species.synonyms == null
-                      ? null
-                      : widget.species.synonyms
-                          ?.join(",")
+                  value: widget.species.synonyms?.join(",")
                           .substring(1, widget.species.synonyms!.length - 1),
                   title: AppLocalizations.of(context).synonyms,
                   onChanged: (s) => widget.species.synonyms = s.split(","),
@@ -66,7 +63,7 @@ class _AddSpeciesBodyState extends State<AddSpeciesBody> {
             ),
             InfoGroup(
               title: AppLocalizations.of(context).care,
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               children: [
                 EditableSimpleInfoEntry(
                   title: AppLocalizations.of(context).light,
@@ -113,7 +110,7 @@ class _AddSpeciesBodyState extends State<AddSpeciesBody> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
           ],

@@ -273,19 +273,13 @@ class _TextFieldSingleDropDownState extends State<TextFieldSingleDropDown> {
               .map((String item) => DropdownMenuItem<String>(
                     enabled: !(widget.disabled ?? false),
                     value: item,
-                    child: Container(
-                      // decoration: BoxDecoration(
-                      //     color: _selectedValue == item
-                      //         ? const Color.fromRGBO(31, 57, 48, 1)
-                      //         : null),
-                      child: Text(
-                        item,
-                        style: TextStyle(
-                            fontSize: 14,
-                            color:
-                                Theme.of(context).textTheme.bodyLarge!.color),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color:
+                              Theme.of(context).textTheme.bodyLarge!.color),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ))
               .toList(),

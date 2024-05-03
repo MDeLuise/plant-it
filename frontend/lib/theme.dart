@@ -10,7 +10,7 @@ Widget Function(BuildContext context, Widget? widget) datePickerTheme =
     (context, child) {
   return Theme(
     data: Theme.of(context).copyWith(
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: Color.fromARGB(255, 94, 156, 134), // header background color
         onPrimary: Colors.white, // header text color
         onSurface: Colors.white, // body text color
@@ -80,9 +80,9 @@ final ThemeData theme = ThemeData(
   ),
 
   // Dialog theme configuration
-  dialogTheme: DialogTheme(
-    backgroundColor: const Color.fromRGBO(
-        24, 44, 37, 1), // Change background color for dialogs
+  dialogTheme: const DialogTheme(
+    backgroundColor:
+        Color.fromRGBO(24, 44, 37, 1), // Change background color for dialogs
     // Dialog theme configuration
     titleTextStyle: TextStyle(
       color: Colors.white, // Change title text color

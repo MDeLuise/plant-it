@@ -71,7 +71,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
       child: BottomAppBar(
           //shape: const CircularNotchedRectangle(),
           //notchMargin: 80.0,
@@ -99,7 +99,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.add_circle_outline,
                       size: 24,
                       color: Color.fromARGB(255, 24, 24, 24),
@@ -107,7 +107,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       AppLocalizations.of(context).addPlant,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 24, 24, 24),
@@ -128,6 +128,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                   ),
                 ));
                 if (updated != null) {
+                  if (!context.mounted) return;
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => SpeciesDetailsPage(
                       species: updated,
@@ -137,14 +138,14 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                 }
               },
               icon: const Icon(Icons.edit_outlined),
-              color: Color.fromARGB(255, 156, 192, 172),
+              color: const Color.fromARGB(255, 156, 192, 172),
               tooltip: AppLocalizations.of(context).modifyPlant,
             ),
             if (isDeletable)
               IconButton(
                 onPressed: () => _removeSpeciesWithConfirm(context),
                 icon: const Icon(Icons.delete_forever_outlined),
-                color: Color.fromARGB(255, 156, 192, 172),
+                color: const Color.fromARGB(255, 156, 192, 172),
                 tooltip: AppLocalizations.of(context).removePlant,
               ),
           ])),

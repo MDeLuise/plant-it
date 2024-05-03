@@ -38,8 +38,9 @@ class _ChangeNotificationsPageState extends State<ChangeNotificationsPage> {
         throw AppException(responseBody["message"]);
       }
       widget.env.logger.info("Notification dispatchers correctly updated");
-      if (!context.mounted) return;
+      if (!mounted) return;
       await fetchAndSetNotificationDispatchers(context, widget.env);
+      if (!mounted) return;
       widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).notificationUpdated);
       Navigator.of(context).pop();

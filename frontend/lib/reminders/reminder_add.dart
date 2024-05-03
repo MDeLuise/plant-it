@@ -45,7 +45,7 @@ class _AddReminderState extends State<AddReminder> {
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
     }
-    if (!context.mounted) return;
+    if (!mounted) return;
     widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).reminderCreatedSuccessfully);
     Navigator.of(context).pop(true);
@@ -70,8 +70,8 @@ class _AddReminderState extends State<AddReminder> {
       action: "WATERING",
       enabled: true,
       start: DateTime.now(),
-      frequency: FrequencyDTO(quantity: 3, unit: Unit.DAYS),
-      repeatAfter: FrequencyDTO(quantity: 5, unit: Unit.DAYS),
+      frequency: FrequencyDTO(quantity: 3, unit: Unit.days),
+      repeatAfter: FrequencyDTO(quantity: 5, unit: Unit.days),
       targetId: widget.targetId,
     );
     _selectedStartDate = DateTime.now();
@@ -171,7 +171,7 @@ class _AddReminderState extends State<AddReminder> {
                     ),
                     child: EditableFrequencyInfoEntry(
                       title: AppLocalizations.of(context).frequency,
-                      unit: Unit.DAYS,
+                      unit: Unit.days,
                       value: 3,
                       onChangeUnit: (u) => _toCreate.frequency!.unit = u!,
                       onChangeValue: (q) => _toCreate.frequency!.quantity = q!,
@@ -183,7 +183,7 @@ class _AddReminderState extends State<AddReminder> {
                     ),
                     child: EditableFrequencyInfoEntry(
                       title: AppLocalizations.of(context).repeatAfter,
-                      unit: Unit.DAYS,
+                      unit: Unit.days,
                       value: 5,
                       onChangeUnit: (u) => _toCreate.frequency!.unit = u!,
                       onChangeValue: (q) => _toCreate.frequency!.quantity = q!,

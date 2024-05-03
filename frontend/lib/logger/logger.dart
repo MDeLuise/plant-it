@@ -27,7 +27,7 @@ abstract class Logger {
 }
 
 class TalkerLogger implements Logger {
-  Talker _innerLogger;
+  final Talker _innerLogger;
 
   TalkerLogger() : _innerLogger = TalkerFlutter.init();
 

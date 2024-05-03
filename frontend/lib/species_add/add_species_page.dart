@@ -49,10 +49,12 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating species: ${responseBody["message"]}");
+        if (!mounted) return;
         throw AppException(AppLocalizations.of(context).errorCreatingSpecies);
       }
       final SpeciesDTO updatedSpecies = SpeciesDTO.fromJson(responseBody);
       widget.env.logger.info("Species successfully created");
+      if (!mounted) return;
       widget.env.toastManager.showToast(
         context,
         ToastNotificationType.success,
@@ -78,7 +80,7 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _createSpecies,
-        child: Icon(
+        child: const Icon(
           Icons.save_outlined,
         ),
       ),

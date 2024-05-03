@@ -10,11 +10,11 @@ class AddCustomCard extends StatelessWidget {
   final String? species;
   final Environment env;
 
-  AddCustomCard({
-    Key? key,
+  const AddCustomCard({
+    super.key,
     this.species,
     required this.env,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class AddCustomCard extends StatelessWidget {
                             Center(
                               child: Text(
                                 AppLocalizations.of(context).custom,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,

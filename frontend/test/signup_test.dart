@@ -170,7 +170,7 @@ void main() {
         .thenAnswer((_) => Future.value(Response('{"content": []}', 200)));
     when(env.plants).thenReturn([]);
     when(http.get("diary/entry/type")).thenAnswer((_) => Future.delayed(
-        Duration(seconds: 5), () => Response('["SEEDING"]', 200)));
+        const Duration(seconds: 5), () => Response('["SEEDING"]', 200)));
     when(http.get("plant/_count"))
         .thenAnswer((_) => Future.value(Response('0', 200)));
     when(http.get("info/version")).thenAnswer((_) => Future.value(Response(

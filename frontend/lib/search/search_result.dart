@@ -15,7 +15,7 @@ class SearchResultCard extends StatefulWidget {
   final Environment env;
   final List<SpeciesDTO> result;
 
-  SearchResultCard({
+  const SearchResultCard({
     super.key,
     required this.species,
     required this.env,
@@ -31,19 +31,19 @@ class _SearchResultCardState extends State<SearchResultCard> {
 
   @override
   Widget build(BuildContext context) {
-    String? _url;
+    String? url;
     if (widget.species.id != null) {
-      _url =
+      url =
           "${widget.env.http.backendUrl}image/content/${widget.species.imageId}";
     } else if (widget.species.imageUrl != null) {
-      _url = "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
+      url = "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
     }
 
     ImageProvider<Object> imageToDisplay =
         const AssetImage("assets/images/no-image.png");
-    if (_url != null) {
+    if (url != null) {
       imageToDisplay = CachedNetworkImageProvider(
-        _url,
+        url,
         headers: {
           "Key": widget.env.http.key!,
         },

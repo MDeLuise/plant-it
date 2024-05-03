@@ -100,7 +100,7 @@ class _SeachPageState extends State<SeachPage> {
               ),
             ),
             if (_loading)
-              CircularProgressIndicator()
+              const CircularProgressIndicator()
             else
               LayoutBuilder(
                 builder: (context, constraints) {

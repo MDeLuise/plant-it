@@ -53,6 +53,7 @@ dependencies:
   talker_flutter: ^4.1.0
   toastification: ^1.2.1
   image_picker: ^1.0.7
+  http_parser: ^4.0.2
   # flutter_side_menu: ^0.4.0
   # colorful_safe_area: ^1.0.0
   # icon_animated: ^1.2.1
@@ -72,6 +73,7 @@ dev_dependencies:
   test: ^1.24.9
   mockito: ^5.4.4
   build_runner: ^2.4.9
+  flutter_lints: ^3.0.2
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -24,15 +24,15 @@ class AddNewReminderSnippet extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context).addNew,
-            style: TextStyle(
-              color: const Color.fromARGB(255, 156, 192, 172),
+            style: const TextStyle(
+              color: Color.fromARGB(255, 156, 192, 172),
               fontWeight: FontWeight.bold,
             ),
           ),
-          Icon(
+          const Icon(
             Icons.add_outlined,
             size: 25,
-            color: const Color.fromARGB(255, 156, 192, 172),
+            color: Color.fromARGB(255, 156, 192, 172),
             weight: 25,
           ),
         ],
@@ -56,7 +56,7 @@ class ReminderSnippet extends StatelessWidget {
   }
 
   String _formatDatespan() {
-    String result = "${formatDate(reminder.start!)}";
+    String result = formatDate(reminder.start!);
     if (reminder.end != null) {
       result += "-${formatDate(reminder.end!)}";
     } else {
@@ -80,13 +80,13 @@ class ReminderSnippet extends StatelessWidget {
           Row(
             children: [
               Text(getLocaleEvent(context, reminder.action!)),
-              Text(", "),
+              const Text(", "),
               Text(_formatFrequency()),
-              Text(", "),
+              const Text(", "),
               Text(_formatDatespan()),
             ],
           ),
-          Icon(
+          const Icon(
             Icons.edit_outlined,
             size: 20,
           ),

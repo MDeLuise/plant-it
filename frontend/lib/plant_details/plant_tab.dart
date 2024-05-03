@@ -222,11 +222,13 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
     if (response.statusCode != 200) {
       widget.env.logger.error(
           "Error while setting image id $imageId as plant avatar: ${responseBody["message"]}");
+      if (!mounted) return false;
       widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).errorUpdatingPlant);
       return false;
     }
     widget.env.logger.info("Plant avatar successfully updated");
+    if (!mounted) return false;
     widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantUpdatedSuccessfully);
     setState(() {
@@ -246,11 +248,13 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
     if (response.statusCode != 200) {
       widget.env.logger.error(
           "Error while removing plant avatar: ${responseBody["message"]}");
+      if (!mounted) return false;
       widget.env.toastManager.showToast(context, ToastNotificationType.error,
           AppLocalizations.of(context).errorUpdatingPlant);
       return false;
     }
     widget.env.logger.info("Plant avatar successfully updated");
+    if (!mounted) return false;
     widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).plantUpdatedSuccessfully);
     setState(() {
@@ -420,26 +424,24 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
                           targetId: widget.plant.id!,
                         ),
                       ),
-                      ..._reminders
-                          .map((r) => GestureDetector(
-                                onTap: () async {
-                                  final bool updated = await goToPageSlidingUp(
-                                    context,
-                                    EditReminder(
-                                      env: widget.env,
-                                      reminder: r,
-                                    ),
-                                  );
-                                  if (updated) {
-                                    _fetchAndSetPlantReminders();
-                                  }
-                                },
-                                child: ReminderSnippet(
+                      ..._reminders.map((r) => GestureDetector(
+                            onTap: () async {
+                              final bool updated = await goToPageSlidingUp(
+                                context,
+                                EditReminder(
                                   env: widget.env,
                                   reminder: r,
                                 ),
-                              ))
-                          .toList(),
+                              );
+                              if (updated) {
+                                _fetchAndSetPlantReminders();
+                              }
+                            },
+                            child: ReminderSnippet(
+                              env: widget.env,
+                              reminder: r,
+                            ),
+                          )),
                     ]),
           InfoGroup(
             title: AppLocalizations.of(context).gallery,

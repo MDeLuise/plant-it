@@ -12,15 +12,15 @@ class GalleryItemThumbnail extends StatelessWidget {
   final double radius;
   final Map<String, String>? headers;
 
-  const GalleryItemThumbnail(
-      {Key? key,
-      required this.galleryItem,
-      required this.onTap,
-      required this.radius,
-      required this.loadingWidget,
-      required this.errorWidget,
-      required this.headers,})
-      : super(key: key);
+  const GalleryItemThumbnail({
+    super.key,
+    required this.galleryItem,
+    required this.onTap,
+    required this.radius,
+    required this.loadingWidget,
+    required this.errorWidget,
+    required this.headers,
+  });
 
   @override
   Widget build(BuildContext context) {

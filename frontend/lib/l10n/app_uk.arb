@@ -2,7 +2,6 @@
   "enterValue": "Введіть значення",
   "enterValidURL": "Введіть коректну URL адресу",
   "go": "Продовжити",
-  "helloWorld": "Hello World!",
   "noBackend": "Не вдається підключитися до сервера",
   "ok": "ОК",
   "serverURL": "Адреса сервера",

@@ -67,7 +67,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
     final int createdEventsNum =
         _eventTypesToCreate.length * _linkedPlants.length;
     widget.env.logger.info("Created $createdEventsNum new event(s)");
-    if (!context.mounted) return;
+    if (!mounted) return;
     widget.env.toastManager.showToast(context, ToastNotificationType.success,
         AppLocalizations.of(context).nEventsCreated(createdEventsNum));
     Provider.of<EventsNotifier>(context, listen: false).notify();

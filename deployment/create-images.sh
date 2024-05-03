@@ -44,10 +44,25 @@ fi
 echo "Build frontend...";
 cd ../frontend;
 flutter pub get;
+
+echo "Run frontend test...";
+flutter test;
+if [ $? -ne 0 ]; then
+    echo "Error while testing frontend, exiting.";
+    exit 2;
+fi
+
+echo "Run frontend analysis...";
+flutter analyze;
+if [ $? -ne 0 ]; then
+    echo "Error while analysing frontend, exiting.";
+    exit 3;
+fi
+
 flutter build web --release;
 if [ $? -ne 0 ]; then
     echo "Error while building frontend, exiting.";
-    exit 2;
+    exit 4;
 fi
 
 
@@ -63,7 +78,7 @@ do
 done
 if [ $? -ne 0 ]; then
     echo "Error while creating images, exiting.";
-    exit 3;
+    exit 5;
 fi
 
 #######################

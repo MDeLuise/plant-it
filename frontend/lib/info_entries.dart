@@ -208,13 +208,13 @@ class EditableSimpleInfoEntry extends SimpleInfoEntry {
 
   const EditableSimpleInfoEntry({
     super.key,
-    required String title,
-    String? value,
+    required super.title,
+    super.value,
     this.onChanged,
     this.onlyNumber = false,
     this.numberDecimal = true,
     this.numberSigned = false,
-  }) : super(title: title, value: value);
+  });
 
   @override
   bool isNull() {
@@ -229,7 +229,7 @@ class EditableSimpleInfoEntry extends SimpleInfoEntry {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             child: Text(
               title,
               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -485,7 +485,7 @@ class _EditableDateInfoEntryState extends State<EditableDateInfoEntry> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFF6DD075).withOpacity(0.5)),
+              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),
@@ -592,7 +592,7 @@ class _EditableCurrencyInfoEntryState extends State<EditableCurrencyInfoEntry> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFF6DD075).withOpacity(0.5)),
+              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),
@@ -606,7 +606,7 @@ class _EditableCurrencyInfoEntryState extends State<EditableCurrencyInfoEntry> {
                       value: value,
                       child: Text(
                         value.toString(),
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     );
                   }).toList(),
@@ -706,7 +706,7 @@ class _EditableAvatarModeInfoEntryState extends State<EditableAvatarMode> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFF6DD075).withOpacity(0.5)),
+              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             width: double.infinity,
@@ -719,7 +719,7 @@ class _EditableAvatarModeInfoEntryState extends State<EditableAvatarMode> {
                   value: value,
                   child: Text(
                     value.toString(),
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 );
               }).toList(),
@@ -770,7 +770,7 @@ class _EditableFrequencyInfoEntryState
   @override
   void initState() {
     super.initState();
-    _selectedUnit = widget.unit ?? Unit.DAYS;
+    _selectedUnit = widget.unit ?? Unit.days;
   }
 
   @override
@@ -789,7 +789,7 @@ class _EditableFrequencyInfoEntryState
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFF6DD075).withOpacity(0.5)),
+              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),
@@ -830,7 +830,7 @@ class _EditableFrequencyInfoEntryState
                             .split('.')
                             .last
                             .toLowerCase(),
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     );
                   }).toList(),
@@ -846,13 +846,13 @@ class _EditableFrequencyInfoEntryState
   Unit _stringToUnit(String unitString) {
     switch (unitString.toLowerCase()) {
       case 'days':
-        return Unit.DAYS;
+        return Unit.days;
       case 'weeks':
-        return Unit.WEEKS;
+        return Unit.weeks;
       case 'months':
-        return Unit.MONTHS;
+        return Unit.months;
       case 'years':
-        return Unit.YEARS;
+        return Unit.years;
       default:
         throw Exception('Invalid unit string: $unitString');
     }

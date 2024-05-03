@@ -67,14 +67,14 @@ class _GalleryState extends State<Gallery> {
       future: _fetchImagesFuture,
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           return _imageUrls.isEmpty
               ? Text(
                   AppLocalizations.of(context).noImages,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
                 )
