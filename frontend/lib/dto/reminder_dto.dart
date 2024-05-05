@@ -34,7 +34,7 @@ class FrequencyDTO {
   Map<String, dynamic> toMap() {
     return {
       "quantity": quantity,
-      "unit": unit.toString().split('.').last,
+      "unit": unit.toString().split('.').last.toUpperCase(),
     };
   }
 }

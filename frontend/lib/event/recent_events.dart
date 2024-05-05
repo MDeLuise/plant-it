@@ -43,20 +43,22 @@ class _RecentEventsState extends State<RecentEvents> {
     if (response.statusCode == 200) {
       final responseBody = json.decode(response.body);
       final List<dynamic> entries = responseBody["content"];
+      List<EventCard> newEvents = [];
       if (entries.isNotEmpty) {
-        setState(() {
-          _recentEvents = entries.map((entry) {
-            return EventCard(
-              action: entry["type"],
-              plant: entry["diaryTargetPersonalName"],
-              date: DateTime.parse(entry["date"]),
-              eventDTO: EventDTO.fromJson(entry),
-              env: widget.env,
-            );
-          }).toList();
-        });
+        newEvents = entries.map((entry) {
+          return EventCard(
+            action: entry["type"],
+            plant: entry["diaryTargetPersonalName"],
+            date: DateTime.parse(entry["date"]),
+            eventDTO: EventDTO.fromJson(entry),
+            env: widget.env,
+          );
+        }).toList();
       }
-      setState(() => _isLoading = false);
+      setState(() {
+        _recentEvents = newEvents;
+        _isLoading = false;
+      });
     } else {
       widget.env.logger.error("Failed to load events");
       throw AppException('Failed to load events');

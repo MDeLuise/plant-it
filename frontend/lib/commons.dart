@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -157,7 +158,15 @@ Future<void> prefetchImages(BuildContext context, Environment env) {
   for (var plant in env.plants) {
     final String plantImageUrl =
         "${env.http.backendUrl}image/content/${plant.avatarImageId}";
-    precacheImage(CachedNetworkImageProvider(plantImageUrl), context);
+    precacheImage(
+        CachedNetworkImageProvider(
+          plantImageUrl,
+          headers: {
+            "Key": env.http.key!,
+          },
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        ),
+        context);
   }
   return Future.value();
 }
