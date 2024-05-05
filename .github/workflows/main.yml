@@ -42,6 +42,10 @@ jobs:
         with:
           flutter-version: '2.x'
 
+      - name: Download Flutter Dependencies
+        run: flutter pub get
+        working-directory: ./frontend
+
       - name: Analyze
         run: flutter analyze
         working-directory: ./frontend

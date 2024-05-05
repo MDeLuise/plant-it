@@ -73,8 +73,16 @@ echo "Create docker image...";
 cd ..;
 for version in "${versions_array[@]}"
 do
-    echo "Creating and pushing image version: $version...";
-    docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain;
+    # Check if $push variable is empty
+    if [ -n "$push" ]; then
+        # If $push is not empty, create and push the image
+        echo "Creating and pushing image version: $version..."
+        docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain
+    else
+        # If $push is empty, only create the image
+        echo "Creating locally the image version: $version..."
+        docker build -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain
+    fi
 done
 if [ $? -ne 0 ]; then
     echo "Error while creating images, exiting.";
