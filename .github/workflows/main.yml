@@ -35,7 +35,7 @@ jobs:
       - name: Checkout Frontend
         uses: actions/checkout@v2
         with:
-          path: frontend
+          path: ./frontend
 
       - name: Setup Flutter Action
         uses: subosito/flutter-action@v2
@@ -44,12 +44,9 @@ jobs:
 
       - name: Download Flutter Dependencies
         run: flutter pub get
-        working-directory: ./frontend
 
       - name: Analyze
         run: flutter analyze
-        working-directory: ./frontend
 
       - name: Run the tests
         run: flutter test
-        working-directory: ./frontend

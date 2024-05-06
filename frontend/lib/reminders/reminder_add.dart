@@ -185,8 +185,9 @@ class _AddReminderState extends State<AddReminder> {
                       title: AppLocalizations.of(context).repeatAfter,
                       unit: Unit.days,
                       value: 5,
-                      onChangeUnit: (u) => _toCreate.frequency!.unit = u!,
-                      onChangeValue: (q) => _toCreate.frequency!.quantity = q!,
+                      onChangeUnit: (u) => _toCreate.repeatAfter!.unit = u!,
+                      onChangeValue: (q) =>
+                          _toCreate.repeatAfter!.quantity = q!,
                     ),
                   )
                 ],

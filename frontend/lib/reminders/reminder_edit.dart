@@ -150,7 +150,7 @@ class _EditReminderState extends State<EditReminder> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFieldSingleDropDown(
-                      initialValue: getLocaleEvent(context, "watering"),
+                      initialValue: getLocaleEvent(context, _toEdit.action!),
                       text: AppLocalizations.of(context).events,
                       options: widget.env.eventTypes
                           .map((e) => formatEventType(e))
@@ -223,8 +223,8 @@ class _EditReminderState extends State<EditReminder> {
                       title: AppLocalizations.of(context).repeatAfter,
                       unit: _toEdit.repeatAfter!.unit,
                       value: _toEdit.repeatAfter!.quantity,
-                      onChangeUnit: (u) => _toEdit.frequency!.unit = u!,
-                      onChangeValue: (q) => _toEdit.frequency!.quantity = q!,
+                      onChangeUnit: (u) => _toEdit.repeatAfter!.unit = u!,
+                      onChangeValue: (q) => _toEdit.repeatAfter!.quantity = q!,
                     ),
                   )
                 ],

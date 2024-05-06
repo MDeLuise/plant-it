@@ -485,7 +485,8 @@ class _EditableDateInfoEntryState extends State<EditableDateInfoEntry> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
+              border:
+                  Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),
@@ -592,7 +593,8 @@ class _EditableCurrencyInfoEntryState extends State<EditableCurrencyInfoEntry> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
+              border:
+                  Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),
@@ -706,7 +708,8 @@ class _EditableAvatarModeInfoEntryState extends State<EditableAvatarMode> {
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
+              border:
+                  Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             width: double.infinity,
@@ -789,7 +792,8 @@ class _EditableFrequencyInfoEntryState
           ),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
+              border:
+                  Border.all(color: const Color(0xFF6DD075).withOpacity(0.5)),
               borderRadius: BorderRadius.circular(4.0),
             ),
             padding: const EdgeInsets.all(10.0),

@@ -73,8 +73,6 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
       child: BottomAppBar(
-          //shape: const CircularNotchedRectangle(),
-          //notchMargin: 80.0,
           color: const Color.fromRGBO(24, 44, 37, 1),
           child: Row(children: [
             ElevatedButton(
