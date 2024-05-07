@@ -1,0 +1,155 @@
+name: Automated Release
+
+on:
+  push:
+    tags:
+      - '[0-9]*.[0-9]*.[0-9]*'
+
+env:
+  FLUTTER_VERSION: 3.19.2
+  DOCKER_NAME: plant-it-server
+
+jobs:
+  build_and_test_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.2.1
+        with:
+          java-version: 20
+
+      - name: Create JAR File
+        run: mvn package
+        working-directory: ./backend
+
+      - name: Save JAR File
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          retention-days: 1
+          path: ./backend/target/*.jar
+
+  build_and_test_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Download Flutter Dependencies
+        run: flutter pub get
+        working-directory: ./frontend
+
+      - name: Flutter Analyze
+        run: flutter analyze
+        working-directory: ./frontend
+
+      - name: Flutter Tests
+        run: flutter test
+        working-directory: ./frontend
+
+      - name: Create Flutter Build Files
+        run: flutter build web --release;
+        working-directory: ./frontend
+
+      - name: Save Flutter Build Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          retention-days: 1
+          path: ./frontend/build
+
+  create_and_push_images:
+    needs: [build_and_test_backend, build_and_test_frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Load JAR File
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: ./backend/target/app.jar
+
+      - name: Load Flutter Build Files
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend/build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deployment/Dockerfile
+          push: true
+          tags: >
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:${{ github.ref_name }}
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:latest,
+
+  create_apk:
+    needs: build_and_test_frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Create apk File
+        run: flutter build apk --release
+        working-directory: ./frontend
+      
+      - name: Save apk File
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-apk
+          retention-days: 1
+          path: ./frontend/build/app/outputs/flutter-apk/app-release.apk
+
+  create_release:
+    runs-on: ubuntu-latest
+    needs: create_apk
+    steps:
+      - name: Load apk File
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-apk
+          path: .
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: v${{ github.ref_name }}
+          body: Hello, Plant-it community!
+          generate_release_notes: true
+          append_body: true
+          files: app-release.apk
+          fail_on_unmatched_files: true
+          token: ${{ secrets.GITHUB_TOKEN }}
