@@ -161,6 +161,6 @@ public class DiaryEntryService {
 
     public Optional<DiaryEntry> getLast(Long plantId, DiaryEntryType type) {
         final Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new ResourceNotFoundException(plantId));
-        return diaryEntryRepository.findFirstByDiaryTargetAndType(plant, type);
+        return diaryEntryRepository.findFirstByDiaryTargetAndTypeOrderByDateDesc(plant, type);
     }
 }

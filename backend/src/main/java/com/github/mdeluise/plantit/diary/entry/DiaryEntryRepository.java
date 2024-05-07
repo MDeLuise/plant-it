@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
-    Optional<DiaryEntry> findFirstByDiaryTargetAndType(Plant target, DiaryEntryType type);
+    Optional<DiaryEntry> findFirstByDiaryTargetAndTypeOrderByDateDesc(Plant target, DiaryEntryType type);
 
     Page<DiaryEntry> findAllByDiaryOwner(User user, Pageable pageable);
 
