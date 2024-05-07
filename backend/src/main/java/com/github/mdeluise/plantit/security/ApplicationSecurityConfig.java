@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.security;
 
 import com.github.mdeluise.plantit.security.apikey.ApiKeyFilter;
 import com.github.mdeluise.plantit.security.jwt.JwtTokenFilter;
+import com.github.mdeluise.plantit.security.ratelimit.RateLimitFilter;
 import com.github.mdeluise.plantit.security.services.PasswordUserDetailsService;
 import com.github.mdeluise.plantit.security.services.TemporaryPasswordUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ApplicationSecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
     private final ApiKeyFilter apiKeyFilter;
+    private final RateLimitFilter rateLimitFilter;
 
 
     @Autowired
-    public ApplicationSecurityConfig(JwtTokenFilter jwtTokenFilter, ApiKeyFilter apiKeyFilter) {
+    public ApplicationSecurityConfig(JwtTokenFilter jwtTokenFilter, ApiKeyFilter apiKeyFilter,
+                                     RateLimitFilter rateLimitFilter) {
         this.jwtTokenFilter = jwtTokenFilter;
         this.apiKeyFilter = apiKeyFilter;
+        this.rateLimitFilter = rateLimitFilter;
     }
 
 
@@ -120,6 +124,8 @@ public class ApplicationSecurityConfig {
             .disable();
 
         http.authenticationManager(authenticationManager);
+
+        http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

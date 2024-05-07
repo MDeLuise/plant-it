@@ -2,7 +2,7 @@ site_name: Plant-it docs
 site_url: https://docs.plant-it.org/
 repo_url: https://github.com/MDeLuise/plant-it
 repo_name: MDeLuise/plant-it
-edit_uri: online-resources/documentation/docs/
+edit_uri: tree/main/online-resources
 
 markdown_extensions:
   - admonition
