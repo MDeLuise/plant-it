@@ -34,19 +34,21 @@ jobs:
     steps:
       - name: Checkout Frontend
         uses: actions/checkout@v2
-        with:
-          path: ./frontend
 
-      - name: Setup Flutter Action
+      - name: Setup
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.x'
+          channel: stable
+          flutter-version: 3.19.2
 
-      - name: Download Flutter Dependencies
+      - name: Download Dependencies
         run: flutter pub get
+        working-directory: ./frontend
 
       - name: Analyze
         run: flutter analyze
+        working-directory: ./frontend
 
       - name: Run the tests
         run: flutter test
+        working-directory: ./frontend
