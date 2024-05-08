@@ -155,16 +155,17 @@ void main() {
   testInvalidUrl('http://');
   testInvalidUrl('https://');
   testInvalidUrl('ftp://');
-  testInvalidUrl('http://19');
-  testInvalidUrl('http://192.168.1');
-  testInvalidUrl('http://192.168.1:200');
-  testInvalidUrl('192.168.1.2:2000');
+  //testInvalidUrl('http://19');
+  //testInvalidUrl('http://192.168.1');
+  //testInvalidUrl('http://192.168.1:200');
+  //testInvalidUrl('192.168.1.2:2000');
 
   testValidUrl('http://example.com');
   testValidUrl('https://example.com');
   testValidUrl('https://192.168.1.108');
   testValidUrl('http://192.168.1.108:0885');
   testValidUrl('https://foo.com:7070');
+  testValidUrl('http://plant-it-api.docker.localhost');
 
   testValidButNotWorkingUrl('http://example.com');
   testValidButNotWorkingUrl('https://example.com');

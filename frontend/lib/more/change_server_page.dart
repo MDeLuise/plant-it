@@ -25,15 +25,7 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
 
   bool _isValidUrl(String url) {
     final RegExp urlRegExp = RegExp(
-      r'^(?:http|https):\/\/'
-      r'(?:(?:[A-Z0-9][A-Z0-9_-]*)(?::(?:[A-Z0-9][A-Z0-9_-]*))?@)?'
-      r'(?:'
-      r'(?:[A-Z0-9][A-Z0-9-]{0,61}[A-Z0-9]\.)+[A-Z]{2,6}'
-      r'|localhost'
-      r'|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-      r')'
-      r'(?::\d+)?'
-      r'(?:\/[^\s]*)?$',
+      r"(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:​,.;]*)?",
       caseSensitive: false,
     );
     return urlRegExp.hasMatch(url);
