@@ -229,78 +229,56 @@ CERTIFICATE_PATH=/certificates/
 ```
 
 #### Example of traefik deployment
-[This](https://github.com/MDeLuise/plant-it/discussions/119) is an example of deployment provider by @filcuk user using [traefik](https://traefik.io/traefik/):
+This is an example of deployment using [traefik](https://traefik.io/traefik/):
 ```
-version: "3"
-name: plant-it
+version: '3'
 services:
-  plantit-se:
+  reverse-proxy:
+    image: traefik:v3.0
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  server:
     image: msdeluise/plant-it-server:latest
-    container_name: plantit-se
-    restart: unless-stopped
+    env_file: server.env
     depends_on:
-      - plantit-db
-      - plantit-cache
-    networks:
-      reverse_proxy:
-      internal:
-        # ipv4_address: ${PLANTIT_BE_IP}
-    # ports:
-    #   - 8080:8080
-    volumes:
-      - $DOCKERDIR/appdata/plantit/upload-dir:/upload-dir
-      - ./certs:/certificates
-    environment:
-      - MYSQL_HOST=plantit-db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=${PLANTIT_DB_NAME}
-      - MYSQL_USERNAME=${PLANTIT_DB_USER}
-      - MYSQL_PSW=${PLANTIT_DB_ROOT}
-      - MYSQL_ROOT_PASSWORD=${PLANTIT_DB_ROOT_PSW}
-      - CACHE_HOST=plantit-cache
-      - CACHE_TTL=86400
-      - CACHE_PORT=6379
-      - API_PORT=8080
-      - JWT_SECRET=<redacted>
-      - JWT_EXP=1
-      - USERS_LIMIT=-1 # less then 0 means no limit
-      - UPLOAD_DIR=/upload-dir
-      - TREFLE_KEY=<redacted>
-      # - ALLOWED_ORIGINS=http://${PLANTIT_FE_IP}:3000
-      - ALLOWED_ORIGINS=https://plantit.${DOMAINNAME0}:3000
-      - LOG_LEVEL=INFO # DEBUG, INFO, WARN, ERROR
-      - CERTIFICATE_PATH=/certificates/
+      - db
+      - cache
+    restart: unless-stopped
     labels:
-      # Traefik
       - "traefik.enable=true"
-      ## HTTP Routers
-      - "traefik.http.routers.plantit-api-rtr.entrypoints=https"
-      - "traefik.http.routers.plantit-api-rtr.rule=Host(`plantit.$DOMAINNAME0`) && (PathPrefix(`/api`))"
-      ## Middlewares
-      - "traefik.http.routers.plantit-api-rtr.middlewares=plantit-cors@docker,chain-no-auth@file"
-      ## HTTP Services
-      - "traefik.http.routers.plantit-api-rtr.service=plantit-api-svc"
-      - "traefik.http.services.plantit-api-svc.loadbalancer.server.port=8080"
-      - "traefik.http.services.plantit-svc.loadbalancer.server.port=3000"
-      ## CORS
-      - "traefik.http.middlewares.plantit-cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://plantit.${DOMAINNAME0}"
+      - "traefik.http.routers.app.rule=Host(`plant-it.docker.localhost`)"
+      - "traefik.http.routers.app.service=server"
+      - "traefik.http.routers.app.entrypoints=http"
+      - "traefik.http.services.server.loadbalancer.server.port=3000"
+      
+      - "traefik.http.routers.api.rule=Host(`plant-it-api.docker.localhost`)"
+      - "traefik.http.routers.api.service=server-api"
+      - "traefik.http.routers.api.entrypoints=http"
+      - "traefik.http.services.server-api.loadbalancer.server.port=8080"
 
-  plantit-db:
+  db:
     image: mysql:8.0
-    container_name: plantit-db
-    restart: unless-stopped
-    networks:
-      - internal
+    restart: always
+    env_file: server.env
     volumes:
-      - $DOCKERDIR/appdata/plantit-db:/var/lib/mysql
+      - "./db:/var/lib/mysql"
+    labels:
+      - "traefik.enable=false"
 
-  plantit-cache:
+  cache:
     image: redis:7.2.1
-    container_name: plantit-cache
-    restart: unless-stopped
-    networks:
-      - internal
+    restart: always
+    labels:
+      - "traefik.enable=false"
 ```
+
+Visit `http://plant-it.docker.localhost` for accessing the app, and `http://plant-it-api.docker.localhost/api/swagger-ui/index.html` for accessing the Swagger UI.
+Use `http://plant-it-api.docker.localhost` as server URL when request in the app setup.
 
 #### SMTP Configuration for Email Notifications
 An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the `server.env` file:
