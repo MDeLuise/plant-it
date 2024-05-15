@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.notification.console;
 
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
+import com.github.mdeluise.plantit.notification.dispatcher.config.NotificationDispatcherConfig;
 import com.github.mdeluise.plantit.reminder.Reminder;
 import org.springframework.stereotype.Component;
 
@@ -29,5 +30,15 @@ public class ConsoleNotificationDispatcher implements NotificationDispatcher {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    @Override
+    public void loadConfig(NotificationDispatcherConfig config) {
+    }
+
+
+    @Override
+    public void initConfig() {
     }
 }

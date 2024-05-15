@@ -12,6 +12,8 @@ import com.github.mdeluise.plantit.diary.entry.DiaryEntryService;
 import com.github.mdeluise.plantit.notification.NotifyException;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
+import com.github.mdeluise.plantit.notification.dispatcher.config.AbstractNotificationDispatcherConfig;
+import com.github.mdeluise.plantit.notification.dispatcher.config.NotificationDispatcherConfigImplRepository;
 import com.github.mdeluise.plantit.reminder.frequency.Frequency;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReminderDispatcher {
     private final List<NotificationDispatcher> notificationsDispatchers;
+    private final NotificationDispatcherConfigImplRepository notificationDispatcherConfigImplRepository;
     private final ReminderRepository reminderRepository;
     private final DiaryEntryService diaryEntryService;
     private final Logger logger = LoggerFactory.getLogger(ReminderDispatcher.class);
@@ -29,8 +32,10 @@ public class ReminderDispatcher {
 
     @Autowired
     public ReminderDispatcher(List<NotificationDispatcher> notificationsDispatchers,
+                              NotificationDispatcherConfigImplRepository notificationDispatcherConfigImplRepository,
                               ReminderRepository reminderRepository, DiaryEntryService diaryEntryService) {
         this.notificationsDispatchers = notificationsDispatchers;
+        this.notificationDispatcherConfigImplRepository = notificationDispatcherConfigImplRepository;
         this.reminderRepository = reminderRepository;
         this.diaryEntryService = diaryEntryService;
     }
@@ -58,8 +63,8 @@ public class ReminderDispatcher {
         }
 
         if (lastEntry.isPresent() &&
-                (new Date(lastEntry.get().getDate().getTime() + calculateMilliseconds(reminder.getFrequency())))
-                    .after(new Date())) {
+                (new Date(lastEntry.get().getDate().getTime() + calculateMilliseconds(reminder.getFrequency()))).after(
+                    new Date())) {
             return false;
         }
 
@@ -83,7 +88,8 @@ public class ReminderDispatcher {
                 }
                 // Time since last notification is greater than frequency
                 return new Date(
-                    reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getRepeatAfter())).before(now);
+                    reminder.getLastNotified().getTime() + calculateMilliseconds(reminder.getRepeatAfter())).before(
+                    now);
             }
             return false;
         }).orElse(false);
@@ -93,6 +99,19 @@ public class ReminderDispatcher {
     private void dispatchInternal(Reminder reminder) {
         final Set<NotificationDispatcher> notificationDispatchersToUse = getUserNotificationDispatcher(reminder);
         notificationDispatchersToUse.forEach(dispatcher -> {
+            final Optional<AbstractNotificationDispatcherConfig> config =
+                notificationDispatcherConfigImplRepository.findByServiceAndUser(dispatcher.getName(),
+                                                                                reminder.getTarget().getOwner()
+                );
+            if (config.isPresent()) {
+                logger.debug("Loading config for notification service {} for user {}", dispatcher.getName(),
+                             reminder.getTarget().getOwner().getUsername()
+                );
+                dispatcher.loadConfig(config.get());
+            } else {
+                logger.debug("Unloading previous config for the service {}", dispatcher.getName());
+                dispatcher.initConfig();
+            }
             try {
                 dispatcher.notifyReminder(reminder);
             } catch (NotifyException e) {

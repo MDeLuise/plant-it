@@ -12,6 +12,7 @@ import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherService;
+import com.github.mdeluise.plantit.notification.dispatcher.config.NotificationDispatcherConfigImplRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class NotificationDispatcherServiceUnitTests {
     private AuthenticatedUserService authenticatedUserService;
     @Mock
     private UserService userService;
+    @Mock
+    private NotificationDispatcherConfigImplRepository notificationDispatcherConfigImplRepository;
     private NotificationDispatcherService notificationDispatcherService;
 
 
@@ -40,7 +43,9 @@ class NotificationDispatcherServiceUnitTests {
         final Set<NotificationDispatcherName> availableNames =
             available.stream().map(NotificationDispatcher::getName).collect(Collectors.toSet());
         notificationDispatcherService =
-            new NotificationDispatcherService(authenticatedUserService, userService, available);
+            new NotificationDispatcherService(authenticatedUserService, userService, available,
+                                              notificationDispatcherConfigImplRepository
+            );
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticated);
 
         notificationDispatcherService.setNotificationDispatchersForUser(availableNames);
@@ -56,7 +61,9 @@ class NotificationDispatcherServiceUnitTests {
         final List<NotificationDispatcher> available =
             List.of(new DummyNotificationDispatcher(true), new DummyNotificationDispatcher(false));
         notificationDispatcherService =
-            new NotificationDispatcherService(authenticatedUserService, userService, available);
+            new NotificationDispatcherService(authenticatedUserService, userService, available,
+                                              notificationDispatcherConfigImplRepository
+            );
 
         final Collection<NotificationDispatcherName> result =
             notificationDispatcherService.getAvailableNotificationDispatchers();
