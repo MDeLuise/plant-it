@@ -1,11 +1,11 @@
 {
-    "name": "app",
-    "short_name": "app",
+    "name": "Plant-it",
+    "short_name": "Plant-it",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "Plant-it is a self-hosted gardening companion app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
