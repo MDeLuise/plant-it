@@ -27,6 +27,33 @@ class AddPlantPage extends StatefulWidget {
 
 class _AddPlantPageState extends State<AddPlantPage> {
   late final PlantDTO _toCreate;
+  late Future<String> _initialPlantName;
+
+  Future<String> _getAndSetInitialPlantName() async {
+    final String scientificName = widget.species.scientificName;
+    if (widget.species.id == null) {
+      _toCreate.info.personalName = scientificName;
+      return scientificName;
+    }
+    try {
+      final response = await widget.env.http
+          .get("botanical-info/${widget.species.id}/_count");
+      if (response.statusCode != 200) {
+        final responseBody = json.decode(response.body);
+        widget.env.logger.error(
+            "Error while getting plant name: ${responseBody["message"]}");
+        if (!mounted) return Future.value(scientificName);
+        throw AppException(AppLocalizations.of(context).generalError);
+      }
+      final String name =
+          "$scientificName${response.body == "0" ? "" : " ${response.body}"}";
+      _toCreate.info.personalName = name;
+      return name;
+    } catch (e, st) {
+      widget.env.logger.error(e, st);
+      throw AppException.withInnerException(e as Exception);
+    }
+  }
 
   void _createPlant() async {
     try {
@@ -79,6 +106,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
   void initState() {
     super.initState();
     _toCreate = PlantDTO(info: PlantInfoDTO());
+    _initialPlantName = _getAndSetInitialPlantName();
   }
 
   @override
@@ -90,30 +118,45 @@ class _AddPlantPageState extends State<AddPlantPage> {
           Icons.add_outlined,
         ),
       ),
-      body: NestedScrollViewPlus(
-        overscrollBehavior: OverscrollBehavior.outer,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              stretch: true,
-              expandedHeight: MediaQuery.of(context).size.height * .3,
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: const <StretchMode>[
-                  StretchMode.zoomBackground,
-                  StretchMode.blurBackground,
-                ],
-                background: AddPlantImageHeader(
-                  species: widget.species,
-                  env: widget.env,
-                ),
+      body: FutureBuilder<String>(
+        future: _initialPlantName,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            _toCreate.info.personalName = snapshot.data!;
+            return NestedScrollViewPlus(
+              overscrollBehavior: OverscrollBehavior.outer,
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    pinned: true,
+                    stretch: true,
+                    expandedHeight: MediaQuery.of(context).size.height * .3,
+                    flexibleSpace: FlexibleSpaceBar(
+                      stretchModes: const <StretchMode>[
+                        StretchMode.zoomBackground,
+                        StretchMode.blurBackground,
+                      ],
+                      background: AddPlantImageHeader(
+                        species: widget.species,
+                        env: widget.env,
+                      ),
+                    ),
+                  ),
+                ];
+              },
+              body: AddPlantBody(
+                toCreate: _toCreate,
               ),
-            ),
-          ];
+            );
+          } else {
+            return const Center(child: Text('Unexpected error'));
+          }
         },
-        body: AddPlantBody(
-          toCreate: _toCreate,
-        ),
       ),
     );
   }
