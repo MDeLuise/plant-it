@@ -46,7 +46,8 @@ public class PlantInfoExtractorFacade {
         key = "{#partialPlantScientificName, #size, @authenticatedUserService.getAuthenticatedUser().id}"
     )
     public List<BotanicalInfo> extractPlants(String partialPlantScientificName, int size) {
-        logger.debug(String.format("Extract botanical info matching %s (size %s)", partialPlantScientificName, size));
-        return chainHead.extractPlants(partialPlantScientificName, size);
+        final String searchTerm = partialPlantScientificName.isBlank() ? "*" : partialPlantScientificName.trim();
+        logger.debug(String.format("Extract botanical info matching %s (size %s)", searchTerm, size));
+        return chainHead.extractPlants(searchTerm, size);
     }
 }
