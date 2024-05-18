@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.notification.email;
 import com.github.mdeluise.plantit.notification.NotifyException;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcher;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
+import com.github.mdeluise.plantit.notification.dispatcher.config.NotificationDispatcherConfig;
 import com.github.mdeluise.plantit.notification.otp.OtpService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
 import com.github.mdeluise.plantit.reminder.Reminder;
@@ -209,6 +210,16 @@ public class EmailService implements NotificationDispatcher {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+
+    @Override
+    public void loadConfig(NotificationDispatcherConfig config) {
+    }
+
+
+    @Override
+    public void initConfig() {
     }
 
 

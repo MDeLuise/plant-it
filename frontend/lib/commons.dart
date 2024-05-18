@@ -53,6 +53,15 @@ const List<String> currencySymbols = [
   "₿", // Bitcoin Sign
 ];
 
+bool isValidUrl(String url) {
+    final RegExp urlRegExp = RegExp(
+      r"(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:​,.;]*)?",
+      caseSensitive: false,
+    );
+    return urlRegExp.hasMatch(url);
+  }
+
+
 String formatDate(DateTime toFormat) {
   final DateFormat dateFormat = DateFormat('dd/MM/yy');
   return dateFormat.format(toFormat);

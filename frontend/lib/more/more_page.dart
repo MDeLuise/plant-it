@@ -9,6 +9,7 @@ import 'package:plant_it/more/change_notifications.dart';
 import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/change_server_page.dart';
 import 'package:plant_it/more/edit_profile.dart';
+import 'package:plant_it/more/ntfy_settings.dart';
 import 'package:plant_it/more/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/theme.dart';
@@ -172,6 +173,17 @@ class _MorePageState extends State<MorePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChangeNotificationsPage(
+                      env: widget.env,
+                    ),
+                  ),
+                ),
+              ),
+              SettingsInternalLink(
+                title: AppLocalizations.of(context).ntfySettings,
+                onClick: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NtfySettingsPage(
                       env: widget.env,
                     ),
                   ),

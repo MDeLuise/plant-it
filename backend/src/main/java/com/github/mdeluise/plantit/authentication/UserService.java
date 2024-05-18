@@ -63,10 +63,8 @@ public class UserService {
     @Transactional
     public User updateInternal(Long id, User updatedUser) {
         final User toUpdate = get(id);
-        if (updatedUser.getUsername() != null && !updatedUser.getUsername().isBlank() &&
-                !updatedUser.getUsername().equals(toUpdate.getUsername())) {
-            toUpdate.setUsername(updatedUser.getUsername());
-        }
+        toUpdate.setUsername(updatedUser.getUsername());
+        toUpdate.setLastLogin(updatedUser.getLastLogin());
         return userRepository.save(toUpdate);
     }
 

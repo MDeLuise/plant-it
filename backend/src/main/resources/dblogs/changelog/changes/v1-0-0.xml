@@ -33,6 +33,7 @@
                         uniqueConstraintName="email_unique"
                 />
             </column>
+            <!--<column name="last_login" type="TIMESTAMP"/>-->
         </createTable>
     </changeSet>
 
@@ -436,6 +437,43 @@
                 columnNames="user_id,dispatcher_name"
                 constraintName="pk_userNotificationDispatchers"
         />
+    </changeSet>
+
+
+    <changeSet id="createNotificationConfigTables" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification_config"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="ntfy_notification_configs">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="url" type="varchar(255)"/>
+            <column name="topic" type="varchar(255)"/>
+            <column name="username" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="token" type="varchar(255)"/>
+        </createTable>
+
+        <addColumn tableName="application_users">
+            <column name="notification_dispatchers" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="addLastLoginColumn" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="last_login" tableName="application_users"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="application_users">
+            <column name="last_login" type="TIMESTAMP"/>
+        </addColumn>
     </changeSet>
 
 

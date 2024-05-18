@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
 import 'package:plant_it/toast/toast_manager.dart';
@@ -66,14 +67,6 @@ class _SetServerState extends State<SetServer> {
     super.dispose();
   }
 
-  bool _isValidUrl(String url) {
-    final RegExp urlRegExp = RegExp(
-      r"(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:​,.;]*)?",
-      caseSensitive: false,
-    );
-    return urlRegExp.hasMatch(url);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +115,7 @@ class _SetServerState extends State<SetServer> {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context).enterValue;
                             }
-                            if (!_isValidUrl(value)) {
+                            if (!isValidUrl(value)) {
                               return AppLocalizations.of(context).enterValidURL;
                             }
                             return null;

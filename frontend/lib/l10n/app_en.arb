@@ -372,5 +372,13 @@
   "errorResettingPassword": "Error while resetting password",
   "resetPassword": "Reset password",
   "resetPasswordHeader": "Insert the username below in order to send a reset password request",
-  "editReminder": "Edit reminder"
+  "editReminder": "Edit reminder",
+  "ntfyServerUrl": "Ntfy server URL",
+  "ntfyServerTopic": "Ntfy server topic",
+  "ntfyServerUsername": "Ntfy server username",
+  "ntfyServerPassword": "Ntfy server password",
+  "ntfyServerToken": "Ntfy server token",
+  "enterValidTopic": "Please enter a valid topic",
+  "ntfySettings": "Ntfy settings",
+  "ntfySettingsUpdated": "Ntfy settings correctly updated"
 }

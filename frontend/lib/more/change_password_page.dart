@@ -64,114 +64,118 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             ),
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          AppLocalizations.of(context).currentPassword,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        controller: _currentPasswordController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(_showCurrentPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              setState(() {
-                                _showCurrentPassword = !_showCurrentPassword;
-                              });
-                            },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            AppLocalizations.of(context).currentPassword,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context).enterValue;
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          AppLocalizations.of(context).newPassword,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        TextFormField(
+                          autofocus: true,
+                          controller: _currentPasswordController,
+                          obscureText: !_showCurrentPassword,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_showCurrentPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _showCurrentPassword = !_showCurrentPassword;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context).enterValue;
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      TextFormField(
-                        controller: _newPasswordController,
-                        obscureText: !_showNewPassword,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(_showNewPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              setState(() {
-                                _showNewPassword = !_showNewPassword;
-                              });
-                            },
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            AppLocalizations.of(context).newPassword,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context).enterValue;
-                          }
-                          if (value.length < 3 || value.length > 20) {
-                            return AppLocalizations.of(context).passwordSize;
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (value) {
-                          if (_formKey.currentState!.validate()) {
-                            _updatePassword();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                        TextFormField(
+                          controller: _newPasswordController,
+                          obscureText: !_showNewPassword,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_showNewPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _showNewPassword = !_showNewPassword;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context).enterValue;
+                            }
+                            if (value.length < 3 || value.length > 20) {
+                              return AppLocalizations.of(context).passwordSize;
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {
+                            if (_formKey.currentState!.validate()) {
+                              _updatePassword();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
 
-                  // Button
-                  const SizedBox(height: 20),
-                  ElevatedLoadingButton(
-                    isLoading: _isLoading,
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        try {
-                          if (_formKey.currentState!.validate()) {
-                            _updatePassword();
-                          }
-                        } finally {
+                    // Button
+                    const SizedBox(height: 20),
+                    ElevatedLoadingButton(
+                      isLoading: _isLoading,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
-                            _isLoading = false;
+                            _isLoading = true;
                           });
+                          try {
+                            if (_formKey.currentState!.validate()) {
+                              _updatePassword();
+                            }
+                          } finally {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
                         }
-                      }
-                    },
-                    child: Text(AppLocalizations.of(context).updatePassword),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                      },
+                      child: Text(AppLocalizations.of(context).updatePassword),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),

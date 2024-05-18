@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.diary.Diary;
 import com.github.mdeluise.plantit.notification.dispatcher.NotificationDispatcherName;
+import com.github.mdeluise.plantit.notification.dispatcher.config.AbstractNotificationDispatcherConfig;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.security.apikey.ApiKey;
 import jakarta.persistence.CascadeType;
@@ -65,6 +66,8 @@ public class User implements Serializable {
     @Column(name = "dispatcher_name")
     private Set<NotificationDispatcherName> notificationDispatchers = new HashSet<>();
     private Date lastLogin;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<AbstractNotificationDispatcherConfig> configs = new HashSet<>();
 
 
     public User(Long id, String username, String password) {
@@ -186,6 +189,16 @@ public class User implements Serializable {
 
     public void setNotificationDispatchers(Set<NotificationDispatcherName> notificationDispatchers) {
         this.notificationDispatchers = notificationDispatchers;
+    }
+
+
+    public Set<AbstractNotificationDispatcherConfig> getConfigs() {
+        return configs;
+    }
+
+
+    public void setConfigs(Set<AbstractNotificationDispatcherConfig> configs) {
+        this.configs = configs;
     }
 
 

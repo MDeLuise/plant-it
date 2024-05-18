@@ -2,6 +2,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
 import 'package:plant_it/toast/toast_manager.dart';
@@ -22,14 +23,6 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _newServerController = TextEditingController();
   bool _isLoading = false;
-
-  bool _isValidUrl(String url) {
-    final RegExp urlRegExp = RegExp(
-      r"(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:​,.;]*)?",
-      caseSensitive: false,
-    );
-    return urlRegExp.hasMatch(url);
-  }
 
   void _updateServer() async {
     setState(() {
@@ -115,7 +108,7 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          if (value == null || !_isValidUrl(value)) {
+                          if (value == null || !isValidUrl(value)) {
                             return AppLocalizations.of(context).enterValidURL;
                           }
                           return null;
