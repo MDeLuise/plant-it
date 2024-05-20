@@ -1,0 +1,40 @@
+name: Handle Labelled Issues
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  handle-completed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Label and Comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const labels = context.payload.issue.labels.map(label => label.name);
+
+            if (labels.includes("Status: Completed")) {
+              const commentBody = "This task has been completed and will be implemented in the next project release. " +
+                "Thank you for your contribution!\n\n" +
+                "If you have any further questions or updates regarding this task, " +
+                "feel free to leave a comment below.";
+
+              // Post the updated comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: commentBody
+              });
+
+              // Close the issue
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                state: 'closed'
+              });
+            }
