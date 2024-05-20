@@ -100,10 +100,10 @@ jobs:
           context: .
           file: ./deployment/Dockerfile
           push: true
-          tags: >
+          platforms: linux/amd64,linux/arm64
+          tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:${{ github.ref_name }}
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:latest,
-
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:latest
   create_apk:
     needs: build_and_test_frontend
     runs-on: ubuntu-latest
