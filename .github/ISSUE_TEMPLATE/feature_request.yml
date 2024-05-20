@@ -1,7 +1,8 @@
 name: 🚀 Feature Request
 description: Request a feature or enhancement in Plant-it.
 labels:
-  - feature request
+  - "Type: Feature Request"
+  - "Status: Created"
 body:
   - type: checkboxes
     attributes:

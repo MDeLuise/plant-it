@@ -1,7 +1,8 @@
 name: 🐛 Bug Report
 description: Report a bug in Plant-it.
 labels:
-  - bug
+  - "Type: Bug"
+  - "Status: Created"
 body:
   - type: checkboxes
     attributes:

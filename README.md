@@ -132,7 +132,7 @@ If you're interested in contributing transactions to enhance the app, you can ge
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
 
 ### Feature development
-Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=feature+request&projects=&template=feature_request.yml).
+Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=Status:+Created,Type:+Feature+Request&projects=&template=feature_request.yml).
 
 ### How to contribute
 If you want to make some changes and test them locally <a href="https://docs.plant-it.org/latest/support/#contributing">take a look at the documentation</a>.
