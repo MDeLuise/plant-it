@@ -121,6 +121,12 @@ Feel free to contribute and help improve the repo.
 
 ### Contributing Translations to the Project
 If you're interested in contributing transactions to enhance the app, you can get started by following the guide provided [here](https://github.com/MDeLuise/plant-it/discussions/148). Your support and contributions are greatly appreciated.
+| Language | Filename | Translation |
+|----------|----------|-------------|
+| English | app_en.arb | 100% |
+| Italian | app_it.arb | 100% |
+| Spanish Castilian | app_es.arb | 98% |
+| Ukrainian | app_uk.arb | 97% |
 
 ### Bug Report, Feature Request and Question
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
