@@ -1,0 +1,42 @@
+name: Measure coverage
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.2.1
+        with:
+          java-version: 20
+
+      - name: Run Coverage
+        run: mvn jacoco:report
+        working-directory: ./backend
+
+      - name: Upload Report
+        uses: 'actions/upload-artifact@v4'
+        with:
+          name: report.xml
+          path: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+
+      - name: Jacoco Report to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.1
+        with:
+          path: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60
+          title: 📝 Coverage Report
+          pass-emoji: 🟢
+          fail-emoji: 🔴
+
+      - name: Get the Coverage info
+        run: |
+          echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
+          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
