@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.app"
+    namespace "com.github.mdeluise.plantit"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
