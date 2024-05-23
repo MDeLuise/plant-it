@@ -27,7 +27,7 @@
   "insertBackendURL": "Hallo Freund! Lass uns Magie geschehen lassen, beginne mit der Konfiguration der URL deines Servers.",
   "loginTagline": "Entdecken, lernen und wachsen!",
   "singupTagline": "Lass uns gemeinsam wachsen!",
-  "sentOTPCode": "Bitte den Code eingeben, der an die E-Mail-Adresse gesendet wurde: ",
+  "sentOTPCode": "Bitte den Code eingeben, der an die E-Mail-Adresse gesendet wurde:",
   "verify": "Verifizieren",
   "resendCode": "Code erneut senden",
   "otpCode": "OTP-Code",
@@ -211,165 +211,166 @@
   },
   "nYearsAndMonths": "{years} {years, plural, =1{Jahr} other{Jahre}}, {months} {months, plural, =1{Monat} other{Monate}}",
   "@nYearsAndMonths": {
- "description": "Wie viele Jahre und Monate eine Entität hat",
-"placeholders": {
-  "years": {
-    "type": "num",
-    "format": "compact"
+    "description": "Wie viele Jahre und Monate eine Entität hat",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
   },
-  "months": {
-    "type": "num",
-    "format": "compact"
-  }
-},
-"nYearsAndMonthsAndDays": "{years} {years, plural, =1{Jahr} other{Jahre}}, {months} {months, plural, =1{Monat} other{Monate}}, {days} {days, plural, =1{Tag} other{Tage}}",
-"@nYearsAndMonthsAndDays": {
-  "description": "Wie viele Jahre, Monate und Tage eine Entität hat",
-  "placeholders": {
-    "years": {
-      "type": "num",
-      "format": "compact"
-    },
-    "months": {
-      "type": "num",
-      "format": "compact"
-    },
-    "days": {
-      "type": "num",
-      "format": "compact"
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{Jahr} other{Jahre}}, {months} {months, plural, =1{Monat} other{Monate}}, {days} {days, plural, =1{Tag} other{Tage}}",
+  "@nYearsAndMonthsAndDays": {
+    "description": "Wie viele Jahre, Monate und Tage eine Entität hat",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
     }
-  }
-},
-"name": "Name",
-"nOutOf": "{value} von {max}",
-"@nOutOf": {
-  "description": "Wert innerhalb einer Skala",
-  "placeholders": {
-    "value": {
-      "type": "num",
-      "format": "compact"
-    },
-    "max": {
-      "type": "num",
-      "format": "compact"
+  },
+  "name": "Name",
+  "nOutOf": "{value} von {max}",
+  "@nOutOf": {
+    "description": "Wert innerhalb einer Skala",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
     }
-  }
-},
-"temp": "{value} °C",
-"@temp": {
-  "description": "Temperatur",
-  "placeholders": {
-    "value": {
-      "type": "num",
-      "format": "compact"
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "description": "Temperatur",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
     }
-  }
-},
-"numberOfPhotos": "Anzahl der Fotos",
-"numberOfEvents": "Anzahl der Ereignisse",
-"searchInYourPlants": "In deinen Pflanzen suchen",
-"searchNewGreenFriends": "Neue grüne Freunde suchen",
-"custom": "Benutzerdefiniert",
-"addPlant": "Pflanze hinzufügen",
-"yes": "Ja",
-"no": "Nein",
-"pleaseConfirm": "Bitte bestätigen",
-"areYouSureToRemoveEvent": "Sind Sie sicher, dass Sie das Ereignis entfernen möchten?",
-"areYouSureToRemoveReminder": "Sind Sie sicher, dass Sie die Erinnerung entfernen möchten?",
-"areYouSureToRemoveSpecies": "Sind Sie sicher, dass Sie die Art entfernen möchten?",
-"areYouSureToRemovePlant": "Sind Sie sicher, dass Sie die Pflanze entfernen möchten?",
-"purchasedPrice": "Kaufpreis",
-"seller": "Verkäufer",
-"location": "Ort",
-"currency": "Währung",
-"plantUpdatedSuccessfully": "Pflanze erfolgreich aktualisiert",
-"plantCreatedSuccessfully": "Pflanze erfolgreich erstellt",
-"insertPrice": "Preis eingeben",
-"noBirthday": "Kein Geburtsdatum",
-"appVersion": "App-Version",
-"serverVersion": "Server-Version",
-"documentation": "Dokumentation",
-"openSource": "Open Source",
-"reportIssue": "Problem melden",
-"logout": "Abmelden",
-"eventCount": "Ereigniszähler",
-"plantCount": "Pflanzenzähler",
-"speciesCount": "Artenzähler",
-"imageCount": "Bildzähler",
-"unknown": "Unbekannt",
-"account": "Konto",
-"changePassword": "Passwort ändern",
-"more": "Mehr",
-"editProfile": "Profil bearbeiten",
-"currentPassword": "Aktuelles Passwort",
-"updatePassword": "Passwort aktualisieren",
-"updateProfile": "Profil aktualisieren",
-"newPassword": "Neues Passwort",
-"removeEvent": "Ereignis entfernen",
-"appLog": "App-Log",
-"passwordUpdated": "Passwort erfolgreich aktualisiert",
-"userUpdated": "Benutzer erfolgreich aktualisiert",
-"noChangesDetected": "Keine Änderungen festgestellt",
-"plantDeletedSuccessfully": "Pflanze erfolgreich gelöscht",
-"server": "Server",
-"notifications": "Benachrichtigungen",
-"changeServer": "Server ändern",
-"serverUpdated": "Server erfolgreich aktualisiert",
-"changeNotifications": "Benachrichtigungen ändern",
-"updateNotifications": "Benachrichtigungen aktualisieren",
-"notificationUpdated": "Benachrichtigung erfolgreich aktualisiert",
-"supportTheProject": "Unterstützen Sie das Projekt",
-"buyMeACoffee": "Kaufen Sie mir einen Kaffee",
-"gallery": "Galerie",
-"photosOf": "Fotos von {name}",
-"@photosOf": {
-  "description": "Foto für Pflanze",
-  "placeholders": {
-    "name": {
-      "type": "String"
+  },
+  "numberOfPhotos": "Anzahl der Fotos",
+  "numberOfEvents": "Anzahl der Ereignisse",
+  "searchInYourPlants": "In deinen Pflanzen suchen",
+  "searchNewGreenFriends": "Neue grüne Freunde suchen",
+  "custom": "Benutzerdefiniert",
+  "addPlant": "Pflanze hinzufügen",
+  "yes": "Ja",
+  "no": "Nein",
+  "pleaseConfirm": "Bitte bestätigen",
+  "areYouSureToRemoveEvent": "Sind Sie sicher, dass Sie das Ereignis entfernen möchten?",
+  "areYouSureToRemoveReminder": "Sind Sie sicher, dass Sie die Erinnerung entfernen möchten?",
+  "areYouSureToRemoveSpecies": "Sind Sie sicher, dass Sie die Art entfernen möchten?",
+  "areYouSureToRemovePlant": "Sind Sie sicher, dass Sie die Pflanze entfernen möchten?",
+  "purchasedPrice": "Kaufpreis",
+  "seller": "Verkäufer",
+  "location": "Ort",
+  "currency": "Währung",
+  "plantUpdatedSuccessfully": "Pflanze erfolgreich aktualisiert",
+  "plantCreatedSuccessfully": "Pflanze erfolgreich erstellt",
+  "insertPrice": "Preis eingeben",
+  "noBirthday": "Kein Geburtsdatum",
+  "appVersion": "App-Version",
+  "serverVersion": "Server-Version",
+  "documentation": "Dokumentation",
+  "openSource": "Open Source",
+  "reportIssue": "Problem melden",
+  "logout": "Abmelden",
+  "eventCount": "Ereigniszähler",
+  "plantCount": "Pflanzenzähler",
+  "speciesCount": "Artenzähler",
+  "imageCount": "Bildzähler",
+  "unknown": "Unbekannt",
+  "account": "Konto",
+  "changePassword": "Passwort ändern",
+  "more": "Mehr",
+  "editProfile": "Profil bearbeiten",
+  "currentPassword": "Aktuelles Passwort",
+  "updatePassword": "Passwort aktualisieren",
+  "updateProfile": "Profil aktualisieren",
+  "newPassword": "Neues Passwort",
+  "removeEvent": "Ereignis entfernen",
+  "appLog": "App-Log",
+  "passwordUpdated": "Passwort erfolgreich aktualisiert",
+  "userUpdated": "Benutzer erfolgreich aktualisiert",
+  "noChangesDetected": "Keine Änderungen festgestellt",
+  "plantDeletedSuccessfully": "Pflanze erfolgreich gelöscht",
+  "server": "Server",
+  "notifications": "Benachrichtigungen",
+  "changeServer": "Server ändern",
+  "serverUpdated": "Server erfolgreich aktualisiert",
+  "changeNotifications": "Benachrichtigungen ändern",
+  "updateNotifications": "Benachrichtigungen aktualisieren",
+  "notificationUpdated": "Benachrichtigung erfolgreich aktualisiert",
+  "supportTheProject": "Unterstützen Sie das Projekt",
+  "buyMeACoffee": "Kaufen Sie mir einen Kaffee",
+  "gallery": "Galerie",
+  "photosOf": "Fotos von {name}",
+  "@photosOf": {
+    "description": "Foto für Pflanze",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
     }
-  }
-},
-"nPhoto": "Hochgeladen {count} neue {count, plural, =1{Foto} other{Fotos}}",
-"@nPhoto": {
-  "description": "Wie viele Fotos hochgeladen wurden",
-  "placeholders": {
-    "count": {
-      "type": "num",
-      "format": "compact"
+  },
+  "nPhoto": "Hochgeladen {count} neue {count, plural, =1{Foto} other{Fotos}}",
+  "@nPhoto": {
+    "description": "Wie viele Fotos hochgeladen wurden",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
     }
-  }
-},
-"errorCreatingPlant": "Fehler beim Erstellen der Pflanze",
-"noImages": "Keine Bilder",
-"errorCreatingSpecies": "Fehler beim Erstellen von Arten",
-"errorUpdatingSpecies": "Fehler beim Aktualisieren von Arten",
-"speciesUpdatedSuccessfully": "Arten erfolgreich aktualisiert",
-"addCustom": "Benutzerdefiniert hinzufügen",
-"speciesCreatedSuccessfully": "Arten erfolgreich erstellt",
-"uploadPhoto": "Foto hochladen",
-"linkURL": "URL-Link",
-"url": "URL",
-"submit": "Bestätigen",
-"cancel": "Abbrechen",
-"actions": "Aktionen",
-"areYouSureToRemovePhoto": "Sind Sie sicher, dass Sie das Foto entfernen möchten?",
-"photoSuccessfullyDeleted": "Foto erfolgreich gelöscht",
-"errorUpdatingPlant": "Fehler beim Aktualisieren der Pflanze",
-"reminders": "Erinnerungen",
-"selectStartDate": "Startdatum auswählen",
-"selectEndDate": "Enddatum auswählen",
-"addNewReminder": "Neue Erinnerung hinzufügen",
-"noEndDate": "Kein Enddatum",
-"frequency": "Häufigkeit",
-"repeatAfter": "Wiederholen nach",
-"addNew": "Neu hinzufügen",
-"reminderCreatedSuccessfully": "Erinnerung erfolgreich erstellt",
-"startAndEndDateOrderError": "Das Startdatum muss vor dem Enddatum liegen",
-"reminderUpdatedSuccessfully": "Erinnerung erfolgreich aktualisiert",
-"reminderDeletedSuccessfully": "Erinnerung erfolgreich gelöscht",
-"errorResettingPassword": "Fehler beim Zurücksetzen des Passworts",
-"resetPassword": "Passwort zurücksetzen",
-"resetPasswordHeader": "Geben Sie unten den Benutzernamen ein, um eine Passwort-Zurücksetzanforderung zu senden",
-"editReminder": "Erinnerung bearbeiten"
+  },
+  "errorCreatingPlant": "Fehler beim Erstellen der Pflanze",
+  "noImages": "Keine Bilder",
+  "errorCreatingSpecies": "Fehler beim Erstellen von Arten",
+  "errorUpdatingSpecies": "Fehler beim Aktualisieren von Arten",
+  "speciesUpdatedSuccessfully": "Arten erfolgreich aktualisiert",
+  "addCustom": "Benutzerdefiniert hinzufügen",
+  "speciesCreatedSuccessfully": "Arten erfolgreich erstellt",
+  "uploadPhoto": "Foto hochladen",
+  "linkURL": "URL-Link",
+  "url": "URL",
+  "submit": "Bestätigen",
+  "cancel": "Abbrechen",
+  "actions": "Aktionen",
+  "areYouSureToRemovePhoto": "Sind Sie sicher, dass Sie das Foto entfernen möchten?",
+  "photoSuccessfullyDeleted": "Foto erfolgreich gelöscht",
+  "errorUpdatingPlant": "Fehler beim Aktualisieren der Pflanze",
+  "reminders": "Erinnerungen",
+  "selectStartDate": "Startdatum auswählen",
+  "selectEndDate": "Enddatum auswählen",
+  "addNewReminder": "Neue Erinnerung hinzufügen",
+  "noEndDate": "Kein Enddatum",
+  "frequency": "Häufigkeit",
+  "repeatAfter": "Wiederholen nach",
+  "addNew": "Neu hinzufügen",
+  "reminderCreatedSuccessfully": "Erinnerung erfolgreich erstellt",
+  "startAndEndDateOrderError": "Das Startdatum muss vor dem Enddatum liegen",
+  "reminderUpdatedSuccessfully": "Erinnerung erfolgreich aktualisiert",
+  "reminderDeletedSuccessfully": "Erinnerung erfolgreich gelöscht",
+  "errorResettingPassword": "Fehler beim Zurücksetzen des Passworts",
+  "resetPassword": "Passwort zurücksetzen",
+  "resetPasswordHeader": "Geben Sie unten den Benutzernamen ein, um eine Passwort-Zurücksetzanforderung zu senden",
+  "editReminder": "Erinnerung bearbeiten"
 }
