@@ -104,12 +104,16 @@ jobs:
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:${{ github.ref_name }}
             ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:latest
+  
   create_apk:
     needs: build_and_test_frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Download apk-signer tool
+        run: sudo apt-get update -y && sudo apt-get install -y apksigner
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -125,6 +129,21 @@ jobs:
 
       - name: Create apk File
         run: flutter build apk --release
+        working-directory: ./frontend
+
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+        working-directory: ./frontend
+
+      - name: Sign apk File
+        run: |
+          echo ${{ secrets.KEYSTORE_PASSWORD }} | \
+            apksigner sign --ks-key-alias ${{ secrets.KEYSTORE_KEY_ALIAS }} \
+            --ks keystore.jks build/app/outputs/flutter-apk/app-release.apk
+        working-directory: ./frontend
+
+      - name: Verify the APK
+        run: apksigner verify --print-certs --verbose build/app/outputs/flutter-apk/app-release.apk
         working-directory: ./frontend
       
       - name: Save apk File
@@ -149,7 +168,30 @@ jobs:
         with:
           draft: true
           name: v${{ github.ref_name }}
-          body: Hello, Plant-it community!
+          body: |
+            Hello, Plant-it community!
+
+            # Services version
+            - server version: `a.b.c`
+            - app version: `d.e.f`
+
+            # Highlights
+            
+            # What's Changed
+            ## 📱 App
+            - 
+
+            ## 🗄️ Server
+            - 
+
+            ## 📓 Documentation
+            - 
+
+            # New Contributors
+            * X made their first contribution in Y
+
+            # Full Changelog
+            https://github.com/MDeLuise/plant-it/compare/
           generate_release_notes: true
           append_body: true
           files: app-release.apk

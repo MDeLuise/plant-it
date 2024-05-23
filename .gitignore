@@ -6,3 +6,5 @@ online-resources/**/package-lock.json
 online-resources/**/resources
 online-resources/documentation/venv
 
+frontend/untranslated.txt
+
