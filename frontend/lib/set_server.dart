@@ -110,7 +110,7 @@ class _SetServerState extends State<SetServer> {
                           decoration: InputDecoration(
                               labelText: AppLocalizations.of(context).serverURL,
                               border: const OutlineInputBorder(),
-                              hintText: "http://192.168.1.6:8085"),
+                              hintText: "http://192.168.1.5:8080"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context).enterValue;
