@@ -114,6 +114,9 @@ jobs:
 
       - name: Download apk-signer tool
         run: sudo apt-get update -y && sudo apt-get install -y apksigner
+      
+      - name: Debug path info 1
+        run: pwd
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -127,8 +130,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Debug path info 2
+        run: pwd
+
       - name: Create apk File
-        run: flutter build apk --release
+        run: flutter pub get && flutter build apk --release
         working-directory: ./frontend
 
       - name: Decode keystore

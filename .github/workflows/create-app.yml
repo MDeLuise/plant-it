@@ -1,0 +1,68 @@
+name: APK Creation
+
+on:
+  workflow_dispatch:
+    inputs:
+      sign:
+        description: 'Sign the created APK'
+        type: boolean
+
+env:
+  FLUTTER_VERSION: 3.19.2
+
+jobs:
+  create_apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download apk-signer tool
+        run: sudo apt-get update -y && sudo apt-get install -y apksigner
+      
+      - name: Debug path info 1
+        run: pwd
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Debug path info 2
+        run: pwd
+
+      - name: Create apk File
+        run: flutter pub get && flutter build apk --release
+        working-directory: ./frontend
+
+      - name: Decode keystore
+        if: inputs.sign == true
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+        working-directory: ./frontend
+
+      - name: Sign apk File
+        if: inputs.sign == true
+        run: |
+          echo ${{ secrets.KEYSTORE_PASSWORD }} | \
+            apksigner sign --ks-key-alias ${{ secrets.KEYSTORE_KEY_ALIAS }} \
+            --ks keystore.jks build/app/outputs/flutter-apk/app-release.apk
+        working-directory: ./frontend
+
+      - name: Verify the APK
+        if: inputs.sign == true
+        run: apksigner verify --print-certs --verbose build/app/outputs/flutter-apk/app-release.apk
+        working-directory: ./frontend
+      
+      - name: Save apk File
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-apk
+          retention-days: 1
+          path: ./frontend/build/app/outputs/flutter-apk/app-release.apk
