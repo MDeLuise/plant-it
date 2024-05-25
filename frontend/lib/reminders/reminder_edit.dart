@@ -153,7 +153,7 @@ class _EditReminderState extends State<EditReminder> {
                       initialValue: getLocaleEvent(context, _toEdit.action!),
                       text: AppLocalizations.of(context).events,
                       options: widget.env.eventTypes
-                          .map((e) => formatEventType(e))
+                          .map((e) => getLocaleEvent(context, e))
                           .toList(),
                       onSelectedItemsChanged: (event) {
                         setState(() {

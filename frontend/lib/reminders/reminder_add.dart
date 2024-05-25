@@ -113,7 +113,7 @@ class _AddReminderState extends State<AddReminder> {
                       initialValue: getLocaleEvent(context, "watering"),
                       text: AppLocalizations.of(context).events,
                       options: widget.env.eventTypes
-                          .map((e) => formatEventType(e))
+                          .map((e) => getLocaleEvent(context, e))
                           .toList(),
                       onSelectedItemsChanged: (event) {
                         setState(() {
