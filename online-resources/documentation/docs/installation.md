@@ -12,7 +12,6 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
 * Create a folder where you want to place all Plant-it related files.
 * Inside that folder, create a file named `docker-compose.yml` with this content:
 ```yaml
-version: "3"
 name: plant-it
 services:
   server:
@@ -162,7 +161,6 @@ Let's say that you want to run Plant-it on a server with IP `http://192.168.1.10
 
 Then this will be you configuration for the `docker-compose.yml` file:
 ```yaml
-version: "3"
 name: plant-it
 services:
   server:
@@ -321,7 +319,6 @@ Let's say that you want to run Plant-it on a server with IP `https://192.168.1.1
 
 `docker-compose.yml`:
 ```yaml
-version: "3"
 name: plant-it
 services:
   server:
