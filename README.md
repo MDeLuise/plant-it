@@ -124,6 +124,7 @@ If you're interested in contributing transactions to enhance the app, you can ge
 |----------|----------|-------------|
 | English | app_en.arb | 100% |
 | Italian | app_it.arb | 100% |
+| Portuguese | app_pt.arb | 100% |
 | Spanish Castilian | app_es.arb | 98% |
 | German | app_de.arb | 98% |
 | Ukrainian | app_uk.arb | 97% |

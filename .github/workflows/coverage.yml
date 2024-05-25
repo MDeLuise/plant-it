@@ -2,13 +2,19 @@ name: Measure coverage
 
 on:
   pull_request:
+    branches:
+    - main
 
 jobs:
   calculate_coverage:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Setup Maven Action
         uses: s4u/setup-maven-action@v1.2.1
         with:
@@ -31,7 +37,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 40
           min-coverage-changed-files: 60
-          title: 📝 Coverage Report
+          title: 📝 Coverage Report For Server Service
           pass-emoji: 🟢
           fail-emoji: 🔴
 
