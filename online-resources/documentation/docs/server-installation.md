@@ -1,4 +1,4 @@
-# Install
+# Server Installation
 
 ## Prerequisite
 Before installing Plant-it, make sure you have the following prerequisites:
@@ -142,18 +142,18 @@ SMTP_AUTH=
 SMTP_START_TTL=
 ```
 
-### Change ports binding
-#### Backend
+## Change ports binding
+### Backend
 If you don't want to use the default port `8080`, you can do the following:
 
 * change the port binding in the `docker-compose.yml` file, e.g. `9090:8080` to setup the port `9090` for the backend service,
 
-#### Frontend
+### Frontend
 If you don't want to use the default port `3000`, you can do the following:
 
 * change the port binding in the `docker-compose.yml` file, e.g. `4040:3000` to setup the port `4040` for the frontend service
 
-#### Complete example
+### Complete example
 Let's say that you want to run Plant-it on a server with IP `http://192.168.1.103` and want to have:
 
 * the backend on port `8089`,
@@ -227,7 +227,7 @@ SSL_ENABLED=false
 CERTIFICATE_PATH=/certificates/
 ```
 
-#### Example of traefik deployment
+## Example of traefik deployment
 This is an example of deployment using [traefik](https://traefik.io/traefik/):
 ```
 version: '3'
@@ -279,7 +279,7 @@ services:
 Visit `http://plant-it.docker.localhost` for accessing the app, and `http://plant-it-api.docker.localhost/api/swagger-ui/index.html` for accessing the Swagger UI.
 Use `http://plant-it-api.docker.localhost` as server URL when request in the app setup.
 
-#### SMTP Configuration for Email Notifications
+## SMTP Configuration for Email Notifications
 An SMTP server can be used to send notifications to users, such as password reset emails. To configure the usage of an SMTP server, the following properties need to be set in the `server.env` file:
 
 - **SMTP_HOST**: The host of the SMTP server.
@@ -294,7 +294,7 @@ An SMTP server can be used to send notifications to users, such as password rese
 
     Please note that some providers, such as Gmail, may require the use of an [application-specific password](https://support.google.com/mail/answer/185833?hl=en) for authentication.
 
-##### Example Gmail Configuration
+### Example Gmail Configuration
 ```properties
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -305,13 +305,18 @@ SMTP_START_TTL=true
 CONTACT_MAIL=your-email@gmail.com
 ```
 
-#### Enable SSL
+## Enable SSL
+!!! warning end "Deprecation"
+
+    Please be aware that SSL feature is deprecated.
+    If you want to use SSL, you can use some application proxy like [traefik](https://traefik.io/traefik/) or [nginx](https://nginx.org/).
+
 To enable SSL for your Plant-it deployment, follow these steps:
 
 1. **Set SSL Enabled Property**: Ensure that SSL is enabled by adding the property `SSL_ENABLED=true` to the `server.env` file.
 1. **Create Volume Binding**: Add a volume binding `"./certs:/certificates"` to the `server.env` services in your `docker-compose.yml` file. This allows the services to access SSL certificates stored in the `./certs` directory.
 
-##### Complete Example
+### Complete Example
 Let's say that you want to run Plant-it on a server with IP `https://192.168.1.103` and want to have:
 
 * the backend on port `8089`,
@@ -374,5 +379,29 @@ This setup creates a self-hosted certificate for both the backend and frontend s
     In some cases, certain browsers may require explicit acceptance of certificates from both the frontend and backend of the application, even if they share the same certificate. This scenario typically arises when encountering a "Cannot connect to the backend" error message and SSL is enabled.
     To resolve this issue, users may need to navigate to both the frontend and backend URLs of the application and manually accept the certificate presented by each. By acknowledging the certificates, users can establish a trusted connection between their browser and the application's frontend and backend servers, thereby resolving connectivity issues.
 
-##### Provide Custom Certificate
+### Provide Custom Certificate
 If you prefer to use your own certificate, simply place the `app.key` and `app.crt` files inside the `CERTIFICATE_PATH` folder.
+
+## Get the API Key
+In order to get the API key, it's needed to use the REST API of the service:
+
+1. Open your browser and navigate to `http://<server-ip>:<server-port>/api/swagger-ui/index.html`.
+2. Obtain a JWT token by calling the `POST /authentication/login` endpoint with your credentials.
+3. Set the JWT token in Swagger for the subsequent calls by using the "Authorize" button at the top.
+4. Create a new API key by calling the `POST /api-key` endpoint, optionally passing a name for the key.
+
+## Homepage dashboard integration
+![](assets/dashboard-homepage.png){ align=left; loading=lazy; style="max-width:400px;"}
+
+The project offers a widget for integrates the service with the popular dashboard called [homepage](https://github.com/gethomepage/homepage).
+In order to use it, simply place the widget as above in the configuration yml file of the dashboard:
+```
+- Plant-it:
+    href: <server-app-url>
+    description: 🪴 Self-hosted, open source gardening companion app
+    widget:
+      type: plantit
+      url: <server-backend-url>
+      key: <you-key>
+```
+You can get the API Key following the step in the relative section.

@@ -1,5 +1,10 @@
 ![](assets/banner.png){ align=left; loading=lazy; style="width:auto;max-height:600px;"}
 
+<p align="center">
+    <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://camo.githubusercontent.com/f422f6f830e814ec7e766de8fef4db949c6add75a9d58548ab2f5d29855c0616/68747470733a2f2f6664726f69642e6769746c61622e696f2f617274776f726b2f62616467652f6765742d69742d6f6e2e706e67" alt="Get it on F-Droid" height="10" data-canonical-src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" style="max-width: 200px"></a>
+    <a href="https://github.com/MDeLuise/plant-it/releases/latest"><img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60" style="max-width: 200px"></a>
+</p>
+
 ## What is Plant-it?
 Plant-it is a gardening companion app that helps you take care of your plants.
 

@@ -13,8 +13,8 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
-  - 'Install': 'installation.md'
-  - 'Use': 'usage.md'
+  - 'Server Installation': 'server-installation.md'
+  - 'App Installation': 'app-installation.md'
   - 'Features': 'features.md'
   - 'Support': 'support.md'
 
