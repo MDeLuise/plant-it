@@ -4,8 +4,8 @@ import java.util.Date;
 
 import com.github.mdeluise.plantit.authentication.payload.request.LoginRequest;
 import com.github.mdeluise.plantit.authentication.payload.request.SignupRequest;
-import com.github.mdeluise.plantit.authentication.payload.response.MessageResponse;
 import com.github.mdeluise.plantit.authentication.payload.response.UserInfoResponse;
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.exception.MaximumNumberOfUsersReachedExceptions;
 import com.github.mdeluise.plantit.notification.email.EmailException;
 import com.github.mdeluise.plantit.notification.email.EmailService;

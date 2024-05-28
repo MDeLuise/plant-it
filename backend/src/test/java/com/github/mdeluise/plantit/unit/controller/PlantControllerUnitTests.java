@@ -2,6 +2,7 @@ package com.github.mdeluise.plantit.unit.controller;
 
 import java.util.List;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantController;
@@ -122,10 +123,10 @@ class PlantControllerUnitTests {
     @Test
     @DisplayName("Test delete plant by existing ID")
     void testDeletePlantByExistingId() {
-        final ResponseEntity<String> responseEntity = plantController.delete(1L);
+        final ResponseEntity<MessageResponse> responseEntity = plantController.delete(1L);
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertEquals("Success", responseEntity.getBody());
+        Assertions.assertEquals("Success", responseEntity.getBody().getMessage());
     }
 
 

@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.plant;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +83,9 @@ public class PlantController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an existing plant", description = "Delete an existing plant.")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long id) {
         plantService.delete(id);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 
 

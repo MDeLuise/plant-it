@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -110,8 +111,8 @@ public class BotanicalInfoController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a botanical info.", description = "Delete the botanical info with the specified `id`.")
-    public ResponseEntity<String> remove(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> remove(@PathVariable Long id) {
         botanicalInfoService.delete(id);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 }

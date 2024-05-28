@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.diary.entry;
 import java.util.Collection;
 import java.util.List;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,9 +91,9 @@ public class DiaryEntryController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long id) {
         diaryEntryService.delete(id);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 
 

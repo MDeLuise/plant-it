@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantDTO;
@@ -94,9 +95,9 @@ public class ImageController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") String id) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable("id") String id) {
         imageStorageService.remove(id);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 
 

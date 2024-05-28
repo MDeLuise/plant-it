@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoRepository;
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.EntityImage;
@@ -122,10 +123,10 @@ class ImageControllerUnitTests {
     void testDeleteImageByExistingId() {
         final String id = "imageId";
 
-        final ResponseEntity<String> responseEntity = imageController.delete(id);
+        final ResponseEntity<MessageResponse> responseEntity = imageController.delete(id);
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertTrue(responseEntity.getBody().contains("Success"));
+        Assertions.assertEquals("Success", responseEntity.getBody().getMessage());
     }
 
 

@@ -3,6 +3,7 @@ package com.github.mdeluise.plantit.notification.dispatcher;
 import java.util.Collection;
 import java.util.Set;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.notification.dispatcher.config.AbstractNotificationDispatcherConfig;
 import com.github.mdeluise.plantit.notification.ntfy.NtfyNotificationDispatcherConfig;
 import com.github.mdeluise.plantit.notification.ntfy.NtfyNotificationDispatcherConfigDTO;
@@ -42,9 +43,9 @@ public class NotificationDispatcherController {
 
 
     @PutMapping
-    public ResponseEntity<String> setUserEnabled(@RequestBody Set<NotificationDispatcherName> toEnable) {
+    public ResponseEntity<MessageResponse> setUserEnabled(@RequestBody Set<NotificationDispatcherName> toEnable) {
         notificationDispatcherService.setNotificationDispatchersForUser(toEnable);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 
 
@@ -58,9 +59,9 @@ public class NotificationDispatcherController {
 
 
     @PostMapping("/config/ntfy")
-    public ResponseEntity<String> setConfig(@RequestBody NtfyNotificationDispatcherConfigDTO config) {
+    public ResponseEntity<MessageResponse> setConfig(@RequestBody NtfyNotificationDispatcherConfigDTO config) {
         final AbstractNotificationDispatcherConfig toSave = ntfyNotificationDispatcherDTOConverter.convertFromDTO(config);
         notificationDispatcherService.setUserConfig(NotificationDispatcherName.NTFY, toSave);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new MessageResponse("Success"));
     }
 }

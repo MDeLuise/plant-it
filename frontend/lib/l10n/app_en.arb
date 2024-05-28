@@ -380,5 +380,11 @@
   "ntfyServerToken": "Ntfy server token",
   "enterValidTopic": "Please enter a valid topic",
   "ntfySettings": "Ntfy settings",
-  "ntfySettingsUpdated": "Ntfy settings correctly updated"
+  "ntfySettingsUpdated": "Ntfy settings correctly updated",
+  "modifySpecies": "Modify species",
+  "removeSpecies": "Delete species",
+  "speciesDeletedSuccessfully": "Species successfully deleted",
+  "success": "Success",
+  "warning": "Warning",
+  "ops": "Ops!"
 }
