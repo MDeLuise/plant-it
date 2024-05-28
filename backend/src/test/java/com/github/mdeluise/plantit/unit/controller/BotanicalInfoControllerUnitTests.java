@@ -10,6 +10,7 @@ import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoController;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTO;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoDTOConverter;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.plantinfo.PlantInfoExtractorFacade;
@@ -187,10 +188,10 @@ class BotanicalInfoControllerUnitTests {
     void testDeleteBotanicalInfo() {
         final long id = 1L;
 
-        final ResponseEntity<String> responseEntity = botanicalInfoController.remove(id);
+        final ResponseEntity<MessageResponse> responseEntity = botanicalInfoController.remove(id);
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertTrue(responseEntity.getBody().contains("success"));
+        Assertions.assertEquals("Success", responseEntity.getBody().getMessage());
     }
 
 

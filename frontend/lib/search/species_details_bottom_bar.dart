@@ -9,6 +9,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_add/add_plant_page.dart';
 import 'package:plant_it/search/species_details_page.dart';
 import 'package:plant_it/species_edit/edit_species_page.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class SpeciesDetailsBottomActionBar extends StatelessWidget {
   final AppHttpClient http;
@@ -62,6 +63,10 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
         env.logger.error(responseBody["message"]);
         throw AppException(responseBody["message"]);
       }
+      env.logger.info("Species ${species.id} deleted");
+      env.toastManager.showToast(context, ToastNotificationType.success,
+        AppLocalizations.of(context).speciesDeletedSuccessfully);
+      Navigator.of(context).pop();
     } catch (e, st) {
       env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
@@ -137,14 +142,14 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
               },
               icon: const Icon(Icons.edit_outlined),
               color: const Color.fromARGB(255, 156, 192, 172),
-              tooltip: AppLocalizations.of(context).modifyPlant,
+              tooltip: AppLocalizations.of(context).modifySpecies,
             ),
             if (isDeletable)
               IconButton(
                 onPressed: () => _removeSpeciesWithConfirm(context),
                 icon: const Icon(Icons.delete_forever_outlined),
                 color: const Color.fromARGB(255, 156, 192, 172),
-                tooltip: AppLocalizations.of(context).removePlant,
+                tooltip: AppLocalizations.of(context).removeSpecies,
               ),
           ])),
     );

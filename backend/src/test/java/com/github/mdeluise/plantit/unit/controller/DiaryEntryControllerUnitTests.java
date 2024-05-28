@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntry;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryController;
 import com.github.mdeluise.plantit.diary.entry.DiaryEntryDTO;
@@ -142,10 +143,10 @@ class DiaryEntryControllerUnitTests {
     void testDeleteDiaryEntry() {
         final Long id = 1L;
 
-        final ResponseEntity<String> responseEntity = diaryEntryController.delete(id);
+        final ResponseEntity<MessageResponse> responseEntity = diaryEntryController.delete(id);
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertTrue(responseEntity.getBody().contains("Success"));
+        Assertions.assertEquals("Success", responseEntity.getBody().getMessage());
     }
 
 
