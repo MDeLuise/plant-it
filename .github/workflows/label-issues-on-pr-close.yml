@@ -1,0 +1,37 @@
+name: Label Issues on PR Close
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Add label to linked issues
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const pr = context.payload.pull_request;
+          if (pr.merged) {
+            const issueNumbers = [];
+            const regex = /\b(fix(es)?|close(s)?)\s+#(\d+)(,?\s*#\d+)*/gi;
+            let match;
+            while ((match = regex.exec(pr.body)) !== null) {
+              const issues = match[0].match(/#\d+/g).map(issue => issue.substring(1));
+              issueNumbers.push(...issues);
+            }
+            for (const issueNumber of issueNumbers) {
+              await github.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: ["Status: Completed"]
+              });
+            }
+          }
