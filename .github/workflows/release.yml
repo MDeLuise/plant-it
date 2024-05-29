@@ -75,7 +75,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
-          path: ./backend/target/app.jar
+          path: ./backend/target/
 
       - name: Load Flutter Build Files
         uses: actions/download-artifact@v4
@@ -178,8 +178,8 @@ jobs:
             Hello, Plant-it community!
 
             # Services version
-            - server version: `a.b.c`
-            - app version: `d.e.f`
+            - server version: ``
+            - app version: ``
 
             # Highlights
             
