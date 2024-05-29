@@ -5,6 +5,10 @@
 #######################
 CERTIFICATE_PATH_DESTINATION="/opt/app";
 
+if [ "$SSL_ENABLED" = "true" ]; then
+  echo "WARNING: SSL_ENABLED property is deprecated and will be removed in a future release."
+  echo "If you need to use SSL, consider using an app proxy like Traefik or Nginx."
+fi
 
 generate_certificates() {
   echo -n "Generating self-signed certificate...";
@@ -52,12 +56,16 @@ echo "SSL enabled: $SSL_ENABLED";
 #######################
 #     Wait for DB     #
 #######################
-/opt/app/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 120 --;
-if [ $? -ne 0 ]; then
-    echo "DB (service name: $MYSQL_HOST, port: $MYSQL_PORT) not available, exiting.";
-    exit 1;
+# Check if DEV is not set or is set to "false"
+if [ -z "$DEV" ] || [ "$DEV" = "false" ]; then
+  /opt/app/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 120 --;
+  if [ $? -ne 0 ]; then
+      echo "DB (service name: $MYSQL_HOST, port: $MYSQL_PORT) not available, exiting.";
+      exit 1;
+  fi
+else
+    export SPRING_PROFILES_ACTIVE=dev
 fi
-
 
 #######################
 #     Run backend     #

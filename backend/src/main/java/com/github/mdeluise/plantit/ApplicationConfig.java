@@ -89,6 +89,7 @@ public class ApplicationConfig {
     @Profile(value = "dev")
     public CommandLineRunner initEmbeddedCache(@Value("${spring.data.redis.port}") int port) {
         return args -> {
+            logger.debug("Starting embedded redis...");
             redisServer = new RedisServer(port);
             redisServer.start();
         };
