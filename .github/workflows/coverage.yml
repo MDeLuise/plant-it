@@ -13,22 +13,27 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: actions/checkout@v2
 
       - name: Setup Maven Action
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: s4u/setup-maven-action@v1.2.1
         with:
           java-version: 20
 
       - name: Run backend tests
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: mvn clean install
         working-directory: ./backend
 
       - name: Run Coverage
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: mvn jacoco:report
         working-directory: ./backend
 
       - name: JaCoCo Report to PR
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: Madrapps/jacoco-report@v1.6.1
         with:
           paths: ${{ github.workspace }}/backend/target/site/jacoco/jacoco.xml
@@ -40,6 +45,7 @@ jobs:
           fail-emoji: 🔴
 
       - name: Get the Coverage info
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: |
           echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
           echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
