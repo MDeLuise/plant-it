@@ -25,13 +25,14 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 
 
 ## Features highlight
-* Add existing plants using [Trefle API](https://trefle.io/) or user created plants to your collection
+* Add existing plants or user created plants to your collection
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
 * Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
 
 ## Quickstart
+### Server
 Installing Plant-it is pretty straight forward, in order to do so follow these steps:
 
 * Create a folder where you want to place all Plant-it related files.
@@ -107,7 +108,27 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
   ```
 * Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
 
-<a href="https://docs.plant-it.org/latest/installation/#configuration">Take a look at the documentation</a> in order to understand the available configurations.
+<a href="https://docs.plant-it.org/latest/server-installation/#configuration">Take a look at the documentation</a> in order to understand the available configurations.
+
+## App
+You can access the Plant-it service using the web app at `http://<server_ip>:3000`.
+
+For Android users, the app is also available as an APK, which can be downloaded either from the GitHub releases assets or from F-Droid.
+
+### Download
+- **GitHub Releases**: You can download the latest APK from the [GitHub releases page](https://github.com/MDeLuise/plant-it/releases/latest).
+  <p align="center">
+    <a href="https://github.com/MDeLuise/plant-it/releases/latest"><img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60" style="max-width: 200px"></a>
+  </p>
+
+- **F-Droid**: Alternatively, you can get the app from [F-Droid](https://f-droid.org/packages/com.github.mdeluise.plantit/).
+  <p align="center">
+    <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://camo.githubusercontent.com/f422f6f830e814ec7e766de8fef4db949c6add75a9d58548ab2f5d29855c0616/68747470733a2f2f6664726f69642e6769746c61622e696f2f617274776f726b2f62616467652f6765742d69742d6f6e2e706e67" alt="Get it on F-Droid" height="60" style="max-width: 200px"></a>
+  </p>
+
+### Installation
+For detailed instructions on how to install and configure the app, please refer to the [installation documentation](https://docs.plant-it.org/latest/app-installation/).
+
 
 ## Support the project
 If you find this project helpful and would like to supporting it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
