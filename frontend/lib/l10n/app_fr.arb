@@ -1,0 +1,390 @@
+{
+  "enterValue": "Veuillez saisir une valeur",
+  "enterValidURL": "Veuillez saisir une URL valide",
+  "go": "Continuer",
+  "noBackend": "Impossible de se connecter au serveur",
+  "ok": "Ok",
+  "serverURL": "URL du serveur",
+  "username": "Nom d'utilisateur",
+  "password": "Mot de passe",
+  "login": "Se connecter",
+  "badCredentials": "Identifiants incorrects",
+  "loginMessage": "Bienvenue sur",
+  "signupMessage": "Bienvenue sur",
+  "appName": "Plant-it",
+  "forgotPassword": "Mot de passe oublié?",
+  "areYouNew": "Êtes-vous nouveau?",
+  "createAccount": "Créer un compte",
+  "email": "Email",
+  "usernameSize": "La longueur du nom d'utilisateur doit être entre 3 et 20 caractères",
+  "passwordSize": "La longueur du mot de passe doit être entre 3 et 20 caractères",
+  "enterValidEmail": "Veuillez saisir une adresse email valide",
+  "alreadyRegistered": "Déjà enregistré?",
+  "signup": "S'inscrire",
+  "generalError": "Erreur lors de l'opération",
+  "error": "Erreur",
+  "details": "Détails",
+  "insertBackendURL": "Salut l'ami! Laissons la magie operer, commencez par configurer l'URL de votre serveur.",
+  "loginTagline": "Explorer, apprendre et cultiver!",
+  "singupTagline": "Cultivons ensemble!",
+  "sentOTPCode": "Veuillez insérer le code envoyé par email à: ",
+  "verify": "Vérifier",
+  "resendCode": "Renvoyer le code",
+  "otpCode": "Code OTP",
+  "splashLoading": "Beep boop beep... Chargement des données depuis le serveur!",
+  "welcomeBack": "Bienvenue de retour",
+  "hello": "Bonjour, {userName}",
+  "@hello": {
+    "description": "Une salutation à l'utilisateur",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "search": "Recherche",
+  "today": "aujourd'hui",
+  "yesterday": "hier",
+  "nDaysAgo": "Il y a {count} {count, plural, =1{jour} other{jours}}",
+  "@nDaysAgo": {
+    "description": "Indique le nombre de jours écoulés depuis un événement",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "Dans {count} {count, plural, =1{jour} other{jours}} à l'avenir (quoi?)",
+  "@nDaysInFuture": {
+    "description": "Indique le nombre de jours dans le futur",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "Il y a {count} {count, plural, =1{mois} other{mois}}",
+  "@nMonthsAgo": {
+    "description": "Indique le nombre de mois écoulés depuis un événement",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "Il y a {count} {count, plural, =1{an} other{ans}}",
+  "@nYearsAgo": {
+    "description": "Indique le nombre d'années écoulées depuis un événement",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "events": "Événements",
+  "plants": "Plantes",
+  "or": "ou",
+  "filter": "Filtre",
+  "seeding": "semis",
+  "watering": "arrosage",
+  "fertilizing": "fertilisation",
+  "biostimulating": "biostimulation",
+  "misting": "brumisation",
+  "transplanting": "transplantation",
+  "water_changing": "changement d'eau",
+  "observation": "observation",
+  "treatment": "traitement",
+  "propagating": "multiplication",
+  "pruning": "taille",
+  "repotting": "rempotage",
+  "recents": "Récents",
+  "addNewEvent": "Ajouter un nouvel événement",
+  "selectDate": "Sélectionner une date",
+  "selectEvents": "Sélectionner des événements",
+  "selectPlants": "Sélectionner des plantes",
+  "nEventsCreated": "{count} {count, plural, =1{événement} other{événements}} créés",
+  "@nEventsCreated": {
+    "description": "Nombre de nouveaux événements créés",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "Ajouter une note",
+  "enterNote": "Entrer une note",
+  "selectAtLeastOnePlant": "Sélectionnez au moins une plante",
+  "selectAtLeastOneEvent": "Sélectionnez au moins un événement",
+  "eventSuccessfullyUpdated": "Événement mis à jour avec succès",
+  "editEvent": "Modifier l'événement",
+  "eventSuccessfullyDeleted": "Événement supprimé avec succès",
+  "noInfoAvailable": "Aucune information disponible",
+  "species": "Espèce",
+  "plant": "Plante",
+  "scientificClassification": "Classification scientifique",
+  "family": "Famille",
+  "genus": "Genre",
+  "synonyms": "Synonymes",
+  "care": "Soins",
+  "light": "Lumière",
+  "humidity": "Humidité",
+  "maxTemp": "Température maximale",
+  "minTemp": "Température minimale",
+  "minPh": "pH minimal",
+  "maxPh": "pH maximal",
+  "info": "Info",
+  "addPhotos": "Ajouter des photos",
+  "addEvents": "Ajouter des événements",
+  "modifyPlant": "Modifier la plante",
+  "removePlant": "Supprimer la plante",
+  "useBirthday": "Utiliser la date de naissance",
+  "birthday": "Date de naissance",
+  "avatar": "Avatar",
+  "note": "Note",
+  "stats": "Statistiques",
+  "eventStats": "Statistiques des événements",
+  "age": "Âge",
+  "newBorn": "Nouveau-né",
+  "nDays": "{count} {count, plural, =1{jour} other{jours}}",
+  "@nDays": {
+    "description": "Nombre de jours qu'une entité a",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonths": "{count} {count, plural, =1{mois} other{mois}}",
+  "@nMonths": {
+    "description": "Nombre de mois qu'une entité a",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYears": "{count} {count, plural, =1{an} other{ans}}",
+  "@nYears": {
+    "description": "Nombre d'années qu'une entité a",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAndDays": "{months} {months, plural, =1{mois} other{mois}}, {days} {days, plural, =1{jour} other{jours}}",
+  "@nMonthsAndDays": {
+    "description": "Nombre de mois et de jours qu'une entité a",
+    "placeholders": {
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndDays": "{years} {years, plural, =1{an} other{ans}}, {days} {days, plural, =1{jour} other{jours}}",
+  "@nYearsAndDays": {
+    "description": "Nombre d'années et de jours qu'une entité a",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonths": "{years} {years, plural, =1{an} other{ans}}, {months} {months, plural, =1{mois} other{mois}}",
+  "@nYearsAndMonths": {
+    "description": "Nombre d'années et de mois qu'une entité a",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{an} other{ans}}, {months} {months, plural, =1{mois} other{mois}}, {days} {days, plural, =1{jour} other{jours}}",
+  "@nYearsAndMonthsAndDays": {
+    "description": "Nombre d'années, de mois et de jours qu'une entité a",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "name": "Nom",
+  "nOutOf": "{value} sur {max}",
+  "@nOutOf": {
+    "description": "Valeur dans une échelle",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "description": "Température",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "numberOfPhotos": "Nombre de photos",
+  "numberOfEvents": "Nombre d'événements",
+  "searchInYourPlants": "Recherche dans vos plantes",
+  "searchNewGreenFriends": "Rechercher de nouveaux amis verts",
+  "custom": "Personnalisé",
+  "addPlant": "Ajouter une plante",
+  "yes": "Oui",
+  "no": "Non",
+  "pleaseConfirm": "Veuillez confirmer",
+  "areYouSureToRemoveEvent": "Êtes-vous sûr de vouloir supprimer l'événement?",
+  "areYouSureToRemoveReminder": "Êtes-vous sûr de vouloir supprimer le rappel?",
+  "areYouSureToRemoveSpecies": "Êtes-vous sûr de vouloir supprimer l'espèce?",
+  "areYouSureToRemovePlant": "Êtes-vous sûr de vouloir supprimer la plante?",
+  "purchasedPrice": "Prix d'achat",
+  "seller": "Vendeur",
+  "location": "Emplacement",
+  "currency": "Devise",
+  "plantUpdatedSuccessfully": "Plante mise à jour avec succès",
+  "plantCreatedSuccessfully": "Plante créée avec succès",
+  "insertPrice": "Insérer le prix",
+  "noBirthday": "Pas de date d'anniversaire",
+  "appVersion": "Version de l'application",
+  "serverVersion": "Version du serveur",
+  "documentation": "Documentation",
+  "openSource": "Open source",
+  "reportIssue": "Signaler un problème",
+  "logout": "Déconnexion",
+  "eventCount": "Nombre d'événements",
+  "plantCount": "Nombre de plantes",
+  "speciesCount": "Nombre d'espèces",
+  "imageCount": "Nombre d'images",
+  "unknown": "Inconnu",
+  "account": "Compte",
+  "changePassword": "Changer de mot de passe",
+  "more": "Plus",
+  "editProfile": "Modifier le profil",
+  "currentPassword": "Mot de passe actuel",
+  "updatePassword": "Mettre à jour le mot de passe",
+  "updateProfile": "Mettre à jour le profil",
+  "newPassword": "Nouveau mot de passe",
+  "removeEvent": "Supprimer l'événement",
+  "appLog": "Journal de l'application",
+  "passwordUpdated": "Mot de passe mis à jour avec succès",
+  "userUpdated": "Utilisateur mis à jour avec succès",
+  "noChangesDetected": "Aucun changement détecté",
+  "plantDeletedSuccessfully": "Plante supprimée avec succès",
+  "server": "Serveur",
+  "notifications": "Notifications",
+  "changeServer": "Changer de serveur",
+  "serverUpdated": "Serveur mis à jour avec succès",
+  "changeNotifications": "Modifier les notifications",
+  "updateNotifications": "Mettre à jour les notifications",
+  "notificationUpdated": "Notification mise à jour avec succès",
+  "supportTheProject": "Soutenir le projet",
+  "buyMeACoffee": "Offrez-moi un café",
+  "gallery": "Galerie",
+  "photosOf": "Photos de {name}",
+  "@photosOf": {
+    "description": "Photo pour la plante",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nPhoto": "{count} {count, plural, =1{photo} other{photos}} téléchargées",
+  "@nPhoto": {
+    "description": "Nombre de photos téléchargées",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "errorCreatingPlant": "Erreur lors de la création de la plante",
+  "noImages": "Aucune image",
+  "errorCreatingSpecies": "Erreur lors de la création de l'espèce",
+  "errorUpdatingSpecies": "Erreur lors de la mise à jour de l'espèce",
+  "speciesUpdatedSuccessfully": "Espèce mise à jour avec succès",
+  "addCustom": "Ajouter personnalisé",
+  "speciesCreatedSuccessfully": "Espèce créée avec succès",
+  "uploadPhoto": "Télécharger une photo",
+  "linkURL": "URL du lien",
+  "url": "URL",
+  "submit": "Confirmer",
+  "cancel": "Annuler",
+  "actions": "Actions",
+  "areYouSureToRemovePhoto": "Êtes-vous sûr de vouloir supprimer la photo?",
+  "photoSuccessfullyDeleted": "Photo supprimée avec succès",
+  "errorUpdatingPlant": "Erreur lors de la mise à jour de la plante",
+  "reminders": "Rappels",
+  "selectStartDate": "Sélectionner la date de début",
+  "selectEndDate": "Sélectionner la date de fin",
+  "addNewReminder": "Ajouter un nouveau rappel",
+  "noEndDate": "Pas de date de fin",
+  "frequency": "Fréquence",
+  "repeatAfter": "Répéter après",
+  "addNew": "Ajouter un nouveau",
+  "reminderCreatedSuccessfully": "Rappel créé avec succès",
+  "startAndEndDateOrderError": "La date de début doit être antérieure à la date de fin",
+  "reminderUpdatedSuccessfully": "Rappel mis à jour avec succès",
+  "reminderDeletedSuccessfully": "Rappel supprimé avec succès",
+  "errorResettingPassword": "Erreur lors de la réinitialisation du mot de passe",
+  "resetPassword": "Réinitialiser le mot de passe",
+  "resetPasswordHeader": "Insérez le nom d'utilisateur ci-dessous pour envoyer une demande de réinitialisation de mot de passe",
+  "editReminder": "Modifier le rappel",
+  "ntfyServerUrl": "URL du serveur Ntfy",
+  "ntfyServerTopic": "Sujet du serveur Ntfy",
+  "ntfyServerUsername": "Nom d'utilisateur du serveur Ntfy",
+  "ntfyServerPassword": "Mot de passe du serveur Ntfy",
+  "ntfyServerToken": "Jeton du serveur Ntfy",
+  "enterValidTopic": "Veuillez entrer un sujet valide",
+  "ntfySettings": "Paramètres de Ntfy",
+  "ntfySettingsUpdated": "Paramètres de Ntfy mis à jour correctement",
+  "modifySpecies": "Modifier l'espèce",
+  "removeSpecies": "Supprimer l'espèce",
+  "speciesDeletedSuccessfully": "Espèce supprimée avec succès",
+  "success": "Succès",
+  "warning": "Avertissement",
+  "ops": "Ops!"
+}
