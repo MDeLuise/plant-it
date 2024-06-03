@@ -43,7 +43,7 @@ dependencies:
   cached_network_image_platform_interface: ^4.0.0
   easy_splash_screen: ^1.0.4
   smooth_page_indicator: ^1.1.0
-  skeletonizer: ^1.1.0
+  skeletonizer: ^1.2.0
   flutter_advanced_avatar: ^1.5.0
   provider: ^6.1.2
   nested_scroll_view_plus: ^2.0.0
