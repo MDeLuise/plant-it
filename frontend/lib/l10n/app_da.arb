@@ -1,0 +1,390 @@
+{
+  "enterValue": "Indtast venligst en værdi",
+  "enterValidURL": "Indtast venligst en gyldig URL",
+  "go": "Fortsæt",
+  "noBackend": "Kan ikke forbinde til serveren",
+  "ok": "Ok",
+  "serverURL": "Server URL",
+  "username": "Brugernavn",
+  "password": "Kodeord",
+  "login": "Log ind",
+  "badCredentials": "Dårlige konto-oplysninger",
+  "loginMessage": "Velkommen tilbage på",
+  "signupMessage": "Velkommen på",
+  "appName": "Plant-it",
+  "forgotPassword": "Glemt kodeord?",
+  "areYouNew": "Er du ny?",
+  "createAccount": "Opret en konto",
+  "email": "Email",
+  "usernameSize": "Brugernavn længde skal være mellem 3 og 20 karaktere",
+  "passwordSize": "Kodeord længe skal være mellem 3 og 20 karaktere",
+  "enterValidEmail": "Indtast venligst en gyldig email",
+  "alreadyRegistered": "Allerede registreret?",
+  "signup": "Tilmeld",
+  "generalError": "Fejl ved udførsel af handlingen",
+  "error": "Fejl",
+  "details": "Detaljer",
+  "insertBackendURL": "Hej ven! Lad os skabe magi, start ved at sætte din server URL op.",
+  "loginTagline": "Udforsk, lær og dyrk!",
+  "singupTagline": "Lad os vokse, sammen!",
+  "sentOTPCode": "Indsæt venligst koden der blev sendt til emailen: ",
+  "verify": "Verificer",
+  "resendCode": "Send kode igen",
+  "otpCode": "OTP kode",
+  "splashLoading": "Beep boop beep... Indlæser data fra serveren!",
+  "welcomeBack": "Velkommen tilbage",
+  "hello": "Halløj, {userName}",
+  "@hello": {
+    "description": "En velkomst til brugeren",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "search": "Søg",
+  "today": "i dag",
+  "yesterday": "i går",
+  "nDaysAgo": "{count} {count, plural, =1{dag} other{dage}} siden",
+  "@nDaysAgo": {
+    "description": "Beskriv hvor mange dage siden en begivenhed skete",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "{count} {count, plural, =1{dag} other{dage}} in fremtiden (vent hvad?)",
+  "@nDaysInFuture": {
+    "description": "Beskriv hvor mange dage i fremtiden en begivenhed skete",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "{count} {count, plural, =1{måned} other{måneder}} siden",
+  "@nMonthsAgo": {
+    "description": "Beskriv hvor mange måneder siden en begivenhed skete",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "{count} {count, plural, =1{år} other{år}} siden",
+  "@nYearsAgo": {
+    "description": "Beskriv hvor mange år siden en begivenhed skete",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "events": "Begivenheder",
+  "plants": "Planter",
+  "or": "eller",
+  "filter": "Filter",
+  "seeding": "såning",
+  "watering": "vander",
+  "fertilizing": "gøder",
+  "biostimulating": "bio-stimulerer",
+  "misting": "forstøver",
+  "transplanting": "transplanterer",
+  "water_changing": "skifter vand",
+  "observation": "observation",
+  "treatment": "behandling",
+  "propagating": "formerer",
+  "pruning": "beskærer",
+  "repotting": "repotter",
+  "recents": "Nylige",
+  "addNewEvent": "Tilføj ny begivenhed",
+  "selectDate": "Vælg dato",
+  "selectEvents": "Vælg begivenheder",
+  "selectPlants": "Vælg planter",
+  "nEventsCreated": "Oprettede {count} nye {count, plural, =1{begivenhed} other{begivenheder}}",
+  "@nEventsCreated": {
+    "description": "Hvor mange nye begivenheder oprettet",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "Tilføj note",
+  "enterNote": "Indtast note",
+  "selectAtLeastOnePlant": "Vælg mindst en plante",
+  "selectAtLeastOneEvent": "Vælg mindst en begivenhed",
+  "eventSuccessfullyUpdated": "Begivenhed opdateret succesfuldt",
+  "editEvent": "Rediger begivenhed",
+  "eventSuccessfullyDeleted": "Begivenhed slettet succesfuldt",
+  "noInfoAvailable": "Ingen information tilgængelig",
+  "species": "Species",
+  "plant": "Plante",
+  "scientificClassification": "Videnskabelig klassifikation",
+  "family": "Familie",
+  "genus": "Slægt",
+  "synonyms": "Synonymer",
+  "care": "Pasning",
+  "light": "Lys",
+  "humidity": "Fugtighed",
+  "maxTemp": "Maksimal temperatur",
+  "minTemp": "Minimum temperatur",
+  "minPh": "Minimum ph",
+  "maxPh": "Maksimal ph",
+  "info": "Information",
+  "addPhotos": "Tilføj billeder",
+  "addEvents": "Tilføj begivenheder",
+  "modifyPlant": "Modificer plante",
+  "removePlant": "Fjern plante",
+  "useBirthday": "Brug fødselsdag",
+  "birthday": "Fødselsdag",
+  "avatar": "Avatar",
+  "note": "Note",
+  "stats": "Statistikker",
+  "eventStats": "Begivenheds statistikker",
+  "age": "Alder",
+  "newBorn": "Nyfødt",
+  "nDays": "{count} {count, plural, =1{dag} other{dage}}",
+  "@nDays": {
+    "description": "Hvor mange dage en enhed har",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonths": "{count} {count, plural, =1{måned} other{måneder}}",
+  "@nMonths": {
+    "description": "Hvor mange måneder en enhed har",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYears": "{count} {count, plural, =1{år} other{år}}",
+  "@nYears": {
+    "description": "Hvor mange år en enhed har",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAndDays": "{months} {months, plural, =1{måned} other{måneder}}, {days} {days, plural, =1{dag} other{dage}}",
+  "@nMonthsAndDays": {
+    "description": "Hvor mange måneder og dage en enhed har",
+    "placeholders": {
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndDays": "{years} {years, plural, =1{år} other{år}}, {days} {days, plural, =1{dag} other{dage}}",
+  "@nYearsAndDays": {
+    "description": "Hvor mange år og dage en enhed har",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonths": "{years} {years, plural, =1{år} other{år}}, {months} {months, plural, =1{måned} other{måneder}}",
+  "@nYearsAndMonths": {
+    "description": "Hvor mange år og måneder en enhed har",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{år} other{år}}, {months} {months, plural, =1{måned} other{måneder}}, {days} {days, plural, =1{dag} other{dage}}",
+  "@nYearsAndMonthsAndDays": {
+    "description": "Hvor mange år, måneder og dage en enhed har",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "name": "Name",
+  "nOutOf": "{value} ud af {max}",
+  "@nOutOf": {
+    "description": "Værdig i en skala",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "description": "Temperatur",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "numberOfPhotos": "Antal billeder",
+  "numberOfEvents": "Antal begivenheder",
+  "searchInYourPlants": "Søg i dine planter",
+  "searchNewGreenFriends": "Søg nye grønne venner",
+  "custom": "Tilpasset",
+  "addPlant": "Tilføj Plante",
+  "yes": "Ja",
+  "no": "Nej",
+  "pleaseConfirm": "Bekræft venligst",
+  "areYouSureToRemoveEvent": "Er du sikker på du vil fjerne begivenheden?",
+  "areYouSureToRemoveReminder": "Er du sikker på du vil fjerne påmindelsen?",
+  "areYouSureToRemoveSpecies": "Er du sikker på du vil fjerne arten?",
+  "areYouSureToRemovePlant": "Er du sikker på du vil fjerne planten?",
+  "purchasedPrice": "Købspris",
+  "seller": "Sælger",
+  "location": "Lokation",
+  "currency": "Valuta",
+  "plantUpdatedSuccessfully": "Plante opdateret succesfuldt",
+  "plantCreatedSuccessfully": "Plante oprettet succesfuldt",
+  "insertPrice": "Indsæt pris",
+  "noBirthday": "Ingen fødselsdag",
+  "appVersion": "App version",
+  "serverVersion": "Server version",
+  "documentation": "Dokumentation",
+  "openSource": "Åben kilde",
+  "reportIssue": "Anmeld fejl",
+  "logout": "Log ud",
+  "eventCount": "Begivenhed optælling",
+  "plantCount": "Plante optælling",
+  "speciesCount": "Art optælling",
+  "imageCount": "Billede optælling",
+  "unknown": "Ukendt",
+  "account": "Konto",
+  "changePassword": "Skift kodeord",
+  "more": "Mere",
+  "editProfile": "Rediger profil",
+  "currentPassword": "Nuværende kodeord",
+  "updatePassword": "Opdater kodeord",
+  "updateProfile": "Opdater profil",
+  "newPassword": "Nyt kodeord",
+  "removeEvent": "Fjern begivenhed",
+  "appLog": "App log",
+  "passwordUpdated": "Kodeord succesfuldt opdateret",
+  "userUpdated": "Bruger succesfuldt opdateret",
+  "noChangesDetected": "Ingen ændringer registreret",
+  "plantDeletedSuccessfully": "Plante succesfuldt slettet",
+  "server": "Server",
+  "notifications": "Notifikationer",
+  "changeServer": "Skift server",
+  "serverUpdated": "Server succesfuldt opdateret",
+  "changeNotifications": "Skift notifikationer",
+  "updateNotifications": "Opdater notifications",
+  "notificationUpdated": "Notifikationer succesfuldt opdateret",
+  "supportTheProject": "Støt projektet",
+  "buyMeACoffee": "Køb mig en kaffe",
+  "gallery": "Galleri",
+  "photosOf": "Billeder af {name}",
+  "@photosOf": {
+    "description": "Billede til plante",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nPhoto": "Uploadet {count} nye {count, plural, =1{billede} other{billeder}}",
+  "@nPhoto": {
+    "description": "Hvor mange billeder er blevet uploadet",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "errorCreatingPlant": "Fejl ved oprettelse af plante",
+  "noImages": "Ingen billeder",
+  "errorCreatingSpecies": "Fejl ved oprettelse af art",
+  "errorUpdatingSpecies": "Fejl ved opdatering af art",
+  "speciesUpdatedSuccessfully": "Art succesfuldt opdateret",
+  "addCustom": "Tilføj tilpasset",
+  "speciesCreatedSuccessfully": "Art succesfuldt oprettet",
+  "uploadPhoto": "Upload Billede",
+  "linkURL": "Link URL",
+  "url": "URL",
+  "submit": "Bekræft",
+  "cancel": "Annuller",
+  "actions": "Handlinger",
+  "areYouSureToRemovePhoto": "Er du sikker på du vil fjerne billedet?",
+  "photoSuccessfullyDeleted": "Billede slettet succesfuldt",
+  "errorUpdatingPlant": "Fejl ved at opdatere plante",
+  "reminders": "Påmindelser",
+  "selectStartDate": "Vælg start dato",
+  "selectEndDate": "Vælg slut dato",
+  "addNewReminder": "Tilføj ny påmindelse",
+  "noEndDate": "Ingen slut dato",
+  "frequency": "Hyppighed",
+  "repeatAfter": "Gentag efter",
+  "addNew": "Tilføj ny",
+  "reminderCreatedSuccessfully": "Påmindelse succesfuldt oprettet",
+  "startAndEndDateOrderError": "Start dato skal være før slut dato",
+  "reminderUpdatedSuccessfully": "Påmindelse succesfuldt opdateret",
+  "reminderDeletedSuccessfully": "Påmindelse succesfuldt slettet",
+  "errorResettingPassword": "Fejl ved nulstilling af kodeord",
+  "resetPassword": "Nulstil kodeord",
+  "resetPasswordHeader": "Indsat brugernavn herunder, for at sende en \"nulstil kodeord\" forespørgsel",
+  "editReminder": "Rediger påmindelse",
+  "ntfyServerUrl": "Ntfy server URL",
+  "ntfyServerTopic": "Ntfy server emne",
+  "ntfyServerUsername": "Ntfy server brugernavn",
+  "ntfyServerPassword": "Ntfy server kodeord",
+  "ntfyServerToken": "Ntfy server token",
+  "enterValidTopic": "Indtast venligst et gyldigt emne",
+  "ntfySettings": "Ntfy indstillinger",
+  "ntfySettingsUpdated": "Ntfy indstillinger korrekt opdateret",
+  "modifySpecies": "Modificer art",
+  "removeSpecies": "Slet art",
+  "speciesDeletedSuccessfully": "Art succesfuldt slettet",
+  "success": "Succes",
+  "warning": "Advarsel",
+  "ops": "Ups!"
+}
