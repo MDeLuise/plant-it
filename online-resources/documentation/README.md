@@ -11,7 +11,7 @@ Before editing the project documentation, ensure that you have Python 3 installe
    pip install -r requirements.txt
    ```
 
-2. Navigate to the `doc/` directory.
+2. Navigate to the `docs/` directory.
 
 3. Edit the documentation files as needed.
 

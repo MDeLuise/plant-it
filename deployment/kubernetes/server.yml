@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+  labels:
+    app: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: msdeluise/plant-it-server:latest
+        ports:
+        - containerPort: 8080
+        - containerPort: 3000
+        env:
+        - name: MYSQL_PSW
+          valueFrom:
+            secretKeyRef:
+              name: plantitsecret
+              key: MYSQL_PSW
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: plantitsecret
+              key: JWT_SECRET
+        - name: TREFLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: plantitsecret
+              key: TREFLE_KEY
+        envFrom:
+        - configMapRef:
+            name: plantitconfig
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  type: NodePort
+  selector:
+    app: server
+  ports:
+    - name: api
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30101
+    - name: app
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30100

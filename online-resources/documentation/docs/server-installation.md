@@ -405,3 +405,91 @@ In order to use it, simply place the widget as above in the configuration yml fi
       key: <you-key>
 ```
 You can get the API Key following the step in the relative section.
+
+## Kubernetes Deployment
+This guide will help you deploy your project using Kubernetes with Minikube. Follow the steps below to set up and access your application.
+
+### Prerequisites
+- Ensure you have Minikube installed and running.
+- Ensure `kubectl` is installed and configured to communicate with your Minikube cluster.
+- (if using [Helm](https://helm.sh/)) Ensure Helm is installed.
+
+### Deployment Steps
+
+#### Using kubectl
+First, download the contents of the `deployment/kubernetes` [directory from the project repository](https://github.com/MDeLuise/plant-it/tree/main/deployment/kubernetes), then:
+
+1. **Run Minikube:**
+   ```sh
+   minikube start --driver=docker --mount --mount-string="/tmp/plant-it-data:/mnt/data"
+   ```
+
+2. **Deploy the DB Secrets:**
+   ```sh
+   kubectl apply -f secret.yml
+   ```
+
+3. **Deploy the DB ConfigMaps:**
+   ```sh
+   kubectl apply -f config.yml
+   ```
+
+4. **Deploy the Database:**
+   ```sh
+   kubectl apply -f db.yml
+   ```
+
+5. **Deploy the Cache:**
+   ```sh
+   kubectl apply -f cache.yml
+   ```
+
+6. **Deploy the Server:**
+   ```sh
+   kubectl apply -f server.yml
+   ```
+
+If you want to change the configuration values, edit the content of `config.yml` and `secret.yml` files.
+
+#### Using Helm
+First, download the contents of the `deployment/helm` [directory from the project repository](https://github.com/MDeLuise/plant-it/tree/main/deployment/helm), then:
+
+1. **Run Minikube:**
+   ```sh
+   minikube start --driver=docker --mount --mount-string="/tmp/plant-it-data:/mnt/data"
+   ```
+
+2. **Create and Modify `my-values.yml` File:**
+   Create a new file called `my-values.yml` to override the default settings provided in the `values.yml` file. You can copy the content from `values.yml` and modify it according to your configuration needs. This ensures your custom values are applied without altering the default configuration.
+
+3. **Install the Helm Chart:**
+   ```sh
+   helm install plantit helm --values helm/values.yml -f helm/my-values.yml
+   ```
+   This command confirms that the values in `helm/values.yml` will be used as the base configuration, and any values specified in `helm/my-values.yml` will override the defaults.
+
+#### Using TrueCharts
+The Plant-it service is also available on TrueCharts, which simplifies the deployment process. You can find the chart for Plant-it [here](https://truecharts.org/charts/incubator/plant-it/). 
+
+Please note that I am not the creator of these charts. For any issues or detailed instructions on how to deploy using TrueCharts, please refer to the official [TrueCharts documentation](https://truecharts.org/guides/).
+
+### Access the Application
+Once the deployment is complete, you can access the application and its Swagger UI at the following URLs:
+
+- **Application:** `http://<minikube_ip>:3000`
+- **Swagger UI:** `http://<minikube_ip>:8080/api/swagger-ui/index.html`
+
+Replace `<minikube_ip>` with the IP address returned by the following command:
+
+```sh
+minikube ip
+```
+
+#### ⚠ Known Issue - Minikube IP not Accessible
+If you encounter issues accessing the NodePort service using `MinikubeIP:NodePort`, execute the following command to expose the service and obtain a direct URL:
+
+```sh
+minikube service server-service
+```
+
+Then, open the printed links in your browser to access the application and Swagger UI.

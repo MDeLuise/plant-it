@@ -1,0 +1,14 @@
+apiVersion: v2
+name: Plant-it
+description: Self-hosted, open source gardening companion app
+type: application
+version: 0.1.0
+icon: https://github.com/MDeLuise/plant-it/blob/main/images/plant-it-logo.png?raw=true
+keywords:
+  - plants
+  - companion
+sources:
+  - https://github.com/MDeLuise/plant-it
+maintainers:
+  - name: MDeLuise
+    url: https://massimilianodeluise.com/

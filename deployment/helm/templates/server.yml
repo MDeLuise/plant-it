@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+  labels:
+    app: {{ .Values.serverName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.serverName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.serverName }}
+    spec:
+      containers:
+      - name: {{ .Values.serverName }}
+        image: "{{ .Values.image.server.name }}:{{ .Values.image.server.tag }}"
+        ports:
+        - containerPort: {{ .Values.configmap.data.API_PORT }}
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.configmap.name }}
+        env:
+        - name: MYSQL_PSW
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secret.name }}
+              key: MYSQL_PSW
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secret.name }}
+              key: JWT_SECRET
+        - name: TREFLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secret.name }}
+              key: TREFLE_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Values.serverName }}
+  ports:
+    - name: api
+      protocol: TCP
+      port: {{ .Values.configmap.data.API_PORT }}
+      targetPort: {{ .Values.configmap.data.API_PORT }}
+      nodePort: 30101
+    - name: app
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30100

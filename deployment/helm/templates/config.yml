@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configmap.name }}
+data:
+  MYSQL_URL: "{{ .Values.configmap.data.MYSQL_URL }}"
+  MYSQL_HOST: "{{ .Values.configmap.data.MYSQL_HOST }}"
+  MYSQL_PORT: "{{ .Values.configmap.data.MYSQL_PORT }}"
+  MYSQL_USERNAME: "{{ .Values.configmap.data.MYSQL_USERNAME }}"
+  MYSQL_DATABASE: "{{ .Values.configmap.data.MYSQL_DATABASE }}"
+  JWT_EXP: "{{ .Values.configmap.data.JWT_EXP }}"
+  USERS_LIMIT: "{{ .Values.configmap.data.USERS_LIMIT }}"
+  UPLOAD_DIR: "{{ .Values.configmap.data.UPLOAD_DIR }}"
+  API_PORT: "{{ .Values.configmap.data.API_PORT }}"
+  LOG_LEVEL: "{{ .Values.configmap.data.LOG_LEVEL }}"
+  ALLOWED_ORIGINS: "{{ .Values.configmap.data.ALLOWED_ORIGINS }}"
+  CACHE_TTL: "{{ .Values.configmap.data.CACHE_TTL }}"
+  CACHE_HOST: "{{ .Values.configmap.data.CACHE_HOST }}"
+  CACHE_PORT: "{{ .Values.configmap.data.CACHE_PORT }}"
+  SSL_ENABLED: "{{ .Values.configmap.data.SSL_ENABLED }}"
+  CERTIFICATE_PATH: "{{ .Values.configmap.data.CERTIFICATE_PATH }}"
