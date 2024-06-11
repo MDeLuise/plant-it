@@ -585,6 +585,96 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kubernetes-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-kubectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using kubectl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Helm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-truecharts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using TrueCharts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access the Application
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Access the Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-issue-minikube-ip-not-accessible" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ Known Issue - Minikube IP not Accessible
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1066,6 +1156,86 @@ In order to use it, simply place the widget as above in the configuration yml fi
       key: &lt;you-key&gt;
 </code></pre></div>
 You can get the API Key following the step in the relative section.</p>
+<h2 id="kubernetes-deployment">Kubernetes Deployment</h2>
+<p>This guide will help you deploy your project using Kubernetes with Minikube. Follow the steps below to set up and access your application.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Ensure you have Minikube installed and running.</li>
+<li>Ensure <code>kubectl</code> is installed and configured to communicate with your Minikube cluster.</li>
+<li>(if using <a href="https://helm.sh/">Helm</a>) Ensure Helm is installed.</li>
+</ul>
+<h3 id="deployment-steps">Deployment Steps</h3>
+<h4 id="using-kubectl">Using kubectl</h4>
+<p>First, download the contents of the <code>deployment/kubernetes</code> <a href="https://github.com/MDeLuise/plant-it/tree/main/deployment/kubernetes">directory from the project repository</a>, then:</p>
+<ol>
+<li>
+<p><strong>Run Minikube:</strong>
+   <div class="highlight"><pre><span></span><code>minikube<span class="w"> </span>start<span class="w"> </span>--driver<span class="o">=</span>docker<span class="w"> </span>--mount<span class="w"> </span>--mount-string<span class="o">=</span><span class="s2">&quot;/tmp/plant-it-data:/mnt/data&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy the DB Secrets:</strong>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>secret.yml
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy the DB ConfigMaps:</strong>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>config.yml
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy the Database:</strong>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>db.yml
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy the Cache:</strong>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>cache.yml
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy the Server:</strong>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>server.yml
+</code></pre></div></p>
+</li>
+</ol>
+<p>If you want to change the configuration values, edit the content of <code>config.yml</code> and <code>secret.yml</code> files.</p>
+<h4 id="using-helm">Using Helm</h4>
+<p>First, download the contents of the <code>deployment/helm</code> <a href="https://github.com/MDeLuise/plant-it/tree/main/deployment/helm">directory from the project repository</a>, then:</p>
+<ol>
+<li>
+<p><strong>Run Minikube:</strong>
+   <div class="highlight"><pre><span></span><code>minikube<span class="w"> </span>start<span class="w"> </span>--driver<span class="o">=</span>docker<span class="w"> </span>--mount<span class="w"> </span>--mount-string<span class="o">=</span><span class="s2">&quot;/tmp/plant-it-data:/mnt/data&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create and Modify <code>my-values.yml</code> File:</strong>
+   Create a new file called <code>my-values.yml</code> to override the default settings provided in the <code>values.yml</code> file. You can copy the content from <code>values.yml</code> and modify it according to your configuration needs. This ensures your custom values are applied without altering the default configuration.</p>
+</li>
+<li>
+<p><strong>Install the Helm Chart:</strong>
+   <div class="highlight"><pre><span></span><code>helm<span class="w"> </span>install<span class="w"> </span>plantit<span class="w"> </span>helm<span class="w"> </span>--values<span class="w"> </span>helm/values.yml<span class="w"> </span>-f<span class="w"> </span>helm/my-values.yml
+</code></pre></div>
+   This command confirms that the values in <code>helm/values.yml</code> will be used as the base configuration, and any values specified in <code>helm/my-values.yml</code> will override the defaults.</p>
+</li>
+</ol>
+<h4 id="using-truecharts">Using TrueCharts</h4>
+<p>The Plant-it service is also available on TrueCharts, which simplifies the deployment process. You can find the chart for Plant-it <a href="https://truecharts.org/charts/incubator/plant-it/">here</a>. </p>
+<p>Please note that I am not the creator of these charts. For any issues or detailed instructions on how to deploy using TrueCharts, please refer to the official <a href="https://truecharts.org/guides/">TrueCharts documentation</a>.</p>
+<h3 id="access-the-application">Access the Application</h3>
+<p>Once the deployment is complete, you can access the application and its Swagger UI at the following URLs:</p>
+<ul>
+<li><strong>Application:</strong> <code>http://&lt;minikube_ip&gt;:3000</code></li>
+<li><strong>Swagger UI:</strong> <code>http://&lt;minikube_ip&gt;:8080/api/swagger-ui/index.html</code></li>
+</ul>
+<p>Replace <code>&lt;minikube_ip&gt;</code> with the IP address returned by the following command:</p>
+<div class="highlight"><pre><span></span><code>minikube<span class="w"> </span>ip
+</code></pre></div>
+<h4 id="known-issue-minikube-ip-not-accessible">⚠ Known Issue - Minikube IP not Accessible</h4>
+<p>If you encounter issues accessing the NodePort service using <code>MinikubeIP:NodePort</code>, execute the following command to expose the service and obtain a direct URL:</p>
+<div class="highlight"><pre><span></span><code>minikube<span class="w"> </span>service<span class="w"> </span>server-service
+</code></pre></div>
+<p>Then, open the printed links in your browser to access the application and Swagger UI.</p>
 
 
 
