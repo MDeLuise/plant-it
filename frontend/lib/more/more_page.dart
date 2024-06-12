@@ -214,7 +214,7 @@ class _MorePageState extends State<MorePage> {
               ),
               SettingsExternalLink(
                 title: AppLocalizations.of(context).documentation,
-                url: "https://docs.plant-it.org/",
+                url: "https://docs.plant-it.org/latest",
               ),
               SettingsExternalLink(
                 title: AppLocalizations.of(context).openSource,
