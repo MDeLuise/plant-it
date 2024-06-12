@@ -142,6 +142,31 @@ SMTP_AUTH=
 SMTP_START_TTL=
 ```
 
+### Integration with Trefle Service
+To enhance your application with plant search capabilities, you can integrate with the Trefle service. Trefle provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the Trefle service in your project:
+
+1. **Create an Account on Trefle:**
+   - Visit the [Trefle website](https://trefle.io/) and sign up for an account.
+   - Follow the registration process to verify your account.
+
+2. **Retrieve the API Key:**
+   - Once your account is set up, log in to your Trefle account.
+   - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the Trefle API.
+
+3. **Configure the API Key:**
+   - Open the `server.env` file in your project.
+   - Add the following line to the file, replacing `YOUR_TREFLE_API_KEY` with the actual API key you obtained from Trefle:
+
+     ```sh
+     TREFLE_KEY=YOUR_TREFLE_API_KEY
+     ```
+
+4. **Save and Restart Your Server:**
+   - Save the changes made to the `server.env` file.
+   - Restart your server to apply the new configuration.
+
+By following these steps, you enable your application to use the Trefle service for searching and retrieving information about existing plants. Ensure that your API key is kept secure and not exposed publicly to avoid unauthorized access.
+
 ## Change ports binding
 ### Backend
 If you don't want to use the default port `8080`, you can do the following:
