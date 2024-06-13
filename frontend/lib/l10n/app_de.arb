@@ -386,5 +386,6 @@
   "speciesDeletedSuccessfully": "Art erfolgreich gelöscht",
   "success": "Erfolg",
   "warning": "Warnung",
-  "ops": "Hoppla!"
+  "ops": "Hoppla!",
+  "changeLanguage": "Sprache ändern"
 }
