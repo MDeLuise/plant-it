@@ -143,6 +143,14 @@ SMTP_START_TTL=
 ```
 
 ### Integration with Trefle Service
+!!! warning end "Trefle Service Inactivity"
+
+    The Trefle service, which Plant-it relies on for plant data, appears to be inactive. There have been no updates to their database, and [their repository](https://github.com/treflehq/trefle-api) shows no recent activity, with several open issues dating back years.
+
+    I am currently exploring the best way to move forward. My initial plan is to create a new project that will start by incorporating all the information from the Trefle database. Over time, this new service will be expanded with additional information as requested by users, such as "Hardiness Zone."
+
+    Due to the expiration of the Trefle service's SSL certificate, users need to set the `TREFLE_SSL_VERIFICATION` property to `false` (default value) in order to bypass SSL verification. This is a temporary fix to address the issue until we can complete the transition to the new service.
+
 To enhance your application with plant search capabilities, you can integrate with the Trefle service. Trefle provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the Trefle service in your project:
 
 1. **Create an Account on Trefle:**
@@ -155,10 +163,11 @@ To enhance your application with plant search capabilities, you can integrate wi
 
 3. **Configure the API Key:**
    - Open the `server.env` file in your project.
-   - Add the following line to the file, replacing `YOUR_TREFLE_API_KEY` with the actual API key you obtained from Trefle:
+   - Add the following lines to the file, replacing `YOUR_TREFLE_API_KEY` with the actual API key you obtained from Trefle:
 
      ```sh
      TREFLE_KEY=YOUR_TREFLE_API_KEY
+     TREFLE_SSL_VERIFICATION=false
      ```
 
 4. **Save and Restart Your Server:**

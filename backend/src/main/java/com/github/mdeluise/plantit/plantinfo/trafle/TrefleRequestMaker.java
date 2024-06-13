@@ -7,10 +7,18 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoCreator;
@@ -29,17 +37,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("ClassDataAbstractionCoupling")
 @Component
 public class TrefleRequestMaker {
     private final String token;
     private final String domain = "https://trefle.io";
     private final String baseEndpoint = domain + "/api/v1";
+    private final boolean trefleSSLVerification;
     private final Logger logger = LoggerFactory.getLogger(TrefleRequestMaker.class);
 
 
     @Autowired
-    public TrefleRequestMaker(@Value("${trefle.key}") String token) {
+    public TrefleRequestMaker(@Value("${trefle.key}") String token,
+                              @Value("${trefle.ssl.verification.enabled}") boolean trefleSSLVerification) {
         this.token = token;
+        this.trefleSSLVerification = trefleSSLVerification;
     }
 
 
@@ -51,7 +63,7 @@ public class TrefleRequestMaker {
             String.format("%s/species/search?q=%s&limit=%s&page=%s&token=%s", baseEndpoint, encodedPartialName,
                           pageable.getPageSize(), pageable.getPageNumber() + 1, token
             );
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -162,7 +174,7 @@ public class TrefleRequestMaker {
     protected JsonObject getPlantGrowthJson(JsonObject plantJson) {
         final String link = plantJson.get("links").getAsJsonObject().get("self").getAsString();
         final String url = String.format("%s%s?token=%s", domain, link, token);
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -187,7 +199,7 @@ public class TrefleRequestMaker {
     private JsonObject getSynonymsJson(JsonObject searchSpeciesJson) {
         final String link = searchSpeciesJson.get("links").getAsJsonObject().get("self").getAsString();
         final String url = String.format("%s%s?token=%s", domain, link, token);
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -215,7 +227,7 @@ public class TrefleRequestMaker {
             String.format("%s/species/search?limit=%s&page=%s&token=%s&q=*", baseEndpoint, pageable.getPageSize(),
                           pageable.getPageNumber() + 1, token
             );
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -248,7 +260,7 @@ public class TrefleRequestMaker {
         final String encodedSpecies = URLEncoder.encode(species, StandardCharsets.UTF_8);
         final String url =
             String.format("%s/species/search?limit=1&page=1&token=%s&q=%s", baseEndpoint, token, encodedSpecies);
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -271,7 +283,7 @@ public class TrefleRequestMaker {
 
     public PlantCareInfo getPlantCare(BotanicalInfo toUpdate) {
         final String url = String.format("%s/species/%s?token=%s", baseEndpoint, toUpdate.getExternalId(), token);
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -295,7 +307,7 @@ public class TrefleRequestMaker {
 
     public Set<String> getSynonyms(BotanicalInfo toUpdate) {
         final String url = String.format("%s/species/%s?token=%s", baseEndpoint, toUpdate.getExternalId(), token);
-        final HttpClient client = HttpClient.newHttpClient();
+        final HttpClient client = getHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         HttpResponse<String> response;
@@ -313,6 +325,48 @@ public class TrefleRequestMaker {
             logger.error(
                 String.format("Error while retrieving growth of species %s from Trefle.", toUpdate.getExternalId()));
             return null;
+        }
+    }
+
+
+    /**
+     * Returns an HttpClient instance. If trefleSSLVerification is true, it returns a default HttpClient.
+     * Otherwise, it returns an HttpClient with SSL verification disabled.
+     * This method is needed only because the Trefle service certificate is expired.
+     * It disables the check of the certificate if the user wants to use the Trefle service.
+     * This is a temporary patch before migrating to another service.
+     */
+    private HttpClient getHttpClient() {
+        if (trefleSSLVerification) {
+            return HttpClient.newHttpClient();
+        }
+        return HttpClient.newBuilder().sslContext(trustAllSSLContext()).build();
+    }
+
+
+    private SSLContext trustAllSSLContext() {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+        SSLContext sslContext;
+        try {
+            sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            return sslContext;
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
         }
     }
 }
