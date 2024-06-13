@@ -37,6 +37,18 @@ final ThemeData theme = ThemeData(
         color: Color.fromARGB(255, 221, 220, 220)), // Large body text color
   ),
 
+  // Radio button style
+  radioTheme: RadioThemeData( 
+    fillColor: MaterialStateProperty.resolveWith<Color>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return Colors.grey; // Color when radio button is disabled
+        }
+        return Colors.white; // Color when radio button is enabled
+      },
+    ),
+  ),
+
   // Form field styles
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(

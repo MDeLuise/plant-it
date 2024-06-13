@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/app_http_client.dart';
@@ -11,6 +10,7 @@ import 'package:plant_it/splash_screen.dart';
 import 'package:plant_it/template.dart';
 import 'package:plant_it/theme.dart';
 import 'package:plant_it/toast/toast_manager.dart';
+import 'package:plant_it/locale_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,6 +33,7 @@ void main() async {
       eventTypes: [],
       plants: [],
     );
+
     if (isLoggedIn) {
       if (prefs.containsKey('serverURL')) {
         final String? serverURL = prefs.getString("serverURL");
@@ -60,20 +61,27 @@ void main() async {
       }
     }
 
+    Locale? prefSavedLocale;
+    if (prefs.containsKey('language_code')) {
+      prefSavedLocale = Locale(
+          prefs.getString('language_code')!, prefs.getString('country_code'));
+    }
+
     runApp(
-      ChangeNotifierProvider(
-        create: (context) => EventsNotifier(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => EventsNotifier()),
+          ChangeNotifierProvider(create: (context) => LocaleProvider()),
+        ],
         child: Container(
           color: const Color(0xFF061913),
           child: Center(
             child: SizedBox(
               width: maxWidth,
-              child: MaterialApp(
-                title: 'Plant-it',
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                theme: theme,
-                home: isLoggedIn ? SplashPage(env: env) : SetServer(env: env),
+              child: MyApp(
+                env: env,
+                isLoggedIn: isLoggedIn,
+                prefSavedLocale: prefSavedLocale,
               ),
             ),
           ),
@@ -86,4 +94,52 @@ void main() async {
           ToastNotificationType.error, error.cause);
     }
   });
+}
+
+class MyApp extends StatefulWidget {
+  final Environment env;
+  final bool isLoggedIn;
+  final Locale? prefSavedLocale;
+
+  const MyApp({
+    super.key,
+    required this.env,
+    required this.isLoggedIn,
+    this.prefSavedLocale,
+  });
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _updatedLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<LocaleProvider>(context, listen: false).addListener(() async {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('language_code')) {
+        _updatedLocale = Locale(
+            prefs.getString('language_code')!, prefs.getString('country_code'));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+
+    return MaterialApp(
+      title: 'Plant-it',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _updatedLocale ?? widget.prefSavedLocale ?? localeProvider.locale,
+      theme: theme,
+      home: widget.isLoggedIn
+          ? SplashPage(env: widget.env)
+          : SetServer(env: widget.env),
+    );
+  }
 }

@@ -387,5 +387,6 @@
   "speciesDeletedSuccessfully": "Specie eliminata correttamente",
   "success": "Successo",
   "warning": "Attenzione",
-  "ops": "Ops!"
+  "ops": "Ops!",
+  "changeLanguage": "Cambia lingua"
 }

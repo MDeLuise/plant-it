@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/logger/logger.dart' as my_logger;
+import 'package:plant_it/more/change_language_page.dart';
 import 'package:plant_it/more/change_notifications.dart';
 import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/change_server_page.dart';
@@ -142,6 +143,17 @@ class _MorePageState extends State<MorePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChangePasswordPage(
+                      env: widget.env,
+                    ),
+                  ),
+                ),
+              ),
+              SettingsInternalLink(
+                title: AppLocalizations.of(context).changeLanguage,
+                onClick: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeLanguagePage(
                       env: widget.env,
                     ),
                   ),
