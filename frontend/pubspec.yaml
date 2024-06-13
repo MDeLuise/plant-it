@@ -48,7 +48,7 @@ dependencies:
   provider: ^6.1.2
   nested_scroll_view_plus: ^2.0.0
   url_launcher: ^6.3.0
-  package_info_plus: ^6.0.0
+  package_info_plus: ^8.0.0
   talker: ^4.2.4
   talker_flutter: ^4.2.4
   toastification: ^2.0.0
