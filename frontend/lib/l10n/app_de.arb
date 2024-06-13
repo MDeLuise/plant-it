@@ -372,5 +372,19 @@
   "errorResettingPassword": "Fehler beim Zurücksetzen des Passworts",
   "resetPassword": "Passwort zurücksetzen",
   "resetPasswordHeader": "Gib unten den Benutzernamen ein, um eine Passwort-Zurücksetzanforderung zu senden",
-  "editReminder": "Erinnerung bearbeiten"
+  "editReminder": "Erinnerung bearbeiten",
+  "ntfyServerUrl": "Ntfy Server URL",
+  "ntfyServerTopic": "Ntfy Server Thema",
+  "ntfyServerUsername": "Ntfy Server Benutzername",
+  "ntfyServerPassword": "Ntfy Server Passwort",
+  "ntfyServerToken": "Ntfy Server Token",
+  "enterValidTopic": "Bitte gültiges Thema eingeben",
+  "ntfySettings": "Ntfy Einstellungen",
+  "ntfySettingsUpdated": "Ntfy Einstellungen erfolgreich aktualisiert",
+  "modifySpecies": "Art bearbeiten",
+  "removeSpecies": "Art löschen",
+  "speciesDeletedSuccessfully": "Art erfolgreich gelöscht",
+  "success": "Erfolg",
+  "warning": "Warnung",
+  "ops": "Hoppla!"
 }
