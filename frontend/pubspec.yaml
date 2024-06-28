@@ -49,7 +49,7 @@ dependencies:
   nested_scroll_view_plus: ^2.0.0
   url_launcher: ^6.3.0
   package_info_plus: ^6.0.0
-  talker: ^4.2.4
+  talker: ^4.3.1
   talker_flutter: ^4.2.4
   toastification: ^2.0.0
   image_picker: ^1.0.7
