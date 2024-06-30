@@ -25,6 +25,10 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 
 
 ## Features highlight
+> [!NOTE]
+> Unfortunately, the Trefle service is no longer operational. The project is inactive, and while the dataset was accessible until now, it is no longer available.
+> I am currently working on a replacement for this service, as mentioned in [issue #218](https://github.com/MDeLuise/plant-it/issues/218).
+
 * Add existing plants or user created plants to your collection
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
