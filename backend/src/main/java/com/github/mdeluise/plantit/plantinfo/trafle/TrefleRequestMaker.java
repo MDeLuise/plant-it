@@ -41,15 +41,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class TrefleRequestMaker {
     private final String token;
-    private final String domain = "https://trefle.io";
-    private final String baseEndpoint = domain + "/api/v1";
+    private final String domain;
+    private final String baseEndpoint;
     private final boolean trefleSSLVerification;
     private final Logger logger = LoggerFactory.getLogger(TrefleRequestMaker.class);
 
 
     @Autowired
-    public TrefleRequestMaker(@Value("${trefle.key}") String token,
+    public TrefleRequestMaker(@Value("${trefle.url}") String domain,
+                              @Value("${trefle.key}") String token,
                               @Value("${trefle.ssl.verification.enabled}") boolean trefleSSLVerification) {
+        this.domain = domain;
+        this.baseEndpoint = domain + "/api/v1";
         this.token = token;
         this.trefleSSLVerification = trefleSSLVerification;
     }
