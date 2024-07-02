@@ -11,7 +11,7 @@ secret:
     MYSQL_PSW: cm9vdA==
     MYSQL_ROOT_PASSWORD: cm9vdA==
     JWT_SECRET: cHV0VGhlU2VjcmV0SGVyZQ==
-    TREFLE_KEY: 
+    FLORACODEX_KEY: 
 
 configmap:
   name: plantitconfigmap

@@ -31,11 +31,11 @@ spec:
             secretKeyRef:
               name: plantitsecret
               key: JWT_SECRET
-        - name: TREFLE_KEY
+        - name: FLORACODEX_KEY
           valueFrom:
             secretKeyRef:
               name: plantitsecret
-              key: TREFLE_KEY
+              key: FLORACODEX_KEY
         envFrom:
         - configMapRef:
             name: plantitconfig

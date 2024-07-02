@@ -34,11 +34,11 @@ spec:
             secretKeyRef:
               name: {{ .Values.secret.name }}
               key: JWT_SECRET
-        - name: TREFLE_KEY
+        - name: FLORACODEX_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.secret.name }}
-              key: TREFLE_KEY
+              key: FLORACODEX_KEY
 ---
 apiVersion: v1
 kind: Service

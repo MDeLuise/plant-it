@@ -18,7 +18,7 @@ Plant-It is designed for gardening enthusiasts, plant lovers, and anyone seeking
 ## High-level overview
 Plant-it can do the following things:
 
-* Add existing plants using Trefle API or user created plants to your collection
+* Add existing plants or user created plants to your collection
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants

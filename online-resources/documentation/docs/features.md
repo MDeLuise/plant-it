@@ -11,9 +11,9 @@ The app's home screen is designed to provide users with a comprehensive view of 
 ![](assets/species.png){ align=left; loading=lazy; style="height:600px;"}
 ![](assets/add-plant.png){ align=left; loading=lazy; style="height:600px;"}
 
-To add a new plant, simply tap the search icon in the bottom bar. From there, you can either add a custom species or, if you setup a Trefle key, explore and add existing species to your collection.
+To add a new plant, simply tap the search icon in the bottom bar. From there, you can either add a custom species or, if you setup a FloraCodex key, explore and add existing species to your collection.
 
-Upon identifying the plant species, select it, click on "Add plant" at the bottom of the page, then input the necessary information, and proceed by clicking the "Add" button. For those without a Trefle key or wishing to add a new species, opt for the "Custom" species option, provide the required details, and then click on the "Save plant" button.
+Upon identifying the plant species, select it, click on "Add plant" at the bottom of the page, then input the necessary information, and proceed by clicking the "Add" button. For those without a FloraCodex key or wishing to add a new species, opt for the "Custom" species option, provide the required details, and then click on the "Save plant" button.
 
 ### View details
 ![](assets/plant-details-1.png){ align=left; loading=lazy; style="height:600px;"}
@@ -53,7 +53,7 @@ To add a new species, tap the search icon in the bottom bar, enter the species n
 ![](assets/species-1.png){ align=left; loading=lazy; style="height:600px;"}
 ![](assets/edit-species.png){ align=left; loading=lazy; style="height:600px;"}
 
-To modify an existing species, tap the search icon in the bottom bar, enter the species name, and select it. Next, click the edit icon in the bottom appbar of the window, make the necessary updates, and then click the floating "Save" button. The species will be updated. If it originated from the Trefle service, a new custom species will be generated, and all plants linked to the Trefle species will be associated with the new one. If it was already a custom species, it will be straightforwardly updated.
+To modify an existing species, tap the search icon in the bottom bar, enter the species name, and select it. Next, click the edit icon in the bottom appbar of the window, make the necessary updates, and then click the floating "Save" button. The species will be updated. If it originated from the FloraCodex service, a new custom species will be generated, and all plants linked to the FloraCodex species will be associated with the new one. If it was already a custom species, it will be straightforwardly updated.
 
 ### Remove existing species
 To delete a species, it must be a custom one. Tap the search icon in the bottom bar, enter the species name, and select it. Next, click the trash icon in the bottom appbar of the window,. Please be aware that this action will also delete all linked plants associated with the species.

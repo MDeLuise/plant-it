@@ -64,7 +64,7 @@ JWT_EXP=1
 USERS_LIMIT=-1
 UPLOAD_DIR=/upload-dir
 API_PORT=8080
-TREFLE_KEY=
+FLORACODEX_KEY=
 LOG_LEVEL=DEBUG
 ALLOWED_ORIGINS=*
 
@@ -109,10 +109,10 @@ JWT_EXP=1
 USERS_LIMIT=-1 # less then 0 means no limit
 UPLOAD_DIR=/upload-dir # path to the directory used to store uploaded images, if on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
 API_PORT=8080
-TREFLE_KEY=
+FLORACODEX_URL=https://api.floracodex.com
+FLORACODEX_KEY=
 ALLOWED_ORIGINS=* # CORS allowed origins (comma separated list)
 LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
-UPDATE_EXISTING=false # update missing fields using Trefle service, useful on system version update if new fields are introduced
 CONTACT_MAIL=foo@bar.com # address used as "contact" for template email
 REMINDER_NOTIFY_CHECK=0 30 7 * * * # 6-values crontab expression to set the check time for reminders
 MAX_REQUESTS_PER_MINUTE=100 # rate limiting of the upcoming requests
@@ -142,39 +142,43 @@ SMTP_AUTH=
 SMTP_START_TTL=
 ```
 
-### Integration with Trefle Service
+### Integration with Trefle Service [NOT WORKING ANYMORE]
 !!! warning end "Trefle Service Inactivity"
 
-    The Trefle service, which Plant-it relies on for plant data, appears to be inactive. There have been no updates to their database, and [their repository](https://github.com/treflehq/trefle-api) shows no recent activity, with several open issues dating back years.
+    The Trefle service, which Plant-it relied on for plant data, appears to be inactive. There have been no updates to their database, and their repository shows no recent activity, with several open issues dating back years. While the dataset was accessible until recently, it is no longer available.
 
-    I am currently exploring the best way to move forward. My initial plan is to create a new project that will start by incorporating all the information from the Trefle database. Over time, this new service will be expanded with additional information as requested by users, such as "Hardiness Zone."
+    I am currently exploring the best way to move forward and working on a replacement for this service, as mentioned in [issue #218](https://github.com/MDeLuise/plant-it/issues/218).
 
-    Due to the expiration of the Trefle service's SSL certificate, users need to set the `TREFLE_SSL_VERIFICATION` property to `false` (default value) in order to bypass SSL verification. This is a temporary fix to address the issue until we can complete the transition to the new service.
+    As a temporary solution, the Flora Codex service has replaced the Trefle service. However, it lacks some features such as:
 
-To enhance your application with plant search capabilities, you can integrate with the Trefle service. Trefle provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the Trefle service in your project:
+      •	Plant care information
+      •	Synonyms
 
-1. **Create an Account on Trefle:**
-   - Visit the [Trefle website](https://trefle.io/) and sign up for an account.
+    Additionally, it has fewer plants compared to Trefle.
+
+    This is a temporary patch that will be resolved in the near future.
+
+
+### Integration with FloraCodex
+To enhance your application with plant search capabilities, you can integrate with the FloraCodex service. FloraCodex provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the FloraCodex service in your project:
+
+1. **Create an Account on FloraCodex:**
+   - Visit the [FloraCodex website](https://floracodex.com/) and sign up for an account.
    - Follow the registration process to verify your account.
 
 2. **Retrieve the API Key:**
-   - Once your account is set up, log in to your Trefle account.
-   - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the Trefle API.
+   - Once your account is set up, log in to your FloraCodex account.
+   - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the FloraCodex API.
 
 3. **Configure the API Key:**
    - Open the `server.env` file in your project.
-   - Add the following lines to the file, replacing `YOUR_TREFLE_API_KEY` with the actual API key you obtained from Trefle:
-
-     ```sh
-     TREFLE_KEY=YOUR_TREFLE_API_KEY
-     TREFLE_SSL_VERIFICATION=false
-     ```
+   - Add the following line to the file, replacing `YOUR_FLORACODEX_API_KEY` with the actual API key you obtained from FloraCodex: `FLORACODEX_KEY=YOUR_FLORACODEX_API_KEY`
 
 4. **Save and Restart Your Server:**
    - Save the changes made to the `server.env` file.
    - Restart your server to apply the new configuration.
 
-By following these steps, you enable your application to use the Trefle service for searching and retrieving information about existing plants. Ensure that your API key is kept secure and not exposed publicly to avoid unauthorized access.
+By following these steps, you enable your application to use the FloraCodex service for searching and retrieving information about existing plants. Ensure that your API key is kept secure and not exposed publicly to avoid unauthorized access.
 
 ## Change ports binding
 ### Backend
@@ -244,7 +248,7 @@ JWT_EXP=1
 USERS_LIMIT=2
 UPLOAD_DIR=/upload-dir
 API_PORT=8080
-TREFLE_KEY=
+FLORACODEX_KEY=
 ALLOWED_ORIGINS=*
 
 #
@@ -400,7 +404,7 @@ API_PORT=8080
 CACHE_TTL=86400
 CACHE_HOST=cache
 CACHE_PORT=6379
-TREFLE_KEY=
+FLORACODEX_KEY=
 ALLOWED_ORIGINS=*
 SSL_ENABLED=true
 CERTIFICATE_PATH=/certificates/ 
