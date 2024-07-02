@@ -1,4 +1,4 @@
-package com.github.mdeluise.plantit.plantinfo.trafle;
+package com.github.mdeluise.plantit.plantinfo.floracodex;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,16 +14,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Order(3)
-public class TreflePlantInfoExtractorStep extends AbstractPlantInfoExtractorStep {
-    private final TrefleRequestMaker trefleRequestMaker;
+@Order(2)
+public class FloraCodexPlantInfoExtractorStep extends AbstractPlantInfoExtractorStep {
+    private final FloraCodexRequestMaker floraCodexRequestMaker;
     private final BotanicalInfoService botanicalInfoService;
 
 
-    public TreflePlantInfoExtractorStep(TrefleRequestMaker trefleRequestMaker,
-                                        BotanicalInfoService botanicalInfoService) {
+    public FloraCodexPlantInfoExtractorStep(FloraCodexRequestMaker floraCodexRequestMaker,
+                                            BotanicalInfoService botanicalInfoService) {
         super();
-        this.trefleRequestMaker = trefleRequestMaker;
+        this.floraCodexRequestMaker = floraCodexRequestMaker;
         this.botanicalInfoService = botanicalInfoService;
     }
 
@@ -31,7 +31,7 @@ public class TreflePlantInfoExtractorStep extends AbstractPlantInfoExtractorStep
     @Override
     protected Set<BotanicalInfo> extractPlantsInternal(String partialPlantScientificName, int size) {
         final Page<BotanicalInfo> result =
-            trefleRequestMaker.fetchInfoFromPartial(partialPlantScientificName, Pageable.ofSize(size));
+            floraCodexRequestMaker.fetchInfoFromPartial(partialPlantScientificName, Pageable.ofSize(size));
         final List<BotanicalInfo> filteredResult = result.stream()
                                                          .filter(botanicalInfo -> !existAlreadyALocalVersion(botanicalInfo))
                                                          .toList();
@@ -41,7 +41,7 @@ public class TreflePlantInfoExtractorStep extends AbstractPlantInfoExtractorStep
 
     @Override
     protected Set<BotanicalInfo> getAllInternal(int size) {
-        final Page<BotanicalInfo> result = trefleRequestMaker.fetchAll(Pageable.ofSize(size));
+        final Page<BotanicalInfo> result = floraCodexRequestMaker.fetchAll(Pageable.ofSize(size));
         final List<BotanicalInfo> filteredResult = result.stream()
                                                          .filter(botanicalInfo -> !existAlreadyALocalVersion(botanicalInfo))
                                                          .toList();
@@ -50,7 +50,7 @@ public class TreflePlantInfoExtractorStep extends AbstractPlantInfoExtractorStep
 
 
     private boolean existAlreadyALocalVersion(BotanicalInfo botanicalInfo) {
-        return botanicalInfoService.existsExternalId(BotanicalInfoCreator.TREFLE, botanicalInfo.getExternalId()) ||
+        return botanicalInfoService.existsExternalId(BotanicalInfoCreator.FLORA_CODEX, botanicalInfo.getExternalId()) ||
                    botanicalInfoService.existsSpecies(botanicalInfo.getSpecies());
     }
 }

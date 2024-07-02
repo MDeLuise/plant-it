@@ -137,13 +137,14 @@ public class ApplicationConfig {
 
     @Bean
     public CommandLineRunner fillExternalInfo(@Value("${update_existing}") boolean update,
-                                              @Value("${trefle.key}") String trefleKey, TrefleMigrator trefleMigrator) {
+                                              @Value("${floracodex.key}") String floraCodexKey,
+                                              TrefleMigrator trefleMigrator) {
         return args -> {
             if (!update) {
                 logger.info("UPDATE_EXISTING flag set to false. Skipping update of existing species.");
                 return;
             }
-            if (trefleKey == null || trefleKey.isBlank()) {
+            if (floraCodexKey == null || floraCodexKey.isBlank()) {
                 logger.info(
                     "UPDATE_EXISTING flag set to true but trefle key not provided. Skipping update of existing " +
                         "species.");
