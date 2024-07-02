@@ -28,6 +28,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 > [!NOTE]
 > Unfortunately, the Trefle service is no longer operational. The project is inactive, and while the dataset was accessible until now, it is no longer available.
 > I am currently working on a replacement for this service, as mentioned in [issue #218](https://github.com/MDeLuise/plant-it/issues/218).
+> As a temporary solution, the backend dataset has been switched to [FloraCodex](https://floracodex.com/), despite some [limitations](https://github.com/MDeLuise/plant-it/issues/218#issuecomment-2202951179) in the service.
 
 * Add existing plants or user created plants to your collection
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
@@ -93,7 +94,7 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
   USERS_LIMIT=-1
   UPLOAD_DIR=/upload-dir
   API_PORT=8080
-  TREFLE_KEY=
+  FLORACODEX_KEY=
   LOG_LEVEL=DEBUG
   ALLOWED_ORIGINS=*
 
