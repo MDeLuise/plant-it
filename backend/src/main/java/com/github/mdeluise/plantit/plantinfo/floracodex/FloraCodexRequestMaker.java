@@ -47,8 +47,8 @@ public class FloraCodexRequestMaker {
         logger.debug("Fetching info for \"{}\" from FloraCodex", partialPlantScientificName);
         final String encodedPartialName = URLEncoder.encode(partialPlantScientificName, StandardCharsets.UTF_8);
         final String url =
-            String.format("%s/species/search?q=%s&limit=%s&key=%s", baseEndpoint, encodedPartialName,
-                          pageable.getPageSize(), token
+            String.format("%s/species/search?q=%s&limit=%s&page=%s&key=%s", baseEndpoint, encodedPartialName,
+                          pageable.getPageSize(), pageable.getPageNumber(), token
             );
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
@@ -105,8 +105,8 @@ public class FloraCodexRequestMaker {
     public Page<BotanicalInfo> fetchAll(Pageable pageable) {
         logger.debug("Fetching all info from FloraCodex");
         final String url =
-            String.format("%s/species/search?limit=%s&key=%s", baseEndpoint, pageable.getPageSize(),
-                          token
+            String.format("%s/species/search?limit=%s&page=%s&key=%s", baseEndpoint, pageable.getPageSize(),
+                          pageable.getPageNumber(), token
             );
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
