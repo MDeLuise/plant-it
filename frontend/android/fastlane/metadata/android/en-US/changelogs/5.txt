@@ -1,0 +1,3 @@
+In this release:
+* Add Dutch language
+* Temporarily change backend to FloraCodex (see the project doc)
