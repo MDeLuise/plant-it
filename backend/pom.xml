@@ -127,7 +127,7 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-spring</artifactId>
-            <version>7.9.0</version>
+            <version>7.18.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
