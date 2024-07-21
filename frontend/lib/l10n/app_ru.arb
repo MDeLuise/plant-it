@@ -1,0 +1,391 @@
+{
+  "enterValue": "Пожалуйста введите значение",
+  "enterValidURL": "Пожалуйста введите правильный URL",
+  "go": "Продолжить",
+  "noBackend": "Невозможно подключиться к серверу",
+  "ok": "Ok",
+  "serverURL": "Server URL",
+  "username": "Имя пользователя",
+  "password": "Пароль",
+  "login": "Логин",
+  "badCredentials": "Неверные учетные данные",
+  "loginMessage": "Добро пожаловать обратно",
+  "signupMessage": "Добро пожаловать",
+  "appName": "Plant-it",
+  "forgotPassword": "Забыли пароль?",
+  "areYouNew": "Ты новенький?",
+  "createAccount": "Создать аккаунт",
+  "email": "Email",
+  "usernameSize": "Длина имени пользователя должна составлять от 3 до 20 символов",
+  "passwordSize": "Длина пароля должна составлять от 3 до 20 символов",
+  "enterValidEmail": "Пожалуйста введите правльный email",
+  "alreadyRegistered": "Уже зарегистрирован?",
+  "signup": "Регистрация",
+  "generalError": "Ошибка при выполнении операции",
+  "error": "Ошибка",
+  "details": "Детали",
+  "insertBackendURL": "Привет друг! Давай сотворим чудо, начнем с настройки URL-адреса вашего сервера.",
+  "loginTagline": Исследуй, учись и совершенствуйся!",
+  "singupTagline": "Давай расти вместе!",
+  "sentOTPCode": "Пожалуйста, введите код, отправленный по электронной почте по адресу: ",
+  "verify": "Проверка",
+  "resendCode": "Отправить повторно",
+  "otpCode": "OTP код",
+  "splashLoading": "Beep boop beep... Загрузка данных с сервера!",
+  "welcomeBack": "С возвращением",
+  "hello": "Привет, {userName}",
+  "@hello": {
+    "description": "Приветствие пользователя",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Вася"
+      }
+    }
+  },
+  "search": "Поиск",
+  "today": "сегодня",
+  "yesterday": "вчера",
+  "nDaysAgo": "{count} {count, plural, =1{день} other{дней}} назад",
+  "@nDaysAgo": {
+    "description": "Опишите, сколько дней назад произошло то или иное событие",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "{count} {count, plural, =1{день} other{дней}} в будущем (чтооо?)",
+  "@nDaysInFuture": {
+    "description": "Опишите, через сколько дней в будущем произойдет то или иное событие",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "{count} {count, plural, =1{месяц} other{месяцев}} назад",
+  "@nMonthsAgo": {
+    "description": "Опишите, сколько месяцев назад произошло то или иное событие",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "{count} {count, plural, =1{год} other{лет}} назад",
+  "@nYearsAgo": {
+    "description": "Опишите, сколько лет назад произошло то или иное событие",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "events": "События",
+  "plants": "Растения",
+  "or": "или",
+  "filter": "Фильтр",
+  "seeding": "посев",
+  "watering": "полив",
+  "fertilizing": "удобрение",
+  "biostimulating": "биостимуляция",
+  "misting": "опрыскивание",
+  "transplanting": "пересадка",
+  "water_changing": "смена воды",
+  "observation": "наблюдение",
+  "treatment": "лечение",
+  "propagating": "размножение",
+  "pruning": "обрезка",
+  "repotting": "пересадка",
+  "recents": "Недавние события",
+  "addNewEvent": "Добавить новое событие",
+  "selectDate": "Выбор даты",
+  "selectEvents": "Выбор события",
+  "selectPlants": "Выбор растения",
+  "nEventsCreated": "Created {count} new {count, plural, =1{событие} other{событий}}",
+  "@nEventsCreated": {
+    "description": "Сколько новых событий создано",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "Добавить заметку",
+  "enterNote": "Текст заметки",
+  "selectAtLeastOnePlant": "Выберите хотя бы одно растение",
+  "selectAtLeastOneEvent": "Выберите хотя бы одно событие",
+  "eventSuccessfullyUpdated": "Событие успешно обновлено",
+  "editEvent": "Редактировать событие",
+  "eventSuccessfullyDeleted": "Событие успешно удалено",
+  "noInfoAvailable": "Информация недоступна",
+  "species": "Виды",
+  "plant": "Растения",
+  "scientificClassification": "Научная классификация",
+  "family": "Семейство",
+  "genus": "Вид",
+  "synonyms": "Синонимы",
+  "care": "Уход",
+  "light": "Свет",
+  "humidity": "Влажность",
+  "maxTemp": "Максимальная температура",
+  "minTemp": "Минимальная температура",
+  "minPh": "Минимальный ph",
+  "maxPh": "Максимальный ph",
+  "info": "Информация",
+  "addPhotos": "Добавить фотографии",
+  "addEvents": "Добавить события",
+  "modifyPlant": "Изменить растение",
+  "removePlant": "Удалить растение",
+  "useBirthday": "Использовать день рождения",
+  "birthday": "День рождения",
+  "avatar": "Аватар",
+  "note": "Заметка",
+  "stats": "Статистика",
+  "eventStats": "Статистика событий",
+  "age": "Возраст",
+  "newBorn": "Новорожденный",
+  "nDays": "{count} {count, plural, =1{день} other{дней}}",
+  "@nDays": {
+    "description": "Сколько дней обьекту",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonths": "{count} {count, plural, =1{месяц} other{месяцев}}",
+  "@nMonths": {
+    "description": "Сколько месяцев обьекту",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYears": "{count} {count, plural, =1{год} other{лет}}",
+  "@nYears": {
+    "description": "Сколько лет обьекту",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAndDays": "{months} {months, plural, =1{месяц} other{месяцев}}, {days} {days, plural, =1{день} other{дней}}",
+  "@nMonthsAndDays": {
+    "description": "Сколько месяцев и дней обьекту",
+    "placeholders": {
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndDays": "{years} {years, plural, =1{год} other{лет}}, {days} {days, plural, =1{день} other{дней}}",
+  "@nYearsAndDays": {
+    "description": "Сколько лет и дней обьекту",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonths": "{years} {years, plural, =1{год} other{лет}}, {months} {months, plural, =1{месяц} other{месяцев}}",
+  "@nYearsAndMonths": {
+    "description": "Сколько лет и месяцев обьекту",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{год} other{лет}}, {months} {months, plural, =1{месяц} other{месяцев}}, {days} {days, plural, =1{день} other{дней}}",
+  "@nYearsAndMonthsAndDays": {
+    "description": "Сколько лет, месяцев и дней обьекту",
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "name": "Name",
+  "nOutOf": "{value} out of {max}",
+  "@nOutOf": {
+    "description": "Значение внутри шкалы",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "description": "Температура",
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "numberOfPhotos": "Количество фотографий",
+  "numberOfEvents": "Количество событий",
+  "searchInYourPlants": "Искать среди моих растений",
+  "searchNewGreenFriends": "Найди новых зеленых друзей",
+  "customcustom": "Свое",
+  "addPlant": "Добавить растение",
+  "yes": "Да",
+  "no": "Нет",
+  "pleaseConfirm": "Пожалуйста подтверди",
+  "areYouSureToRemoveEvent": "Ты точно хочешь удалить событие?",
+  "areYouSureToRemoveReminder": "Ты точно хочешь удалить напоминание?",
+  "areYouSureToRemoveSpecies": "Ты точно хочешь удалить вид?",
+  "areYouSureToRemovePlant": "Ты точно хочешь удалить растение?",
+  "purchasedPrice": "Цена покупки",
+  "seller": "Продавец",
+  "location": "Местоположение",
+  "currency": "Валюта",
+  "plantUpdatedSuccessfully": "Растение успешно обновлено",
+  "plantCreatedSuccessfully": "Растение успешно создано",
+  "insertPrice": "Введите цену",
+  "noBirthday": "Нет дня рождения",
+  "appVersion": "Версия приложения",
+  "serverVersion": "Версия сервера",
+  "documentation": "Документация",
+  "openSource": "Источник",
+  "reportIssue": "Сообщить о проблеме",
+  "logout": "Выйти",
+  "eventCount": "Количество событий",
+  "plantCount": "Количество растений",
+  "speciesCount": "Количество видов",
+  "imageCount": "Количество изображений",
+  "unknown": "Неизвестно",
+  "account": "Аккаунт",
+  "changePassword": "Сменить пароль",
+  "more": "Больше",
+  "editProfile": "Редактировать профиль",
+  "currentPassword": "Текущий пароль",
+  "updatePassword": "Обновить пароль",
+  "updateProfile": "Обновить профиль",
+  "newPassword": "Новый пароль",
+  "removeEvent": "Удалить событие",
+  "appLog": "Журнал приложения",
+  "passwordUpdated": "Пароль успешно обновлен",
+  "userUpdated": "Пользователь успешно обновлен",
+  "noChangesDetected": "Изменений не обнаружено",
+  "plantDeletedSuccessfully": "Растение успешно обновлено",
+  "server": "Сервер",
+  "notifications": "Уведомления",
+  "changeServer": "Сменить сервер",
+  "serverUpdated": "Сервер успешно обновлен",
+  "changeNotifications": "Изменить уведомления",
+  "updateNotifications": "Обновить уведомления",
+  "notificationUpdated": "Уведомление успешно обновлено",
+  "supportTheProject": "Поддержать проект",
+  "buyMeACoffee": "Купи мне кофе",
+  "gallery": "Галерея",
+  "photosOf": "Фотграфии {name}",
+  "@photosOf": {
+    "description": "Фотография растения",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nPhoto": "Uploaded {count} new {count, plural, =1{фотография} other{фотографий}}",
+  "@nPhoto": {
+    "description": "Сколько фотографий было загружено",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "errorCreatingPlant": "Ошибка при создании растения",
+  "noImages": "Нет изображения",
+  "errorCreatingSpecies": "Ошибка при создании вида",
+  "errorUpdatingSpecies": "Ошибка при обновлении вида",
+  "speciesUpdatedSuccessfully": "Вид успешно обновлен",
+  "addCustom": "Добавить свое",
+  "speciesCreatedSuccessfully": "Вид успешно создан",
+  "uploadPhoto": "Загрузить фото",
+  "linkURL": "Адрес URL",
+  "url": "URL",
+  "submit": "Подтвердить",
+  "cancel": "Отменить",
+  "actions": "Действия",
+  "areYouSureToRemovePhoto": "Точно удалть фото?",
+  "photoSuccessfullyDeleted": "Фото успешно удалено",
+  "errorUpdatingPlant": "Ошибка обновления растения",
+  "reminders": "Напоминания",
+  "selectStartDate": "Выберите дату начала",
+  "selectEndDate": "Выберите дату окончания",
+  "addNewReminder": "Добавить новое напоминание",
+  "noEndDate": "Нет даты окончания",
+  "frequency": "Частота",
+  "repeatAfter": "Повторите после",
+  "addNew": "Добавить новое",
+  "reminderCreatedSuccessfully": "Напоминание успешно создано",
+  "startAndEndDateOrderError": "Дата начала должна быть раньше даты окончания",
+  "reminderUpdatedSuccessfully": "Напоминание успешно обновлено",
+  "reminderDeletedSuccessfully": "Напоминание успешно удалено",
+  "errorResettingPassword": "Ошибка при сбросе пароля",
+  "resetPassword": "Сброс пароля",
+  "resetPasswordHeader": "Введите имя пользователя, чтобы отправить запрос на сброс пароля",
+  "editReminder": "Редактировать Напоминание",
+  "ntfyServerUrl": "URL сервера Ntfy",
+  "ntfyServerTopic": "Тема сервера Ntfy",
+  "ntfyServerUsername": "Имя пользователя сервера Ntfy",
+  "ntfyServerPassword": "Пароль сервера Ntfy",
+  "ntfyServerToken": "Токен сервера Ntfy",
+  "enterValidTopic": "Пожалуйста, укажи правильную тему",
+  "ntfySettings": "Настройки Ntfy",
+  "ntfySettingsUpdated": "Корректно обновлены настройки Ntfy",
+  "modifySpecies": "Изменить вид",
+  "removeSpecies": "Удалить вид",
+  "speciesDeletedSuccessfully": "Вид успешно удален",
+  "success": "Успех",
+  "warning": "Предупреждение",
+  "ops": "Упс!",
+  "changeLanguage": "Сменить язык"
+}
