@@ -12,7 +12,7 @@ jobs:
       github.event.pull_request.user.login != github.repository_owner
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
 
     steps:
