@@ -130,6 +130,8 @@ CERTIFICATE_PATH=/certificates/ # path to files to use for ssl. If on docker dep
 CACHE_TTL=86400
 CACHE_HOST=cache
 CACHE_PORT=6379
+CACHE_PASSWORD=
+CACHE_USERNAME=
 
 #
 # SMTP
