@@ -52,7 +52,7 @@ dependencies:
   talker: ^4.2.4
   talker_flutter: ^4.4.0
   toastification: ^2.0.0
-  image_picker: ^1.0.7
+  image_picker: ^1.1.2
   http_parser: ^4.0.2
   # flutter_side_menu: ^0.4.0
   # colorful_safe_area: ^1.0.0
