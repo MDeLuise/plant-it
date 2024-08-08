@@ -6,7 +6,9 @@ import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/notify_conf_notifier.dart';
 import 'package:plant_it/toast/toast_manager.dart';
+import 'package:provider/provider.dart';
 
 class ChangeNotificationsPage extends StatefulWidget {
   final Environment env;
@@ -43,6 +45,7 @@ class _ChangeNotificationsPageState extends State<ChangeNotificationsPage> {
       if (!mounted) return;
       widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).notificationUpdated);
+      Provider.of<NotifyConfNotifier>(context, listen: false).notify();
       Navigator.of(context).pop();
     } finally {
       setState(() {

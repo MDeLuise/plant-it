@@ -116,13 +116,13 @@ LOG_LEVEL=DEBUG # could be: DEBUG, INFO, WARN, ERROR
 CONTACT_MAIL=foo@bar.com # address used as "contact" for template email
 REMINDER_NOTIFY_CHECK=0 30 7 * * * # 6-values crontab expression to set the check time for reminders
 MAX_REQUESTS_PER_MINUTE=100 # rate limiting of the upcoming requests
-NTFY_ENABLED=true # if "false" ntfy service won't be available as notification dispatcher
 
 #
-# SSL
+# Notification
 #
-SSL_ENABLED=false
-CERTIFICATE_PATH=/certificates/ # path to files to use for ssl. If on docker deployment leave as it is and change the volume binding in the docker-compose file if needed
+NTFY_ENABLED=true # if "false" ntfy service won't be available as notification dispatcher
+GOTIFY_ENABLED=true # if "false" ntfy service won't be available as notification dispatcher
+
 
 #
 # Cache

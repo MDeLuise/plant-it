@@ -42,7 +42,6 @@ public class NtfyNotificationDispatcher implements NotificationDispatcher {
                                                                   reminder.getTarget().getInfo().getPersonalName())
                                                               .header("X-Tags", "seedling");
 
-        // Set request body
         final String requestBody =
             "Time to take care of " + reminder.getTarget().getInfo().getPersonalName() + ", action required: " +
                 reminder.getAction();
@@ -50,7 +49,6 @@ public class NtfyNotificationDispatcher implements NotificationDispatcher {
             HttpRequest.BodyPublishers.ofString(requestBody, StandardCharsets.UTF_8);
         requestBuilder.method("POST", bodyPublisher);
 
-        // Set authentication based on provided credentials
         if (username != null && password != null) {
             final String credentials = username + ":" + password;
             final String basicAuth = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
@@ -63,7 +61,6 @@ public class NtfyNotificationDispatcher implements NotificationDispatcher {
             final HttpRequest httpRequest = requestBuilder.build();
             final HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            // Handle response
             int statusCode = response.statusCode();
             if (statusCode < 200 || statusCode >= 300) {
                 throw new NotifyException("Failed to send notification. Response code: " + statusCode);

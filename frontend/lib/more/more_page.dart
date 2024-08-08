@@ -10,10 +10,13 @@ import 'package:plant_it/more/change_notifications.dart';
 import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/change_server_page.dart';
 import 'package:plant_it/more/edit_profile.dart';
+import 'package:plant_it/more/gotify_settings.dart';
 import 'package:plant_it/more/ntfy_settings.dart';
 import 'package:plant_it/more/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:plant_it/notify_conf_notifier.dart';
 import 'package:plant_it/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -34,6 +37,8 @@ class _MorePageState extends State<MorePage> {
   bool _statsLoading = true;
   late String _appVersion;
   bool _appVersionLoading = true;
+  bool _ntfyVisible = false;
+  bool _gotifyVisible = false;
 
   void _fetchAndSetStats() async {
     try {
@@ -102,9 +107,29 @@ class _MorePageState extends State<MorePage> {
     });
   }
 
+  bool _isNotificationDispatcherActiveAndEnabled(String name) {
+    if (!widget.env.notificationDispatcher.map((e) => e.name).contains(name)) {
+      return false;
+    }
+    final NotificationDispatcher dispatcher =
+        widget.env.notificationDispatcher.firstWhere((e) => e.name == name);
+    return dispatcher.enabled;
+  }
+
+  void _setNotificationServiceSettingVisibility() {
+    setState(() {
+      _ntfyVisible = _isNotificationDispatcherActiveAndEnabled("NTFY");
+      _gotifyVisible = _isNotificationDispatcherActiveAndEnabled("GOTIFY");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _setNotificationServiceSettingVisibility();
+    Provider.of<NotifyConfNotifier>(context, listen: false).addListener(() {
+      _setNotificationServiceSettingVisibility();
+    });
     _fetchAndSetStats();
     _fetchAndSetAppVersion();
   }
@@ -190,17 +215,30 @@ class _MorePageState extends State<MorePage> {
                   ),
                 ),
               ),
-              SettingsInternalLink(
-                title: AppLocalizations.of(context).ntfySettings,
-                onClick: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NtfySettingsPage(
-                      env: widget.env,
+              if (_ntfyVisible)
+                SettingsInternalLink(
+                  title: AppLocalizations.of(context).ntfySettings,
+                  onClick: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NtfySettingsPage(
+                        env: widget.env,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              if (_gotifyVisible)
+                SettingsInternalLink(
+                  title: AppLocalizations.of(context).gotifySettings,
+                  onClick: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GotifySettingsPage(
+                        env: widget.env,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
           SettingsSection(
@@ -242,7 +280,8 @@ class _MorePageState extends State<MorePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => TalkerScreen(
-                      talker: (widget.env.logger as my_logger.TalkerLogger).talker,
+                      talker:
+                          (widget.env.logger as my_logger.TalkerLogger).talker,
                       appBarTitle: AppLocalizations.of(context).appLog,
                       theme: TalkerScreenTheme(
                         backgroundColor:

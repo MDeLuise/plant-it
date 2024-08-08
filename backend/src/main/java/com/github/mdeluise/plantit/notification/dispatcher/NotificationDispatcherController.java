@@ -5,6 +5,9 @@ import java.util.Set;
 
 import com.github.mdeluise.plantit.common.MessageResponse;
 import com.github.mdeluise.plantit.notification.dispatcher.config.AbstractNotificationDispatcherConfig;
+import com.github.mdeluise.plantit.notification.gotify.GotifyNotificationDispatcherConfig;
+import com.github.mdeluise.plantit.notification.gotify.GotifyNotificationDispatcherConfigDTO;
+import com.github.mdeluise.plantit.notification.gotify.GotifyNotificationDispatcherDTOConverter;
 import com.github.mdeluise.plantit.notification.ntfy.NtfyNotificationDispatcherConfig;
 import com.github.mdeluise.plantit.notification.ntfy.NtfyNotificationDispatcherConfigDTO;
 import com.github.mdeluise.plantit.notification.ntfy.NtfyNotificationDispatcherDTOConverter;
@@ -24,13 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationDispatcherController {
     private final NotificationDispatcherService notificationDispatcherService;
     private final NtfyNotificationDispatcherDTOConverter ntfyNotificationDispatcherDTOConverter;
+    private final GotifyNotificationDispatcherDTOConverter gotifyNotificationDispatcherDTOConverter;
 
 
     @Autowired
     public NotificationDispatcherController(NotificationDispatcherService notificationDispatcherService,
-                                            NtfyNotificationDispatcherDTOConverter ntfyNotificationDispatcherDTOConverter) {
+                                            NtfyNotificationDispatcherDTOConverter ntfyNotificationDispatcherDTOConverter,
+                                            GotifyNotificationDispatcherDTOConverter gotifyNotificationDispatcherDTOConverter) {
         this.notificationDispatcherService = notificationDispatcherService;
         this.ntfyNotificationDispatcherDTOConverter = ntfyNotificationDispatcherDTOConverter;
+        this.gotifyNotificationDispatcherDTOConverter = gotifyNotificationDispatcherDTOConverter;
     }
 
 
@@ -50,7 +56,7 @@ public class NotificationDispatcherController {
 
 
     @GetMapping("/config/ntfy")
-    public NtfyNotificationDispatcherConfigDTO getConfig() {
+    public NtfyNotificationDispatcherConfigDTO getNtfyConfig() {
         final NtfyNotificationDispatcherConfig result =
             (NtfyNotificationDispatcherConfig) notificationDispatcherService.getUserConfig(NotificationDispatcherName.NTFY)
                                                                             .orElse(new NtfyNotificationDispatcherConfig());
@@ -59,9 +65,26 @@ public class NotificationDispatcherController {
 
 
     @PostMapping("/config/ntfy")
-    public ResponseEntity<MessageResponse> setConfig(@RequestBody NtfyNotificationDispatcherConfigDTO config) {
+    public ResponseEntity<MessageResponse> setNtfyConfig(@RequestBody NtfyNotificationDispatcherConfigDTO config) {
         final AbstractNotificationDispatcherConfig toSave = ntfyNotificationDispatcherDTOConverter.convertFromDTO(config);
         notificationDispatcherService.setUserConfig(NotificationDispatcherName.NTFY, toSave);
+        return ResponseEntity.ok(new MessageResponse("Success"));
+    }
+
+
+    @GetMapping("/config/gotify")
+    public GotifyNotificationDispatcherConfigDTO getGotifyConfig() {
+        final GotifyNotificationDispatcherConfig result =
+            (GotifyNotificationDispatcherConfig) notificationDispatcherService.getUserConfig(NotificationDispatcherName.GOTIFY)
+                                                                              .orElse(new GotifyNotificationDispatcherConfig());
+        return gotifyNotificationDispatcherDTOConverter.convertToDTO(result);
+    }
+
+
+    @PostMapping("/config/gotify")
+    public ResponseEntity<MessageResponse> setGotifyConfig(@RequestBody GotifyNotificationDispatcherConfigDTO config) {
+        final AbstractNotificationDispatcherConfig toSave = gotifyNotificationDispatcherDTOConverter.convertFromDTO(config);
+        notificationDispatcherService.setUserConfig(NotificationDispatcherName.GOTIFY, toSave);
         return ResponseEntity.ok(new MessageResponse("Success"));
     }
 }
