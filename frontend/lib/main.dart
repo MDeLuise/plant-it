@@ -5,6 +5,7 @@ import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/notify_conf_notifier.dart';
 import 'package:plant_it/set_server.dart';
 import 'package:plant_it/splash_screen.dart';
 import 'package:plant_it/template.dart';
@@ -71,6 +72,7 @@ void main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => EventsNotifier()),
+          ChangeNotifierProvider(create: (context) => NotifyConfNotifier()),
           ChangeNotifierProvider(create: (context) => LocaleProvider()),
         ],
         child: Container(

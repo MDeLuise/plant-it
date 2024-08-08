@@ -387,5 +387,9 @@
   "success": "Success",
   "warning": "Warning",
   "ops": "Ops!",
-  "changeLanguage": "Change language"
+  "changeLanguage": "Change language",
+  "gotifyServerUrl": "Gotify server URL",
+  "gotifyServerToken": "Gotify server token",
+  "gotifySettings": "Gotify settings",
+  "gotifySettingsUpdated": "Gotify settings correctly updated"
 }

@@ -440,10 +440,10 @@
     </changeSet>
 
 
-    <changeSet id="createNotificationConfigTables" author="MDeLuise">
+    <changeSet id="createNtfyNotificationConfigTables" author="MDeLuise">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="notification_config"/>
+                <tableExists tableName="ntfy_notification_configs"/>
             </not>
         </preConditions>
 
@@ -461,6 +461,23 @@
         <addColumn tableName="application_users">
             <column name="notification_dispatchers" type="VARCHAR(255)"/>
         </addColumn>
+    </changeSet>
+
+
+    <changeSet id="createGotifyNotificationConfigTables" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="gotify_notification_configs"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="gotify_notification_configs">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="url" type="varchar(255)"/>
+            <column name="token" type="varchar(255)"/>
+        </createTable>
     </changeSet>
 
 
