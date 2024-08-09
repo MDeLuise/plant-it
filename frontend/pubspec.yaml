@@ -40,7 +40,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   material_loading_buttons: ^1.2.1
   cached_network_image: ^3.3.1
-  cached_network_image_platform_interface: ^4.0.0
+  cached_network_image_platform_interface: ^4.1.0
   easy_splash_screen: ^1.0.4
   smooth_page_indicator: ^1.1.0
   skeletonizer: ^1.4.2
