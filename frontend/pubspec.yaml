@@ -51,7 +51,7 @@ dependencies:
   package_info_plus: ^8.0.1
   talker: ^4.2.4
   talker_flutter: ^4.4.0
-  toastification: ^2.0.0
+  toastification: ^2.1.0
   image_picker: ^1.1.2
   http_parser: ^4.0.2
   # flutter_side_menu: ^0.4.0
