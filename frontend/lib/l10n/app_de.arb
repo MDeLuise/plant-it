@@ -387,5 +387,9 @@
   "success": "Erfolg",
   "warning": "Warnung",
   "ops": "Hoppla!",
-  "changeLanguage": "Sprache ändern"
+  "changeLanguage": "Sprache ändern",
+  "gotifyServerUrl": "Gotify Server URL",
+  "gotifyServerToken": "Gotify Server Token",
+  "gotifySettings": "Gotify Einstellungen",
+  "gotifySettingsUpdated": "Gotify Einstellungen korrekt aktualisiert"
 }
