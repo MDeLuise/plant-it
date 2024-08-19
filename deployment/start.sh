@@ -70,7 +70,7 @@ fi
 #######################
 #     Run backend     #
 #######################
-/jdk-21.0.2/bin/java -jar /opt/app/backend/app.jar &
+java -jar /opt/app/backend/app.jar &
 
 
 #######################
