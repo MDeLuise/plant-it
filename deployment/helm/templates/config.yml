@@ -17,5 +17,3 @@ data:
   CACHE_TTL: "{{ .Values.configmap.data.CACHE_TTL }}"
   CACHE_HOST: "{{ .Values.configmap.data.CACHE_HOST }}"
   CACHE_PORT: "{{ .Values.configmap.data.CACHE_PORT }}"
-  SSL_ENABLED: "{{ .Values.configmap.data.SSL_ENABLED }}"
-  CERTIFICATE_PATH: "{{ .Values.configmap.data.CERTIFICATE_PATH }}"
