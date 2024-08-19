@@ -6,7 +6,7 @@ ARG JAVATARGET
 
 RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
         JAVATARGET=linux-x64; \
-    elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+    elif [ "$TARGETPLATFORM" = "linux/arm64" ] || [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then \
         JAVATARGET=linux-aarch64; \
     fi && \
     apt-get update && \

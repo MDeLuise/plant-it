@@ -77,7 +77,7 @@ do
     if [ -n "$push" ]; then
         # If $push is not empty, create and push the image
         echo "Creating and pushing image version: $version..."
-        docker buildx build $push --platform linux/amd64,linux/arm64 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain
+        docker buildx build $push --platform linux/amd64,linux/arm64/v8,linux/arm/v7 -t msdeluise/plant-it-server:$version -f deployment/Dockerfile . --progress=plain
     else
         # If $push is empty, only create the image
         echo "Creating locally the image version: $version..."
