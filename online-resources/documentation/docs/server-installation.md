@@ -74,12 +74,6 @@ ALLOWED_ORIGINS=*
 CACHE_TTL=86400
 CACHE_HOST=cache
 CACHE_PORT=6379
-
-#
-# SSL
-#
-SSL_ENABLED=false
-CERTIFICATE_PATH=/certificates/
 ```
 
 * Run the docker compose file (`docker compose -f docker-compose.yml up -d`), then the service will be available at `localhost:3000`, while the REST API will be available at `localhost:8080/api` (`localhost:8080/api/swagger-ui/index.html` for the documentation of them).
@@ -122,7 +116,6 @@ MAX_REQUESTS_PER_MINUTE=100 # rate limiting of the upcoming requests
 #
 NTFY_ENABLED=true # if "false" ntfy service won't be available as notification dispatcher
 GOTIFY_ENABLED=true # if "false" ntfy service won't be available as notification dispatcher
-
 
 #
 # Cache
@@ -259,12 +252,6 @@ ALLOWED_ORIGINS=*
 CACHE_TTL=86400
 CACHE_HOST=cache
 CACHE_PORT=6379
-
-#
-# SSL
-#
-SSL_ENABLED=false
-CERTIFICATE_PATH=/certificates/
 ```
 
 ## Example of traefik deployment
@@ -344,91 +331,6 @@ SMTP_AUTH=true
 SMTP_START_TTL=true
 CONTACT_MAIL=your-email@gmail.com
 ```
-
-## Enable SSL
-!!! warning end "Deprecation"
-
-    Please be aware that SSL feature is deprecated.
-    If you want to use SSL, you can use some application proxy like [traefik](https://traefik.io/traefik/) or [nginx](https://nginx.org/).
-
-To enable SSL for your Plant-it deployment, follow these steps:
-
-1. **Set SSL Enabled Property**: Ensure that SSL is enabled by adding the property `SSL_ENABLED=true` to the `server.env` file.
-1. **Create Volume Binding**: Add a volume binding `"./certs:/certificates"` to the `server.env` services in your `docker-compose.yml` file. This allows the services to access SSL certificates stored in the `./certs` directory.
-
-### Complete Example
-Let's say that you want to run Plant-it on a server with IP `https://192.168.1.103` and want to have:
-
-* the backend on port `8089`,
-* the frontend on port `3009`.
-
-`docker-compose.yml`:
-```yaml
-name: plant-it
-services:
-  server:
-    image: msdeluise/plant-it-server:latest
-    env_file: server.env
-    depends_on:
-      - db
-      - cache
-    restart: unless-stopped
-    volumes:
-      - "./upload-dir:/upload-dir"
-      - "certs:/certificates"
-    ports:
-      - "8089:8080"
-      - "3009:3000"
-  db:
-    image: mysql:8.0
-    restart: always
-    env_file: server.env
-    volumes:
-      - "./db:/var/lib/mysql"
-  cache:
-    image: redis:7.2.1
-    restart: always
-```
-
-`server.env`:
-```properties
-MYSQL_HOST=db
-MYSQL_PORT=3306
-MYSQL_USERNAME=root
-MYSQL_PSW=root
-MYSQL_DATABASE=bootdb
-MYSQL_ROOT_PASSWORD=root
-JWT_SECRET=32characterscomplicatedsecret
-JWT_EXP=1
-USERS_LIMIT=2
-UPLOAD_DIR=/upload-dir
-API_PORT=8080
-CACHE_TTL=86400
-CACHE_HOST=cache
-CACHE_PORT=6379
-FLORACODEX_KEY=
-ALLOWED_ORIGINS=*
-SSL_ENABLED=true
-CERTIFICATE_PATH=/certificates/ 
-```
-
-This setup creates a self-hosted certificate for both the backend and frontend services.
-
-!!! info "Accept certificates"
-
-    In some cases, certain browsers may require explicit acceptance of certificates from both the frontend and backend of the application, even if they share the same certificate. This scenario typically arises when encountering a "Cannot connect to the backend" error message and SSL is enabled.
-    To resolve this issue, users may need to navigate to both the frontend and backend URLs of the application and manually accept the certificate presented by each. By acknowledging the certificates, users can establish a trusted connection between their browser and the application's frontend and backend servers, thereby resolving connectivity issues.
-
-### Provide Custom Certificate
-If you prefer to use your own certificate, simply place the `app.key` and `app.crt` files inside the `CERTIFICATE_PATH` folder.
-
-## Get the API Key
-In order to get the API key, it's needed to use the REST API of the service:
-
-1. Open your browser and navigate to `http://<server-ip>:<server-port>/api/swagger-ui/index.html`.
-2. Obtain a JWT token by calling the `POST /authentication/login` endpoint with your credentials.
-3. Set the JWT token in Swagger for the subsequent calls by using the "Authorize" button at the top.
-4. Create a new API key by calling the `POST /api-key` endpoint, optionally passing a name for the key.
 
 ## Homepage dashboard integration
 ![](assets/dashboard-homepage.png){ align=left; loading=lazy; style="max-width:400px;"}

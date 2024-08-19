@@ -29,8 +29,6 @@ configmap:
     CACHE_TTL: 86400
     CACHE_HOST: cache-service
     CACHE_PORT: 6379
-    SSL_ENABLED: false
-    CERTIFICATE_PATH: /
 
 image:
   server:

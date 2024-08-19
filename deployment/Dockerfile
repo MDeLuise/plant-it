@@ -1,17 +1,15 @@
 FROM alpine:3.20.2
 
-# Determine architecture and set Java download URL accordingly
-ARG TARGETPLATFORM
-ARG JAVATARGET
+# Download dependencies
 ARG JAVA_VERSION=21
 
 RUN apk update && \
-    apk add bash openssl tar wget python3 openjdk${JAVA_VERSION}-jre
+    apk add bash wget python3 openjdk${JAVA_VERSION}-jre
 
 # Create environment
 RUN mkdir -p /opt/app
 
-# Download dependencies
+# Download external dependencies
 RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /opt/app/wait-for-it.sh
 
 # Copy project files
