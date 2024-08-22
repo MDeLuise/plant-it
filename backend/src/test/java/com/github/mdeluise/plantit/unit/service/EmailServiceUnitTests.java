@@ -33,6 +33,7 @@ class EmailServiceUnitTests {
     private Transport transport;
     @Mock
     private MimeMessage mimeMessage;
+    private final String from = "test@test.com";
     private EmailService emailService;
 
 
@@ -41,7 +42,7 @@ class EmailServiceUnitTests {
         //Mockito.when(session.getTransport("smtp")).thenReturn(transport);
         Mockito.when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
         emailService =
-            new EmailService(emailSender, templateEngine, otpService, temporaryPasswordService, "contact", "smtp");
+            new EmailService(emailSender, templateEngine, otpService, temporaryPasswordService, "contact", "smtp", from);
     }
 
 

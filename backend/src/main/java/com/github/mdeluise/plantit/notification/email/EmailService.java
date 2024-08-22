@@ -31,6 +31,7 @@ public class EmailService implements NotificationDispatcher {
     private final TemporaryPasswordService temporaryPasswordService;
     private final String contactEmail;
     private final boolean enabled;
+    private final String from;
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
 
@@ -39,13 +40,15 @@ public class EmailService implements NotificationDispatcher {
     public EmailService(JavaMailSender emailSender, SpringTemplateEngine templateEngine, OtpService otpService,
                         TemporaryPasswordService temporaryPasswordService,
                         @Value("${server.owner.contact}") String contactEmail,
-                        @Value("${spring.mail.host}") String smtpHost) throws EmailException {
+                        @Value("${spring.mail.host}") String smtpHost,
+                        @Value("${spring.mail.username}") String from) throws EmailException {
         this.emailSender = emailSender;
         this.templateEngine = templateEngine;
         this.otpService = otpService;
         this.temporaryPasswordService = temporaryPasswordService;
         this.contactEmail = contactEmail;
         this.enabled = Strings.isNotEmpty(smtpHost);
+        this.from = from;
         if (isEnabled()) {
             checkConnection();
         }
@@ -230,6 +233,7 @@ public class EmailService implements NotificationDispatcher {
             helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(to);
             helper.setSubject(subject);
+            helper.setFrom(from);
         } catch (MessagingException e) {
             logger.error("Error while setting mail to send", e);
             throw new EmailException(e);
