@@ -17,7 +17,7 @@
   "createAccount": "Crear una cuenta",
   "email": "Correo electrónico",
   "usernameSize": "La longitud del nombre de usuario debe estar entre 3 y 20 caracteres",
-  "passwordSize": "La longitud de la contraseña debe estar entre 3 y 20 caracteres",
+  "passwordSize": "La longitud de la contraseña debe estar entre 6 y 20 caracteres",
   "enterValidEmail": "Por favor, introduce un correo electrónico válido",
   "alreadyRegistered": "¿Ya estás registrado?",
   "signup": "Registrarse",

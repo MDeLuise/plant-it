@@ -17,7 +17,7 @@
   "createAccount": "Opret en konto",
   "email": "Email",
   "usernameSize": "Brugernavn længde skal være mellem 3 og 20 karaktere",
-  "passwordSize": "Kodeord længe skal være mellem 3 og 20 karaktere",
+  "passwordSize": "Kodeord længe skal være mellem 6 og 20 karaktere",
   "enterValidEmail": "Indtast venligst en gyldig email",
   "alreadyRegistered": "Allerede registreret?",
   "signup": "Tilmeld",

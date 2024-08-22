@@ -8,6 +8,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/login.dart';
 import 'package:plant_it/otp.dart';
+import 'package:plant_it/toast/toast_manager.dart';
 
 class SignupPage extends StatefulWidget {
   final Environment env;
@@ -59,7 +60,8 @@ class _SignupPageState extends State<SignupPage> {
       } else {
         final responseBody = json.decode(response.body);
         widget.env.logger.error(responseBody["message"]);
-        throw AppException(responseBody["message"]);
+        widget.env.toastManager.showToast(
+            context, ToastNotificationType.error, responseBody["message"]);
       }
     } catch (e, st) {
       if (!mounted) return;
@@ -170,7 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                                   return AppLocalizations.of(context)
                                       .enterValue;
                                 }
-                                if (value.length < 3 || value.length > 20) {
+                                if (value.length < 6 || value.length > 20) {
                                   return AppLocalizations.of(context)
                                       .passwordSize;
                                 }

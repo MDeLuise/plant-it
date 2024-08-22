@@ -137,7 +137,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context).enterValue;
                             }
-                            if (value.length < 3 || value.length > 20) {
+                            if (value.length < 6 || value.length > 20) {
                               return AppLocalizations.of(context).passwordSize;
                             }
                             return null;
