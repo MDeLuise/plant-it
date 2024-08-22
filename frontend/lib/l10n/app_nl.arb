@@ -17,7 +17,7 @@
   "createAccount": "Account aanmaken",
   "email": "E-mail",
   "usernameSize": "De lengte van de gebruikersnaam moet tussen 3 en 20 tekens zijn",
-  "passwordSize": "De lengte van het wachtwoord moet tussen 3 en 20 tekens zijn",
+  "passwordSize": "De lengte van het wachtwoord moet tussen 6 en 20 tekens zijn",
   "enterValidEmail": "Voer een geldig e-mailadres in",
   "alreadyRegistered": "Al geregistreerd?",
   "signup": "Registreren",

@@ -17,7 +17,7 @@
   "createAccount": "Criar uma conta",
   "email": "E-mail",
   "usernameSize": "Seu nome de usuário precisa ter entre 3 e 20 caracteres",
-  "passwordSize": "Sua senha precisa ter entre 3 e 20 caracteres",
+  "passwordSize": "Sua senha precisa ter entre 6 e 20 caracteres",
   "enterValidEmail": "Por favor, insira um endereço de e-mail válido",
   "alreadyRegistered": "Já possui cadastrado?",
   "signup": "Cadastro",

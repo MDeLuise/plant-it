@@ -17,7 +17,7 @@
   "createAccount": "Konto erstellen",
   "email": "E-Mail",
   "usernameSize": "Der Benutzername muss zwischen 3 und 20 Zeichen lang sein",
-  "passwordSize": "Das Passwort muss zwischen 3 und 20 Zeichen lang sein",
+  "passwordSize": "Das Passwort muss zwischen 6 und 20 Zeichen lang sein",
   "enterValidEmail": "Bitte eine gültige E-Mail-Adresse eingeben",
   "alreadyRegistered": "Bereits registriert?",
   "signup": "Registrieren",
