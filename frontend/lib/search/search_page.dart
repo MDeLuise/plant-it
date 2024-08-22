@@ -36,7 +36,8 @@ class _SeachPageState extends State<SeachPage> {
         : "botanical-info/partial/$seatchTerm";
     try {
       final response = await widget.env.http.get(url);
-      final List<dynamic> responseBody = json.decode(response.body);
+      final List<dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes));
       if (!mounted) return;
       if (response.statusCode != 200) {
         widget.env.logger.error(json.decode(response.body)["message"]);

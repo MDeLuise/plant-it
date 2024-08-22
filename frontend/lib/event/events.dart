@@ -144,7 +144,7 @@ class _EventsPageState extends State<EventsPage> {
     }
     final response = await widget.env.http.get(url);
     if (response.statusCode == 200) {
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       final List<dynamic> entries = responseBody["content"];
       return entries.map((entry) => dtoToCard(entry, widget.env)).toList();
     } else {

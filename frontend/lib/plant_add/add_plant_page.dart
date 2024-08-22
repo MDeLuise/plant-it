@@ -39,7 +39,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
       final response = await widget.env.http
           .get("botanical-info/${widget.species.id}/_count");
       if (response.statusCode != 200) {
-        final responseBody = json.decode(response.body);
+        final responseBody = json.decode(utf8.decode(response.bodyBytes));
         widget.env.logger.error(
             "Error while getting plant name: ${responseBody["message"]}");
         if (!mounted) return Future.value(scientificName);
@@ -64,7 +64,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
       _toCreate.speciesId = speciesId;
       _toCreate.info.state = "PURCHASED";
       final response = await widget.env.http.post("plant", _toCreate.toMap());
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating plant: ${responseBody["message"]}");
@@ -87,7 +87,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
     try {
       final response =
           await widget.env.http.post("botanical-info", widget.species.toMap());
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating species: ${responseBody["message"]}");

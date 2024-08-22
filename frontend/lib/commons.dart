@@ -184,7 +184,7 @@ Future<void> fetchAndSetEventTypes(
     BuildContext context, Environment env) async {
   try {
     final response = await env.http.get("diary/entry/type");
-    final responseBody = json.decode(response.body);
+    final responseBody = json.decode(utf8.decode(response.bodyBytes));
     if (response.statusCode == 200) {
       final List<String> eventTypes = List<String>.from(responseBody);
       env.eventTypes = eventTypes;
@@ -203,7 +203,7 @@ Future<void> fetchAndSetPlants(BuildContext context, Environment env) async {
   try {
     final totalPlantsResponse = await env.http.get("plant/_count");
     if (totalPlantsResponse.statusCode != 200) {
-      final totalPlantsResponseBody = json.decode(totalPlantsResponse.body);
+      final totalPlantsResponseBody = json.decode(utf8.decode(totalPlantsResponse.bodyBytes));
       throw AppException(totalPlantsResponseBody["message"]);
     }
     if (totalPlantsResponse.body == "0") {

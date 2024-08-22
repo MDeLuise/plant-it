@@ -29,7 +29,7 @@ class _EditPlantPageState extends State<EditPlantPage> {
   void _updatePlant() async {
     final response = await widget.env.http
         .put("plant/${widget.plantDTO.id}", _updated.toMap());
-    final responseBody = json.decode(response.body);
+    final responseBody = json.decode(utf8.decode(response.bodyBytes));
     if (!mounted) return;
     if (response.statusCode != 200) {
       widget.env.logger.error(responseBody["message"]);
@@ -45,7 +45,7 @@ class _EditPlantPageState extends State<EditPlantPage> {
     final response = await widget.env.http
         .post("plant/${widget.plantDTO.id}", _updated.toMap());
     if (!mounted) return;
-    final responseBody = json.decode(response.body);
+    final responseBody = json.decode(utf8.decode(response.bodyBytes));
     if (response.statusCode != 200) {
       widget.env.logger.error(responseBody["message"]);
       throw AppException(responseBody["message"]);
