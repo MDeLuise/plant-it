@@ -74,7 +74,7 @@ class _SignupPageState extends State<SignupPage> {
 
   bool _isValidEmail(String email) {
     final RegExp emailRegex = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$',
       caseSensitive: false,
     );
     return emailRegex.hasMatch(email);
