@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd">
 
 
     <changeSet id="createUserTable" author="MDeLuise">
@@ -33,7 +33,7 @@
                         uniqueConstraintName="email_unique"
                 />
             </column>
-            <!--<column name="last_login" type="TIMESTAMP"/>-->
+            <column name="last_login" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 
@@ -65,12 +65,47 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
+
+    <changeSet context="mysql,h2" id="createComplexConstraintForApiKeyTable-mysql" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="mysql,h2"/>
+                <not>
+                    <uniqueConstraintExists
+                            constraintName="api_key_name_unique"
+                            tableName="api_keys"
+                    />
+                </not>
+            </and>
+        </preConditions>
         <addUniqueConstraint
                 columnNames="user_id, name"
                 constraintName="api_key_name_unique"
                 tableName="api_keys"
         />
+    </changeSet>
+
+
+    <changeSet context="sqlite" id="createComplexConstraintForApiKeyTable-sqlite" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="sqlite"/>
+                <not>
+                    <indexExists
+                            indexName="api_key_name_unique"
+                            tableName="api_keys"
+                    />
+                </not>
+            </and>
+        </preConditions>
+        <createIndex
+                indexName="api_key_name_unique"
+                tableName="api_keys">
+            <column name="user_id"/>
+            <column name="name"/>
+        </createIndex>
     </changeSet>
 
 
@@ -142,7 +177,21 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
+    </changeSet>
 
+
+    <changeSet context="mysql,h2" id="createComplexConstraintForBotanicalInfoTable-mysql" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="mysql,h2"/>
+                <not>
+                    <uniqueConstraintExists
+                            constraintName="botanical_info_species_unique"
+                            tableName="botanical_infos"
+                    />
+                </not>
+            </and>
+        </preConditions>
         <addUniqueConstraint
                 columnNames="species, creator, user_creator_id"
                 constraintName="botanical_info_species_unique"
@@ -153,6 +202,35 @@
                 constraintName="botanical_info_external_id_unique"
                 tableName="botanical_infos"
         />
+    </changeSet>
+
+
+    <changeSet context="sqlite" id="createComplexConstraintForBotanicalInfoTable-sqlite" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="sqlite"/>
+                <not>
+                    <indexExists
+                            indexName="botanical_info_species_unique"
+                            tableName="botanical_infos"
+                    />
+                </not>
+            </and>
+        </preConditions>
+        <createIndex
+                indexName="botanical_info_species_unique"
+                tableName="botanical_infos">
+            <column name="species"/>
+            <column name="creator"/>
+            <column name="user_creator_id"/>
+        </createIndex>
+        <createIndex
+                indexName="botanical_info_external_id_unique"
+                tableName="botanical_infos">
+            <column name="creator"/>
+            <column name="external_id"/>
+            <column name="user_creator_id"/>
+        </createIndex>
     </changeSet>
 
 
@@ -205,12 +283,47 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
 
+
+    <changeSet context="mysql,h2" id="createComplexConstraintForPlantTable-mysql" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="mysql,h2"/>
+                <not>
+                    <uniqueConstraintExists
+                            constraintName="plant_name_unique"
+                            tableName="plants"
+                    />
+                </not>
+            </and>
+        </preConditions>
         <addUniqueConstraint
                 columnNames="owner_id, personal_name"
                 constraintName="plant_name_unique"
                 tableName="plants"
         />
+    </changeSet>
+
+
+    <changeSet context="sqlite" id="createComplexConstraintForPlantTable-sqlite" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="sqlite"/>
+                <not>
+                    <indexExists
+                            indexName="plant_name_unique"
+                            tableName="plants"
+                    />
+                </not>
+            </and>
+        </preConditions>
+        <createIndex
+                indexName="plant_name_unique"
+                tableName="plants">
+            <column name="owner_id"/>
+            <column name="personal_name"/>
+        </createIndex>
     </changeSet>
 
 
@@ -355,12 +468,47 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
         </createTable>
+    </changeSet>
 
+
+    <changeSet context="mysql,h2" id="createComplexConstraintForSynonymsTable-mysql" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="mysql,h2"/>
+                <not>
+                    <uniqueConstraintExists
+                            constraintName="synonym_unique"
+                            tableName="synonyms"
+                    />
+                </not>
+            </and>
+        </preConditions>
         <addUniqueConstraint
                 columnNames="botanical_info_id, synonym_value"
                 constraintName="synonym_unique"
                 tableName="synonyms"
         />
+    </changeSet>
+
+
+    <changeSet context="sqlite" id="createComplexConstraintForSynonymsTable-sqlite" author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="sqlite"/>
+                <not>
+                    <indexExists
+                            indexName="synonym_unique"
+                            tableName="synonyms"
+                    />
+                </not>
+            </and>
+        </preConditions>
+        <createIndex
+                indexName="synonym_unique"
+                tableName="synonyms">
+            <column name="botanical_info_id"/>
+            <column name="synonym_value"/>
+        </createIndex>
     </changeSet>
 
 
@@ -432,11 +580,49 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+
+    <changeSet context="mysql,h2" id="createComplexConstraintForUserNotificationDispatchersTable-mysql"
+               author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="mysql,h2"/>
+                <not>
+                    <uniqueConstraintExists
+                            constraintName="pk_userNotificationDispatchers"
+                            tableName="notification_dispatchers"
+                    />
+                </not>
+            </and>
+        </preConditions>
         <addPrimaryKey
                 tableName="notification_dispatchers"
                 columnNames="user_id,dispatcher_name"
                 constraintName="pk_userNotificationDispatchers"
         />
+    </changeSet>
+
+
+    <changeSet context="sqlite" id="createComplexConstraintForUserNotificationDispatchersTable-sqlite"
+               author="MDeLuise">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="sqlite"/>
+                <not>
+                    <indexExists
+                            indexName="pk_userNotificationDispatchers"
+                            tableName="notification_dispatchers"
+                    />
+                </not>
+            </and>
+        </preConditions>
+        <createIndex
+                indexName="pk_userNotificationDispatchers"
+                tableName="notification_dispatchers">
+            <column name="user_id"/>
+            <column name="dispatcher_name"/>
+        </createIndex>
     </changeSet>
 
 
@@ -491,257 +677,6 @@
         <addColumn tableName="application_users">
             <column name="last_login" type="TIMESTAMP"/>
         </addColumn>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.2.0 -->
-    <changeSet id="updateTo0.1.1" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="botanical_infos" columnName="light"/>
-            </not>
-        </preConditions>
-        <addColumn tableName="botanical_infos">
-            <column name="light" type="int" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-            <column name="humidity" type="int" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-            <column name="min_temp" type="double" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-            <column name="max_temp" type="double" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-            <column name="ph_min" type="double" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-            <column name="ph_max" type="double" defaultValue="null">
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
-        <addColumn tableName="plants">
-            <column name="purchased_price" type="double" defaultValue="null">
-            </column>
-            <column name="currency_symbol" type="varchar(4)" defaultValue="null">
-            </column>
-            <column name="seller" type="varchar(100)" defaultValue="null">
-            </column>
-            <column name="location" type="varchar(100)" defaultValue="null">
-            </column>
-        </addColumn>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.3.0 -->
-    <changeSet id="updateTo0.3.0" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="entity_images" columnName="create_on"/>
-            </not>
-        </preConditions>
-        <renameColumn tableName="entity_images" oldColumnName="saved_at"
-                      newColumnName="create_on" columnDataType="datetime"/>
-
-        <addColumn tableName="application_users">
-            <column name="email" type="varchar(70)" valueComputed="(username || '@to-change.com')">
-                <constraints nullable="false" unique="true" uniqueConstraintName="email_unique"/>
-            </column>
-        </addColumn>
-
-        <createTable tableName="temporary_passwords">
-            <column name="username" type="varchar(20)">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="password" type="varchar(120)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="expiration" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.4.0 -->
-    <changeSet id="modifyReminderColumns" author="MDeLuise">
-        <modifyDataType tableName="reminders" columnName="reminder_start" newDataType="date"/>
-        <modifyDataType tableName="reminders" columnName="reminder_end" newDataType="date"/>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.4.3 -->
-    <changeSet id="addDeleteCascadeToForeignKeys" author="MDeLuise">
-        <!-- Drop and recreate foreign key constraint fk_apiKey_user -->
-        <dropForeignKeyConstraint baseTableName="api_keys" constraintName="fk_apiKey_user"/>
-        <addForeignKeyConstraint baseTableName="api_keys"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_apiKey_user"
-                                 referencedTableName="application_users"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_botanicalInfo_user -->
-        <dropForeignKeyConstraint baseTableName="botanical_infos" constraintName="fk_botanicalInfo_user"/>
-        <addForeignKeyConstraint baseTableName="botanical_infos"
-                                 baseColumnNames="user_creator_id"
-                                 constraintName="fk_botanicalInfo_user"
-                                 referencedTableName="application_users"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_plant_user -->
-        <dropForeignKeyConstraint baseTableName="plants" constraintName="fk_plant_user"/>
-        <addForeignKeyConstraint baseTableName="plants"
-                                 baseColumnNames="owner_id"
-                                 constraintName="fk_plant_user"
-                                 referencedTableName="application_users"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_plant_botanicalName -->
-        <dropForeignKeyConstraint baseTableName="plants" constraintName="fk_plant_botanicalName"/>
-        <addForeignKeyConstraint baseTableName="plants"
-                                 baseColumnNames="botanical_name_id"
-                                 constraintName="fk_plant_botanicalName"
-                                 referencedTableName="botanical_infos"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_entityImage_botanicalInfoId -->
-        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_entityImage_botanicalInfoId"/>
-        <addForeignKeyConstraint baseTableName="entity_images"
-                                 baseColumnNames="botanical_info_entity_id"
-                                 constraintName="fk_entityImage_botanicalInfoId"
-                                 referencedTableName="botanical_infos"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_entityImage_plantId -->
-        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_entityImage_plantId"/>
-        <addForeignKeyConstraint baseTableName="entity_images"
-                                 baseColumnNames="plant_entity_id"
-                                 constraintName="fk_entityImage_plantId"
-                                 referencedTableName="plants"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_avatar_plantId -->
-        <dropForeignKeyConstraint baseTableName="entity_images" constraintName="fk_avatar_plantId"/>
-        <addForeignKeyConstraint baseTableName="entity_images"
-                                 baseColumnNames="avatar_of"
-                                 constraintName="fk_avatar_plantId"
-                                 referencedTableName="plants"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_diary_user -->
-        <dropForeignKeyConstraint baseTableName="diaries" constraintName="fk_diary_user"/>
-        <addForeignKeyConstraint baseTableName="diaries"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_diary_user"
-                                 referencedTableName="application_users"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_diary_trackedEntity -->
-        <dropForeignKeyConstraint baseTableName="diaries" constraintName="fk_diary_trackedEntity"/>
-        <addForeignKeyConstraint baseTableName="diaries"
-                                 baseColumnNames="target_id"
-                                 constraintName="fk_diary_trackedEntity"
-                                 referencedTableName="plants"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_diaryEntry_diary -->
-        <dropForeignKeyConstraint baseTableName="diary_entries" constraintName="fk_diaryEntry_diary"/>
-        <addForeignKeyConstraint baseTableName="diary_entries"
-                                 baseColumnNames="diary_id"
-                                 constraintName="fk_diaryEntry_diary"
-                                 referencedTableName="diaries"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_synonyms_botanicalInfo -->
-        <dropForeignKeyConstraint baseTableName="synonyms" constraintName="fk_synonyms_botanicalInfo"/>
-        <addForeignKeyConstraint baseTableName="synonyms"
-                                 baseColumnNames="botanical_info_id"
-                                 constraintName="fk_synonyms_botanicalInfo"
-                                 referencedTableName="botanical_infos"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_reminder_plant -->
-        <dropForeignKeyConstraint baseTableName="reminders" constraintName="fk_reminder_plant"/>
-        <addForeignKeyConstraint baseTableName="reminders"
-                                 baseColumnNames="target_id"
-                                 constraintName="fk_reminder_plant"
-                                 referencedTableName="plants"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-
-        <!-- Drop and recreate foreign key constraint fk_dispatcher_user -->
-        <dropForeignKeyConstraint baseTableName="notification_dispatchers" constraintName="fk_dispatcher_user"/>
-        <addForeignKeyConstraint baseTableName="notification_dispatchers"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_dispatcher_user"
-                                 referencedTableName="application_users"
-                                 referencedColumnNames="id"
-                                 deleteCascade="true"/>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.4.3 -->
-    <changeSet id="addExternalIdUniqueConstraintIfNotExists" author="MDeLuise" failOnError="false">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*)
-                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-                WHERE CONSTRAINT_TYPE = 'UNIQUE'
-                  AND LOWER(CONSTRAINT_NAME) = 'botanical_info_external_id_unique'
-                  AND LOWER(TABLE_NAME) = 'botanical_infos';
-            </sqlCheck>
-        </preConditions>
-        <addUniqueConstraint
-                columnNames="creator, external_id"
-                constraintName="botanical_info_external_id_unique"
-                tableName="botanical_infos"
-        />
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.4.3 -->
-    <changeSet id="remove_unique_constraint_and_column" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <columnExists tableName="botanical_infos" columnName="scientific_name"/>
-        </preConditions>
-
-        <!-- Drop the unique constraint -->
-        <dropUniqueConstraint
-                constraintName="botanical_info_scientific_name_unique"
-                tableName="botanical_infos"/>
-
-        <!-- Drop the scientific_name column -->
-        <dropColumn tableName="botanical_infos" columnName="scientific_name"/>
-    </changeSet>
-
-
-    <!-- can be removed after update to v0.5.0 -->
-    <changeSet id="updateEntityImageTable" author="MDeLuise">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="entity_images" columnName="content_type"/>
-            </not>
-        </preConditions>
-        <addColumn tableName="entity_images">
-            <column name="content_type" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
-        <dropNotNullConstraint tableName="entity_images" columnName="url" columnDataType="varchar(255)"/>
     </changeSet>
 
 
