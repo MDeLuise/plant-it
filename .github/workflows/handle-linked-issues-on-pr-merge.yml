@@ -44,20 +44,13 @@ jobs:
 
               // Leave a comment on the issue
               const author = issue.data.user.login;
-              const commentBody = `
-                Hi @${author},
-
-                This task has been completed and will be implemented in the next project release.
-                Thank you for your contribution!
-
-                If you have any further questions or updates regarding this task, feel free to leave a comment below.
-              `;
+              const commentBody = `Hi @${author},\n\nThis task has been completed and will be implemented in the next project release.\n\nThank you for your contribution!\n\nIf you have any further questions or updates regarding this task, feel free to leave a comment below.`;
 
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber,
-                body: commentBody.trim()
+                body: commentBody
               });
             }
           }

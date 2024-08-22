@@ -21,15 +21,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commentBody = `
-              Hi @${context.payload.sender.login}!
-              This task has been completed and will be implemented in the next project release.
-              Thank you for your contribution!
-            `;
+            const commentBody = `Hi @${context.payload.sender.login},\n\nThis task has been completed and will be implemented in the next project release.\n\nThank you for your contribution!`;
 
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: commentBody.trim()
+              body: commentBody
             });
