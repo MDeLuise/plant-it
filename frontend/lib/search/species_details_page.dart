@@ -38,6 +38,16 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  iconTheme: const IconThemeData(
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black,
+                        spreadRadius: 10,
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
                   pinned: true,
                   stretch: true,
                   expandedHeight: MediaQuery.of(context).size.height * .5,
