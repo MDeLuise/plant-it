@@ -41,7 +41,7 @@ class _EditSpeciesPageState extends State<EditSpeciesPage> {
           widget.species.toMap(),
         );
       }
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while updating species: ${responseBody["message"]}");

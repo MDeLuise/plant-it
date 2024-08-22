@@ -51,7 +51,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
           final response =
               await widget.env.http.post("diary/entry", toCreate.toMap());
           if (!mounted) return;
-          final responseBody = json.decode(response.body);
+          final responseBody = json.decode(utf8.decode(response.bodyBytes));
           if (response.statusCode == 200) {
             created.add(dtoToCard(responseBody, widget.env));
           } else {

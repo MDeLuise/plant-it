@@ -41,7 +41,7 @@ class _RecentEventsState extends State<RecentEvents> {
     final response =
         await widget.env.http.get("diary/entry?pageNo=0&pageSize=$_pageSize");
     if (response.statusCode == 200) {
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       final List<dynamic> entries = responseBody["content"];
       List<EventCard> newEvents = [];
       if (entries.isNotEmpty) {

@@ -45,7 +45,7 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
         "botanical-info",
         _toCreate.toMap(),
       );
-      final responseBody = json.decode(response.body);
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode != 200) {
         widget.env.logger
             .error("Error while creating species: ${responseBody["message"]}");
