@@ -122,7 +122,7 @@ For Android users, the app is also available as an APK, which can be downloaded 
 
 - **F-Droid**: Alternatively, you can get the app from [F-Droid](https://f-droid.org/packages/com.github.mdeluise.plantit/).
   <p align="center">
-    <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://camo.githubusercontent.com/f422f6f830e814ec7e766de8fef4db949c6add75a9d58548ab2f5d29855c0616/68747470733a2f2f6664726f69642e6769746c61622e696f2f617274776f726b2f62616467652f6765742d69742d6f6e2e706e67" alt="Get it on F-Droid" height="60" style="max-width: 200px"></a>
+    <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Get_it_on_F-Droid_%28material_design%29.svg/2880px-Get_it_on_F-Droid_%28material_design%29.svg.png" alt="Get it on F-Droid" height=40 ></a>
   </p>
 
 ### Installation
@@ -144,8 +144,8 @@ If you're interested in contributing transactions to enhance the app, you can ge
 |----------|----------|-------------|
 | English | app_en.arb | 100% |
 | Italian | app_it.arb | 100% |
+| German | app_de.arb | 100% |
 | Russian | app_ru.arb | 98% |
-| German | app_de.arb | 98% |
 | French | app_fr.arb | 98% |
 | Dutch Flemish | app_nl.arb | 98% |
 | Danish | app_da.arb | 98% |
