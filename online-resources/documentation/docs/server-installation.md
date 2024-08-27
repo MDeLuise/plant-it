@@ -120,6 +120,7 @@ GOTIFY_ENABLED=true # if "false" ntfy service won't be available as notification
 #
 # Cache
 #
+CACHE_TYPE=redis # Cache type. By default, it's "redis" but can also be "none"
 CACHE_TTL=86400
 CACHE_HOST=cache
 CACHE_PORT=6379
@@ -174,6 +175,76 @@ To enhance your application with plant search capabilities, you can integrate wi
    - Restart your server to apply the new configuration.
 
 By following these steps, you enable your application to use the FloraCodex service for searching and retrieving information about existing plants. Ensure that your API key is kept secure and not exposed publicly to avoid unauthorized access.
+
+### Deployment Without Cache
+If you need to deploy the application without using a cache, you can disable the cache by setting the `CACHE_TYPE` environment variable to `none`. This prevents the application from attempting to connect to a cache service.
+
+Then, to remove the cache service from your deployment, update your docker-compose.yaml file as follows:
+```yaml
+name: plant-it
+services:
+  server:
+    image: msdeluise/plant-it-server:latest
+    env_file: server.env
+    depends_on:
+      - db
+    restart: unless-stopped
+    volumes:
+      - "./upload-dir:/upload-dir"
+      - "./certs:/certificates"
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file: server.env
+    volumes:
+      - "./db:/var/lib/mysql"
+```
+
+### Deployment Without Docker
+If you prefer to install and run the server without using Docker, ensure that you have Java Runtime Environment (JRE) 21 installed on your system. Follow these steps to set up the server:
+1. **Download the Server JAR File**:
+   - Obtain the `server.jar` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
+
+2. **Set Environment Variables**:
+   - Configure the necessary environment variables based on your `server.env` file. For example:
+     ```bash
+     export MYSQL_HOST=localhost && \
+     export MYSQL_PORT=3306 && \
+     ...
+     ```
+   - Adjust these variables according to your specific setup.
+
+3. **Run the Server**:
+   - Start the server by executing the following command:
+     ```bash
+     java -jar server.jar
+     ```
+
+#### **Frontend Setup Without Docker**
+For the frontend, if you're using Android, you can use the provided APK available on [GitHub releases](https://github.com/MDeLuise/plant-it/releases/latest) or [F-Droid](https://f-droid.org/packages/com.github.mdeluise.plantit/). However, for iOS, a standalone app is not available. If you choose not to use Docker for the frontend, follow these steps:
+
+1. **Download the Frontend Files**:
+   - Download the `client.tar.gz` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
+
+2. **Uncompress the Files**:
+   - Extract the contents of the `client.tar.gz` file:
+     ```bash
+     tar -xzf client.tar.gz
+     ```
+
+3. **Serve the Files**:
+   - You can serve the frontend files locally using a simple HTTP server. For example, using Python:
+     ```bash
+     python3 -m http.server 3000
+     ```
+   - Alternatively, you can serve the files using a web server like Nginx.
+
+By following these instructions, you can deploy both the server and frontend components without relying on Docker. This setup provides flexibility if Docker is not available or desirable in your environment.
+
 
 ## Change ports binding
 ### Backend
@@ -341,6 +412,7 @@ In order to use it, simply place the widget as above in the configuration yml fi
 - Plant-it:
     href: <server-app-url>
     description: 🪴 Self-hosted, open source gardening companion app
+    icon: plant-it
     widget:
       type: plantit
       url: <server-backend-url>
