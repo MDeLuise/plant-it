@@ -182,7 +182,7 @@ jobs:
           path: .
 
       - name: Rename backend jar to server.jar
-        run: mv ./backend/target/*.jar ./server.jar
+        run: mv *.jar ./server.jar
 
       - name: Load frontend files
         uses: actions/download-artifact@v4
@@ -191,7 +191,7 @@ jobs:
           path: .
 
       - name: Create client.tar.gz
-        run: tar -czf client.tar.gz -C ./frontend/build/web .
+        run: tar -czf client.tar.gz -C ./web .
 
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
