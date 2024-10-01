@@ -159,20 +159,24 @@ SMTP_START_TTL=
 To enhance your application with plant search capabilities, you can integrate with the FloraCodex service. FloraCodex provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the FloraCodex service in your project:
 
 1. **Create an Account on FloraCodex:**
-   - Visit the [FloraCodex website](https://floracodex.com/) and sign up for an account.
-   - Follow the registration process to verify your account.
+   
+    - Visit the [FloraCodex website](https://floracodex.com/) and sign up for an account.
+    - Follow the registration process to verify your account.
 
 2. **Retrieve the API Key:**
-   - Once your account is set up, log in to your FloraCodex account.
-   - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the FloraCodex API.
+   
+    - Once your account is set up, log in to your FloraCodex account.
+    - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the FloraCodex API.
 
 3. **Configure the API Key:**
-   - Open the `server.env` file in your project.
-   - Add the following line to the file, replacing `YOUR_FLORACODEX_API_KEY` with the actual API key you obtained from FloraCodex: `FLORACODEX_KEY=YOUR_FLORACODEX_API_KEY`
+   
+    - Open the `server.env` file in your project.
+    - Add the following line to the file, replacing `YOUR_FLORACODEX_API_KEY` with the actual API key you obtained from FloraCodex: `FLORACODEX_KEY=YOUR_FLORACODEX_API_KEY`
 
 4. **Save and Restart Your Server:**
-   - Save the changes made to the `server.env` file.
-   - Restart your server to apply the new configuration.
+   
+    - Save the changes made to the `server.env` file.
+    - Restart your server to apply the new configuration.
 
 By following these steps, you enable your application to use the FloraCodex service for searching and retrieving information about existing plants. Ensure that your API key is kept secure and not exposed publicly to avoid unauthorized access.
 
@@ -206,41 +210,56 @@ services:
 
 ### Deployment Without Docker
 If you prefer to install and run the server without using Docker, ensure that you have Java Runtime Environment (JRE) 21 installed on your system. Follow these steps to set up the server:
+
 1. **Download the Server JAR File**:
-   - Obtain the `server.jar` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
+   
+    - Obtain the `server.jar` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
 
 2. **Set Environment Variables**:
-   - Configure the necessary environment variables based on your `server.env` file. For example:
-     ```bash
-     export MYSQL_HOST=localhost && \
-     export MYSQL_PORT=3306 && \
-     ...
-     ```
-   - Adjust these variables according to your specific setup.
-
+   
+    - You can configure the necessary environment variables in two ways:
+     
+        - **Option 1**: Manually export them in your terminal based on your setup. For example:
+          ```bash
+          export MYSQL_HOST=localhost && \
+          export MYSQL_PORT=3306 && \
+          ...
+          ```
+        Adjust these variables according to your specific setup.
+     
+        - **Option 2**: Provide a `server.properties` file that contains all the required properties. You can download a template for this file from the [project's repository](https://github.com/MDeLuise/plant-it/blob/main/backend/src/main/resources/application.properties) and adjust it to suit your configuration.
+   
 3. **Run the Server**:
-   - Start the server by executing the following command:
-     ```bash
-     java -jar server.jar
-     ```
+   
+    - If you chose **Option 1** (manually setting environment variables), run the server using the following command:
+      ```bash
+      java -jar server.jar
+      ```
+    - If you chose **Option 2** (using the `server.properties` file), run the server with the following command, specifying the location of your configuration file:
+      ```bash
+      java -jar server.jar --spring.config.location=classpath:/<path-to-server.properties>
+      ```
 
 #### **Frontend Setup Without Docker**
 For the frontend, if you're using Android, you can use the provided APK available on [GitHub releases](https://github.com/MDeLuise/plant-it/releases/latest) or [F-Droid](https://f-droid.org/packages/com.github.mdeluise.plantit/). However, for iOS, a standalone app is not available. If you choose not to use Docker for the frontend, follow these steps:
 
 1. **Download the Frontend Files**:
-   - Download the `client.tar.gz` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
+   
+    - Download the `client.tar.gz` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
 
 2. **Uncompress the Files**:
-   - Extract the contents of the `client.tar.gz` file:
-     ```bash
-     tar -xzf client.tar.gz
-     ```
+   
+    - Extract the contents of the `client.tar.gz` file:
+      ```bash
+      tar -xzf client.tar.gz
+      ```
 
 3. **Serve the Files**:
-   - You can serve the frontend files locally using a simple HTTP server. For example, using Python:
-     ```bash
-     python3 -m http.server 3000
-     ```
+   
+    - You can serve the frontend files locally using a simple HTTP server. For example, using Python:
+      ```bash
+      python3 -m http.server 3000
+      ```
    - Alternatively, you can serve the files using a web server like Nginx.
 
 By following these instructions, you can deploy both the server and frontend components without relying on Docker. This setup provides flexibility if Docker is not available or desirable in your environment.
@@ -419,6 +438,47 @@ In order to use it, simply place the widget as above in the configuration yml fi
       key: <you-key>
 ```
 You can get the API Key following the step in the relative section.
+
+## API Key Retrieval
+To retrieve an API Key using the REST API, follow these steps:
+
+1. **Authenticate and Retrieve JWT Token:**
+   
+    - Send a `POST` request to the authentication endpoint to log in.
+    - Replace `<server-url>` with the actual server URL.
+    - Example using `curl`:
+
+      ```bash
+      curl -X 'POST' \
+      'http://<server-url>/api/authentication/login' \
+      -H 'accept: */*' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "username": "user",
+      "password": "user"
+      }'
+      ```
+
+    - Upon successful authentication, the response will contain a JWT token. This token is required for the next step.
+
+2. **Generate API Key:**
+   
+    - With the JWT token, make an authenticated `POST` request to the API Key endpoint. You may optionally pass a name parameter for the API key.
+    - Example using `curl`:
+
+    ```bash
+    curl -X 'POST' \
+    'http://<server-url>/api/api-key/' \
+    -H 'accept: */*' \
+    -H 'Authorization: Bearer <JWT-token>' \
+    -d ''
+    ```
+
+3. **Receive API Key:**
+   
+    - The response from the API Key request will contain your newly generated API Key.
+
+Make sure to store the API Key securely, as it will be used for authenticating your requests to the system.
 
 ## Kubernetes Deployment
 This guide will help you deploy your project using Kubernetes with Minikube. Follow the steps below to set up and access your application.
