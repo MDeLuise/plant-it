@@ -13,10 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -107,37 +109,25 @@ public class ApplicationSecurityConfig {
             }
         }
 
-        http.cors();
-         http.csrf()
-             .disable();
-        http.sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.authorizeHttpRequests()
-            .requestMatchers(authWhitelist)
-            .permitAll()
-            .anyRequest()
-            .authenticated();
-
-        http.headers()
-            .frameOptions()
-            .disable();
-
-        http.authenticationManager(authenticationManager);
-
-        http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
-
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-        http.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+        return http
+                   .httpBasic(AbstractHttpConfigurer::disable)
+                   .cors(Customizer.withDefaults())
+                   .csrf(AbstractHttpConfigurer::disable)
+                   .authorizeHttpRequests(r -> r.requestMatchers(authWhitelist)
+                                                .permitAll()
+                                                .anyRequest()
+                                                .authenticated())
+                   .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                   .authenticationManager(authenticationManager)
+                   .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+                   .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                   .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+                   .build();
     }
 
 
     private void configureH2(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().requestMatchers(PathRequest.toH2Console()).permitAll();
-        //http.csrf().ignoringRequestMatchers(PathRequest.toH2Console());
+        http.authorizeHttpRequests(r -> r.requestMatchers(PathRequest.toH2Console()).permitAll());
     }
 
 
