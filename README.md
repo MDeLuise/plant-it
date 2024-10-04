@@ -54,7 +54,6 @@ Installing Plant-it is pretty straight forward, in order to do so follow these s
       restart: unless-stopped
       volumes:
         - "./upload-dir:/upload-dir"
-        - "./certs:/certificates"
       ports:
         - "8080:8080"
         - "3000:3000"

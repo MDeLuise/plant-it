@@ -23,7 +23,6 @@ services:
     restart: unless-stopped
     volumes:
       - "./upload-dir:/upload-dir"
-      - "./certs:/certificates"
     ports:
       - "8080:8080"
       - "3000:3000"
@@ -195,7 +194,6 @@ services:
     restart: unless-stopped
     volumes:
       - "./upload-dir:/upload-dir"
-      - "./certs:/certificates"
     ports:
       - "8080:8080"
       - "3000:3000"
@@ -295,7 +293,6 @@ services:
     restart: unless-stopped
     volumes:
       - "./upload-dir:/upload-dir"
-      - "./certs:/certificates"
     ports:
       - "8089:8080"
       - "3009:3000"
