@@ -23,5 +23,4 @@ java -jar /opt/app/backend/app.jar &
 #######################
 #     Run frontend    #
 #######################
-cd /opt/app/frontend/build/web;
-python3 -m http.server 3000;
+nginx -g 'daemon off;';
