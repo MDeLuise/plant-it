@@ -1,14 +1,23 @@
 package com.github.mdeluise.plantit.reminder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
+import com.github.mdeluise.plantit.diary.entry.DiaryEntryType;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
 import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantService;
+import com.github.mdeluise.plantit.reminder.occurrence.ReminderOccurrence;
+import com.github.mdeluise.plantit.reminder.occurrence.ReminderOccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,14 +25,17 @@ public class ReminderService {
     private final ReminderRepository reminderRepository;
     private final PlantService plantService;
     private final AuthenticatedUserService authenticatedUserService;
+    private final ReminderOccurrenceService reminderOccurrenceService;
 
 
     @Autowired
     public ReminderService(ReminderRepository reminderRepository, PlantService plantService,
-                           AuthenticatedUserService authenticatedUserService) {
+                           AuthenticatedUserService authenticatedUserService,
+                           ReminderOccurrenceService reminderOccurrenceService) {
         this.reminderRepository = reminderRepository;
         this.plantService = plantService;
         this.authenticatedUserService = authenticatedUserService;
+        this.reminderOccurrenceService = reminderOccurrenceService;
     }
 
 
@@ -86,5 +98,32 @@ public class ReminderService {
 
     public void deleteAll() {
         reminderRepository.findAll().forEach(reminder -> remove(reminder.getId()));
+    }
+
+
+    public Collection<Reminder> getAllFiltered(DiaryEntryType type, Long plantId) {
+        final User authenticatedUser = authenticatedUserService.getAuthenticatedUser();
+        if (type == null && plantId == null) {
+            return reminderRepository.findAllByTargetOwner(authenticatedUser);
+        } else if (type == null) {
+            final Plant plant = plantService.get(plantId);
+            return reminderRepository.findAllByTargetAndTargetOwner(plant, authenticatedUser);
+        } else {
+            return reminderRepository.findAllByTargetOwnerAndAction(authenticatedUser, type);
+        }
+    }
+
+
+    public Page<ReminderOccurrence> getAllOccurrences(DiaryEntryType type, Long plantId, Date from, Date to,
+                                                      Pageable pageable) {
+        final Collection<Reminder> allFiltered = getAllFiltered(type, plantId);
+        final List<ReminderOccurrence> occurrences = new ArrayList<>();
+        for (Reminder reminder : allFiltered) {
+            occurrences.addAll(reminderOccurrenceService.getOccurrences(reminder, from, to));
+        }
+        final int start = Math.min((int) pageable.getOffset(), occurrences.size());
+        final int end = Math.min(start + pageable.getPageSize(), occurrences.size());
+        final List<ReminderOccurrence> pageContent = occurrences.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, occurrences.size());
     }
 }

@@ -16,11 +16,12 @@ class FilterWidget extends StatefulWidget {
   final Function(List<String>) onSelectedEventsChanged;
   final Function(List<String>) onSelectedPlantsChanged;
 
-  const FilterWidget(
-      {super.key,
-      required this.env,
-      required this.onSelectedEventsChanged,
-      required this.onSelectedPlantsChanged});
+  const FilterWidget({
+    super.key,
+    required this.env,
+    required this.onSelectedEventsChanged,
+    required this.onSelectedPlantsChanged,
+  });
 
   @override
   State<FilterWidget> createState() => _FilterWidgetState();
@@ -86,15 +87,15 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 }
 
-class EventsPage extends StatefulWidget {
+class EventsDoneSection extends StatefulWidget {
   final Environment env;
-  const EventsPage({super.key, required this.env});
+  const EventsDoneSection({super.key, required this.env});
 
   @override
-  State<StatefulWidget> createState() => _EventsPageState();
+  State<StatefulWidget> createState() => _EventsDoneSectionState();
 }
 
-class _EventsPageState extends State<EventsPage> {
+class _EventsDoneSectionState extends State<EventsDoneSection> {
   final _pageSize = 10;
   final PagingController<int, EventCard> _pagingController =
       PagingController(firstPageKey: 0);

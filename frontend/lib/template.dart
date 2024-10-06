@@ -3,7 +3,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:plant_it/event/add_new_event.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/event/events.dart';
+import 'package:plant_it/event/events_page.dart';
 import 'package:plant_it/homepage/homepage.dart';
 import 'package:plant_it/more/more_page.dart';
 import 'package:plant_it/search/search_page.dart';

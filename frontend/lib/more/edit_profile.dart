@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/info_entries.dart';
@@ -36,18 +37,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _email = widget.env.credentials.email;
   }
 
-  bool _isValidEmail(String email) {
-    final RegExp emailRegex = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$',
-      caseSensitive: false,
-    );
-    return emailRegex.hasMatch(email);
-  }
-
   void _updateUser() async {
     bool changed = false;
     if (widget.env.credentials.email != _email) {
-      if (!_isValidEmail(_email)) {
+      if (!isValidEmail(_email)) {
         widget.env.logger.error("Enter valid email");
         throw AppException("Enter valid email");
       }

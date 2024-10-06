@@ -74,14 +74,6 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  bool _isValidEmail(String email) {
-    final RegExp emailRegex = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$',
-      caseSensitive: false,
-    );
-    return emailRegex.hasMatch(email);
-  }
-
   @override
   void dispose() {
     _usernameController.dispose();
@@ -137,7 +129,7 @@ class _SignupPageState extends State<SignupPage> {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context).enterValue;
                             }
-                            if (!_isValidEmail(value)) {
+                            if (!isValidEmail(value)) {
                               return AppLocalizations.of(context)
                                   .enterValidEmail;
                             }

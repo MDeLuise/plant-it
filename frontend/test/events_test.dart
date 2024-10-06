@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:plant_it/app_http_client.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/event_card.dart';
-import 'package:plant_it/event/events.dart';
+import 'package:plant_it/event/events_done_section.dart';
 import 'package:plant_it/logger/logger.dart';
 import 'package:plant_it/toast/toast_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,7 +59,8 @@ void main() {
   testWidgets('Events widget has correct fields', (tester) async {
     // Arrange
     await tester.pumpWidget(LocalizationsInjector(
-        navigatorObserver: navigatorObserver, child: EventsPage(env: env)));
+        navigatorObserver: navigatorObserver,
+        child: EventsDoneSection(env: env)));
     expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
 
     // Act
@@ -126,7 +127,8 @@ void main() {
 
     // Arrange
     await tester.pumpWidget(LocalizationsInjector(
-        navigatorObserver: navigatorObserver, child: EventsPage(env: env)));
+        navigatorObserver: navigatorObserver,
+        child: EventsDoneSection(env: env)));
     await tester.pumpAndSettle();
 
     // Assert and verify
@@ -189,7 +191,8 @@ void main() {
 
     // Arrange
     await tester.pumpWidget(LocalizationsInjector(
-        navigatorObserver: navigatorObserver, child: EventsPage(env: env)));
+        navigatorObserver: navigatorObserver,
+        child: EventsDoneSection(env: env)));
     await tester.pumpAndSettle();
 
     // Act

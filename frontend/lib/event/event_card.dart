@@ -46,21 +46,6 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color backgroundColor = Colors.grey[200]!; // Default color
 
-    const Map<String, Color> typeColors = {
-      'SEEDING': Color.fromRGBO(23, 122, 105, 1),
-      'WATERING': Color.fromARGB(255, 55, 91, 159),
-      'FERTILIZING': Color.fromARGB(255, 199, 26, 24),
-      'BIOSTIMULATING': Color.fromARGB(255, 203, 106, 32),
-      'MISTING': Color.fromRGBO(0, 62, 185, 0.4),
-      'TRANSPLANTING': Color.fromARGB(255, 175, 118, 89),
-      'WATER_CHANGING': Color.fromRGBO(40, 108, 169, 1),
-      'OBSERVATION': Color.fromRGBO(105, 105, 105, 1),
-      'TREATMENT': Color.fromRGBO(185, 23, 50, 1),
-      'PROPAGATING': Color.fromRGBO(17, 96, 50, 1),
-      'PRUNING': Color.fromARGB(102, 62, 6, 183),
-      'REPOTTING': Color.fromRGBO(144, 85, 67, 1),
-    };
-
     if (typeColors.containsKey(action)) {
       backgroundColor = typeColors[action]!;
     }
@@ -71,20 +56,6 @@ class EventCard extends StatelessWidget {
     final formattedTimePassed = _formatTimePassed(context, timePassed);
 
     IconData actionIcon = Icons.info; // Default icon
-    final Map<String, IconData> typeIcons = {
-      'SEEDING': Icons.grass_outlined,
-      'WATERING': Icons.water_drop_outlined,
-      'FERTILIZING': Icons.lunch_dining_outlined,
-      'BIOSTIMULATING': Icons.battery_charging_full_outlined,
-      'MISTING': Icons.shower_outlined,
-      'TRANSPLANTING': Icons.add_home_outlined,
-      'WATER_CHANGING': Icons.waves_outlined,
-      'OBSERVATION': Icons.visibility_outlined,
-      'TREATMENT': Icons.science_outlined,
-      'PROPAGATING': Icons.child_friendly_outlined,
-      'PRUNING': Icons.cut_outlined,
-      'REPOTTING': Icons.cached_outlined,
-    };
 
     if (typeIcons.containsKey(action)) {
       actionIcon = typeIcons[action]!;
