@@ -18,10 +18,10 @@
 ## Why?
 Plant-it is a gardening companion app that helps you take care of your plants.
 
-It does not recommend you about which action to take, instead it is designed to logs the activity you are doing.
-This is on purpose, I strongly believe that the only one in charge of know when to water your plants, when to fertilize them, etc. is you (with the help of multiple online sources).
+It does not recommend you about which action to take, instead it is designed to log the activity you are doing.
+This is on purpose, I strongly believe that the only one in charge of knowing when to water your plants, when to fertilize them, etc. is you (with the help of multiple online sources).
 
-Plant-it helps you remember the last time you did a treatment of your plants, which plants you have, collects photos of your plants, and notify you about time passed since last action on them.
+Plant-it helps you remember the last time you did a treatment of your plants, which plants you have, collects photos of your plants, and notifies you about the time passed since the last action on them.
 
 
 ## Features highlight
@@ -34,7 +34,7 @@ Plant-it helps you remember the last time you did a treatment of your plants, wh
 * Log events like watering, fertilizing, biostimulating, etc. for your plants
 * View all the logged events, filtering by plant and event type
 * Upload photos of your plants
-* Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)
+* Set reminders for some actions on your plants (e.g. notify if not watered every 4 days)
 
 ## Quickstart
 ### Server
@@ -129,7 +129,7 @@ For detailed instructions on how to install and configure the app, please refer 
 
 
 ## Support the project
-If you find this project helpful and would like to supporting it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
+If you find this project helpful and would like to support it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
 <p align="center">
   <a href="https://www.buymeacoffee.com/mdeluise" target="_blank"><img width="150px" src="images/bmc-button.png"></a>
 </p>
@@ -153,7 +153,7 @@ If you're interested in contributing transactions to enhance the app, you can ge
 | Spanish Castilian | app_es.arb | 95% |
 
 ### Bug Report, Feature Request and Question
-You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Chose the right template and then fill the required info.
+You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Choose the right template and then fill in the required info.
 
 ### Feature development
 Let's discuss first possible solutions for the development before start working on that, please open a [feature request issue](https://github.com/MDeLuise/plant-it/issues/new?assignees=&labels=Status:+Created,Type:+Feature+Request&projects=&template=feature_request.yml).
