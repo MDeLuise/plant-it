@@ -1,5 +1,3 @@
-library galleryimage;
-
 import 'package:flutter/material.dart';
 
 import 'gallery_item_model.dart';

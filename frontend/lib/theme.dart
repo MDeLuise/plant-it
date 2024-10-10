@@ -39,9 +39,9 @@ final ThemeData theme = ThemeData(
 
   // Radio button style
   radioTheme: RadioThemeData( 
-    fillColor: MaterialStateProperty.resolveWith<Color>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
+    fillColor: WidgetStateProperty.resolveWith<Color>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
           return Colors.grey; // Color when radio button is disabled
         }
         return Colors.white; // Color when radio button is enabled
@@ -70,10 +70,10 @@ final ThemeData theme = ThemeData(
   // Button styles
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
           const Color(0xFF6DD075)), // Button background color
       foregroundColor:
-          MaterialStateProperty.all<Color>(Colors.black), // Button text color
+          WidgetStateProperty.all<Color>(Colors.black), // Button text color
     ),
   ),
 

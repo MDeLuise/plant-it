@@ -36,6 +36,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   _removePlant(context).then((res) {
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
                   });
