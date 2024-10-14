@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -65,44 +64,53 @@ class _EditPlantPageState extends State<EditPlantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (_updated.id == null) {
-              _createPlant();
-            } else {
-              _updatePlant();
-            }
-          },
-          child: Icon(
-            widget.plantDTO.id == null
-                ? Icons.add_outlined
-                : Icons.save_outlined,
-          ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_updated.id == null) {
+            _createPlant();
+          } else {
+            _updatePlant();
+          }
+        },
+        child: Icon(
+          widget.plantDTO.id == null ? Icons.add_outlined : Icons.save_outlined,
         ),
-        body: NestedScrollViewPlus(
-          overscrollBehavior: OverscrollBehavior.outer,
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                pinned: true,
-                stretch: true,
-                expandedHeight: MediaQuery.of(context).size.height * .3,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: const <StretchMode>[
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                  ],
-                  background: EditPlantImageHeader(
-                    plant: widget.plantDTO,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * .3,
+                    maxHeight: MediaQuery.of(context).size.height * .3,
+                  ),
+                  child: EditPlantImageHeader(
+                    plant: _updated,
                     env: widget.env,
                   ),
                 ),
-              ),
-            ];
-          },
-          body: EditPlantBody(
-            plant: _updated,
+                EditPlantBody(plant: _updated),
+              ],
+            ),
           ),
-        ));
+          Positioned(
+            top: 10.0,
+            left: 10.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

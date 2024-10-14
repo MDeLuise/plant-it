@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -84,30 +83,40 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
           Icons.save_outlined,
         ),
       ),
-      body: NestedScrollViewPlus(
-        overscrollBehavior: OverscrollBehavior.outer,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              pinned: true,
-              stretch: true,
-              expandedHeight: MediaQuery.of(context).size.height * .3,
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: const <StretchMode>[
-                  StretchMode.zoomBackground,
-                  StretchMode.blurBackground,
-                ],
-                background: AddSpeciesImageHeader(
-                  species: _toCreate,
-                  env: widget.env,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * .5,
+                    maxHeight: MediaQuery.of(context).size.height * .5,
+                  ),
+                  child: AddSpeciesImageHeader(
+                    species: _toCreate,
+                    env: widget.env,
+                  ),
                 ),
-              ),
+                AddSpeciesBody(species: _toCreate),
+              ],
             ),
-          ];
-        },
-        body: AddSpeciesBody(
-          species: _toCreate,
-        ),
+          ),
+          Positioned(
+            top: 10.0,
+            left: 10.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

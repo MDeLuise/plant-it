@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
@@ -127,31 +126,53 @@ class _AddPlantPageState extends State<AddPlantPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             _toCreate.info.personalName = snapshot.data!;
-            return NestedScrollViewPlus(
-              overscrollBehavior: OverscrollBehavior.outer,
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    pinned: true,
-                    stretch: true,
-                    expandedHeight: MediaQuery.of(context).size.height * .3,
-                    flexibleSpace: FlexibleSpaceBar(
-                      stretchModes: const <StretchMode>[
-                        StretchMode.zoomBackground,
-                        StretchMode.blurBackground,
-                      ],
-                      background: AddPlantImageHeader(
-                        species: widget.species,
-                        env: widget.env,
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height * .3,
+                          maxHeight: MediaQuery.of(context).size.height * .3,
+                        ),
+                        child: AddPlantImageHeader(
+                          species: widget.species,
+                          env: widget.env,
+                        ),
                       ),
-                    ),
+                      AddPlantBody(toCreate: _toCreate),
+                      Positioned(
+                        top: 10.0,
+                        left: 10.0,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ];
-              },
-              body: AddPlantBody(
-                toCreate: _toCreate,
-              ),
+                ),
+                Positioned(
+                  top: 10.0,
+                  left: 10.0,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return const Center(child: Text('Unexpected error'));

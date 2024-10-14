@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
 import 'package:plant_it/plant_details/species_tab.dart';
 import 'package:plant_it/search/header.dart';
 import 'package:plant_it/search/species_details_bottom_bar.dart';
@@ -24,49 +23,50 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: SpeciesDetailsBottomActionBar(
-          isDeletable: widget.species.creator == "USER",
-          species: widget.species,
-          http: widget.env.http,
-          env: widget.env,
-        ),
-        body: DefaultTabController(
-          length: 2,
-          child: NestedScrollViewPlus(
-            overscrollBehavior: OverscrollBehavior.outer,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  iconTheme: const IconThemeData(
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: 10,
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+      bottomNavigationBar: SpeciesDetailsBottomActionBar(
+        isDeletable: widget.species.creator == "USER",
+        species: widget.species,
+        http: widget.env.http,
+        env: widget.env,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * .5,
+                    maxHeight: MediaQuery.of(context).size.height * .5,
                   ),
-                  pinned: true,
-                  stretch: true,
-                  expandedHeight: MediaQuery.of(context).size.height * .5,
-                  flexibleSpace: FlexibleSpaceBar(
-                    stretchModes: const <StretchMode>[
-                      StretchMode.zoomBackground,
-                      StretchMode.blurBackground,
-                    ],
-                    background: SpeciesImageHeader(
-                        species: widget.species, env: widget.env),
+                  child: SpeciesImageHeader(
+                    species: widget.species,
+                    env: widget.env,
                   ),
                 ),
-              ];
-            },
-            body: SpeciesDetailsTab(
-              species: widget.species,
-              isLoading: false,
+                SpeciesDetailsTab(
+                  species: widget.species,
+                  isLoading: false,
+                ),
+              ],
             ),
           ),
-        ));
+          Positioned(
+            top: 10.0,
+            left: 10.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
