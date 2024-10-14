@@ -30,7 +30,7 @@ class _ReminderSectionState extends State<ReminderSection> {
 
   Widget _getDayOfWeek(int day) {
     final now = DateTime.now();
-    final date = now.add(Duration(days: day - now.weekday));
+    final date = now.add(Duration(days: (day - now.weekday + 7) % 7 + 1));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -40,11 +40,48 @@ class _ReminderSectionState extends State<ReminderSection> {
         ),
         child: Center(
           child: AutoSizeText(
-            DateFormat.E().format(date).toUpperCase(),
+            DateFormat.E(Localizations.localeOf(context).toLanguageTag())
+                .format(date)
+                .toUpperCase(),
             maxLines: 1,
           ),
         ),
       ),
+    );
+  }
+
+  Row getHeader(BuildContext context, DateTime date) {
+    final String monthName =
+        DateFormat.MMMM(Localizations.localeOf(context).toLanguageTag())
+            .format(date);
+    final String monthNameCapitalized =
+        "${monthName[0].toUpperCase()}${monthName.substring(1).toLowerCase()}";
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: AutoSizeText(
+            "$monthNameCapitalized, ${date.year}",
+            style: const TextStyle(fontSize: 40),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+        const Spacer(),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () => _globalKey.currentState!.previousPage(),
+              icon: const Icon(Icons.chevron_left_rounded),
+            ),
+            IconButton(
+              onPressed: () => _globalKey.currentState!.nextPage(),
+              icon: const Icon(Icons.chevron_right_rounded),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -119,7 +156,10 @@ class _ReminderSectionState extends State<ReminderSection> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      DateFormat('EEE, MMM dd').format(date).toUpperCase(),
+                      DateFormat('EEE, MMM dd',
+                              Localizations.localeOf(context).toLanguageTag())
+                          .format(date)
+                          .toUpperCase(),
                       style: TextStyle(
                         color:
                             Color.fromARGB(255, 180, 180, 180).withOpacity(.5),
@@ -196,32 +236,7 @@ class _ReminderSectionState extends State<ReminderSection> {
                   )
                 : null,
           ),
-          headerBuilder: (date) => Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: AutoSizeText(
-                  "${DateFormat.MMMM().format(date)}, ${date.year}",
-                  style: const TextStyle(fontSize: 40),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => _globalKey.currentState!.previousPage(),
-                    icon: const Icon(Icons.chevron_left_rounded),
-                  ),
-                  IconButton(
-                    onPressed: () => _globalKey.currentState!.nextPage(),
-                    icon: const Icon(Icons.chevron_right_rounded),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          headerBuilder: (date) => getHeader(context, date),
           weekDayBuilder: _getDayOfWeek,
           onCellTap: (events, date) {
             if (events.isEmpty) {
