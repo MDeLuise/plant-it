@@ -5,13 +5,13 @@ import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
-import 'package:nested_scroll_view_plus/nested_scroll_view_plus.dart';
+import 'package:plant_it/floating_tabbar.dart';
+import 'package:plant_it/plant_details/details_tab.dart';
 import 'package:plant_it/plant_details/plant_details_bottom_bar.dart';
 import 'package:plant_it/plant_details/header.dart';
 import 'package:plant_it/plant_details/plant_tab.dart';
-import 'package:plant_it/plant_details/sliver_persistent_header_delegate.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/plant_details/species_tab.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PlantDetailsPage extends StatefulWidget {
   final Environment env;
@@ -32,6 +32,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   late PlantDetailsTab _plantDetailsTab;
   late PlantDTO _toShow;
   bool _isLoading = true;
+  late Widget _activeTab;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
     _toShow = widget.plant;
     _plantDetailsTab = _createPlantDetailsChild();
     _fetchAndSetSpecies();
+    _activeTab = DetailsTab(plant: _toShow, env: widget.env);
   }
 
   // Used only for refresh the Gallery
@@ -46,7 +48,6 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
     return PlantDetailsTab(
       key: UniqueKey(),
       plant: _toShow,
-      http: widget.env.http,
       env: widget.env,
     );
   }
@@ -92,77 +93,78 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: PlantDetailsBottomActionBar(
-          plant: _toShow,
-          env: widget.env,
-          updatePlantLocally: _updatePlantLocally,
-          refreshGallery: _refreshGallery,
-        ),
-        body: DefaultTabController(
-          length: 2,
-          child: NestedScrollViewPlus(
-            overscrollBehavior: OverscrollBehavior.outer,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  iconTheme: const IconThemeData(
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: 10,
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  pinned: true,
-                  stretch: true,
-                  expandedHeight: MediaQuery.of(context).size.height * .5,
-                  flexibleSpace: FlexibleSpaceBar(
-                    stretchModes: const <StretchMode>[
-                      StretchMode.zoomBackground,
-                      StretchMode.blurBackground,
-                    ],
-                    background: PlantImageHeader(
-                      plant: _toShow,
-                      env: widget.env,
-                    ),
-                  ),
-                ),
-                SliverPersistentHeader(
-                  delegate: PlantDetailsPersistentHeaderDelegate(
-                    TabBar(
-                      dividerColor: Colors.transparent,
-                      tabs: [
-                        Tab(
-                          text: AppLocalizations.of(context).plant,
-                        ),
-                        Tab(
-                          text: AppLocalizations.of(context).species,
-                        ),
-                      ],
-                    ),
-                  ),
-                  pinned: true,
-                ),
-              ];
-            },
-            body: TabBarView(
+      bottomNavigationBar: PlantDetailsBottomActionBar(
+        plant: _toShow,
+        env: widget.env,
+        updatePlantLocally: _updatePlantLocally,
+        refreshGallery: _refreshGallery,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
               children: [
-                _plantDetailsTab,
-                SpeciesDetailsTab(
-                  species: _isLoading
-                      ? SpeciesDTO(
-                          scientificName: "foo",
-                          care: SpeciesCareInfoDTO(),
-                          creator: "USER")
-                      : _species,
-                  isLoading: _isLoading,
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * .5,
+                    maxHeight: MediaQuery.of(context).size.height * .5,
+                  ),
+                  child: PlantImageHeader(
+                    plant: _toShow,
+                    env: widget.env,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Column(
+                    children: [
+                      FloatingTabBar(
+                        titles: [
+                          AppLocalizations.of(context).activity, // or "Tasks"
+                          AppLocalizations.of(context).plant,
+                          AppLocalizations.of(context).species,
+                        ],
+                        callbacks: [
+                          () => setState(() => _activeTab = DetailsTab(
+                                key: UniqueKey(),
+                                plant: _toShow,
+                                env: widget.env,
+                              )),
+                          () => setState(() => _activeTab = _plantDetailsTab),
+                          () => setState(() => _activeTab = SpeciesDetailsTab(
+                                species: _isLoading
+                                    ? SpeciesDTO(
+                                        scientificName: "foo",
+                                        care: SpeciesCareInfoDTO(),
+                                        creator: "USER")
+                                    : _species,
+                                isLoading: _isLoading,
+                              )),
+                        ],
+                      ),
+                      _activeTab,
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ));
+          Positioned(
+            top: 10.0,
+            left: 10.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -391,5 +391,6 @@
   "gotifyServerUrl": "Gotify server URL",
   "gotifyServerToken": "Gotify server token",
   "gotifySettings": "Gotify settings",
-  "gotifySettingsUpdated": "Gotify settings correctly updated"
+  "gotifySettingsUpdated": "Gotify settings correctly updated",
+  "activity": "Activity"
 }

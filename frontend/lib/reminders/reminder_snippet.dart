@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/reminder_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -51,22 +52,29 @@ class ReminderSnippet extends StatelessWidget {
     required this.reminder,
   });
 
-  String _formatFrequency() {
+  String _formatDescription(BuildContext context) {
+    final String localeEvent = getLocaleEvent(context, reminder.action!);
+    final String frequency = _formatFrequency(context);
+    final String dateSpan = _formatDatespan();
+    return "$localeEvent, $frequency, $dateSpan";
+  }
+
+  String _formatFrequency(BuildContext context) {
     return "every ${reminder.frequency!.quantity} ${reminder.frequency!.unit.toString().split('.').last.toLowerCase()}";
   }
 
   String _formatDatespan() {
-    String result = formatDate(reminder.start!);
+    String result = _formatDate(reminder.start!);
     if (reminder.end != null) {
-      result += "-${formatDate(reminder.end!)}";
+      result += "-${_formatDate(reminder.end!)}";
     } else {
       result = "from $result";
     }
     return result;
   }
 
-  String formatDate(DateTime toFormat) {
-    return '${toFormat.day.toString().padLeft(2, '0')}/${toFormat.month.toString().padLeft(2, '0')}/${toFormat.year}';
+  String _formatDate(DateTime toFormat) {
+    return '${toFormat.day.toString().padLeft(2, '0')}/${toFormat.month.toString().padLeft(2, '0')}/${DateFormat('yy').format(toFormat)}';
   }
 
   @override
@@ -77,14 +85,9 @@ class ReminderSnippet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Text(getLocaleEvent(context, reminder.action!)),
-              const Text(", "),
-              Text(_formatFrequency()),
-              const Text(", "),
-              Text(_formatDatespan()),
-            ],
+          Text(
+            _formatDescription(context),
+            overflow: TextOverflow.ellipsis,
           ),
           const Icon(
             Icons.edit_outlined,

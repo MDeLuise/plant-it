@@ -392,5 +392,6 @@
   "gotifyServerUrl": "URL del server gotify",
   "gotifyServerToken": "Token per il server gotify",
   "gotifySettings": "Impostazioni gotify",
-  "gotifySettingsUpdated": "Configurazioni gotify aggiornate correttamente"
+  "gotifySettingsUpdated": "Configurazioni gotify aggiornate correttamente",
+  "activity": "Attività"
 }

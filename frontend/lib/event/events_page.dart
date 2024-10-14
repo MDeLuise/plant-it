@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/events_done_section.dart';
-import 'package:plant_it/event/floating_tabbar.dart';
+import 'package:plant_it/floating_tabbar.dart';
 import 'package:plant_it/event/reminder_section.dart';
 
 class EventsPage extends StatefulWidget {
