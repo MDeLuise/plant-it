@@ -26,8 +26,8 @@ class _ReminderOccurenceCard extends StatelessWidget {
   final ReminderOccurrenceDTO occurrence;
   const _ReminderOccurenceCard({required this.occurrence});
 
-  String _formatFrequency(FrequencyDTO frequency) {
-    return "every ${frequency.quantity} ${frequency.unit.toString().split('.').last.toLowerCase()}";
+  String _formatFrequency(BuildContext context, FrequencyDTO frequency) {
+    return localizedFrequency(context, frequency.quantity, frequency.unit);
   }
 
   String formatDate(DateTime toFormat) {
@@ -58,7 +58,7 @@ class _ReminderOccurenceCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      _formatFrequency(occurrence.reminderFrequency!),
+                      _formatFrequency(context, occurrence.reminderFrequency!),
                       style: const TextStyle(
                         fontSize: 13,
                         color: Color.fromARGB(255, 180, 180, 180),

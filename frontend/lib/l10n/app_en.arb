@@ -35,7 +35,6 @@
   "welcomeBack": "Welcome back",
   "hello": "Hello, {userName}",
   "@hello": {
-    "description": "A greeting to the user",
     "placeholders": {
       "userName": {
         "type": "String",
@@ -48,7 +47,6 @@
   "yesterday": "yesterday",
   "nDaysAgo": "{count} {count, plural, =1{day} other{days}} ago",
   "@nDaysAgo": {
-    "description": "Describe how many days ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -58,7 +56,6 @@
   },
   "nDaysInFuture": "{count} {count, plural, =1{day} other{days}} in future (whaaat?)",
   "@nDaysInFuture": {
-    "description": "Describe how many days in future an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -68,7 +65,6 @@
   },
   "nMonthsAgo": "{count} {count, plural, =1{month} other{months}} ago",
   "@nMonthsAgo": {
-    "description": "Describe how many months ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -78,7 +74,6 @@
   },
   "nYearsAgo": "{count} {count, plural, =1{year} other{years}} ago",
   "@nYearsAgo": {
-    "description": "Describe how many years ago an event happened",
     "placeholders": {
       "count": {
         "type": "num",
@@ -109,7 +104,6 @@
   "selectPlants": "Select plants",
   "nEventsCreated": "Created {count} new {count, plural, =1{event} other{events}}",
   "@nEventsCreated": {
-    "description": "How many new events created",
     "placeholders": {
       "count": {
         "type": "num",
@@ -153,7 +147,6 @@
   "newBorn": "New born",
   "nDays": "{count} {count, plural, =1{day} other{days}}",
   "@nDays": {
-    "description": "How many days an entity has",
     "placeholders": {
       "count": {
         "type": "num",
@@ -163,7 +156,6 @@
   },
   "nMonths": "{count} {count, plural, =1{month} other{months}}",
   "@nMonths": {
-    "description": "How many months an entity has",
     "placeholders": {
       "count": {
         "type": "num",
@@ -173,7 +165,6 @@
   },
   "nYears": "{count} {count, plural, =1{year} other{years}}",
   "@nYears": {
-    "description": "How many years an entity has",
     "placeholders": {
       "count": {
         "type": "num",
@@ -183,7 +174,6 @@
   },
   "nMonthsAndDays": "{months} {months, plural, =1{month} other{months}}, {days} {days, plural, =1{day} other{days}}",
   "@nMonthsAndDays": {
-    "description": "How many months and days an entity has",
     "placeholders": {
       "months": {
         "type": "num",
@@ -197,7 +187,6 @@
   },
   "nYearsAndDays": "{years} {years, plural, =1{year} other{years}}, {days} {days, plural, =1{day} other{days}}",
   "@nYearsAndDays": {
-    "description": "How many years and days an entity has",
     "placeholders": {
       "years": {
         "type": "num",
@@ -211,7 +200,6 @@
   },
   "nYearsAndMonths": "{years} {years, plural, =1{year} other{years}}, {months} {months, plural, =1{month} other{months}}",
   "@nYearsAndMonths": {
-    "description": "How many years and months an entity has",
     "placeholders": {
       "years": {
         "type": "num",
@@ -225,7 +213,6 @@
   },
   "nYearsAndMonthsAndDays": "{years} {years, plural, =1{year} other{years}}, {months} {months, plural, =1{month} other{months}}, {days} {days, plural, =1{day} other{days}}",
   "@nYearsAndMonthsAndDays": {
-    "description": "How many years and months and days an entity has",
     "placeholders": {
       "years": {
         "type": "num",
@@ -244,7 +231,6 @@
   "name": "Name",
   "nOutOf": "{value} out of {max}",
   "@nOutOf": {
-    "description": "Value inside a scale",
     "placeholders": {
       "value": {
         "type": "num",
@@ -258,7 +244,6 @@
   },
   "temp": "{value} °C",
   "@temp": {
-    "description": "Temperature",
     "placeholders": {
       "value": {
         "type": "num",
@@ -324,7 +309,6 @@
   "gallery": "Gallery",
   "photosOf": "Photos of {name}",
   "@photosOf": {
-    "description": "Photo for plant",
     "placeholders": {
       "name": {
         "type": "String"
@@ -333,7 +317,6 @@
   },
   "nPhoto": "Uploaded {count} new {count, plural, =1{photo} other{photos}}",
   "@nPhoto": {
-    "description": "How many photos has been uploaded",
     "placeholders": {
       "count": {
         "type": "num",
@@ -392,5 +375,55 @@
   "gotifyServerToken": "Gotify server token",
   "gotifySettings": "Gotify settings",
   "gotifySettingsUpdated": "Gotify settings correctly updated",
-  "activity": "Activity"
+  "activity": "Activity",
+  "fromDate": "from",
+  "frequencyEvery": "every {amount} {unit}",
+  "@frequencyEvery": {
+    "placeholders": {
+      "amount": {
+        "type": "num",
+        "example": "2"
+      },
+      "unit": {
+        "type": "String",
+        "example": "days"
+      }
+    }
+  },
+  "day": "{count, plural, =1{day} other{days}}",
+  "@day": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "week": "{count, plural, =1{week} other{weeks}}",
+  "@week": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "month": "{count, plural, =1{month} other{months}}",
+  "@month": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "year": "{count, plural, =1{year} other{years}}",
+  "@year": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  }
 }

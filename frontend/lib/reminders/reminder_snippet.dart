@@ -55,20 +55,23 @@ class ReminderSnippet extends StatelessWidget {
   String _formatDescription(BuildContext context) {
     final String localeEvent = getLocaleEvent(context, reminder.action!);
     final String frequency = _formatFrequency(context);
-    final String dateSpan = _formatDatespan();
+    final String dateSpan = _formatDatespan(context);
     return "$localeEvent, $frequency, $dateSpan";
   }
 
-  String _formatFrequency(BuildContext context) {
-    return "every ${reminder.frequency!.quantity} ${reminder.frequency!.unit.toString().split('.').last.toLowerCase()}";
+  String _formatFrequency(
+    BuildContext context,
+  ) {
+    return localizedFrequency(
+        context, reminder.frequency!.quantity, reminder.frequency!.unit);
   }
 
-  String _formatDatespan() {
+  String _formatDatespan(BuildContext context) {
     String result = _formatDate(reminder.start!);
     if (reminder.end != null) {
       result += "-${_formatDate(reminder.end!)}";
     } else {
-      result = "from $result";
+      result = "${AppLocalizations.of(context).fromDate} $result";
     }
     return result;
   }

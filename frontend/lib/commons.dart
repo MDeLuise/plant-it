@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/dto/plant_dto.dart';
+import 'package:plant_it/dto/reminder_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/event_card.dart';
 import 'package:plant_it/splash_screen.dart';
@@ -169,6 +170,28 @@ String getLocaleEvent(BuildContext context, String event) {
     return AppLocalizations.of(context).repotting;
   }
 }
+
+String localizedFrequency(BuildContext context, int amount, Unit unitKey) {
+  String localizedUnit;
+  switch (unitKey) {
+    case Unit.days:
+      localizedUnit = AppLocalizations.of(context).day(amount);
+      break;
+    case Unit.weeks:
+      localizedUnit = AppLocalizations.of(context).week(amount);
+      break;
+    case Unit.months:
+      localizedUnit = AppLocalizations.of(context).month(amount);
+      break;
+    case Unit.years:
+      localizedUnit = AppLocalizations.of(context).year(amount);
+      break;
+    default:
+      localizedUnit = unitKey.toString();
+  }
+  return AppLocalizations.of(context).frequencyEvery(amount, localizedUnit);
+}
+
 
 Future<void> prefetchImages(BuildContext context, Environment env) {
   for (var plant in env.plants) {
