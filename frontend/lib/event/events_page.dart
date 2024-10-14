@@ -3,6 +3,8 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/events_done_section.dart';
 import 'package:plant_it/floating_tabbar.dart';
 import 'package:plant_it/event/reminder_section.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class EventsPage extends StatefulWidget {
   final Environment env;
@@ -26,9 +28,9 @@ class _EventsPageState extends State<EventsPage> {
   Widget build(BuildContext context) {
     Widget getCurrentSection() {
       if (_activeIndex == 0) {
-        return EventsDoneSection(env: widget.env);
-      } else {
         return ReminderSection(env: widget.env);
+      } else {
+        return EventsDoneSection(env: widget.env);
       }
     }
 
@@ -40,7 +42,10 @@ class _EventsPageState extends State<EventsPage> {
       child: Column(
         children: [
           FloatingTabBar(
-            titles: ["Events", "Reminders"],
+            titles: [
+              AppLocalizations.of(context).reminders,
+              AppLocalizations.of(context).events,
+              ],
             callbacks: [
               () => _onTabSelected(0),
               () => _onTabSelected(1),
