@@ -6,7 +6,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/event/event_card.dart';
-import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:provider/provider.dart';
 
 import '../dropdown.dart';

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,6 +11,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/info_entries.dart';
 import 'package:plant_it/plant_details/gallery.dart';
 import 'package:plant_it/toast/toast_manager.dart';
+import 'package:provider/provider.dart';
 
 class PlantDetailsTab extends StatefulWidget {
   final PlantDTO plant;
@@ -26,6 +28,8 @@ class PlantDetailsTab extends StatefulWidget {
 }
 
 class _PlantDetailsTabState extends State<PlantDetailsTab> {
+  late UniqueKey _galleryKey = UniqueKey();
+
   Future<bool> _updatePlantAvatarImage(String imageId) async {
     if (imageId != widget.plant.avatarImageId) {
       return _setNewAvatarImage(imageId);
@@ -179,6 +183,16 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PhotosNotifier>(context, listen: false).addListener(() {
+      setState(() {
+        _galleryKey = UniqueKey();
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
@@ -232,11 +246,12 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
             children: [
               Gallery(
                 env: widget.env,
-                plant: widget.plant,
+                key: _galleryKey,
+                plant: PlantDTO.fromJson(widget.plant.toMap()),
                 removePhoto: _deletePlantPhotoWithConfirm,
                 setAvatar: _updatePlantAvatarImage,
                 avatarImageId: widget.plant.avatarImageId,
-              )
+              ),
             ],
           ),
         ],

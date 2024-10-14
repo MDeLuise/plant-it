@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -12,6 +13,7 @@ import 'package:plant_it/plant_details/header.dart';
 import 'package:plant_it/plant_details/plant_tab.dart';
 import 'package:plant_it/plant_details/species_tab.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class PlantDetailsPage extends StatefulWidget {
   final Environment env;
@@ -97,7 +99,6 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
         plant: _toShow,
         env: widget.env,
         updatePlantLocally: _updatePlantLocally,
-        refreshGallery: _refreshGallery,
       ),
       body: Stack(
         children: [

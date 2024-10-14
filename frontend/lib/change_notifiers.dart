@@ -5,3 +5,9 @@ class EventsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class PhotosNotifier extends ChangeNotifier {
+  void notify() {
+    notifyListeners();
+  }
+}

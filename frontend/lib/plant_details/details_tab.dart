@@ -6,11 +6,13 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/reminder_dto.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/info_entries.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/reminders/reminder_add.dart';
 import 'package:plant_it/reminders/reminder_edit.dart';
 import 'package:plant_it/reminders/reminder_snippet.dart';
+import 'package:provider/provider.dart';
 
 class DetailsTab extends StatefulWidget {
   final PlantDTO plant;
@@ -167,6 +169,12 @@ class _DetailsTabState extends State<DetailsTab> {
     _fetchAndSetEventsNumber();
     _fetchAndSetPlantStats();
     _fetchAndSetPlantReminders();
+    Provider.of<EventsNotifier>(context, listen: false).addListener(() {
+      _fetchAndSetEventsNumber();
+    });
+    Provider.of<PhotosNotifier>(context, listen: false).addListener(() {
+      _fetchAndSetPhotosNumber();
+    });
   }
 
   @override

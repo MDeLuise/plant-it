@@ -12,7 +12,7 @@ import 'package:plant_it/dto/reminder_dto.dart';
 import 'package:plant_it/dto/reminder_occurrence.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/reminder_list.dart';
-import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:provider/provider.dart';
 
 class ReminderSection extends StatefulWidget {

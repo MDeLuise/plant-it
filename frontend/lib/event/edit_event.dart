@@ -7,7 +7,7 @@ import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/event_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/dropdown.dart';
-import 'package:plant_it/events_notifier.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/theme.dart';
 import 'package:plant_it/toast/toast_manager.dart';
 import 'package:provider/provider.dart';

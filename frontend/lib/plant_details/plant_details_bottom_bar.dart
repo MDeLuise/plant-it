@@ -4,25 +4,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/event/add_new_event.dart';
 import 'package:plant_it/plant_edit/edit_plant_page.dart';
 import 'package:plant_it/toast/toast_manager.dart';
+import 'package:provider/provider.dart';
 
 class PlantDetailsBottomActionBar extends StatelessWidget {
   final PlantDTO plant;
   final Environment env;
   final Function(PlantDTO updated) updatePlantLocally;
-  final Function() refreshGallery;
 
   const PlantDetailsBottomActionBar({
     super.key,
     required this.plant,
     required this.env,
     required this.updatePlantLocally,
-    required this.refreshGallery,
   });
 
   void _removePlantWithConfirm(BuildContext context) async {
@@ -91,7 +91,7 @@ class PlantDetailsBottomActionBar extends StatelessWidget {
       if (!context.mounted) return;
       env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).nPhoto(pickedImages.length));
-      refreshGallery();
+      Provider.of<PhotosNotifier>(context, listen: false).notify();
     }
   }
 
