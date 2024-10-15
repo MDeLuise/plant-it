@@ -65,6 +65,7 @@ class _SeachPageState extends State<SeachPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

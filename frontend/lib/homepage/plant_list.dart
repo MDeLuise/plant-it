@@ -153,35 +153,21 @@ class ParallaxPlantCard extends StatefulWidget {
   final PlantDTO plant;
   final double horizontalSlide;
   final AppHttpClient http;
-  late final String _imageUrl;
   final List<PlantDTO> filteredPlants;
 
-  ParallaxPlantCard({
+  const ParallaxPlantCard({
     super.key,
     required this.plant,
     required this.horizontalSlide,
     required this.http,
     required this.filteredPlants,
-  }) {
-    _imageUrl = "image/content/${plant.avatarImageId}";
-  }
+  });
 
   @override
   State<ParallaxPlantCard> createState() => _ParallaxPlantCard();
 }
 
 class _ParallaxPlantCard extends State<ParallaxPlantCard> {
-  bool _loading = true;
-
-  @override
-  void didUpdateWidget(ParallaxPlantCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.filteredPlants != widget.filteredPlants) {
-      setState(() {
-        _loading = true;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

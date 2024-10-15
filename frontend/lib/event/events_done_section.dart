@@ -163,6 +163,7 @@ class _EventsDoneSectionState extends State<EventsDoneSection> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
+      physics: ClampingScrollPhysics(),
       slivers: <Widget>[
         SliverToBoxAdapter(
           child: FilterWidget(
