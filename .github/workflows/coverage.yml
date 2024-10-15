@@ -20,7 +20,7 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         uses: s4u/setup-maven-action@v1.2.1
         with:
-          java-version: 20
+          java-version: 21
 
       - name: Run backend tests
         if: ${{ github.actor != 'dependabot[bot]' }}
