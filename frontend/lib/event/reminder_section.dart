@@ -199,7 +199,7 @@ class _ReminderSectionState extends State<ReminderSection> {
           onPageChange: (date, page) => _fetchReminderOccurrences(date),
           cellBuilder: (date, event, isToday, isInMonth, hideDaysNotInMonth) =>
               Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(2),
             child: isInMonth
                 ? Container(
                     decoration: BoxDecoration(
