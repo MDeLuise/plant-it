@@ -27,91 +27,185 @@ class SearchResultCard extends StatefulWidget {
 }
 
 class _SearchResultCardState extends State<SearchResultCard> {
-  bool _loading = true;
-
   @override
   Widget build(BuildContext context) {
-    String? url;
-    if (widget.species.id != null) {
-      url =
-          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}";
-    } else if (widget.species.imageUrl != null) {
-      url = "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
-    }
-
-    ImageProvider<Object> imageToDisplay =
-        const AssetImage("assets/images/no-image.png");
-    if (url != null) {
-      imageToDisplay = CachedNetworkImageProvider(
-        url,
-        headers: {
-          "Key": widget.env.http.key!,
-        },
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        errorListener: (p0) {
-          imageToDisplay = const AssetImage("assets/images/no-image.png");
-        },
-      );
-    }
-    _loading = false;
-
-    Widget tag = Row(children: [
-      const SizedBox(
-        width: 6,
+    return CachedNetworkImage(
+      imageUrl:
+          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}",
+      httpHeaders: {
+        "Key": widget.env.http.key!,
+      },
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Skeletonizer(
+        enabled: true,
+        effect: skeletonizerEffect,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * .4,
+            minHeight: MediaQuery.of(context).size.height * .4,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage("assets/images/no-image.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
       ),
-      TagChip(
-        tag: AppLocalizations.of(context).custom.toUpperCase(),
-      )
-    ]);
-    if (widget.species.creator != "USER") {
-      tag = const SizedBox();
-    }
-
-    return GestureDetector(
-      onTap: () => goToPageSlidingUp(
-          context,
-          SpeciesDetailsPage(
-            species: widget.species,
-            env: widget.env,
-          )),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Skeletonizer(
-                enabled: _loading,
-                effect: skeletonizerEffect,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: imageToDisplay,
-                      fit: BoxFit.cover,
+      errorWidget: (context, url, error) {
+        return GestureDetector(
+          onTap: () => goToPageSlidingUp(
+            context,
+            SpeciesDetailsPage(
+              species: widget.species,
+              env: widget.env,
+            ),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * .4,
+                  minHeight: MediaQuery.of(context).size.height * .4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(24, 44, 37, 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(100),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/no-image.png"),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.species.scientificName,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                  ),
-                  tag,
-                ],
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.species.creator == "USER")
+                      TagChip(
+                        tag: AppLocalizations.of(context).custom.toUpperCase(),
+                      ),
+                    Text(
+                      widget.species.scientificName,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors
+                              .white), // Make text color white for better contrast
+                    ),
+                    if (widget.species.family != null)
+                      Text(
+                        widget.species.family!,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
+      imageBuilder: (context, imageProvider) {
+        return GestureDetector(
+          onTap: () => goToPageSlidingUp(
+            context,
+            SpeciesDetailsPage(
+              species: widget.species,
+              env: widget.env,
+            ),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * .4,
+                  minHeight: MediaQuery.of(context).size.height * .4,
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Add a gradient overlay to the bottom
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 80, // Adjust the height as needed
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(
+                          10), // Match the container's borderRadius
+                    ),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withOpacity(0.0),
+                        Colors.black.withOpacity(0.9),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.species.creator == "USER")
+                      TagChip(
+                        tag: AppLocalizations.of(context).custom.toUpperCase(),
+                      ),
+                    Text(
+                      widget.species.scientificName,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors
+                              .white), // Make text color white for better contrast
+                    ),
+                    if (widget.species.family != null)
+                      Text(
+                        widget.species.family!,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -104,40 +104,30 @@ class _SeachPageState extends State<SeachPage> {
             if (_loading)
               const CircularProgressIndicator()
             else
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  // Calculate the number of items per row based on screen width
-                  int crossAxisCount = constraints.maxWidth < 600
-                      ? 1
-                      : constraints.maxWidth ~/ 200;
-
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          childAspectRatio: 2 / 1.3,
-                        ),
-                        itemCount: _result.length,
-                        itemBuilder: (context, index) {
-                          return SearchResultCard(
-                            species: _result[index],
+              Padding(
+                padding: const EdgeInsets.all(35),
+                child: Column(
+                  children: [
+                    ..._result.map(
+                      (r) => Column(
+                        children: [
+                          SearchResultCard(
+                            species: r,
                             env: widget.env,
                             result: _result,
-                          );
-                        },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                      AddCustomCard(
-                        env: widget.env,
-                        species: _searchController.text,
-                      ),
-                    ],
-                  );
-                },
+                    ),
+                    AddCustomCard(
+                      env: widget.env,
+                      species: _searchController.text,
+                    ),
+                  ],
+                ),
               ),
             const SizedBox(height: 100),
           ],
