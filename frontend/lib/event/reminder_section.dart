@@ -203,7 +203,7 @@ class _ReminderSectionState extends State<ReminderSection> {
             child: isInMonth
                 ? Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: const Color.fromRGBO(24, 44, 37, 1),
                       border: isToday
                           ? Border.all(
