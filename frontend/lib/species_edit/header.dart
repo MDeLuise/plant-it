@@ -26,6 +26,7 @@ class EditSpeciesImageHeader extends StatefulWidget {
 
 class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
   bool _loading = true;
+  bool _imageUploaded = false;
   ImageProvider<Object> _imageToDisplay =
       const AssetImage("assets/images/no-image.png");
 
@@ -139,9 +140,17 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
   }
 
   void _uploadImage() async {
+    setState(() {
+      _loading = true;
+    });
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage == null) return;
+    if (pickedImage == null) {
+      setState(() {
+        _loading = false;
+      });
+      return;
+    }
     widget.species.imageContentType =
         "image/${pickedImage.name.split(".").last.toLowerCase()}";
     widget.species.imageContent = await pickedImage.readAsBytes();
@@ -150,9 +159,9 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
     ImageProvider<Object> uploaded = await ImageProviderHelper.getImageProvider(
         pickedImage, widget.env.logger);
     setState(() {
-      _loading = true;
       _imageToDisplay = uploaded;
       _loading = false;
+      _imageUploaded = true;
     });
   }
 
@@ -163,12 +172,17 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
         Skeletonizer(
           enabled: _loading,
           effect: skeletonizerEffect,
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: _imageToDisplay,
-                fit: BoxFit.cover,
-                opacity: .3,
+          child: Padding(
+            padding: EdgeInsets.all(_imageUploaded || _loading ? 0 : 100),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: _imageToDisplay,
+                  fit: _imageUploaded || _loading
+                      ? BoxFit.cover
+                      : BoxFit.contain,
+                  opacity: .3,
+                ),
               ),
             ),
           ),
