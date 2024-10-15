@@ -21,42 +21,54 @@ class AddPlantImageHeader extends StatefulWidget {
 }
 
 class _AddPlantImageHeaderState extends State<AddPlantImageHeader> {
-  bool _loading = true;
-
   @override
   Widget build(BuildContext context) {
-    ImageProvider<Object> imageToDisplay =
-        const AssetImage("assets/images/no-image.png");
-    if (widget.species.imageUrl != null) {
-      imageToDisplay = CachedNetworkImageProvider(
-        "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}",
-        headers: {
-          "Key": widget.env.http.key!,
-        },
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        errorListener: (p0) {
-          imageToDisplay = const AssetImage("assets/images/no-image.png");
-        },
-      );
-    }
-    setState(() {
-      _loading = false;
-    });
-
-    return Skeletonizer(
-      enabled: _loading,
-      effect: skeletonizerEffect,
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageToDisplay,
-            //alignment: Alignment(
-            //    widget.horizontalSlide, 0), // this does the parallax
-            fit: BoxFit.cover,
+    return CachedNetworkImage(
+      imageUrl:
+          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}",
+      httpHeaders: {
+        "Key": widget.env.http.key!,
+      },
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Skeletonizer(
+        enabled: true,
+        effect: skeletonizerEffect,
+        child: Container(
+          decoration: BoxDecoration(
+            image: const DecorationImage(
+              image: AssetImage("assets/images/no-image.png"),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        //alignment: Alignment(widget.horizontalSlide, 0),
       ),
+      errorWidget: (context, url, error) {
+        return Container(
+          color: const Color.fromRGBO(24, 44, 37, 1),
+          child: Padding(
+            padding: const EdgeInsets.all(100),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/no-image.png"),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      imageBuilder: (context, imageProvider) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      },
     );
   }
 }
