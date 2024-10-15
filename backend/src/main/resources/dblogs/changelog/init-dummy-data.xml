@@ -210,16 +210,31 @@
     </changeSet>
 
 
-    <changeSet id="insertReminders" author="MDeLuise">
+    <changeSet id="insertReminders1" author="MDeLuise">
         <insert tableName="reminders">
             <column name="id" value="99"/>
             <column name="target_id" value="97"/>
             <column name="reminder_start" value="${now}"/>
-            <column name="frequency_quantity" value="0"/>
+            <column name="frequency_quantity" value="2"/>
             <column name="frequency_unit" value="DAYS"/>
             <column name="repeat_after_quantity" value="0"/>
             <column name="repeat_after_unit" value="DAYS"/>
             <column name="action" value="WATERING"/>
+            <column name="enabled" value="true"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insertReminders2" author="MDeLuise">
+        <insert tableName="reminders">
+            <column name="id" value="98"/>
+            <column name="target_id" value="98"/>
+            <column name="reminder_start" value="${now}"/>
+            <column name="frequency_quantity" value="1"/>
+            <column name="frequency_unit" value="WEEKS"/>
+            <column name="repeat_after_quantity" value="2"/>
+            <column name="repeat_after_unit" value="DAYS"/>
+            <column name="action" value="FERTILIZING"/>
             <column name="enabled" value="true"/>
         </insert>
     </changeSet>

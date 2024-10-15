@@ -185,65 +185,138 @@ class _ParallaxPlantCard extends State<ParallaxPlantCard> {
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider<Object> imageToDisplay =
-        const AssetImage("assets/images/no-image.png");
-    imageToDisplay = CachedNetworkImageProvider(
-      "${widget.http.backendUrl}${widget._imageUrl}",
-      headers: {
+    return CachedNetworkImage(
+      imageUrl:
+          "${widget.http.backendUrl}image/content/${widget.plant.avatarImageId}",
+      httpHeaders: {
         "Key": widget.http.key!,
       },
       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      errorListener: (p0) {
-        imageToDisplay = const AssetImage("assets/images/no-image.png");
-      },
-    );
-    setState(() {
-      _loading = false;
-    });
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Skeletonizer(
-            enabled: _loading,
-            effect: skeletonizerEffect,
-            child: AspectRatio(
-              aspectRatio: 2 / 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: imageToDisplay,
-                    //alignment: Alignment(
-                    //    widget.horizontalSlide, 0), // this does the parallax
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                //alignment: Alignment(widget.horizontalSlide, 0),
-              ),
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Skeletonizer(
+        enabled: true,
+        effect: skeletonizerEffect,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: 10,
+            maxWidth: 10,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage("assets/images/no-image.png"),
+              fit: BoxFit.cover,
             ),
           ),
         ),
-        Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.plant.info.personalName!,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
+      ),
+      errorWidget: (context, url, error) {
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(24, 44, 37, 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(100),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/no-image.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-                Text(
-                  widget.plant.species!,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.grey),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              left: 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.plant.info.personalName!,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors
+                            .white), // Make text color white for better contrast
+                  ),
+                  Text(
+                    widget.plant.species!,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+      imageBuilder: (context, imageProvider) {
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
                 ),
-              ],
-            ))
-      ],
+              ),
+            ),
+            // Add a gradient overlay to the bottom
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 80, // Adjust the height as needed
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(
+                        10), // Match the container's borderRadius
+                  ),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.0),
+                      Colors.black.withOpacity(0.9),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              left: 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.plant.info.personalName!,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors
+                            .white), // Make text color white for better contrast
+                  ),
+                  Text(
+                    widget.plant.species!,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
