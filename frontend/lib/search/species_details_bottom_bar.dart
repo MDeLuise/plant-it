@@ -16,6 +16,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
   final bool isDeletable;
   final SpeciesDTO species;
   final Environment env;
+  final Function(SpeciesDTO) updateSpeciesLocally;
 
   const SpeciesDetailsBottomActionBar({
     super.key,
@@ -23,6 +24,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
     required this.http,
     required this.species,
     required this.env,
+    required this.updateSpeciesLocally,
   });
 
   void _removeSpeciesWithConfirm(BuildContext context) async {
@@ -63,9 +65,10 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
         env.logger.error(responseBody["message"]);
         throw AppException(responseBody["message"]);
       }
+      updateSpeciesLocally(species);
       env.logger.info("Species ${species.id} deleted");
       env.toastManager.showToast(context, ToastNotificationType.success,
-        AppLocalizations.of(context).speciesDeletedSuccessfully);
+          AppLocalizations.of(context).speciesDeletedSuccessfully);
       Navigator.of(context).pop();
     } catch (e, st) {
       env.logger.error(e, st);
@@ -128,6 +131,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                   builder: (context) => EditSpeciesPage(
                     species: SpeciesDTO.fromJson(species.toMap()),
                     env: env,
+                    updateSpeciesLocally: updateSpeciesLocally,
                   ),
                 ));
                 if (updated != null) {
@@ -136,6 +140,7 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                     builder: (context) => SpeciesDetailsPage(
                       species: updated,
                       env: env,
+                      updateSpeciesLocally: updateSpeciesLocally,
                     ),
                   ));
                 }

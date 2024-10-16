@@ -145,6 +145,7 @@ class _PlantTabState extends State<PlantTab> {
       await _updateImageReferenceWithTheSpecies();
       widget.updatePlantLocally(widget.plant);
       widget.env.logger.info("Photo successfully deleted");
+      if (!mounted) return false;
       widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).photoSuccessfullyDeleted);
     }

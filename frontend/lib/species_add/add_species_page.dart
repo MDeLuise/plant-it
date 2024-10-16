@@ -14,11 +14,13 @@ import 'package:plant_it/toast/toast_manager.dart';
 class AddSpeciesPage extends StatefulWidget {
   final String? name;
   final Environment env;
+  final Function(SpeciesDTO) updateSpeciesLocally;
 
   const AddSpeciesPage({
     super.key,
     this.name,
     required this.env,
+    required this.updateSpeciesLocally,
   });
 
   @override
@@ -60,12 +62,14 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
         ToastNotificationType.success,
         AppLocalizations.of(context).speciesCreatedSuccessfully,
       );
+      widget.updateSpeciesLocally(updatedSpecies);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => SpeciesDetailsPage(
             env: widget.env,
             species: updatedSpecies,
+            updateSpeciesLocally: widget.updateSpeciesLocally,
           ),
         ),
       );

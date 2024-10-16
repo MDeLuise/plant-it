@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/back_button.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details/species_tab.dart';
@@ -9,11 +10,13 @@ import 'package:plant_it/search/species_details_bottom_bar.dart';
 class SpeciesDetailsPage extends StatefulWidget {
   final Environment env;
   final SpeciesDTO species;
+  final Function(SpeciesDTO) updateSpeciesLocally;
 
   const SpeciesDetailsPage({
     super.key,
     required this.env,
     required this.species,
+    required this.updateSpeciesLocally,
   });
 
   @override
@@ -21,6 +24,11 @@ class SpeciesDetailsPage extends StatefulWidget {
 }
 
 class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
+  void _updateSpeciesLocally(SpeciesDTO species) {
+    fetchAndSetPlants(context, widget.env);
+    widget.updateSpeciesLocally(species);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +37,7 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
         species: widget.species,
         http: widget.env.http,
         env: widget.env,
+        updateSpeciesLocally: _updateSpeciesLocally,
       ),
       body: Stack(
         children: [

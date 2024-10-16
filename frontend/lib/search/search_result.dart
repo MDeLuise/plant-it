@@ -14,12 +14,14 @@ class SearchResultCard extends StatefulWidget {
   final SpeciesDTO species;
   final Environment env;
   final List<SpeciesDTO> result;
+  final Function(SpeciesDTO) updateSpeciesLocally;
 
   const SearchResultCard({
     super.key,
     required this.species,
     required this.env,
     required this.result,
+    required this.updateSpeciesLocally,
   });
 
   @override
@@ -70,6 +72,7 @@ class _SearchResultCardState extends State<SearchResultCard> {
             SpeciesDetailsPage(
               species: widget.species,
               env: widget.env,
+              updateSpeciesLocally: widget.updateSpeciesLocally,
             ),
           ),
           child: Stack(
@@ -138,6 +141,7 @@ class _SearchResultCardState extends State<SearchResultCard> {
             SpeciesDetailsPage(
               species: widget.species,
               env: widget.env,
+              updateSpeciesLocally: widget.updateSpeciesLocally,
             ),
           ),
           child: Stack(

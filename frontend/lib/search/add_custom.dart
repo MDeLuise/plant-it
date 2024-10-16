@@ -3,17 +3,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/commons.dart';
+import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/species_add/add_species_page.dart';
 
 class AddCustomCard extends StatelessWidget {
   final String? species;
   final Environment env;
+  final Function(SpeciesDTO) updateSpeciesLocally;
 
   const AddCustomCard({
     super.key,
     this.species,
     required this.env,
+    required this.updateSpeciesLocally,
   });
 
   @override
@@ -24,6 +27,7 @@ class AddCustomCard extends StatelessWidget {
         AddSpeciesPage(
           name: species,
           env: env,
+          updateSpeciesLocally: updateSpeciesLocally,
         ),
       ),
       child: Stack(

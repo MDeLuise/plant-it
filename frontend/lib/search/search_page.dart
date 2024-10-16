@@ -115,6 +115,7 @@ class _SeachPageState extends State<SeachPage> {
                             species: r,
                             env: widget.env,
                             result: _result,
+                            updateSpeciesLocally: (s) => _fetchAndSetResult(_searchController.text),
                           ),
                           SizedBox(
                             height: 20,
@@ -125,6 +126,7 @@ class _SeachPageState extends State<SeachPage> {
                     AddCustomCard(
                       env: widget.env,
                       species: _searchController.text,
+                      updateSpeciesLocally: (s) =>_fetchAndSetResult(_searchController.text),
                     ),
                   ],
                 ),
