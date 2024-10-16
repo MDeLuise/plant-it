@@ -223,10 +223,6 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
                 title: AppLocalizations.of(context).avatar,
                 value: widget.plant.avatarMode!.toLowerCase(),
               ),
-              FullWidthInfoEntry(
-                title: AppLocalizations.of(context).note,
-                value: widget.plant.info.note,
-              ),
               SimpleInfoEntry(
                   title: AppLocalizations.of(context).purchasedPrice,
                   value: widget.plant.info.purchasedPrice == null
@@ -239,6 +235,10 @@ class _PlantDetailsTabState extends State<PlantDetailsTab> {
               SimpleInfoEntry(
                   title: AppLocalizations.of(context).location,
                   value: widget.plant.info.location.toString()),
+              FullWidthInfoEntry(
+                title: AppLocalizations.of(context).note,
+                value: widget.plant.info.note,
+              ),
             ],
           ),
           InfoGroup(
