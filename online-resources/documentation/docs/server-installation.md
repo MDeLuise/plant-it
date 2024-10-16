@@ -420,8 +420,9 @@ CONTACT_MAIL=your-email@gmail.com
 ```
 
 ## Homepage dashboard integration
-![](assets/dashboard-homepage.png){ align=left; loading=lazy; style="max-width:400px;"}
-
+<p align="center">
+<img src="assets/dashboard-homepage.png" style="max-width: 400px">
+</p>
 The project offers a widget for integrates the service with the popular dashboard called [homepage](https://github.com/gethomepage/homepage).
 In order to use it, simply place the widget as above in the configuration yml file of the dashboard:
 ```
