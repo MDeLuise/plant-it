@@ -16,11 +16,13 @@ import 'package:provider/provider.dart';
 class PlantTab extends StatefulWidget {
   final PlantDTO plant;
   final Environment env;
+  final Function(PlantDTO) updatePlantLocally;
 
   const PlantTab({
     super.key,
     required this.plant,
     required this.env,
+    required this.updatePlantLocally,
   });
 
   @override
@@ -61,6 +63,7 @@ class _PlantTabState extends State<PlantTab> {
       widget.plant.avatarMode = "SPECIFIED";
       widget.plant.avatarImageId = imageId;
     });
+    widget.updatePlantLocally(widget.plant);
     return true;
   }
 
@@ -87,6 +90,7 @@ class _PlantTabState extends State<PlantTab> {
       widget.plant.avatarMode = "NONE";
       widget.plant.avatarImageId = null;
     });
+    widget.updatePlantLocally(widget.plant);
     return true;
   }
 
@@ -119,7 +123,6 @@ class _PlantTabState extends State<PlantTab> {
             ],
           );
         });
-
     return completer.future;
   }
 
@@ -138,9 +141,13 @@ class _PlantTabState extends State<PlantTab> {
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
     }
-    widget.env.logger.info("Photo successfully deleted");
-    widget.env.toastManager.showToast(context, ToastNotificationType.success,
-        AppLocalizations.of(context).photoSuccessfullyDeleted);
+    if (imageId == widget.plant.avatarImageId) {
+      await _updateImageReferenceWithTheSpecies();
+      widget.updatePlantLocally(widget.plant);
+      widget.env.logger.info("Photo successfully deleted");
+      widget.env.toastManager.showToast(context, ToastNotificationType.success,
+          AppLocalizations.of(context).photoSuccessfullyDeleted);
+    }
     return true;
   }
 
@@ -180,6 +187,26 @@ class _PlantTabState extends State<PlantTab> {
             .nYearsAndMonthsAndDays(years, remainingMonths, remainingDays);
       }
     }
+  }
+
+  Future<void> _updateImageReferenceWithTheSpecies() async {
+    final response = await widget.env.http.get("plant/${widget.plant.id}");
+    final responseBody = json.decode(response.body);
+
+    if (response.statusCode != 200) {
+      widget.env.logger.error(
+          "Error while getting plant ${widget.plant.id}: ${responseBody["message"]}");
+      if (!mounted) return;
+      widget.env.toastManager.showToast(context, ToastNotificationType.error,
+          AppLocalizations.of(context).errorUpdatingPlant);
+      return;
+    }
+
+    final PlantDTO updated = PlantDTO.fromJson(responseBody);
+    setState(() {
+      widget.plant.avatarMode = updated.avatarMode;
+      widget.plant.avatarImageId = updated.avatarImageId;
+    });
   }
 
   @override

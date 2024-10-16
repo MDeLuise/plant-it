@@ -114,7 +114,7 @@ class _PlantListState extends State<PlantList> {
                   },
                   child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: ParallaxPlantCard(
+                      child: PlantCard(
                         horizontalSlide:
                             (index - _page).clamp(-1, 1).toDouble(),
                         plant: _filteredPlants[index],
@@ -149,13 +149,13 @@ class _PlantListState extends State<PlantList> {
   }
 }
 
-class ParallaxPlantCard extends StatefulWidget {
+class PlantCard extends StatefulWidget {
   final PlantDTO plant;
   final double horizontalSlide;
   final AppHttpClient http;
   final List<PlantDTO> filteredPlants;
 
-  const ParallaxPlantCard({
+  const PlantCard({
     super.key,
     required this.plant,
     required this.horizontalSlide,
@@ -164,10 +164,10 @@ class ParallaxPlantCard extends StatefulWidget {
   });
 
   @override
-  State<ParallaxPlantCard> createState() => _ParallaxPlantCard();
+  State<PlantCard> createState() => _PlantCardState();
 }
 
-class _ParallaxPlantCard extends State<ParallaxPlantCard> {
+class _PlantCardState extends State<PlantCard> {
 
   @override
   Widget build(BuildContext context) {

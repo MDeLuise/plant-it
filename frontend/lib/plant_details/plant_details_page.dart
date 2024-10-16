@@ -68,6 +68,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
       _activeTab = PlantTab(
         plant: _toShow,
         env: widget.env,
+        updatePlantLocally: _updatePlantLocally,
       );
     } else if (_activeTab is SpeciesDetailsTab) {
       _activeTab = SpeciesDetailsTab(
@@ -143,8 +144,11 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                                 plant: _toShow,
                                 env: widget.env,
                               )),
-                          () => setState(() => _activeTab =
-                              PlantTab(plant: _toShow, env: widget.env)),
+                          () => setState(() => _activeTab = PlantTab(
+                                plant: _toShow,
+                                env: widget.env,
+                                updatePlantLocally: _updatePlantLocally,
+                              )),
                           () => setState(() => _activeTab = SpeciesDetailsTab(
                                 species: _isLoading
                                     ? SpeciesDTO(
