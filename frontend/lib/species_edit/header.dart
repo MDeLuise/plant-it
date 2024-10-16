@@ -48,6 +48,9 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
           _imageToDisplay = const AssetImage("assets/images/no-image.png");
         },
       );
+      setState(() {
+        _imageUploaded = true;
+      });
     }
     setState(() {
       _loading = false;
@@ -172,16 +175,19 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
         Skeletonizer(
           enabled: _loading,
           effect: skeletonizerEffect,
-          child: Padding(
-            padding: EdgeInsets.all(_imageUploaded || _loading ? 0 : 100),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: _imageToDisplay,
-                  fit: _imageUploaded || _loading
-                      ? BoxFit.cover
-                      : BoxFit.contain,
-                  opacity: .3,
+          child: Container(
+            color: _imageUploaded ? null : const Color.fromRGBO(24, 44, 37, 1),
+            child: Padding(
+              padding: EdgeInsets.all(_imageUploaded || _loading ? 0 : 100),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: _imageToDisplay,
+                    fit: _imageUploaded || _loading
+                        ? BoxFit.cover
+                        : BoxFit.contain,
+                    opacity: .3,
+                  ),
                 ),
               ),
             ),
