@@ -14,7 +14,6 @@ import com.github.mdeluise.plantit.exception.UnauthorizedException;
 import com.github.mdeluise.plantit.image.BotanicalInfoImage;
 import com.github.mdeluise.plantit.image.EntityImage;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
-import com.github.mdeluise.plantit.image.storage.StorageFileNotFoundException;
 import com.github.mdeluise.plantit.plant.Plant;
 import com.github.mdeluise.plantit.plant.PlantRepository;
 import jakarta.transaction.Transactional;
@@ -234,12 +233,7 @@ public class BotanicalInfoService {
         if (oldImage != updatedImage) { // both not null
             linkNewImage(updatedImage, toUpdate);
             if (oldImage != null && (updatedImage == null || !updatedImage.equals(oldImage))) {
-                try {
-                    imageStorageService.remove(oldImage.getId());
-                } catch (StorageFileNotFoundException e) {
-                    logger.error("Error while deleting image with id {}, file not found", oldImage.getId(), e);
-                    imageStorageService.removeOnlyFromDB(oldImage.getId());
-                }
+                imageStorageService.remove(oldImage.getId());
             }
         }
         return toUpdate;
