@@ -28,6 +28,8 @@ public interface ImageStorageService {
 
     void remove(String id);
 
+    void removeOnlyFromDB(String id);
+
     void removeAll();
 
     Collection<String> getAllIds(ImageTarget linkedEntity);

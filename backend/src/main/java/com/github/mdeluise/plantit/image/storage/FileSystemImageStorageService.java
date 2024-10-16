@@ -311,14 +311,20 @@ public class FileSystemImageStorageService implements ImageStorageService {
         if (entityImagePath != null) {
             final File toRemove = new File(entityImagePath);
             if (!toRemove.exists() || !toRemove.canRead()) {
-                logger.error("Error while reading image " + id + " permission deny");
+                logger.error("Error while reading image {} permission deny", id);
                 throw new StorageFileNotFoundException("Could not read image with id: " + id);
             }
             if (!toRemove.delete()) {
-                logger.error("Error while removing image " + id);
+                logger.error("Error while removing image {}", id);
                 throw new StorageException("Could not remove image with id " + id);
             }
         }
+        imageRepository.deleteById(id);
+    }
+
+
+    @Override
+    public void removeOnlyFromDB(String id) {
         imageRepository.deleteById(id);
     }
 
