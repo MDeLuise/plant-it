@@ -143,19 +143,6 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         ),
                       ),
                       AddPlantBody(toCreate: _toCreate),
-                      Positioned(
-                        top: 10.0,
-                        left: 10.0,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
                     ],
                   ),
                 ),
