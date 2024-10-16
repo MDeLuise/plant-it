@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/back_button.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -149,15 +150,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                 Positioned(
                   top: 10.0,
                   left: 10.0,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
+                  child: AppBackButton(),
                 ),
               ],
             );

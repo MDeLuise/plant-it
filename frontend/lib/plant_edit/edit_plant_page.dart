@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/back_button.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_edit/edit_plant_body.dart';
@@ -99,15 +100,7 @@ class _EditPlantPageState extends State<EditPlantPage> {
           Positioned(
             top: 10.0,
             left: 10.0,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            child: AppBackButton(),
           ),
         ],
       ),

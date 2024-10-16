@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/back_button.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant_details/species_tab.dart';
@@ -55,15 +56,7 @@ class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
           Positioned(
             top: 10.0,
             left: 10.0,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            child: AppBackButton(),
           ),
         ],
       ),

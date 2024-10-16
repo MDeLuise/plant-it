@@ -13,21 +13,21 @@ import 'package:plant_it/plant_details/gallery.dart';
 import 'package:plant_it/toast/toast_manager.dart';
 import 'package:provider/provider.dart';
 
-class PlantDetailsTab extends StatefulWidget {
+class PlantTab extends StatefulWidget {
   final PlantDTO plant;
   final Environment env;
 
-  const PlantDetailsTab({
+  const PlantTab({
     super.key,
     required this.plant,
     required this.env,
   });
 
   @override
-  State<PlantDetailsTab> createState() => _PlantDetailsTabState();
+  State<PlantTab> createState() => _PlantTabState();
 }
 
-class _PlantDetailsTabState extends State<PlantDetailsTab> {
+class _PlantTabState extends State<PlantTab> {
   late UniqueKey _galleryKey = UniqueKey();
 
   Future<bool> _updatePlantAvatarImage(String imageId) async {

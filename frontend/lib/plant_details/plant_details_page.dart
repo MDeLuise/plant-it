@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/back_button.dart';
 import 'package:plant_it/dto/plant_dto.dart';
 import 'package:plant_it/dto/species_dto.dart';
 import 'package:plant_it/environment.dart';
@@ -29,7 +30,6 @@ class PlantDetailsPage extends StatefulWidget {
 
 class _PlantDetailsPageState extends State<PlantDetailsPage> {
   late final SpeciesDTO _species;
-  late PlantDetailsTab _plantDetailsTab;
   late PlantDTO _toShow;
   bool _isLoading = true;
   late Widget _activeTab;
@@ -38,15 +38,8 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   void initState() {
     super.initState();
     _toShow = widget.plant;
-    _plantDetailsTab = _createPlantDetailsChild();
     _fetchAndSetSpecies();
-    _activeTab = DetailsTab(plant: _toShow, env: widget.env);
-  }
-
-  // Used only for refresh the Gallery
-  PlantDetailsTab _createPlantDetailsChild() {
-    return PlantDetailsTab(
-      key: UniqueKey(),
+    _activeTab = DetailsTab(
       plant: _toShow,
       env: widget.env,
     );
@@ -60,9 +53,34 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
       return updated;
     }).toList();
     setState(() {
-      _toShow = updated;
-      _plantDetailsTab = _createPlantDetailsChild();
+      _toShow = PlantDTO.fromJson(updated.toMap());
+      _refreshActiveTab();
     });
+  }
+
+  void _refreshActiveTab() {
+    if (_activeTab is DetailsTab) {
+      _activeTab = DetailsTab(
+        plant: _toShow,
+        env: widget.env,
+      );
+    } else if (_activeTab is PlantTab) {
+      _activeTab = PlantTab(
+        plant: _toShow,
+        env: widget.env,
+      );
+    } else if (_activeTab is SpeciesDetailsTab) {
+      _activeTab = SpeciesDetailsTab(
+        species: _isLoading
+            ? SpeciesDTO(
+                scientificName: "foo",
+                care: SpeciesCareInfoDTO(),
+                creator: "USER",
+              )
+            : _species,
+        isLoading: _isLoading,
+      );
+    }
   }
 
   void _fetchAndSetSpecies() async {
@@ -122,11 +140,11 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                         ],
                         callbacks: [
                           () => setState(() => _activeTab = DetailsTab(
-                                key: UniqueKey(),
                                 plant: _toShow,
                                 env: widget.env,
                               )),
-                          () => setState(() => _activeTab = _plantDetailsTab),
+                          () => setState(() => _activeTab =
+                              PlantTab(plant: _toShow, env: widget.env)),
                           () => setState(() => _activeTab = SpeciesDetailsTab(
                                 species: _isLoading
                                     ? SpeciesDTO(
@@ -148,15 +166,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
           Positioned(
             top: 10.0,
             left: 10.0,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            child: AppBackButton(),
           ),
         ],
       ),
