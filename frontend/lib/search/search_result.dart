@@ -37,19 +37,28 @@ class _SearchResultCardState extends State<SearchResultCard> {
       },
       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       fit: BoxFit.cover,
-      placeholder: (context, url) => Skeletonizer(
-        enabled: true,
-        effect: skeletonizerEffect,
+      placeholder: (context, url) => AspectRatio(
+        aspectRatio: 1,
         child: Container(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height * .4,
             minHeight: MediaQuery.of(context).size.height * .4,
           ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: const DecorationImage(
-              image: AssetImage("assets/images/no-image.png"),
-              fit: BoxFit.cover,
+          child: Skeletonizer(
+            enabled: true,
+            effect: skeletonizerEffect,
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * .4,
+                minHeight: MediaQuery.of(context).size.height * .4,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: const DecorationImage(
+                  image: AssetImage("assets/images/no-image.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ),

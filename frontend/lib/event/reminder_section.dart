@@ -32,10 +32,10 @@ class _ReminderSectionState extends State<ReminderSection> {
     final now = DateTime.now();
     final date = now.add(Duration(days: (day - now.weekday + 7) % 7 + 1));
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(2),
       child: Container(
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           color: Colors.grey,
         ),
         child: Center(
