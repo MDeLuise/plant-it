@@ -37,9 +37,18 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
   }
 
   void _setInitialImage() {
+    String? imageUrl;
     if (widget.species.imageUrl != null) {
+      imageUrl =
+          "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
+    } else if (widget.species.imageId != null) {
+      imageUrl =
+          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}";
+    }
+
+    if (imageUrl != null) {
       _imageToDisplay = CachedNetworkImageProvider(
-        "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}",
+        imageUrl,
         headers: {
           "Key": widget.env.http.key!,
         },
