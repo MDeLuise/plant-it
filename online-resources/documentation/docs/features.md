@@ -18,8 +18,13 @@ Upon identifying the plant species, select it, click on "Add plant" at the botto
 ### View details
 ![](assets/plant-details-1.png){ align=left; loading=lazy; style="height:600px;"}
 ![](assets/plant-details-2.png){ align=left; loading=lazy; style="height:600px;"}
+![](assets/plant-details-3.png){ align=left; loading=lazy; style="height:600px;"}
 
-To access comprehensive plant details, simply open the plant from the home screen. Here, you'll find a detailed overview of the plant, including information about the associated species.
+To view detailed information about a plant, open it from the home screen. You’ll see a comprehensive overview, including details about the plant and its associated species.
+
+* In the "Activity" section, you can find events and reminders specific to that plant.
+* The "Plant" section provides detailed information about the individual plant.
+* The "Species" section contains information about the plant’s species.
 
 ### Edit details or remove plant
 ![](assets/edit-plant.png){ align=left; loading=lazy; style="height:600px;"}
@@ -35,7 +40,7 @@ To create a new event, simply tap the plus button in the bottom bar. From there,
 ### View all events
 ![](assets/events.png){ align=left; loading=lazy; style="height:600px;"}
 
-To access all saved events, select the "calendar" icon in the button bar. Here, you'll find a chronological list of all events, and you can further filter them by plants and/or type for convenient organization.
+To access all saved events, select the "calendar" icon in the button bar, then click on the "Events" section. Here, you'll find a chronological list of all events, and you can further filter them by plants and/or type for convenient organization.
 
 ### Edit or remove existing event
 ![](assets/edit-event.png){ align=left; loading=lazy; style="height:600px;"}
@@ -50,7 +55,7 @@ To modify or delete an event, choose it from either the home screen or the "diar
 To add a new species, tap the search icon in the bottom bar, enter the species name, and select the "Custom" species option. Enter the necessary details and then click "Save plant" to create the new species.
 
 ### Edit existing species
-![](assets/species-1.png){ align=left; loading=lazy; style="height:600px;"}
+![](assets/species.png){ align=left; loading=lazy; style="height:600px;"}
 ![](assets/edit-species.png){ align=left; loading=lazy; style="height:600px;"}
 
 To modify an existing species, tap the search icon in the bottom bar, enter the species name, and select it. Next, click the edit icon in the bottom appbar of the window, make the necessary updates, and then click the floating "Save" button. The species will be updated. If it originated from the FloraCodex service, a new custom species will be generated, and all plants linked to the FloraCodex species will be associated with the new one. If it was already a custom species, it will be straightforwardly updated.
@@ -59,16 +64,25 @@ To modify an existing species, tap the search icon in the bottom bar, enter the 
 To delete a species, it must be a custom one. Tap the search icon in the bottom bar, enter the species name, and select it. Next, click the trash icon in the bottom appbar of the window,. Please be aware that this action will also delete all linked plants associated with the species.
 
 ## Reminders
-The Reminder feature in the project allows users to set up reminders for specific actions related to their plants. 
+The Reminder feature in the project allows users to set up reminders for specific actions related to their plants.
+
+### View Upcoming Reminder Occurrences
+![](assets/reminder-1.png){ align=left; loading=lazy; style="height:600px;"}
+![](assets/reminder-2.png){ align=left; loading=lazy; style="height:600px;"}
+To see the upcoming reminder occurrences for your plants, follow these steps:
+
+* Open the Calendar: Click on the "Calendar" icon located in the bottom bar of the app.
+* Navigate to the Reminder Section: Once in the Calendar view, switch to the "Reminder" section. Here, you'll find a calendar displaying all scheduled reminder occurrences.
+* View Daily Details: Click on a specific day in the calendar to see a detailed list of reminder occurrences, along with the associated plants. This allows you to quickly check which tasks need attention on a particular day.
 
 ### Add a new reminder
-![](assets/reminder.png){ align=left; loading=lazy; style="height:600px;"}
+![](assets/plant-details-1.png){ align=left; loading=lazy; style="height:600px;"}
 ![](assets/add-reminder.png){ align=left; loading=lazy; style="height:600px;"}
 
 Follow the steps below to create a new reminder:
 
-* Navigate to Plant Detail View: Open the detail view of the desired plant by selecting it from the plant list. Once in the detail view, locate and click on the "Plant" section.
-* Access Reminders Section: Within the "Plant" section, scroll down until you find the "Reminders" subsection. Here, you can manage existing reminders, including removing or disabling them, as well as creating new ones.
+* Navigate to Plant Detail View: Open the detail view of the desired plant by selecting it from the plant list. Once in the detail view, locate and click on the "Activity" section.
+* Access Reminders Section: Within the "Activity" section, scroll down until you find the "Reminders" subsection. Here, you can manage existing reminders, including removing or disabling them, as well as creating new ones.
 * Create a New Reminder: To create a new reminder, click on the "add" icon provided in the reminders section.
 * Fill Required Information: You will be prompted to fill in the following required information for the new reminder:
     * Type: Specify the type of action to be reminded of.
