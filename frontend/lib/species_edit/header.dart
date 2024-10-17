@@ -118,8 +118,7 @@ class _EditSpeciesImageHeaderState extends State<EditSpeciesImageHeader> {
             TextButton(
               onPressed: () async {
                 try {
-                  final response = await widget.env.http
-                      .get("${widget.env.http.backendUrl}proxy?url=$url");
+                  final response = await widget.env.http.get("proxy?url=$url");
                   if (response.statusCode == 200) {
                     final imageBytes = response.bodyBytes;
                     widget.species.imageContent = null;

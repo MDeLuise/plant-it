@@ -10,6 +10,7 @@ import java.net.URL;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,14 +30,20 @@ public class ImageProxyController {
         connection.setRequestMethod("GET");
 
         final String contentType = connection.getContentType();
-        response.setContentType(contentType);
+        if (contentType == null || !contentType.startsWith("image/")) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "The provided URL does not point to a valid image.");
+            return;
+        }
 
+        response.setContentType(contentType);
         try (InputStream inputStream = connection.getInputStream()) {
             final byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 response.getOutputStream().write(buffer, 0, bytesRead);
             }
+        } catch (IOException e) {
+            response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to proxy the image.");
         }
     }
 }

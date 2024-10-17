@@ -132,18 +132,20 @@ class _AddSpeciesImageHeaderState extends State<AddSpeciesImageHeader> {
             ),
             TextButton(
               onPressed: () async {
+                setState(() {
+                  _loading = true;
+                });
                 try {
-                  final response = await widget.env.http
-                      .get("${widget.env.http.backendUrl}proxy?url=$url");
+                  final response = await widget.env.http.get("proxy?url=$url");
                   if (response.statusCode == 200) {
                     final imageBytes = response.bodyBytes;
                     widget.species.imageContent = null;
                     widget.species.imageId = null;
                     widget.species.imageUrl = url;
                     setState(() {
-                      _loading = true;
                       _imageToDisplay = MemoryImage(imageBytes);
                       _loading = false;
+                      _imageUploaded = true;
                     });
                     if (!context.mounted) return;
                     Navigator.of(context).pop();
