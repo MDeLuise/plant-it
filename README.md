@@ -143,14 +143,14 @@ If you're interested in contributing transactions to enhance the app, you can ge
 |----------|----------|-------------|
 | English | app_en.arb | 100% |
 | Italian | app_it.arb | 100% |
-| German | app_de.arb | 100% |
-| Russian | app_ru.arb | 98% |
-| French | app_fr.arb | 98% |
-| Dutch Flemish | app_nl.arb | 98% |
-| Danish | app_da.arb | 98% |
-| Portuguese | app_pt.arb | 97% |
-| Ukrainian | app_uk.arb | 95% |
-| Spanish Castilian | app_es.arb | 95% |
+| German | app_de.arb | 92% |
+| Russian | app_ru.arb | 91% |
+| Dutch Flemish | app_nl.arb | 91% |
+| French | app_fr.arb | 90% |
+| Danish | app_da.arb | 90% |
+| Portuguese | app_pt.arb | 89% |
+| Ukrainian | app_uk.arb | 87% |
+| Spanish Castilian | app_es.arb | 87% |
 
 ### Bug Report, Feature Request and Question
 You can submit any of this in the [issues](https://github.com/MDeLuise/plant-it/issues/new/choose) section of the repository. Choose the right template and then fill in the required info.
