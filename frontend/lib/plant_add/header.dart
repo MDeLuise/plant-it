@@ -74,10 +74,18 @@ class _AddPlantImageHeaderState extends State<AddPlantImageHeader> {
       },
       imageBuilder: (context, imageProvider) {
         return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
+          padding: EdgeInsets.all(_url == null ? 100 : 0),
+          decoration: _url == null
+              ? BoxDecoration(
+                  color: const Color.fromRGBO(24, 44, 37, 1),
+                )
+              : null,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: _url == null ? BoxFit.contain : BoxFit.cover,
+              ),
             ),
           ),
         );
