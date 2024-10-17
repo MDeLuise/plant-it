@@ -38,7 +38,8 @@ class _AddPlantImageHeaderState extends State<AddPlantImageHeader> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: _url ?? "assets/images/no-image.png",
+      imageUrl:
+          _url ?? "${widget.env.http.backendUrl}image/content/non-existing-id",
       httpHeaders: {
         "Key": widget.env.http.key!,
       },

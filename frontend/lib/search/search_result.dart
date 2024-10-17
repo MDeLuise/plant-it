@@ -46,34 +46,25 @@ class _SearchResultCardState extends State<SearchResultCard> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: _url ?? "assets/images/no-image.png",
+      imageUrl: _url ??
+          "${widget.env.http.backendUrl}image/content/non-existing-id",
       httpHeaders: {
         "Key": widget.env.http.key!,
       },
       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      fit: BoxFit.cover,
-      placeholder: (context, url) => AspectRatio(
-        aspectRatio: 1,
+      placeholder: (context, url) => Skeletonizer(
+        effect: skeletonizerEffect,
+        enabled: true,
         child: Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * .4,
             minHeight: MediaQuery.of(context).size.height * .4,
+            maxWidth: MediaQuery.of(context).size.height * .4,
           ),
-          child: Skeletonizer(
-            enabled: true,
-            effect: skeletonizerEffect,
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .4,
-                minHeight: MediaQuery.of(context).size.height * .4,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage("assets/images/no-image.png"),
-                  fit: BoxFit.cover,
-                ),
-              ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage("assets/images/no-image.png"),
+              fit: BoxFit.cover,
             ),
           ),
         ),
