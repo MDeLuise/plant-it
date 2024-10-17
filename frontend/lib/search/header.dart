@@ -75,9 +75,17 @@ class _SpeciesImageHeaderState extends State<SpeciesImageHeader> {
       imageBuilder: (context, imageProvider) {
         return Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
+            color: _url == null ? const Color.fromRGBO(24, 44, 37, 1) : null,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(_url == null ? 100 : 0),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: _url == null ? BoxFit.contain : BoxFit.cover,
+                ),
+              ),
             ),
           ),
         );

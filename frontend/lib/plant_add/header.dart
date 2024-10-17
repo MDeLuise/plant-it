@@ -21,11 +21,24 @@ class AddPlantImageHeader extends StatefulWidget {
 }
 
 class _AddPlantImageHeaderState extends State<AddPlantImageHeader> {
+  String? _url;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.species.id != null) {
+      _url =
+          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}";
+    } else if (widget.species.imageUrl != null) {
+      _url =
+          "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl:
-          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}",
+      imageUrl: _url ?? "assets/images/no-image.png",
       httpHeaders: {
         "Key": widget.env.http.key!,
       },

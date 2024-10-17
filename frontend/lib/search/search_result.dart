@@ -29,11 +29,24 @@ class SearchResultCard extends StatefulWidget {
 }
 
 class _SearchResultCardState extends State<SearchResultCard> {
+  String? _url;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.species.id != null) {
+      _url =
+          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}";
+    } else if (widget.species.imageUrl != null) {
+      _url =
+          "${widget.env.http.backendUrl}proxy?url=${widget.species.imageUrl}";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl:
-          "${widget.env.http.backendUrl}image/content/${widget.species.imageId}",
+      imageUrl: _url ?? "assets/images/no-image.png",
       httpHeaders: {
         "Key": widget.env.http.key!,
       },
@@ -147,46 +160,56 @@ class _SearchResultCardState extends State<SearchResultCard> {
           child: Stack(
             children: [
               Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                      _url == null ? const Color.fromRGBO(24, 44, 37, 1) : null,
+                ),
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * .4,
                   minHeight: MediaQuery.of(context).size.height * .4,
                 ),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                  child: Padding(
+                    padding: EdgeInsets.all(_url == null ? 100 : 0),
+                    child: Container(
+                      padding: EdgeInsets.all(_url == null ? 100 : 0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: _url == null ? BoxFit.contain : BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
               // Add a gradient overlay to the bottom
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 80, // Adjust the height as needed
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(
-                          10), // Match the container's borderRadius
-                    ),
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.black.withOpacity(0.0),
-                        Colors.black.withOpacity(0.9),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+              if (_url != null)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 80, // Adjust the height as needed
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(
+                            10), // Match the container's borderRadius
+                      ),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.0),
+                          Colors.black.withOpacity(0.9),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
                     ),
                   ),
                 ),
-              ),
               Positioned(
                 bottom: 10,
                 left: 10,
