@@ -47,7 +47,7 @@ dependencies:
   flutter_advanced_avatar: ^1.5.0
   provider: ^6.1.2
   url_launcher: ^6.3.0
-  package_info_plus: ^8.0.2
+  package_info_plus: ^8.1.0
   talker: ^4.4.1
   talker_flutter: ^4.4.0
   toastification: ^2.3.0
