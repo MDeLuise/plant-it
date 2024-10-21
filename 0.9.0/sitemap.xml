@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://docs.plant-it.org/0.9.0/</loc>
+         <lastmod>2024-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.plant-it.org/0.9.0/app-installation/</loc>
+         <lastmod>2024-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.plant-it.org/0.9.0/features/</loc>
+         <lastmod>2024-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.plant-it.org/0.9.0/server-installation/</loc>
+         <lastmod>2024-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://docs.plant-it.org/0.9.0/support/</loc>
+         <lastmod>2024-10-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
