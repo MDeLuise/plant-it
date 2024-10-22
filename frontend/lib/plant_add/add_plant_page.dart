@@ -58,10 +58,11 @@ class _AddPlantPageState extends State<AddPlantPage> {
   void _createPlant() async {
     try {
       int speciesId = widget.species.id ?? -1;
+      SpeciesDTO? updatedSpecies;
       if (widget.species.id == null) {
-        speciesId = await _createSpecies();
+        updatedSpecies = await _createSpecies();
       }
-      _toCreate.speciesId = speciesId;
+      _toCreate.speciesId = updatedSpecies?.id ?? speciesId;
       _toCreate.info.state = "PURCHASED";
       final response = await widget.env.http.post("plant", _toCreate.toMap());
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
@@ -76,14 +77,14 @@ class _AddPlantPageState extends State<AddPlantPage> {
       if (!mounted) return;
       widget.env.toastManager.showToast(context, ToastNotificationType.success,
           AppLocalizations.of(context).plantCreatedSuccessfully);
-      Navigator.pop(context, true);
+      Navigator.pop(context, updatedSpecies);
     } catch (e, st) {
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);
     }
   }
 
-  Future<int> _createSpecies() async {
+  Future<SpeciesDTO> _createSpecies() async {
     try {
       final response =
           await widget.env.http.post("botanical-info", widget.species.toMap());
@@ -95,7 +96,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
         throw AppException(AppLocalizations.of(context).errorCreatingSpecies);
       }
       widget.env.logger.info("Species successfully created");
-      return responseBody["id"];
+      return SpeciesDTO.fromJson(responseBody);
     } catch (e, st) {
       widget.env.logger.error(e, st);
       throw AppException.withInnerException(e as Exception);

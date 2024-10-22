@@ -101,7 +101,11 @@ class SpeciesDetailsBottomActionBar extends StatelessWidget {
                       species: species,
                     ),
                   ),
-                ),
+                ).then((speciesCreated) {
+                  if (speciesCreated != null) {
+                    updateSpeciesLocally(speciesCreated);
+                  }
+                }),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

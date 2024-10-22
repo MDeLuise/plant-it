@@ -25,8 +25,8 @@ class SpeciesDetailsPage extends StatefulWidget {
 
 class _SpeciesDetailsPageState extends State<SpeciesDetailsPage> {
   void _updateSpeciesLocally(SpeciesDTO species) {
-    fetchAndSetPlants(context, widget.env);
     widget.updateSpeciesLocally(species);
+    fetchAndSetPlants(context, widget.env);
   }
 
   @override
