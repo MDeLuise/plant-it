@@ -4,28 +4,96 @@ labels:
   - "Type: Bug"
   - "Status: Created"
 body:
-  - type: checkboxes
+  - type: markdown
     attributes:
-      label: Avoid duplicated bug reports
-      description: Please avoid bug report duplication
-      options:
-        - label: I've found a bug and checked that there are no open or closed bug report related to this.
-          required: true
-
+      value: |
+        Please use this only if you identified a real error in the application. If you need help, please use the [discussion forum](https://github.com/MDeLuise/plant-it/discussions).
+        Thanks for taking the time to fill out this bug report!
+  
+  # General description
   - type: textarea
+    id: description
     attributes:
-      label: Description
-      description: Please provide a brief description of the bug.
+      label: Bug Description
+      description: A clear and concise description of what the application error is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce
+      description: How can the error be reproduced?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: If applicable, add complete logs from the system logs.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+
+  # Host details
+  - type: input
+    id: plant-it-version
+    attributes:
+      label: Plant-it version
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: plant-it-setup-method
+    attributes:
+      label: Setup Method
+      description: How did you installed Plant-it?
+      options:
+        - Docker
+        - Non-docker
+    validations:
+      required: true
+  - type: dropdown
+    id: plant-it-setup-os
+    attributes:
+      label: Operating System
+      description: In which operating system does the server run?
+      options:
+        - Linux (Ubuntu, CentOS,...)
+        - Windows
+        - macOS
+        - other (please specify in description)
     validations:
       required: true
 
+  # Client details
   - type: textarea
+    id: client-details
     attributes:
-      label: Local environment
-      description: If applicable, please provide additional information related to the environment you are using.
+      label: Client details
+      description: Details about your browser and operating system used to access Plant-it.
       placeholder: |
-        1. backend version and app version
-        2. content of docker-compose.yml file (remember to hide possible sensitive info)
-        3. content of server.env file (remember to hide possible sensitive info)
-        4. app log
-        5. output of the docker compose log
+        - OS: [e.g. Windows, macOS, iOS, Android]
+        - Browser [e.g. Chrome, Firefox, Safari]
+        - Browser Version [e.g. 101.4]
+        - Android APK
+    validations:
+      required: false

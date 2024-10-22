@@ -20,9 +20,6 @@ jobs:
       - name: Download apk-signer tool
         run: sudo apt-get update -y && sudo apt-get install -y apksigner
       
-      - name: Debug path info 1
-        run: pwd
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -34,9 +31,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '21'
-
-      - name: Debug path info 2
-        run: pwd
 
       - name: Create apk File
         run: flutter pub get && flutter build apk --release
