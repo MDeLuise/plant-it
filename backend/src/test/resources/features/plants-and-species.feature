@@ -47,8 +47,8 @@ Feature: Integration tests regards botanical info managements
     Given a user signup with username "user", password "user000", email "foo@bar.com"
     * a user login with username "user" and password "user000"
     * user adds new botanical info
-      | synonyms                | family | genus | species | creator | externalId | image_id | image_url | image_content                                                                                | image_content_type |
-      | synonym,Synonym,synonym |        |       | foo     | TREFLE  |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/jpg          |
+      | synonyms                | family | genus | species | creator     | externalId | image_id | image_url | image_content                                                                                | image_content_type |
+      | synonym,Synonym,synonym |        |       | foo     | FLORA_CODEX |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/jpg          |
     * response is ok
     * using this plant info
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
@@ -68,8 +68,8 @@ Feature: Integration tests regards botanical info managements
     Given a user signup with username "user", password "user000", email "foo@bar.com"
     * a user login with username "user" and password "user000"
     * user adds new botanical info
-      | synonyms                | family | genus | species | creator | externalId | image_id | image_url | image_content                                                                                | image_content_type |
-      | synonym,Synonym,synonym |        |       | foo     | TREFLE  |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/png          |
+      | synonyms                | family | genus | species | creator     | externalId | image_id | image_url | image_content                                                                                | image_content_type |
+      | synonym,Synonym,synonym |        |       | foo     | FLORA_CODEX |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/png          |
     * response is ok
     * there is 1 image in upload folder
     * using this plant info
@@ -90,8 +90,8 @@ Feature: Integration tests regards botanical info managements
     Given a user signup with username "user", password "user000", email "foo@bar.com"
     * a user login with username "user" and password "user000"
     * user adds new botanical info
-      | synonyms                | family | genus | species | creator | externalId | image_id | image_url | image_content                                                                                | image_content_type |
-      | synonym,Synonym,synonym |        |       | foo     | TREFLE  |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/jpeg         |
+      | synonyms                | family | genus | species | creator     | externalId | image_id | image_url | image_content                                                                                | image_content_type |
+      | synonym,Synonym,synonym |        |       | foo     | FLORA_CODEX |            |          |           | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII= | image/jpeg         |
     * response is ok
     * using this plant info
       | startDate | personalName | endDate | state     | note | purchasedPrice | currencySymbol | seller | location |
@@ -155,12 +155,12 @@ Feature: Integration tests regards botanical info managements
     Given a user signup with username "user", password "user000", email "foo@bar.com"
     * a user login with username "user" and password "user000"
     * user adds new botanical info
-      | synonyms | family | genus | species | creator | externalId | image_id | image_url | image_content |
-      | synonym  |        |       | foo     | TREFLE  |            |          |           |               |
+      | synonyms | family | genus | species | creator     | externalId | image_id | image_url | image_content |
+      | synonym  |        |       | foo     | FLORA_CODEX |            |          |           |               |
     * response is ok
     When user adds new botanical info
-      | synonyms | family | genus | species | creator | externalId | image_id | image_url | image_content |
-      |          |        |       | foo     | TREFLE  |            |          |           |               |
+      | synonyms | family | genus | species | creator     | externalId | image_id | image_url | image_content |
+      |          |        |       | foo     | FLORA_CODEX |            |          |           |               |
     Then response is not ok
     When user adds new botanical info
       | synonyms | family | genus | species | creator | externalId | image_id | image_url | image_content |

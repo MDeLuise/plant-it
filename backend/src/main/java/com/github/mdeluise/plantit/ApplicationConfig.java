@@ -5,7 +5,6 @@ import java.net.http.HttpClient;
 
 import com.github.mdeluise.plantit.notification.otp.OtpService;
 import com.github.mdeluise.plantit.notification.password.TemporaryPasswordService;
-import com.github.mdeluise.plantit.plantinfo.trafle.TrefleMigrator;
 import com.github.mdeluise.plantit.reminder.ReminderDispatcher;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -132,26 +131,5 @@ public class ApplicationConfig {
     @Scheduled(cron = "${reminders.notify_check}")
     public void dispatchReminders() {
         reminderDispatcher.dispatch();
-    }
-
-
-    @Bean
-    public CommandLineRunner fillExternalInfo(@Value("${update_existing}") boolean update,
-                                              @Value("${floracodex.key}") String floraCodexKey,
-                                              TrefleMigrator trefleMigrator) {
-        return args -> {
-            if (!update) {
-                logger.info("UPDATE_EXISTING flag set to false. Skipping update of existing species.");
-                return;
-            }
-            if (floraCodexKey == null || floraCodexKey.isBlank()) {
-                logger.info(
-                    "UPDATE_EXISTING flag set to true but trefle key not provided. Skipping update of existing " +
-                        "species.");
-                return;
-            }
-            logger.info("trefle key provided. Starting update of existing species...");
-            trefleMigrator.fillMissingExternalInfo();
-        };
     }
 }

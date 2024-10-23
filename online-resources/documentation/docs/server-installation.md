@@ -137,23 +137,6 @@ SMTP_AUTH=
 SMTP_START_TTL=
 ```
 
-### Integration with Trefle Service [NOT WORKING ANYMORE]
-!!! warning end "Trefle Service Inactivity"
-
-    The Trefle service, which Plant-it relied on for plant data, appears to be inactive. There have been no updates to their database, and their repository shows no recent activity, with several open issues dating back years. While the dataset was accessible until recently, it is no longer available.
-
-    I am currently exploring the best way to move forward and working on a replacement for this service, as mentioned in [issue #218](https://github.com/MDeLuise/plant-it/issues/218).
-
-    As a temporary solution, the Flora Codex service has replaced the Trefle service. However, it lacks some features such as:
-
-      •	Plant care information
-      •	Synonyms
-
-    Additionally, it has fewer plants compared to Trefle.
-
-    This is a temporary patch that will be resolved in the near future.
-
-
 ### Integration with FloraCodex
 To enhance your application with plant search capabilities, you can integrate with the FloraCodex service. FloraCodex provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the FloraCodex service in your project:
 
@@ -420,9 +403,8 @@ CONTACT_MAIL=your-email@gmail.com
 ```
 
 ## Homepage dashboard integration
-<p align="center">
-<img src="assets/dashboard-homepage.png" style="max-width: 400px">
-</p>
+![](assets/dashboard-homepage.png){ align=left; loading=lazy; style="max-width: 400px"}
+
 The project offers a widget for integrates the service with the popular dashboard called [homepage](https://github.com/gethomepage/homepage).
 In order to use it, simply place the widget as above in the configuration yml file of the dashboard:
 ```

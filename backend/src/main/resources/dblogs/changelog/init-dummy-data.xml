@@ -18,7 +18,7 @@
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Hylotelephium"/>
             <column name="species" value="Hylotelephium spectabile"/>
-            <column name="creator" value="TREFLE"/>
+            <column name="creator" value="FLORA_CODEX"/>
         </insert>
         <insert tableName="botanical_infos">
             <column name="id" value="98"/>
@@ -26,7 +26,7 @@
             <column name="family" value="Crassulaceae"/>
             <column name="genus" value="Sedum"/>
             <column name="species" value="Sedum palmeri"/>
-            <column name="creator" value="TREFLE"/>
+            <column name="creator" value="FLORA_CODEX"/>
             <column name="light" value="8"/>
             <column name="humidity" value="6"/>
             <column name="min_temp" value="-10"/>

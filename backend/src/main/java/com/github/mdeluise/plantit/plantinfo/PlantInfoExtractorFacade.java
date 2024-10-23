@@ -5,7 +5,6 @@ import java.util.List;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.plantinfo.floracodex.FloraCodexPlantInfoExtractorStep;
-import com.github.mdeluise.plantit.plantinfo.trafle.TreflePlantInfoExtractorStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,7 @@ public class PlantInfoExtractorFacade {
                                     List<PlantInfoExtractorStep> steps,
                                     AuthenticatedUserService authenticatedUserService) {
         this.authenticatedUserService = authenticatedUserService;
-        List<PlantInfoExtractorStep> stepsToUse = steps.stream()
-                                                       .filter(step -> !(step instanceof TreflePlantInfoExtractorStep))
-                                                       .toList();
+        List<PlantInfoExtractorStep> stepsToUse = steps.stream().toList();
         if (floraCodexKey == null || floraCodexKey.isBlank()) {
             logger.debug("FloraCodex service not used");
             stepsToUse = stepsToUse.stream().filter(step -> !(step instanceof FloraCodexPlantInfoExtractorStep)).toList();

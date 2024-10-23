@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
-import com.github.mdeluise.plantit.MigratorTo050;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.common.AuthenticatedUserService;
 import com.github.mdeluise.plantit.exception.ResourceNotFoundException;
@@ -214,15 +213,7 @@ public class FileSystemImageStorageService implements ImageStorageService {
 
     @Cacheable(value = "image-content", key = "{#id}")
     public ImageContentResponse getImageContent(String id) throws IOException {
-        //get(id);
-
-        final EntityImageImpl entityImage = (EntityImageImpl) get(id);
-        if (entityImage.getContentType() == null && entityImage.getPath() != null) {
-            logger.debug("Image {} is to update due to missing content/type", entityImage.getId());
-            MigratorTo050.fillMissingImageType(entityImage);
-            imageRepository.save(entityImage);
-        }
-
+        get(id);
         return getImageContentInternal(id);
     }
 

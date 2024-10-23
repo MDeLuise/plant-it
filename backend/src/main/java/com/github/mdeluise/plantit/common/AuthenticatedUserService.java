@@ -20,9 +20,9 @@ public class AuthenticatedUserService {
 
 
     public User getAuthenticatedUser() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        String username = authentication.getName();
+        final SecurityContext context = SecurityContextHolder.getContext();
+        final Authentication authentication = context.getAuthentication();
+        final String username = authentication.getName();
         return userService.get(username);
     }
 }

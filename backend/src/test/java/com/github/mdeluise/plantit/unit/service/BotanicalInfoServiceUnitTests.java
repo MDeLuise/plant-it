@@ -85,7 +85,7 @@ class BotanicalInfoServiceUnitTests {
         botanicalInfo2.setUserCreator(authenticatedUser);
         final BotanicalInfo botanicalInfo3 = new BotanicalInfo();
         botanicalInfo2.setId(3L);
-        botanicalInfo2.setCreator(BotanicalInfoCreator.TREFLE);
+        botanicalInfo2.setCreator(BotanicalInfoCreator.FLORA_CODEX);
         final List<BotanicalInfo> botanicalInfoList = Arrays.asList(botanicalInfo1, botanicalInfo2, botanicalInfo3);
         final Set<BotanicalInfo> expectedBotanicalInfoSet = new HashSet<>(botanicalInfoList);
         Mockito.when(authenticatedUserService.getAuthenticatedUser()).thenReturn(authenticatedUser);
