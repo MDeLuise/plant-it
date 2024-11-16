@@ -56,7 +56,7 @@
       }
     }
   },
-  "nDaysInFuture": "{count} {count, plural, =1{Tag} other{Tagen}} in der Zukunft (was?)",
+  "nDaysInFuture": "{count} {count, plural, =1{Tag} other{Tage}} in der Zukunft (was?)",
   "@nDaysInFuture": {
     "description": "Beschreibt, wie viele Tage in der Zukunft ein Ereignis stattfinden wird",
     "placeholders": {
@@ -91,11 +91,11 @@
   "or": "oder",
   "filter": "Filtern",
   "seeding": "gesät",
-  "watering": "gegoßen",
+  "watering": "gegossen",
   "fertilizing": "gedüngt",
   "biostimulating": "biostimuliert",
   "misting": "besprüht",
-  "transplanting": "ausgetopft",
+  "transplanting": "umgetopft",
   "water_changing": "Wasser gewechselt",
   "observation": "Beobachtung",
   "treatment": "Behandlung",
@@ -125,7 +125,7 @@
   "editEvent": "Ereignis bearbeiten",
   "eventSuccessfullyDeleted": "Ereignis erfolgreich gelöscht",
   "noInfoAvailable": "Keine Informationen verfügbar",
-  "species": "Arten",
+  "species": "Art",
   "plant": "Pflanze",
   "scientificClassification": "Wissenschaftliche Klassifikation",
   "family": "Familie",
@@ -144,7 +144,7 @@
   "modifyPlant": "Pflanze bearbeiten",
   "removePlant": "Pflanze entfernen",
   "useBirthday": "Geburtsdatum verwenden",
-  "birthday": "Geburtsdatum",
+  "birthday": "Anzuchtdatum",
   "avatar": "Avatar",
   "note": "Notiz",
   "stats": "Statistiken",
@@ -286,7 +286,7 @@
   "plantUpdatedSuccessfully": "Pflanze erfolgreich aktualisiert",
   "plantCreatedSuccessfully": "Pflanze erfolgreich erstellt",
   "insertPrice": "Preis eingeben",
-  "noBirthday": "Kein Geburtsdatum",
+  "noBirthday": "Kein Anzuchtdatum",
   "appVersion": "App-Version",
   "serverVersion": "Server-Version",
   "documentation": "Dokumentation",
@@ -320,7 +320,7 @@
   "updateNotifications": "Benachrichtigungen aktualisieren",
   "notificationUpdated": "Benachrichtigung erfolgreich aktualisiert",
   "supportTheProject": "Unterstütze das Projekt",
-  "buyMeACoffee": "Kaufen mir einen Kaffee",
+  "buyMeACoffee": "Kaufen Sie mir einen Kaffee",
   "gallery": "Galerie",
   "photosOf": "Fotos von {name}",
   "@photosOf": {
@@ -331,7 +331,7 @@
       }
     }
   },
-  "nPhoto": "Hochgeladen {count} neue {count, plural, =1{Foto} other{Fotos}}",
+  "nPhoto": "{count} {count, plural, =1{neues Foto} other{neue Fotos} hochgeladen}",
   "@nPhoto": {
     "description": "Wie viele Fotos hochgeladen wurden",
     "placeholders": {
@@ -343,11 +343,11 @@
   },
   "errorCreatingPlant": "Fehler beim Erstellen der Pflanze",
   "noImages": "Keine Bilder",
-  "errorCreatingSpecies": "Fehler beim Erstellen von Arten",
-  "errorUpdatingSpecies": "Fehler beim Aktualisieren von Arten",
-  "speciesUpdatedSuccessfully": "Arten erfolgreich aktualisiert",
+  "errorCreatingSpecies": "Fehler beim Erstellen der Art",
+  "errorUpdatingSpecies": "Fehler beim Aktualisieren der Art",
+  "speciesUpdatedSuccessfully": "Art erfolgreich aktualisiert",
   "addCustom": "Benutzerdefiniert hinzufügen",
-  "speciesCreatedSuccessfully": "Arten erfolgreich erstellt",
+  "speciesCreatedSuccessfully": "Art erfolgreich erstellt",
   "uploadPhoto": "Foto hochladen",
   "linkURL": "URL-Link",
   "url": "URL",
@@ -378,7 +378,7 @@
   "ntfyServerUsername": "Ntfy Server Benutzername",
   "ntfyServerPassword": "Ntfy Server Passwort",
   "ntfyServerToken": "Ntfy Server Token",
-  "enterValidTopic": "Bitte gültiges Thema eingeben",
+  "enterValidTopic": "Bitte ein gültiges Thema eingeben",
   "ntfySettings": "Ntfy Einstellungen",
   "ntfySettingsUpdated": "Ntfy Einstellungen erfolgreich aktualisiert",
   "modifySpecies": "Art bearbeiten",
@@ -391,5 +391,56 @@
   "gotifyServerUrl": "Gotify Server URL",
   "gotifyServerToken": "Gotify Server Token",
   "gotifySettings": "Gotify Einstellungen",
-  "gotifySettingsUpdated": "Gotify Einstellungen korrekt aktualisiert"
+  "gotifySettingsUpdated": "Gotify Einstellungen korrekt aktualisiert",
+  "activity": "Aktivität",
+  "fromDate": "seit",
+  "frequencyEvery": "alle {amount} {unit}",
+  "@frequencyEvery": {
+    "placeholders": {
+      "amount": {
+        "type": "num",
+        "example": "2"
+      },
+      "unit": {
+        "type": "String",
+        "example": "days"
+      }
+    }
+  },
+  "day": "{count, plural, =1{Tag} other{Tage}}",
+  "@day": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "week": "{count, plural, =1{Woche} other{Wochen}}",
+  "@week": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "month": "{count, plural, =1{Monat} other{Monate}}",
+  "@month": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "year": "{count, plural, =1{Jahr} other{Jahre}}",
+  "@year": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  }
 }
