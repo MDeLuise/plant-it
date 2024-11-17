@@ -331,7 +331,7 @@
       }
     }
   },
-  "nPhoto": "{count} {count, plural, =1{neues Foto} other{neue Fotos} hochgeladen}",
+  "nPhoto": "{count} {count, plural, =1{neues Foto} other{neue Fotos}} hochgeladen",
   "@nPhoto": {
     "description": "Wie viele Fotos hochgeladen wurden",
     "placeholders": {
