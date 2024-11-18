@@ -48,7 +48,7 @@ dependencies:
   provider: ^6.1.2
   url_launcher: ^6.3.0
   package_info_plus: ^8.1.1
-  talker: ^4.4.4
+  talker: ^4.4.7
   talker_flutter: ^4.4.4
   toastification: ^2.3.0
   image_picker: ^1.1.2
