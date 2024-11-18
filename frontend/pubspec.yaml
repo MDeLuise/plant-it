@@ -49,7 +49,7 @@ dependencies:
   url_launcher: ^6.3.0
   package_info_plus: ^8.1.1
   talker: ^4.4.4
-  talker_flutter: ^4.4.4
+  talker_flutter: ^4.4.7
   toastification: ^2.3.0
   image_picker: ^1.1.2
   http_parser: ^4.0.2
