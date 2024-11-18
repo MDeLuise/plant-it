@@ -370,10 +370,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_advanced_avatar
-      sha256: "29f5d1586075a2ee5ce462fe25b9aa7179a157697260f542a05c5293a5bda8cc"
+      sha256: "00b3716b7891c143ca321ffb01af17928115df7020e7812fbb58816d9d143e2e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.5.1"
   flutter_cache_manager:
     dependency: transitive
     description:

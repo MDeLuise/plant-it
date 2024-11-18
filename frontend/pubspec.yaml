@@ -44,7 +44,7 @@ dependencies:
   easy_splash_screen: ^1.0.4
   smooth_page_indicator: ^1.2.0+3
   skeletonizer: ^1.4.2
-  flutter_advanced_avatar: ^1.5.0
+  flutter_advanced_avatar: ^1.5.1
   provider: ^6.1.2
   url_launcher: ^6.3.0
   package_info_plus: ^8.1.1
