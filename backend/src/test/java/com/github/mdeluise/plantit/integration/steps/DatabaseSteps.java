@@ -1,5 +1,6 @@
 package com.github.mdeluise.plantit.integration.steps;
 
+import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mdeluise.plantit.authentication.UserService;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
@@ -8,7 +9,6 @@ import com.github.mdeluise.plantit.plant.PlantService;
 import com.github.mdeluise.plantit.reminder.ReminderService;
 import io.cucumber.java.en.And;
 import jakarta.transaction.Transactional;
-import org.springframework.test.web.servlet.MockMvc;
 
 public class DatabaseSteps {
     final MockMvc mockMvc;
@@ -36,9 +36,9 @@ public class DatabaseSteps {
     @And("cleanup the database")
     @Transactional
     public void cleanupDB() {
-        userService.removeAll();
-        botanicalInfoService.deleteAll();
-        plantService.deleteAll();
         reminderService.deleteAll();
+        plantService.deleteAll();
+        botanicalInfoService.deleteAll();
+        userService.removeAll();
     }
 }
