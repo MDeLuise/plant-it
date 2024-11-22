@@ -1,5 +1,13 @@
 package com.github.mdeluise.plantit.plant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import com.github.mdeluise.plantit.authentication.User;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfo;
 import com.github.mdeluise.plantit.botanicalinfo.BotanicalInfoService;
@@ -11,14 +19,6 @@ import com.github.mdeluise.plantit.image.PlantImage;
 import com.github.mdeluise.plantit.image.PlantImageRepository;
 import com.github.mdeluise.plantit.image.storage.ImageStorageService;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PlantService {
@@ -108,6 +108,18 @@ public class PlantService {
     }
 
 
+    public void deleteInternal(Long plantId) {
+        final Plant toDelete = plantRepository.findById(plantId).orElseThrow(() -> new ResourceNotFoundException(plantId));
+
+        // FIXME
+        // this is not needed for the DB PlantImage entities (which are removed in cascade),
+        // but for the related files in the system
+        toDelete.getImages().forEach(plantImage -> imageStorageService.remove(plantImage.getId()));
+
+        plantRepository.delete(toDelete);
+    }
+
+
     @CacheEvict(cacheNames = "plants", allEntries = true)
     @Transactional
     public Plant update(Long id, Plant updated) {
@@ -158,7 +170,7 @@ public class PlantService {
 
     @Transactional
     public void deleteAll() {
-        plantRepository.findAll().forEach(plant -> delete(plant.getId()));
+        plantRepository.findAll().forEach(plant -> deleteInternal(plant.getId()));
     }
 
 
