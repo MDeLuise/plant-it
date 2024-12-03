@@ -16,6 +16,7 @@ nav:
   - 'Server Installation': 'server-installation.md'
   - 'App Installation': 'app-installation.md'
   - 'Features': 'features.md'
+  - 'Developer': 'developer.md'
   - 'Support': 'support.md'
 
 extra:

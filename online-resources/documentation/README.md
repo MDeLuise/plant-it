@@ -28,7 +28,7 @@ Before editing the project documentation, ensure that you have Python 3 installe
 
 2. Run the following command to deploy the changes:
    ```
-   mike deploy -b static-doc --alias-type redirect <new_version> latest
+   mike deploy -b static-doc --update-alias --alias-type redirect <new_version> latest
    ```
 
    Replace `<new_version>` with the version number of your updated documentation.
