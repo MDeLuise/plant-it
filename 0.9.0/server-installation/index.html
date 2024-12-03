@@ -461,15 +461,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#integration-with-trefle-service-not-working-anymore" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with Trefle Service [NOT WORKING ANYMORE]
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#integration-with-floracodex" class="md-nav__link">
     <span class="md-ellipsis">
       Integration with FloraCodex
@@ -928,17 +919,6 @@
 <span class="na">SMTP_AUTH</span><span class="o">=</span>
 <span class="na">SMTP_START_TTL</span><span class="o">=</span>
 </code></pre></div></p>
-<h3 id="integration-with-trefle-service-not-working-anymore">Integration with Trefle Service [NOT WORKING ANYMORE]</h3>
-<div class="admonition warning end">
-<p class="admonition-title">Trefle Service Inactivity</p>
-<p>The Trefle service, which Plant-it relied on for plant data, appears to be inactive. There have been no updates to their database, and their repository shows no recent activity, with several open issues dating back years. While the dataset was accessible until recently, it is no longer available.</p>
-<p>I am currently exploring the best way to move forward and working on a replacement for this service, as mentioned in <a href="https://github.com/MDeLuise/plant-it/issues/218">issue #218</a>.</p>
-<p>As a temporary solution, the Flora Codex service has replaced the Trefle service. However, it lacks some features such as:</p>
-<p>• Plant care information
-  • Synonyms</p>
-<p>Additionally, it has fewer plants compared to Trefle.</p>
-<p>This is a temporary patch that will be resolved in the near future.</p>
-</div>
 <h3 id="integration-with-floracodex">Integration with FloraCodex</h3>
 <p>To enhance your application with plant search capabilities, you can integrate with the FloraCodex service. FloraCodex provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the FloraCodex service in your project:</p>
 <ol>
@@ -1215,9 +1195,7 @@ Use <code>http://plant-it-api.docker.localhost</code> as server URL when request
 <span class="na">CONTACT_MAIL</span><span class="o">=</span><span class="s">your-email@gmail.com</span>
 </code></pre></div>
 <h2 id="homepage-dashboard-integration">Homepage dashboard integration</h2>
-<p align="center">
-<img src="assets/dashboard-homepage.png" style="max-width: 400px">
-</p>
+<p><img align="left;" alt="" loading="lazy;" src="../assets/dashboard-homepage.png" style="max-width: 400px" /></p>
 <p>The project offers a widget for integrates the service with the popular dashboard called <a href="https://github.com/gethomepage/homepage">homepage</a>.
 In order to use it, simply place the widget as above in the configuration yml file of the dashboard:
 <div class="highlight"><pre><span></span><code>- Plant-it:
