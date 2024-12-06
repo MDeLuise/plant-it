@@ -54,7 +54,7 @@
       }
     }
   },
-  "nDaysInFuture": "在未来的 {count} {count, plural, =1{天} other{天}} (什么?)"
+  "nDaysInFuture": "在未来的 {count} {count, plural, =1{天} other{天}} (什么?)",
   "@nDaysInFuture": {
     "description": "描述某个事件将在未来多少天后发生",
     "placeholders": {
