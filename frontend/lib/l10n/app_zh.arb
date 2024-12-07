@@ -66,7 +66,7 @@
   },
   "nMonthsAgo": "{count} {count, plural, =1{月} other{月}} 前",
   "@nMonthsAgo": {
-    "description": "描述某个事件发生在多少个月前"
+    "description": "描述某个事件发生在多少个月前",
     "placeholders": {
       "count": {
         "type": "num",
@@ -76,7 +76,7 @@
   },
   "nYearsAgo": "{count} {count, plural, =1{年} other{年}} 前",
   "@nYearsAgo": {
-    "description": "描述某个事件发生在多少个年前"
+    "description": "描述某个事件发生在多少个年前",
     "placeholders": {
       "count": {
         "type": "num",
@@ -105,9 +105,9 @@
   "selectDate": "选择日期",
   "selectEvents": "选择事件",
   "selectPlants": "选择植物",
-  "nEventsCreated": "已创建 {count} 个新 {count, plural, =1{事件} other{事件}}"
+  "nEventsCreated": "已创建 {count} 个新 {count, plural, =1{事件} other{事件}}",
   "@nEventsCreated": {
-    "description": "创建了多少个新事件"
+    "description": "创建了多少个新事件",
     "placeholders": {
       "count": {
         "type": "num",
@@ -319,7 +319,7 @@
       }
     }
   },
-  "nPhoto": "已上传 {count} 张新{count, plural, =1{照片} other{照片}}"
+  "nPhoto": "已上传 {count} 张新{count, plural, =1{照片} other{照片}}",
   "@nPhoto": {
     "placeholders": {
       "count": {
