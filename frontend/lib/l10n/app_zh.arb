@@ -1,0 +1,434 @@
+{
+  "enterValue": "请输入一个值",
+  "enterValidURL": "请输入一个有效的地址",
+  "go": "继续",
+  "noBackend": "无法连接到服务器",
+  "ok": "确定",
+  "serverURL": "服务器地址",
+  "username": "用户名",
+  "password": "密码",
+  "login": "登录",
+  "badCredentials": "错误的凭证",
+  "loginMessage": "欢迎回来",
+  "signupMessage": "欢迎加入",
+  "appName": "Plant-it 种植物",
+  "forgotPassword": "忘记密码",
+  "areYouNew": "你是新用户吗",
+  "createAccount": "创建账户",
+  "email": "邮箱",
+  "usernameSize": "用户名长度必须在3到20个字符之间",
+  "passwordSize": "密码长度必须在6到20个字符之间",
+  "enterValidEmail": "请输入有效的邮箱",
+  "alreadyRegistered": "已经注册？",
+  "signup": "注册",
+  "generalError": "执行操作时出错",
+  "error": "错误",
+  "details": "详情",
+  "insertBackendURL": "朋友你好！让我们开始实现奇迹吧，请先设置您的服务器地址。",
+  "loginTagline": "探索、学习和培育！",
+  "singupTagline": "一起成长吧！",
+  "sentOTPCode": "请输入通过邮箱发送的验证码：",
+  "verify": "验证",
+  "resendCode": "重新发送验证码",
+  "otpCode": "单次验证码",
+  "splashLoading": "哔哔哔……正在从服务器加载数据！",
+  "welcomeBack": "欢迎回来",
+  "hello": "你好，{userName}",
+  "@hello": {
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "小明"
+      }
+    }
+  },
+  "search": "搜索",
+  "today": "今天",
+  "yesterday": "昨天",
+  "nDaysAgo": "{count} {count, plural, =1{天} other{天}} 前",
+  "@nDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nDaysInFuture": "在未来的 {count} {count, plural, =1{天} other{天}} (什么?)",
+  "@nDaysInFuture": {
+    "description": "描述某个事件将在未来多少天后发生",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAgo": "{count} {count, plural, =1{月} other{月}} 前",
+  "@nMonthsAgo": {
+    "description": "描述某个事件发生在多少个月前",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAgo": "{count} {count, plural, =1{年} other{年}} 前",
+  "@nYearsAgo": {
+    "description": "描述某个事件发生在多少个年前",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "events": "事件",
+  "plants": "植物",
+  "or": "或者",
+  "filter": "筛选",
+  "seeding": "播种",
+  "watering": "浇水",
+  "fertilizing": "施肥",
+  "biostimulating": "生物刺激",
+  "misting": "喷雾",
+  "transplanting": "移栽",
+  "water_changing": "换水",
+  "observation": "观察",
+  "treatment": "治疗",
+  "propagating": "繁殖",
+  "pruning": "修剪",
+  "repotting": "换盆",
+  "recents": "最近的",
+  "addNewEvent": "添加新事件",
+  "selectDate": "选择日期",
+  "selectEvents": "选择事件",
+  "selectPlants": "选择植物",
+  "nEventsCreated": "已创建 {count} 个新 {count, plural, =1{事件} other{事件}}",
+  "@nEventsCreated": {
+    "description": "创建了多少个新事件",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "addNote": "添加笔记",
+  "enterNote": "输入笔记",
+  "selectAtLeastOnePlant": "最少选择一棵植物",
+  "selectAtLeastOneEvent": "最少选择一个事件",
+  "eventSuccessfullyUpdated": "事件更新成功",
+  "editEvent": "编辑事件",
+  "eventSuccessfullyDeleted": "事件删除成功",
+  "noInfoAvailable": "无可用信息",
+  "species": "物种",
+  "plant": "植物",
+  "scientificClassification": "科学分类",
+  "family": "科",
+  "genus": "属",
+  "synonyms": "同义词",
+  "care": "护理",
+  "light": "光照",
+  "humidity": "湿度",
+  "maxTemp": "最大温度",
+  "minTemp": "最小温度",
+  "minPh": "最小酸碱度",
+  "maxPh": "最大酸碱度",
+  "info": "信息",
+  "addPhotos": "添加照片",
+  "addEvents": "添加活动",
+  "modifyPlant": "修改植物",
+  "removePlant": "删除植物",
+  "useBirthday": "使用生日",
+  "birthday": "生日",
+  "avatar": "头像",
+  "note": "笔记",
+  "stats": "统计数据",
+  "eventStats": "事件数据",
+  "age": "年龄",
+  "newBorn": "新生",
+  "nDays": "{count} {count, plural, =1{天} other{天}}",
+  "@nDays": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonths": "{count} {count, plural, =1{月} other{月}}",
+  "@nMonths": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYears": "{count} {count, plural, =1{年} other{年}}",
+  "@nYears": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nMonthsAndDays": "{months} {months, plural, =1{月} other{月}}, {days} {days, plural, =1{天} other{天}}",
+  "@nMonthsAndDays": {
+    "placeholders": {
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndDays": "{years} {years, plural, =1{年} other{年}}, {days} {days, plural, =1{天} other{天}}",
+  "@nYearsAndDays": {
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonths": "{years} {years, plural, =1{年} other{年}}, {months} {months, plural, =1{月} other{月}}",
+  "@nYearsAndMonths": {
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{年} other{年}}, {months} {months, plural, =1{月} other{月}}, {days} {days, plural, =1{日} other{日}}",
+  "@nYearsAndMonthsAndDays": {
+    "placeholders": {
+      "years": {
+        "type": "num",
+        "format": "compact"
+      },
+      "months": {
+        "type": "num",
+        "format": "compact"
+      },
+      "days": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "name": "名称",
+  "nOutOf": "{value} 个中的 {max} 个",
+  "@nOutOf": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      },
+      "max": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "temp": "{value} °C",
+  "@temp": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "numberOfPhotos": "照片数量",
+  "numberOfEvents": "事件数量",
+  "searchInYourPlants": "搜索您的植物",
+  "searchNewGreenFriends": "搜索新的绿色朋友",
+  "custom": "自定义",
+  "addPlant": "添加植物",
+  "yes": "是",
+  "no": "否",
+  "pleaseConfirm": "请确认",
+  "areYouSureToRemoveEvent": "确定要删除此事件吗？",
+  "areYouSureToRemoveReminder": "确定要移除提醒吗？",
+  "areYouSureToRemoveSpecies": "确定要移除物种吗？",
+  "areYouSureToRemovePlant": "确定要移除植物吗？",
+  "purchasedPrice": "购买价格",
+  "seller": "卖家",
+  "location": "位置",
+  "currency": "货币",
+  "plantUpdatedSuccessfully": "植物更新成功",
+  "plantCreatedSuccessfully": "植物创建成功",
+  "insertPrice": "输入价格",
+  "noBirthday": "无生日",
+  "appVersion": "应用版本",
+  "serverVersion": "服务器版本",
+  "documentation": "文档",
+  "openSource": "开源",
+  "reportIssue": "报告问题",
+  "logout": "退出登录",
+  "eventCount": "事件数量",
+  "plantCount": "植物数量",
+  "speciesCount": "物种数量",
+  "imageCount": "图片数量",
+  "unknown": "未知",
+  "account": "账户",
+  "changePassword": "更改密码",
+  "more": "更多",
+  "editProfile": "编辑个人资料",
+  "currentPassword": "当前密码",
+  "updatePassword": "更新密码",
+  "updateProfile": "更新个人资料",
+  "newPassword": "新密码",
+  "removeEvent": "移除事件",
+  "appLog": "应用日志",
+  "passwordUpdated": "密码更新成功",
+  "userUpdated": "用户更新成功",
+  "noChangesDetected": "未检测到更新",
+  "plantDeletedSuccessfully": "成功删除植物",
+  "server": "服务器",
+  "notifications": "提醒",
+  "changeServer": "更改服务器",
+  "serverUpdated": "服务器成功更新",
+  "changeNotifications": "更改提醒",
+  "updateNotifications": "更新提醒",
+  "notificationUpdated": "提醒成功更新",
+  "supportTheProject": "捐赠支持该项目",
+  "buyMeACoffee": "请我喝杯奶茶!",
+  "gallery": "图库",
+  "photosOf": "照片 {name}",
+  "@photosOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nPhoto": "已上传 {count} 张新{count, plural, =1{照片} other{照片}}",
+  "@nPhoto": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "errorCreatingPlant": "创建植物时出错",
+  "noImages": "没有图片",
+  "errorCreatingSpecies": "创建物种时出错",
+  "errorUpdatingSpecies": "更新物种时出错",
+  "speciesUpdatedSuccessfully": "物种更新成功",
+  "addCustom": "添加自定义",
+  "speciesCreatedSuccessfully": "物种创建成功",
+  "uploadPhoto": "上传照片",
+  "linkURL": "链接地址",
+  "url": "地址",
+  "submit": "确认",
+  "cancel": "取消",
+  "actions": "操作",
+  "areYouSureToRemovePhoto": "确定要删除照片吗？",
+  "photoSuccessfullyDeleted": "照片删除成功",
+  "errorUpdatingPlant": "更新植物时出错",
+  "reminders": "提醒",
+  "selectStartDate": "选择开始日期",
+  "selectEndDate": "选择结束日期",
+  "addNewReminder": "添加新提醒",
+  "noEndDate": "没有结束日期",
+  "frequency": "频率",
+  "repeatAfter": "重复间隔",
+  "addNew": "添加新项",
+  "reminderCreatedSuccessfully": "提醒创建成功",
+  "startAndEndDateOrderError": "开始日期必须在结束日期之前",
+  "reminderUpdatedSuccessfully": "提醒更新成功",
+  "reminderDeletedSuccessfully": "提醒删除成功",
+  "errorResettingPassword": "重置密码时出错",
+  "resetPassword": "重置密码",
+  "resetPasswordHeader": "在下方输入用户名以发送重置密码请求",
+  "editReminder": "编辑提醒",
+  "ntfyServerUrl": "Ntfy服务器地址",
+  "ntfyServerTopic": "Ntfy服务器主题",
+  "ntfyServerUsername": "Ntfy服务器用户名",
+  "ntfyServerPassword": "Ntfy服务器密码",
+  "ntfyServerToken": "Ntfy服务器令牌",
+  "enterValidTopic": "请输入有效的主题",
+  "ntfySettings": "Ntfy设置",
+  "ntfySettingsUpdated": "Ntfy设置已成功更新",
+  "modifySpecies": "修改物种",
+  "removeSpecies": "删除物种",
+  "speciesDeletedSuccessfully": "物种删除成功",
+  "success": "成功",
+  "warning": "警告",
+  "ops": "哎呀!",
+  "changeLanguage": "更改语言",
+  "gotifyServerUrl": "Gotify服务器地址",
+  "gotifyServerToken": "Gotify服务器令牌",
+  "gotifySettings": "Gotify设置",
+  "gotifySettingsUpdated": "Gotify设置已成功更新",
+  "activity": "动态",
+  "fromDate": "从",
+  "frequencyEvery": "每 {amount} {unit}",
+  "@frequencyEvery": {
+    "placeholders": {
+      "amount": {
+        "type": "num",
+        "example": "2"
+      },
+      "unit": {
+        "type": "String",
+        "example": "天"
+      }
+    }
+  },
+  "day": "{count, plural, =1{天} other{天}}",
+  "@day": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "week": "{count, plural, =1{周} other{周}}",
+  "@week": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "month": "{count, plural, =1{月} other{月}}",
+  "@month": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "year": "{count, plural, =1{年} other{年}}",
+  "@year": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  }
+}
+
