@@ -1,0 +1,5 @@
+* Resolve issue with adding duplicate genus species causing error if page not reloaded
+* Add Polish language
+* Update German language
+* Add Simplified Chinese language
+* Upgrade dependencies

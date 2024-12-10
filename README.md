@@ -139,6 +139,8 @@ If you're interested in contributing transactions to enhance the app, you can ge
 | English | app_en.arb | 100% |
 | Italian | app_it.arb | 100% |
 | German | app_de.arb | 100% |
+| Polish | app_pl.arb | 100% |
+| Chinese | app_zh.arb | 100% |
 | Russian | app_ru.arb | 91% |
 | Dutch Flemish | app_nl.arb | 91% |
 | French | app_fr.arb | 90% |
