@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>3.4.0</version>
+            <version>3.4.1</version>
         </dependency>
         <!--
             https://github.com/kstyrc/embedded-redis/issues/135#issuecomment-1825620600
