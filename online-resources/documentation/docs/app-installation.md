@@ -2,6 +2,7 @@
 <p style="display: flex; align-items: center; justify-content: center;">
 <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Get_it_on_F-Droid_%28material_design%29.svg/2880px-Get_it_on_F-Droid_%28material_design%29.svg.png" alt="Get it on F-Droid" style="height: 40px; max-width: 180px"></a>
 <a href="https://github.com/MDeLuise/plant-it/releases/latest"><img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60" style="max-width: 200px"></a>
+<a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/MDeLuise/plant-it"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" alt="Get it on Obtanium" height="41" style="max-width: 200px"></a>
 </p>
 
 To illustrate how to use the various components of this project, let's assume you have deployed the server Docker image on a machine with the IP address `192.168.1.5` and have kept the default port configurations. Specifically, the API is running on port `8080`, and the frontend is running on port `3000`.

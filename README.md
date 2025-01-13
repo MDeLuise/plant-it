@@ -119,6 +119,11 @@ For Android users, the app is also available as an APK, which can be downloaded 
     <a href="https://f-droid.org/packages/com.github.mdeluise.plantit" rel="nofollow"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Get_it_on_F-Droid_%28material_design%29.svg/2880px-Get_it_on_F-Droid_%28material_design%29.svg.png" alt="Get it on F-Droid" height=40 ></a>
   </p>
 
+- **Obtanium**: You can also download the app from [Obtanium](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/MDeLuise/plant-it).
+  <p align="center">
+      <a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/MDeLuise/plant-it" rel="nofollow"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" alt="Get it on Obtanium" height=40 ></a>
+    </p>
+
 ### Installation
 For detailed instructions on how to install and configure the app, please refer to the [installation documentation](https://docs.plant-it.org/latest/app-installation/).
 
