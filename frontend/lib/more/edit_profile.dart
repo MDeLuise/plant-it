@@ -133,22 +133,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
-                          TextFormField(
-                            obscureText: !_showPassword,
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                icon: Icon(_showPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _showPassword = !_showPassword;
-                                  });
-                                },
+                          AutofillGroup(
+                            child: TextFormField(
+                              autofillHints: [AutofillHints.password],
+                              obscureText: !_showPassword,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                  onPressed: () {
+                                    setState(() {
+                                      _showPassword = !_showPassword;
+                                    });
+                                  },
+                                ),
                               ),
+                              onChanged: (p) => _currentPassword = p,
                             ),
-                            onChanged: (p) => _currentPassword = p,
                           ),
                         ],
                       ),

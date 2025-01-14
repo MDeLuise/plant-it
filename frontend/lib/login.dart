@@ -48,109 +48,114 @@ class _LoginPageState extends State<LoginPage> {
                   const HeaderMessage(),
                   Form(
                     key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Username
-                        TextFormField(
-                          autofocus: true,
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).username,
-                            border: const OutlineInputBorder(),
+                    child: AutofillGroup(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Username
+                          TextFormField(
+                            autofillHints: [AutofillHints.username],
+                            autofocus: true,
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).username,
+                              border: const OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context).enterValue;
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Password
-                        Column(
-                          children: [
-                            TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_showPassword,
-                              decoration: InputDecoration(
-                                labelText:
-                                    AppLocalizations.of(context).password,
-                                border: const OutlineInputBorder(),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showPassword = !_showPassword;
-                                    });
-                                  },
+                          // Password
+                          Column(
+                            children: [
+                              TextFormField(
+                                autofillHints: [AutofillHints.password],
+                                controller: _passwordController,
+                                obscureText: !_showPassword,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      AppLocalizations.of(context).password,
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_showPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showPassword = !_showPassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context)
+                                        .enterValue;
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) {
+                                  if (_formKey.currentState!.validate()) {
+                                    loginAndSetAppKey(
+                                        widget.env,
+                                        context,
+                                        _usernameController.text,
+                                        _passwordController.text);
+                                  }
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                    onTap: () => goToPageSlidingUp(
+                                        context,
+                                        ResetPassword(
+                                          env: widget.env,
+                                        )),
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .forgotPassword,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .enterValue;
-                                }
-                                return null;
-                              },
-                              onFieldSubmitted: (value) {
-                                if (_formKey.currentState!.validate()) {
-                                  loginAndSetAppKey(
+                            ],
+                          ),
+
+                          // Button
+                          const SizedBox(height: 20),
+                          ElevatedLoadingButton(
+                            isLoading: _isLoading,
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                try {
+                                  await loginAndSetAppKey(
                                       widget.env,
                                       context,
                                       _usernameController.text,
                                       _passwordController.text);
+                                } finally {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
                                 }
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                  onTap: () => goToPageSlidingUp(
-                                      context,
-                                      ResetPassword(
-                                        env: widget.env,
-                                      )),
-                                  child: Text(
-                                    AppLocalizations.of(context).forgotPassword,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Button
-                        const SizedBox(height: 20),
-                        ElevatedLoadingButton(
-                          isLoading: _isLoading,
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              try {
-                                await loginAndSetAppKey(
-                                    widget.env,
-                                    context,
-                                    _usernameController.text,
-                                    _passwordController.text);
-                              } finally {
-                                setState(() {
-                                  _isLoading = false;
-                                });
                               }
-                            }
-                          },
-                          child: Text(AppLocalizations.of(context).login),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                            },
+                            child: Text(AppLocalizations.of(context).login),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
 

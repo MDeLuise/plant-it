@@ -96,97 +96,102 @@ class _SignupPageState extends State<SignupPage> {
                   const HeaderMessage(),
                   Form(
                     key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Username
-                        TextFormField(
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).username,
-                            border: const OutlineInputBorder(),
+                    child: AutofillGroup(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Username
+                          TextFormField(
+                            autofillHints: [AutofillHints.username],
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).username,
+                              border: const OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context).enterValue;
+                              }
+                              if (value.length < 3 || value.length > 20) {
+                                return AppLocalizations.of(context).usernameSize;
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            if (value.length < 3 || value.length > 20) {
-                              return AppLocalizations.of(context).usernameSize;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Email
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).email,
-                            border: const OutlineInputBorder(),
+                          const SizedBox(height: 20),
+                      
+                          // Email
+                          TextFormField(
+                            autofillHints: [AutofillHints.email],
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).email,
+                              border: const OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context).enterValue;
+                              }
+                              if (!isValidEmail(value)) {
+                                return AppLocalizations.of(context)
+                                    .enterValidEmail;
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            if (!isValidEmail(value)) {
-                              return AppLocalizations.of(context)
-                                  .enterValidEmail;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Password
-                        Column(
-                          children: [
-                            TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_showPassword,
-                              decoration: InputDecoration(
-                                labelText:
-                                    AppLocalizations.of(context).password,
-                                border: const OutlineInputBorder(),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showPassword = !_showPassword;
-                                    });
-                                  },
+                          const SizedBox(height: 20),
+                      
+                          // Password
+                          Column(
+                            children: [
+                              TextFormField(
+                                autofillHints: [AutofillHints.password],
+                                controller: _passwordController,
+                                obscureText: !_showPassword,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      AppLocalizations.of(context).password,
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_showPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showPassword = !_showPassword;
+                                      });
+                                    },
+                                  ),
                                 ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .enterValue;
-                                }
-                                if (value.length < 6 || value.length > 20) {
-                                  return AppLocalizations.of(context)
-                                      .passwordSize;
-                                }
-                                return null;
-                              },
-                            )
-                          ],
-                        ),
-
-                        // Button
-                        const SizedBox(height: 20),
-                        ElevatedLoadingButton(
-                          isLoading: _isLoading,
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _signup();
-                            }
-                          },
-                          child: Text(AppLocalizations.of(context).signup),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context)
+                                        .enterValue;
+                                  }
+                                  if (value.length < 6 || value.length > 20) {
+                                    return AppLocalizations.of(context)
+                                        .passwordSize;
+                                  }
+                                  return null;
+                                },
+                              )
+                            ],
+                          ),
+                      
+                          // Button
+                          const SizedBox(height: 20),
+                          ElevatedLoadingButton(
+                            isLoading: _isLoading,
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _signup();
+                              }
+                            },
+                            child: Text(AppLocalizations.of(context).signup),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
 

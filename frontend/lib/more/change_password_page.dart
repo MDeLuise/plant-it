@@ -69,41 +69,46 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            AppLocalizations.of(context).currentPassword,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        TextFormField(
-                          autofocus: true,
-                          controller: _currentPasswordController,
-                          obscureText: !_showCurrentPassword,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: Icon(_showCurrentPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  _showCurrentPassword = !_showCurrentPassword;
-                                });
-                              },
+                    AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              AppLocalizations.of(context).currentPassword,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                          TextFormField(
+                            autofillHints: [AutofillHints.password],
+                            autofocus: true,
+                            controller: _currentPasswordController,
+                            obscureText: !_showCurrentPassword,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                icon: Icon(_showCurrentPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _showCurrentPassword =
+                                        !_showCurrentPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context).enterValue;
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
 
@@ -118,6 +123,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           ),
                         ),
                         TextFormField(
+                          autofillHints: [AutofillHints.password],
                           controller: _newPasswordController,
                           obscureText: !_showNewPassword,
                           decoration: InputDecoration(
