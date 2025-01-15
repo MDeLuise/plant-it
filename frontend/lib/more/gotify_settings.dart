@@ -19,7 +19,7 @@ class GotifySettingsPage extends StatefulWidget {
 }
 
 class _GotifySettingsPageState extends State<GotifySettingsPage> {
-  bool _showToken = true;
+  bool _showToken = false;
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
 

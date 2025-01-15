@@ -28,7 +28,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late String _username;
   late String _email;
   String _currentPassword = "";
-  bool _showPassword = true;
+  bool _showPassword = false;
 
   @override
   void initState() {

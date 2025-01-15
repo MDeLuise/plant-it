@@ -19,8 +19,8 @@ class NtfySettingsPage extends StatefulWidget {
 }
 
 class _NtfySettingsPageState extends State<NtfySettingsPage> {
-  bool _showPassword = true;
-  bool _showToken = true;
+  bool _showPassword = false;
+  bool _showToken = false;
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _topicController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();

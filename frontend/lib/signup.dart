@@ -27,7 +27,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _showPassword = true;
+  bool _showPassword = false;
   bool _isLoading = false;
 
   Future<void> _signup() async {
