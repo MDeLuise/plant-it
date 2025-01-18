@@ -21,11 +21,18 @@ class EventRepository extends BaseRepository<Event> {
 
   @override
   Future<Event> get(int id) {
-    return (db.select(db.events)..where((t) => t.id.equals(id))).watchSingle().first;
+    return (db.select(db.events)..where((t) => t.id.equals(id)))
+        .watchSingle()
+        .first;
   }
 
   @override
   Future<int> insert(UpdateCompanion<Event> toInsert) {
     return db.into(db.events).insert(toInsert);
+  }
+
+  @override
+  void delete(int id) {
+    (db.delete(db.events)..where((t) => t.id.equals(id))).go();
   }
 }
