@@ -5,6 +5,7 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
 import 'package:plant_it/more/event/add_event.dart';
+import 'package:plant_it/more/event/edit_event.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -41,6 +42,19 @@ class _EventsListPageState extends State<EventsListPage> {
       context,
       MaterialPageRoute(
         builder: (context) => AddEventPage(widget.env),
+      ),
+    );
+
+    if (shouldRefresh == true) {
+      _fetchEvents();
+    }
+  }
+
+  Future<void> _navigateToEditEvent(BuildContext context, Event toEdit) async {
+    final bool? shouldRefresh = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditEventPage(widget.env, toEdit),
       ),
     );
 
@@ -86,53 +100,50 @@ class _EventsListPageState extends State<EventsListPage> {
           final event = _events[index];
           final eventIcon = event.icon;
 
-          ListTile(
-            leading: CircleAvatar(
-              radius: 24,
-              child: Icon(appIcons[eventIcon]),
-            ),
-          );
-          return ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            leading: CircleAvatar(
-              radius: 24,
-              backgroundColor: event.color != null
-                  ? hexToColor(event.color!)
-                  : Theme.of(context).colorScheme.primary,
-              child: Icon(
-                appIcons[eventIcon],
-                color: Theme.of(context).colorScheme.surfaceDim,
-              ),
-            ),
-            title: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        event.name,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      if (event.description != null &&
-                          event.description!.isNotEmpty)
-                        Text(
-                          event.description!,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14.0,
-                          ),
-                        ),
-                    ],
-                  ),
+          return GestureDetector(
+            onTap: () => _navigateToEditEvent(context, event),
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              leading: CircleAvatar(
+                radius: 24,
+                backgroundColor: event.color != null
+                    ? hexToColor(event.color!)
+                    : Theme.of(context).colorScheme.primary,
+                child: Icon(
+                  appIcons[eventIcon],
+                  color: Theme.of(context).colorScheme.surfaceDim,
                 ),
-              ],
-            ),
-            trailing: GestureDetector(
-              onTap: () => _confirmAndDelete(context, event.id),
-              child: const Icon(LucideIcons.trash_2),
+              ),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.name,
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                        if (event.description != null &&
+                            event.description!.isNotEmpty)
+                          Text(
+                            event.description!,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              trailing: GestureDetector(
+                onTap: () => _confirmAndDelete(context, event.id),
+                child: const Icon(LucideIcons.trash_2),
+              ),
             ),
           );
         },
