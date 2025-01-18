@@ -20,7 +20,7 @@ class _MorePageState extends State<MorePage> {
     return ListView(
       children: [
         ListTile(
-          title: const Text("Events"),
+          title: const Text("Event Types"),
           subtitle: const Text("Manage the event types"),
           leading: const Icon(LucideIcons.boxes),
           onTap: () => navigateTo(context, EventsListPage(widget.env)),

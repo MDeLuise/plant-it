@@ -5,6 +5,8 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
 import 'package:plant_it/more/event/add_event.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class EventsListPage extends StatefulWidget {
   final Environment env;
@@ -27,7 +29,9 @@ class _EventsListPageState extends State<EventsListPage> {
   Future<void> _fetchEvents() async {
     widget.env.eventRepository.getAll().then((r) {
       setState(() {
-        _events = r;
+        _events = r
+          ..sort(
+              (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       });
     });
   }
@@ -45,11 +49,30 @@ class _EventsListPageState extends State<EventsListPage> {
     }
   }
 
+  Future<dynamic> _confirmAndDelete(BuildContext context, int eventId) {
+    return QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      text: 'This will also delete all events of this type.',
+      confirmBtnText: 'Delete',
+      cancelBtnText: 'Cancel',
+      title: "Delete event type?",
+      confirmBtnColor: Colors.red,
+      showCancelBtn: true,
+      backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+      onConfirmBtnTap: () {
+        widget.env.eventRepository.delete(eventId);
+        _fetchEvents();
+        Navigator.of(context).pop(true);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Events'),
+        title: const Text('Event Types'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -108,7 +131,7 @@ class _EventsListPageState extends State<EventsListPage> {
               ],
             ),
             trailing: GestureDetector(
-              onTap: () => {},
+              onTap: () => _confirmAndDelete(context, event.id),
               child: const Icon(LucideIcons.trash_2),
             ),
           );

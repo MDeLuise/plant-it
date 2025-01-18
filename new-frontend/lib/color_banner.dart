@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
 import 'package:plant_it/icons.dart';
 
 class ColorBanner extends StatefulWidget {
@@ -177,14 +176,14 @@ class _ColorPickerElementState extends State<_ColorPickerElement> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Back'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 widget.callback(pickerColor);
                 Navigator.of(context).pop();
               },
-              child: const Text('Ok'),
+              child: const Text('Select'),
             ),
           ],
         );

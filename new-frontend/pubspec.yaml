@@ -54,6 +54,7 @@ dependencies:
   easy_loading_button: ^0.3.2
   flutter_colorpicker: ^1.1.0
   gradient_borders: ^1.0.1
+  quickalert: ^1.1.0
   # https://pub.dev/packages/shimmer
   # https://pub.dev/packages/flutter_carousel_widget
   # https://pub.dev/packages/flutter_local_notifications
