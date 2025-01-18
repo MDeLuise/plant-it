@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
 import 'package:plant_it/icons.dart';
 
 class ColorBanner extends StatefulWidget {
@@ -40,25 +43,24 @@ class _ColorBannerState extends State<ColorBanner> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => _onColorSelected(-1, null),
-            child: _DynamicColorElement(
-              context,
+          _DynamicColorElement(context,
               isSelected: _indexSelected == -1,
-            ),
-          ),
+              callback: () => _onColorSelected(-1, null)),
           ...defaults.asMap().entries.map(
             (entry) {
               final index = entry.key;
               final color = entry.value;
-              return GestureDetector(
-                onTap: () => _onColorSelected(index, color),
-                child: _ColorElement(
-                  color,
-                  isSelected: _indexSelected == index,
-                ),
+              return _ColorElement(
+                color,
+                isSelected: _indexSelected == index,
+                callback: () => _onColorSelected(index, color),
               );
             },
+          ),
+          _ColorPickerElement(
+            context,
+            isSelected: _indexSelected == defaults.length,
+            callback: (c) => _onColorSelected(defaults.length, c),
           ),
         ],
       ),
@@ -69,25 +71,30 @@ class _ColorBannerState extends State<ColorBanner> {
 class _ColorElement extends StatelessWidget {
   final Color color;
   final bool isSelected;
+  final Function callback;
 
-  const _ColorElement(this.color, {this.isSelected = false});
+  const _ColorElement(this.color,
+      {this.isSelected = false, required void Function() this.callback});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: isSelected
-            ? Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 3,
-              )
-            : null,
-      ),
-      child: CircleAvatar(
-        backgroundColor: color,
-        radius: 24,
+    return GestureDetector(
+      onTap: () => callback(),
+      child: Container(
+        margin: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: isSelected
+              ? Border.all(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 3,
+                )
+              : null,
+        ),
+        child: CircleAvatar(
+          backgroundColor: color,
+          radius: 24,
+        ),
       ),
     );
   }
@@ -96,8 +103,10 @@ class _ColorElement extends StatelessWidget {
 class _DynamicColorElement extends StatefulWidget {
   final BuildContext context;
   final bool isSelected;
+  final Function callback;
 
-  const _DynamicColorElement(this.context, {this.isSelected = false});
+  const _DynamicColorElement(this.context,
+      {this.isSelected = false, required void Function() this.callback});
 
   @override
   State<_DynamicColorElement> createState() => _DynamicColorElementState();
@@ -106,23 +115,107 @@ class _DynamicColorElement extends StatefulWidget {
 class _DynamicColorElementState extends State<_DynamicColorElement> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: widget.isSelected
-            ? Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 2,
-              )
-            : null,
+    return GestureDetector(
+      onTap: () => widget.callback(),
+      child: Container(
+        margin: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: widget.isSelected
+              ? Border.all(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 2,
+                )
+              : null,
+        ),
+        child: CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          radius: 24,
+          child: Icon(
+            appIcons['palette'],
+            color: Theme.of(widget.context).colorScheme.surfaceDim,
+          ),
+        ),
       ),
-      child: CircleAvatar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        radius: 24,
-        child: Icon(
-          appIcons['palette'],
-          color: Theme.of(widget.context).colorScheme.surfaceDim,
+    );
+  }
+}
+
+class _ColorPickerElement extends StatefulWidget {
+  final BuildContext context;
+  final bool isSelected;
+  final Function(Color c) callback;
+
+  const _ColorPickerElement(this.context,
+      {this.isSelected = false, required void Function(Color c) this.callback});
+
+  @override
+  State<_ColorPickerElement> createState() => _ColorPickerElementState();
+}
+
+class _ColorPickerElementState extends State<_ColorPickerElement> {
+  Color pickerColor = const Color.fromARGB(255, 79, 170, 77);
+
+  void _pickColor() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              enableAlpha: false,
+              labelTypes: const [ColorLabelType.rgb],
+              pickerColor: pickerColor,
+              onColorChanged: (c) => pickerColor = c,
+              pickerAreaBorderRadius:
+                  const BorderRadius.all(Radius.circular(3)),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Back'),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.callback(pickerColor);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _pickColor,
+      child: Container(
+        margin: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+            border: widget.isSelected
+                ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  )
+                : const GradientBoxBorder(
+                    gradient: LinearGradient(colors: [Colors.blue, Colors.red]),
+                    width: 2,
+                  ),
+            borderRadius: BorderRadius.circular(50)),
+        child: CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          radius: 24,
+          child: Icon(
+            appIcons['pipette'],
+            color: Theme.of(widget.context).colorScheme.surfaceDim,
+          ),
         ),
       ),
     );
