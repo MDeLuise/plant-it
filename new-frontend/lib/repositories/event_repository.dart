@@ -35,4 +35,9 @@ class EventRepository extends BaseRepository<Event> {
   void delete(int id) {
     (db.delete(db.events)..where((t) => t.id.equals(id))).go();
   }
+
+  @override
+  Future<bool> update(Event updated) {
+    return db.update(db.events).replace(updated);
+  }
 }
