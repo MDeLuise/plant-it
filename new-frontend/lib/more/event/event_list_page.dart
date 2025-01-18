@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -97,48 +98,19 @@ class _EventsListPageState extends State<EventsListPage> {
                         Text(
                           event.description!,
                           style: const TextStyle(
-                              color: Colors.grey, fontSize: 14.0),
+                            color: Colors.grey,
+                            fontSize: 14.0,
+                          ),
                         ),
                     ],
                   ),
                 ),
               ],
             ),
-            // trailing: FutureBuilder<double>(
-            //   future: statsCalculator.getCurrentEventBalance(event.id!),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return const SizedBox(
-            //         height: 24,
-            //         width: 24,
-            //         child: CircularProgressIndicator(
-            //           strokeWidth: 2.0,
-            //         ),
-            //       );
-            //     } else if (snapshot.hasError) {
-            //       return const Text("Error");
-            //     } else {
-            //       final balance = snapshot.data ?? 0.0;
-            //       return Text(
-            //         "€${balance.toStringAsFixed(2)}",
-            //         style: const TextStyle(fontWeight: FontWeight.bold),
-            //       );
-            //     }
-            //   },
-            // ),
-            onTap: () async {
-              // final bool? shouldRefresh = await Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => EditEventPage(widget.env, Event),
-              //   ),
-              // );
-
-              // // If the user successfully edits the Event, refresh the Events list
-              // if (shouldRefresh == true) {
-              //   _fetchEvents();
-              // }
-            },
+            trailing: GestureDetector(
+              onTap: () => {},
+              child: const Icon(LucideIcons.trash_2),
+            ),
           );
         },
       ),

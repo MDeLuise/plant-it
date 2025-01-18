@@ -52,6 +52,19 @@ dependencies:
   drift_flutter: ^0.2.4
   multi_dropdown: ^3.0.1
   easy_loading_button: ^0.3.2
+  flutter_colorpicker: ^1.1.0
+  gradient_borders: ^1.0.1
+  # https://pub.dev/packages/shimmer
+  # https://pub.dev/packages/flutter_carousel_widget
+  # https://pub.dev/packages/flutter_local_notifications
+  # https://pub.dev/packages/system_theme
+  # https://pub.dev/packages/sliver_tools
+  # https://pub.dev/packages/quick_actions
+  # https://pub.dev/packages/image_picker
+  # https://pub.dev/packages/notification_listener_service
+  # https://pub.dev/packages/home_widget
+  # https://pub.dev/packages/expandable_page_view
+
 
 dev_dependencies:
   flutter_test:
