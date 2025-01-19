@@ -1,4 +1,3 @@
-import 'package:easy_loading_button/easy_loading_button.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -17,10 +16,19 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   final _formKey = GlobalKey<FormState>();
   final controller = MultiSelectController<Event>();
-  List<DropdownItem<Event>> items = [
-    DropdownItem(label: 'Watering', value: Event(id: 1, name: "watering")),
-    DropdownItem(label: 'Seeding', value: Event(id: 2, name: "seeding")),
-  ];
+  late final List<DropdownItem<Event>> events;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.env.eventRepository.getAll().then((r) {
+      List<DropdownItem<Event>> fetchedEvents =
+          r.map((e) => DropdownItem(label: e.name, value: e)).toList();
+      setState(() {
+        events = fetchedEvents;
+      });
+    });
+  }
 
   void _saveEvent() async {
     await Future.delayed(const Duration(seconds: 2), () {});
@@ -49,7 +57,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         height: 4,
                       ),
                       MultiDropdown<Event>(
-                        items: items,
+                        items: events,
                         controller: controller,
                         enabled: true,
                         searchEnabled: true,
