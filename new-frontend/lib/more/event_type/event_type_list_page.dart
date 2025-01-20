@@ -41,7 +41,7 @@ class _EventTypesListPageState extends State<EventTypeListPage> {
     final bool? shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddEventPage(widget.env),
+        builder: (context) => AddEventTypePage(widget.env),
       ),
     );
 
@@ -50,11 +50,12 @@ class _EventTypesListPageState extends State<EventTypeListPage> {
     }
   }
 
-  Future<void> _navigateToEditEvent(BuildContext context, EventType toEdit) async {
+  Future<void> _navigateToEditEvent(
+      BuildContext context, EventType toEdit) async {
     final bool? shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditEventPage(widget.env, toEdit),
+        builder: (context) => EditEventTypePage(widget.env, toEdit),
       ),
     );
 
