@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
@@ -19,43 +21,106 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<Event> _recentEvents = [];
   List<Plant> _plants = [];
+  List<Plant> _filteredPlants = [];
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
     widget.env.eventRepository
         .getLast(5)
         .then((r) => setState(() => _recentEvents = r));
-    widget.env.plantRepository
-        .getAll()
-        .then((r) => setState(() => _plants = r));
+    widget.env.plantRepository.getAll().then((r) => setState(() {
+          _plants = r;
+          _filteredPlants = r;
+        }));
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        final query = _searchController.text.toLowerCase();
+        _filteredPlants = _plants
+            .where((plant) => plant.name.toLowerCase().contains(query))
+            .toList();
+      });
+    });
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() {
+      _filteredPlants = _plants; // Reset the filtered list
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            _Header(),
-            SizedBox(height: 15),
-            FlutterCarousel(
-              options: FlutterCarouselOptions(
-                height: 400.0,
-                showIndicator: false,
+        physics: const ClampingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              _Header(),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search plants",
+                  prefixIcon: const Icon(LucideIcons.search),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(LucideIcons.x),
+                          onPressed: _clearSearch,
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
               ),
-              items: _plants.map((p) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return PlantCard(widget.env, p);
-                  },
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            _Recent(widget.env, _recentEvents),
-          ],
+              const SizedBox(height: 10),
+              FlutterCarousel(
+                options: FlutterCarouselOptions(
+                  height: 400.0,
+                  showIndicator: false,
+                ),
+                items: _filteredPlants.map((plant) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return PlantCard(
+                        widget.env,
+                        plant,
+                        key: UniqueKey(),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              _Recent(widget.env, _recentEvents),
+            ],
+          ),
         ),
       ),
     );
@@ -114,21 +179,19 @@ class _Recent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: AppTabBar(env, [
-          "Reminders",
-          "Events"
-        ], [
-          Center(
-            child: Text(
-              "Reminders will be displayed here",
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          Column(
-            children: recentEvents.map((e) => EventCard(env, e)).toList(),
-          )
-        ]));
+    return AppTabBar(env, [
+      "Reminders",
+      "Events"
+    ], [
+      Center(
+        child: Text(
+          "Reminders will be displayed here",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ),
+      Column(
+        children: recentEvents.map((e) => EventCard(env, e)).toList(),
+      )
+    ]);
   }
 }
