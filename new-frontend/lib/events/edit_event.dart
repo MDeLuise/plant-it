@@ -4,6 +4,8 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/loading_button.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class EditEventScreen extends StatefulWidget {
   final Environment env;
@@ -88,6 +90,37 @@ class _EditEventScreenState extends State<EditEventScreen> {
     }
   }
 
+  void _deleteEvent() async {
+    return QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      confirmBtnText: 'Delete',
+      cancelBtnText: 'Cancel',
+      title: "Delete event?",
+      confirmBtnColor: Colors.red,
+      showCancelBtn: true,
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.surfaceDim,
+      ),
+      backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(.8),
+      onConfirmBtnTap: () {
+        try {
+          widget.env.eventRepository.delete(widget.event.id);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error deleting event')),
+          );
+          return;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Event deleted successfully')),
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -118,6 +151,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Event"),
+        actions: [
+          IconButton(
+              onPressed: _deleteEvent, icon: const Icon(LucideIcons.trash_2)),
+        ],
       ),
       body: SafeArea(
         child: Padding(
