@@ -33,7 +33,7 @@ class EventRepository extends BaseRepository<Event> {
 
   @override
   void delete(int id) {
-    (db.delete(db.events)..where((t) => t.id.equals(id))).go();
+    (db.delete(db.events)..where((e) => e.id.equals(id))).go();
   }
 
   @override
@@ -50,6 +50,95 @@ class EventRepository extends BaseRepository<Event> {
                 )
           ])
           ..limit(num))
+        .get();
+  }
+
+  Future<int> count(List<int>? plantIds, List<int>? eventTypes) {
+    if (plantIds == null && eventTypes != null) {
+      return _countByEventTypes(eventTypes);
+    } else if (plantIds != null && eventTypes == null) {
+      return _countByPlants(plantIds);
+    } else if (plantIds != null && eventTypes != null) {
+      return _countByPlantsAndEventTypes(plantIds, eventTypes);
+    } else {
+      throw Exception(
+          "At least one of plantIds and eventTypes must be not null");
+    }
+  }
+
+  Future<int> _countByPlants(List<int> plantIds) {
+    return _selectByPlants(plantIds).then((r) => r.length);
+  }
+
+  Future<int> _countByEventTypes(List<int> eventTypes) {
+    return _selectByEventTypes(eventTypes).then((r) => r.length);
+  }
+
+  Future<int> _countByPlantsAndEventTypes(
+      List<int> plantIds, List<int> eventTypes) {
+    return _selectByPlantsAndEventTypes(plantIds, eventTypes)
+        .then((r) => r.length);
+  }
+
+  Future<List<Event>> getFiltered(List<int>? plantIds, List<int>? eventTypes) {
+    if (plantIds == null && eventTypes != null) {
+      return _selectByEventTypes(eventTypes);
+    } else if (plantIds != null && eventTypes == null) {
+      return _selectByPlants(plantIds);
+    } else if (plantIds != null && eventTypes != null) {
+      return _selectByPlantsAndEventTypes(plantIds, eventTypes);
+    } else {
+      throw Exception(
+          "At least one of plantIds and eventTypes must be not null");
+    }
+  }
+
+  Future<Event?> getLastFiltered(List<int>? plantIds, List<int>? eventTypes) {
+    return getFiltered(plantIds, eventTypes).then((r) {
+      if (r.isEmpty) {
+        return null;
+      }
+      return r.first;
+    });
+  }
+
+  Future<List<Event>> _selectByPlants(List<int> plantIds) {
+    return (db.select(db.events)
+          ..where((e) => e.plant.isIn(plantIds))
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.date,
+                  mode: OrderingMode.desc,
+                )
+          ]))
+        .get();
+  }
+
+  Future<List<Event>> _selectByEventTypes(List<int> eventTypes) {
+    return (db.select(db.events)
+          ..where((e) => e.type.isIn(eventTypes))
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.date,
+                  mode: OrderingMode.desc,
+                )
+          ]))
+        .get();
+  }
+
+  Future<List<Event>> _selectByPlantsAndEventTypes(
+      List<int> plantIds, List<int> eventTypes) {
+    return (db.select(db.events)
+          ..where((e) => Expression.and([
+                e.plant.isIn(plantIds),
+                e.type.isIn(eventTypes),
+              ]))
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.date,
+                  mode: OrderingMode.desc,
+                )
+          ]))
         .get();
   }
 }
