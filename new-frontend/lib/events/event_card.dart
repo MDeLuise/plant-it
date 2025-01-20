@@ -48,16 +48,22 @@ class _EventCardState extends State<EventCard> {
               padding: const EdgeInsets.all(15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(appIcons[eventType.icon!]),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(formatDate(widget.event.date)),
-                      Text(plant.name),
+                      Icon(appIcons[eventType.icon!]),
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(formatDate(widget.event.date)),
+                          Text(plant.name),
+                        ],
+                      ),
                     ],
                   ),
+                  Text(timeDiffStr(widget.event.date)),
                 ],
               ),
             ),

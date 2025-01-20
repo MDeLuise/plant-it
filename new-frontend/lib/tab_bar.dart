@@ -36,7 +36,7 @@ class _AppTabBarState extends State<AppTabBar>
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(.8),
+              color: Theme.of(context).colorScheme.secondary.withOpacity(.6),
               borderRadius: BorderRadius.circular(16),
             ),
             child: TabBar(
@@ -45,7 +45,7 @@ class _AppTabBarState extends State<AppTabBar>
               unselectedLabelColor: Theme.of(context).colorScheme.onSecondary,
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorPadding: EdgeInsets.zero,
