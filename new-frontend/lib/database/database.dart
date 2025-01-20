@@ -26,7 +26,7 @@ class Events extends Table {
   IntColumn get type => integer().references(EventTypes, #id)();
   IntColumn get plant => integer().references(Plants, #id)();
   TextColumn get note => text().withLength(max: 250).nullable()();
-  DateTimeColumn get date => dateTime().nullable()();
+  DateTimeColumn get date => dateTime()();
 }
 
 @DriftDatabase(tables: [EventTypes, Plants, Events])
