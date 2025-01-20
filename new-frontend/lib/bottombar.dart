@@ -31,7 +31,7 @@ class _BottomBarState extends State<Bottombar> {
         ),
         NavigationDestination(
           icon: Icon(LucideIcons.calendar),
-          label: 'Events',
+          label: 'Activity',
         ),
         NavigationDestination(
           icon: Icon(LucideIcons.search),
