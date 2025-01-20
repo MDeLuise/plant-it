@@ -40,4 +40,19 @@ class ReminderRepository extends BaseRepository<Reminder> {
   Future<bool> update(Reminder updated) async {
     return db.update(db.reminders).replace(updated);
   }
+
+  Future<bool> updateLastNotified(Reminder reminder) {
+    return update(Reminder(
+      id: reminder.id,
+      type: reminder.type,
+      plant: reminder.plant,
+      startDate: reminder.startDate,
+      frequencyUnit: reminder.frequencyUnit,
+      frequencyQuantity: reminder.frequencyQuantity,
+      repeatAfterUnit: reminder.repeatAfterUnit,
+      repeatAfterQuantity: reminder.repeatAfterQuantity,
+      enabled: reminder.enabled,
+      lastNotified: DateTime.now(),
+    ));
+  }
 }
