@@ -56,10 +56,10 @@ dependencies:
   gradient_borders: ^1.0.1
   quickalert: ^1.1.0
   flutter_carousel_widget: ^3.1.0
+  flutter_local_notifications: ^18.0.1
   # https://pub.dev/packages/table_calendar
   # https://pub.dev/packages/introduction_screen
   # https://pub.dev/packages/shimmer
-  # https://pub.dev/packages/flutter_local_notifications
   # https://pub.dev/packages/system_theme
   # https://pub.dev/packages/sliver_tools
   # https://pub.dev/packages/quick_actions
