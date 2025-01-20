@@ -74,7 +74,10 @@ class _EventTypesListPageState extends State<EventTypeListPage> {
       title: "Delete event type?",
       confirmBtnColor: Colors.red,
       showCancelBtn: true,
-      backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.surfaceDim,
+      ),
+      backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(.8),
       onConfirmBtnTap: () {
         widget.env.eventTypeRepository.delete(eventId);
         _fetchEvents();
