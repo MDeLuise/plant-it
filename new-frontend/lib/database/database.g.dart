@@ -687,8 +687,8 @@ class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-      'date', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, type, plant, note, date];
   @override
@@ -723,6 +723,8 @@ class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
     if (data.containsKey('date')) {
       context.handle(
           _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
     }
     return context;
   }
@@ -742,7 +744,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
       note: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note']),
       date: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}date']),
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
     );
   }
 
@@ -757,13 +759,13 @@ class Event extends DataClass implements Insertable<Event> {
   final int type;
   final int plant;
   final String? note;
-  final DateTime? date;
+  final DateTime date;
   const Event(
       {required this.id,
       required this.type,
       required this.plant,
       this.note,
-      this.date});
+      required this.date});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -773,9 +775,7 @@ class Event extends DataClass implements Insertable<Event> {
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
-    if (!nullToAbsent || date != null) {
-      map['date'] = Variable<DateTime>(date);
-    }
+    map['date'] = Variable<DateTime>(date);
     return map;
   }
 
@@ -785,7 +785,7 @@ class Event extends DataClass implements Insertable<Event> {
       type: Value(type),
       plant: Value(plant),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
-      date: date == null && nullToAbsent ? const Value.absent() : Value(date),
+      date: Value(date),
     );
   }
 
@@ -797,7 +797,7 @@ class Event extends DataClass implements Insertable<Event> {
       type: serializer.fromJson<int>(json['type']),
       plant: serializer.fromJson<int>(json['plant']),
       note: serializer.fromJson<String?>(json['note']),
-      date: serializer.fromJson<DateTime?>(json['date']),
+      date: serializer.fromJson<DateTime>(json['date']),
     );
   }
   @override
@@ -808,7 +808,7 @@ class Event extends DataClass implements Insertable<Event> {
       'type': serializer.toJson<int>(type),
       'plant': serializer.toJson<int>(plant),
       'note': serializer.toJson<String?>(note),
-      'date': serializer.toJson<DateTime?>(date),
+      'date': serializer.toJson<DateTime>(date),
     };
   }
 
@@ -817,13 +817,13 @@ class Event extends DataClass implements Insertable<Event> {
           int? type,
           int? plant,
           Value<String?> note = const Value.absent(),
-          Value<DateTime?> date = const Value.absent()}) =>
+          DateTime? date}) =>
       Event(
         id: id ?? this.id,
         type: type ?? this.type,
         plant: plant ?? this.plant,
         note: note.present ? note.value : this.note,
-        date: date.present ? date.value : this.date,
+        date: date ?? this.date,
       );
   Event copyWithCompanion(EventsCompanion data) {
     return Event(
@@ -865,7 +865,7 @@ class EventsCompanion extends UpdateCompanion<Event> {
   final Value<int> type;
   final Value<int> plant;
   final Value<String?> note;
-  final Value<DateTime?> date;
+  final Value<DateTime> date;
   const EventsCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -878,9 +878,10 @@ class EventsCompanion extends UpdateCompanion<Event> {
     required int type,
     required int plant,
     this.note = const Value.absent(),
-    this.date = const Value.absent(),
+    required DateTime date,
   })  : type = Value(type),
-        plant = Value(plant);
+        plant = Value(plant),
+        date = Value(date);
   static Insertable<Event> custom({
     Expression<int>? id,
     Expression<int>? type,
@@ -902,7 +903,7 @@ class EventsCompanion extends UpdateCompanion<Event> {
       Value<int>? type,
       Value<int>? plant,
       Value<String?>? note,
-      Value<DateTime?>? date}) {
+      Value<DateTime>? date}) {
     return EventsCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -1467,14 +1468,14 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   required int type,
   required int plant,
   Value<String?> note,
-  Value<DateTime?> date,
+  required DateTime date,
 });
 typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int> id,
   Value<int> type,
   Value<int> plant,
   Value<String?> note,
-  Value<DateTime?> date,
+  Value<DateTime> date,
 });
 
 final class $$EventsTableReferences
@@ -1710,7 +1711,7 @@ class $$EventsTableTableManager extends RootTableManager<
             Value<int> type = const Value.absent(),
             Value<int> plant = const Value.absent(),
             Value<String?> note = const Value.absent(),
-            Value<DateTime?> date = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
           }) =>
               EventsCompanion(
             id: id,
@@ -1724,7 +1725,7 @@ class $$EventsTableTableManager extends RootTableManager<
             required int type,
             required int plant,
             Value<String?> note = const Value.absent(),
-            Value<DateTime?> date = const Value.absent(),
+            required DateTime date,
           }) =>
               EventsCompanion.insert(
             id: id,

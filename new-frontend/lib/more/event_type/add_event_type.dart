@@ -7,16 +7,16 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
 import 'package:plant_it/loading_button.dart';
 
-class AddEventPage extends StatefulWidget {
+class AddEventTypePage extends StatefulWidget {
   final Environment env;
 
-  const AddEventPage(this.env, {super.key});
+  const AddEventTypePage(this.env, {super.key});
 
   @override
-  State<AddEventPage> createState() => _AddEventPageState();
+  State<AddEventTypePage> createState() => _AddEventTypePageState();
 }
 
-class _AddEventPageState extends State<AddEventPage> {
+class _AddEventTypePageState extends State<AddEventTypePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();

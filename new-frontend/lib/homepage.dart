@@ -1,7 +1,10 @@
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_it/events/event_card.dart';
+import 'package:plant_it/tab_bar.dart';
 
 class Homepage extends StatefulWidget {
   final Environment env;
@@ -13,6 +16,16 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  List<Event> _recentEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.env.eventRepository
+        .getLast(5)
+        .then((r) => setState(() => _recentEvents = r));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -43,6 +56,8 @@ class _HomepageState extends State<Homepage> {
                 );
               }).toList(),
             ),
+            const SizedBox(height: 20),
+            _Recent(widget.env, _recentEvents),
           ],
         ),
       ),
@@ -69,5 +84,32 @@ class _Header extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _Recent extends StatelessWidget {
+  final Environment env;
+  final List<Event> recentEvents;
+
+  const _Recent(this.env, this.recentEvents);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: AppTabBar(env, [
+          "Reminders",
+          "Events"
+        ], [
+          Center(
+            child: Text(
+              "Reminders will be displayed here",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          Column(
+            children: recentEvents.map((e) => EventCard(env, e)).toList(),
+          )
+        ]));
   }
 }

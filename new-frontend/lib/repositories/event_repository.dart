@@ -37,7 +37,19 @@ class EventRepository extends BaseRepository<Event> {
   }
 
   @override
-  Future<bool> update(Event updated) {
+  Future<bool> update(Event updated) async {
     return db.update(db.events).replace(updated);
+  }
+
+  Future<List<Event>> getLast(int num) async {
+    return (db.select(db.events)
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.date,
+                  mode: OrderingMode.desc,
+                )
+          ])
+          ..limit(num))
+        .get();
   }
 }
