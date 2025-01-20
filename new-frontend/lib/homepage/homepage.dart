@@ -4,6 +4,7 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
+import 'package:plant_it/homepage/plant_card.dart';
 import 'package:plant_it/tab_bar.dart';
 
 class Homepage extends StatefulWidget {
@@ -17,6 +18,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   List<Event> _recentEvents = [];
+  List<Plant> _plants = [];
 
   @override
   void initState() {
@@ -24,6 +26,9 @@ class _HomepageState extends State<Homepage> {
     widget.env.eventRepository
         .getLast(5)
         .then((r) => setState(() => _recentEvents = r));
+    widget.env.plantRepository
+        .getAll()
+        .then((r) => setState(() => _plants = r));
   }
 
   @override
@@ -32,26 +37,18 @@ class _HomepageState extends State<Homepage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 20),
             _Header(),
+            SizedBox(height: 15),
             FlutterCarousel(
               options: FlutterCarouselOptions(
                 height: 400.0,
                 showIndicator: false,
               ),
-              items: [1, 2, 3, 4, 5].map((i) {
+              items: _plants.map((p) {
                 return Builder(
                   builder: (BuildContext context) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          'text $i',
-                          style: TextStyle(fontSize: 16.0),
-                        ));
+                    return PlantCard(widget.env, p);
                   },
                 );
               }).toList(),
@@ -66,8 +63,21 @@ class _HomepageState extends State<Homepage> {
 }
 
 class _Header extends StatelessWidget {
+  String _getGreeting(int hour) {
+    if (hour < 12) {
+      return "Good morning";
+    } else if (hour < 18) {
+      return "Good afternoon";
+    } else {
+      return "Good evening";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentHour = DateTime.now().hour;
+    final greeting = _getGreeting(currentHour);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
@@ -76,11 +86,20 @@ class _Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Hello"),
-              Text("User"),
+              Text(
+                greeting,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Text(
+                "User",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ],
           ),
-          Icon(LucideIcons.bell),
+          //Icon(LucideIcons.bell),
         ],
       ),
     );
