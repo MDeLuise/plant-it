@@ -4,22 +4,22 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
-import 'package:plant_it/more/event/add_event.dart';
-import 'package:plant_it/more/event/edit_event.dart';
+import 'package:plant_it/more/event_type/add_event_type.dart';
+import 'package:plant_it/more/event_type/edit_event_type.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-class EventsListPage extends StatefulWidget {
+class EventTypeListPage extends StatefulWidget {
   final Environment env;
 
-  const EventsListPage(this.env, {super.key});
+  const EventTypeListPage(this.env, {super.key});
 
   @override
-  State<EventsListPage> createState() => _EventsListPageState();
+  State<EventTypeListPage> createState() => _EventTypesListPageState();
 }
 
-class _EventsListPageState extends State<EventsListPage> {
-  List<Event> _events = [];
+class _EventTypesListPageState extends State<EventTypeListPage> {
+  List<EventType> _events = [];
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _EventsListPageState extends State<EventsListPage> {
   }
 
   Future<void> _fetchEvents() async {
-    widget.env.eventRepository.getAll().then((r) {
+    widget.env.eventTypeRepository.getAll().then((r) {
       setState(() {
         _events = r
           ..sort(
@@ -50,7 +50,7 @@ class _EventsListPageState extends State<EventsListPage> {
     }
   }
 
-  Future<void> _navigateToEditEvent(BuildContext context, Event toEdit) async {
+  Future<void> _navigateToEditEvent(BuildContext context, EventType toEdit) async {
     final bool? shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -75,7 +75,7 @@ class _EventsListPageState extends State<EventsListPage> {
       showCancelBtn: true,
       backgroundColor: Theme.of(context).colorScheme.surfaceTint,
       onConfirmBtnTap: () {
-        widget.env.eventRepository.delete(eventId);
+        widget.env.eventTypeRepository.delete(eventId);
         _fetchEvents();
         Navigator.of(context).pop(true);
       },

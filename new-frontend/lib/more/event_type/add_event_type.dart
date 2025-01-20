@@ -39,7 +39,7 @@ class _AddEventPageState extends State<AddEventPage> {
 
   Future<void> _saveEvent() async {
     if (_formKey.currentState!.validate()) {
-      final event = EventsCompanion(
+      final event = EventTypesCompanion(
         name: drift.Value(_nameController.text),
         description: drift.Value(_descriptionController.text),
         icon: drift.Value(_selectedIcon),
@@ -47,7 +47,7 @@ class _AddEventPageState extends State<AddEventPage> {
       );
 
       try {
-        await widget.env.eventRepository.insert(event);
+        await widget.env.eventTypeRepository.insert(event);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event added successfully')),
         );
