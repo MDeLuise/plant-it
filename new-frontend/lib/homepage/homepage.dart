@@ -7,6 +7,9 @@ import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
 import 'package:plant_it/homepage/plant_card.dart';
+import 'package:plant_it/reminder/reminder_card.dart';
+import 'package:plant_it/reminder/reminder_occurrence.dart';
+import 'package:plant_it/reminder/reminder_occurrence_service.dart';
 import 'package:plant_it/tab_bar.dart';
 
 class Homepage extends StatefulWidget {
@@ -19,7 +22,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  List<Event> _recentEvents = [];
   List<Plant> _plants = [];
   List<Plant> _filteredPlants = [];
   final TextEditingController _searchController = TextEditingController();
@@ -29,9 +31,6 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    widget.env.eventRepository
-        .getLast(5)
-        .then((r) => setState(() => _recentEvents = r));
     widget.env.plantRepository.getAll().then((r) => setState(() {
           _plants = r;
           _filteredPlants = r;
@@ -61,7 +60,7 @@ class _HomepageState extends State<Homepage> {
   void _clearSearch() {
     _searchController.clear();
     setState(() {
-      _filteredPlants = _plants; // Reset the filtered list
+      _filteredPlants = _plants;
     });
   }
 
@@ -118,7 +117,7 @@ class _HomepageState extends State<Homepage> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              _Recent(widget.env, _recentEvents),
+              _Recent(widget.env),
             ],
           ),
         ),
@@ -171,26 +170,43 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Recent extends StatelessWidget {
+class _Recent extends StatefulWidget {
   final Environment env;
-  final List<Event> recentEvents;
 
-  const _Recent(this.env, this.recentEvents);
+  const _Recent(this.env);
+
+  @override
+  State<_Recent> createState() => _RecentState();
+}
+
+class _RecentState extends State<_Recent> {
+  List<Event> _recentEvents = [];
+  List<ReminderOccurrence> _nextReminderOccurrences = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.env.eventRepository
+        .getLast(5)
+        .then((r) => setState(() => _recentEvents = r));
+    ReminderOccurrenceService(widget.env)
+        .getNextOccurrences(5)
+        .then((r) => setState(() =>_nextReminderOccurrences = r));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AppTabBar(env, [
+    return AppTabBar(widget.env, [
       "Reminders",
       "Events"
     ], [
-      Center(
-        child: Text(
-          "Reminders will be displayed here",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+      Column(
+        children: _nextReminderOccurrences
+            .map((e) => ReminderOccurrenceCard(widget.env, e))
+            .toList(),
       ),
       Column(
-        children: recentEvents.map((e) => EventCard(env, e)).toList(),
+        children: _recentEvents.map((e) => EventCard(widget.env, e)).toList(),
       )
     ]);
   }

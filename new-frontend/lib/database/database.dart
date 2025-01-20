@@ -68,7 +68,15 @@ class Images extends Table {
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 
-@DriftDatabase(tables: [EventTypes, Plants, Events, Reminders, Images])
+class UserSettings extends Table {
+  TextColumn get key => text().withLength(max: 50)();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {key};
+}
+
+@DriftDatabase(tables: [EventTypes, Plants, Events, Reminders, Images, UserSettings])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -133,12 +141,8 @@ class AppDatabase extends _$AppDatabase {
       name: 'Kalanchoe jetpack',
     ));
 
-    await into(plants).insertOnConflictUpdate(PlantsCompanion.insert(
-      id: const Value(5),
-      name: 'Kalanchoe jetpack',
-    ));
-
     await into(reminders).insertOnConflictUpdate(RemindersCompanion.insert(
+      id: const Value(1),
       type: 1,
       plant: 1,
       startDate: DateTime.now().subtract(const Duration(days: 2)),
@@ -150,6 +154,7 @@ class AppDatabase extends _$AppDatabase {
     ));
 
     await into(reminders).insertOnConflictUpdate(RemindersCompanion.insert(
+      id: const Value(2),
       type: 2,
       plant: 2,
       startDate: DateTime.now().subtract(const Duration(days: 4)),

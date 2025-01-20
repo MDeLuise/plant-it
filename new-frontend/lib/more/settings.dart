@@ -3,6 +3,7 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:plant_it/notification/reminder_notification_service.dart';
 
 class Settings extends StatefulWidget {
   final Environment env;
@@ -14,21 +15,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  String _appVersion = "Loading...";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAppVersion();
-  }
-
-  Future<void> _loadAppVersion() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      _appVersion = packageInfo.version;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +23,13 @@ class _SettingsState extends State<Settings> {
       ),
       body: ListView(
         children: [
+          ListTile(
+            title: const Text("Notification"),
+            subtitle:
+                const Text("Configure when and if notifications are received"),
+            leading: const Icon(Icons.notifications),
+            onTap: () => navigateTo(context, NotificationSettings(widget.env)),
+          ),
           ListTile(
             title: const Text("Database"),
             subtitle: const Text("Import and Export options"),
@@ -50,12 +43,128 @@ class _SettingsState extends State<Settings> {
             onTap: () => navigateTo(context, CacheSettings(widget.env.cache)),
           ),
           ListTile(
-            title: const Text("App Info"),
-            subtitle: const Text("Version and details about the app"),
+            title: const Text("About Plant-it"),
+            subtitle: const Text("Details about the app"),
             leading: const Icon(Icons.info),
-            onTap: () => navigateTo(context, AppInfo(appVersion: _appVersion)),
+            onTap: () => navigateTo(context, AppInfo(env: widget.env)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class NotificationSettings extends StatefulWidget {
+  final Environment env;
+
+  const NotificationSettings(this.env, {super.key});
+
+  @override
+  State<NotificationSettings> createState() => _NotificationSettingsState();
+}
+
+class _NotificationSettingsState extends State<NotificationSettings> {
+  late final ReminderNotificationService reminderNotification =
+      ReminderNotificationService(widget.env);
+  bool notificationsEnabled = true;
+  TimeOfDay notificationTime = TimeOfDay(hour: 8, minute: 0);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final notificationsStatus = await widget.env.userSettingRepository
+        .getOrDefault('notificationsEnabled', 'false');
+    final hour = await widget.env.userSettingRepository
+        .getOrDefault('notificationHour', '8');
+    final minute = await widget.env.userSettingRepository
+        .getOrDefault('notificationMinute', '0');
+
+    setState(() {
+      notificationsEnabled = notificationsStatus == 'true';
+      notificationTime =
+          TimeOfDay(hour: int.parse(hour), minute: int.parse(minute));
+    });
+  }
+
+  Future<void> _saveSettingsToDB() async {
+    final bool notificationsEnabledExists =
+        await widget.env.userSettingRepository.exists('notificationsEnabled');
+
+    if (!notificationsEnabledExists && notificationsEnabled) {
+      await ReminderNotificationService(widget.env).initialize();
+    }
+
+    widget.env.userSettingRepository
+        .put('notificationsEnabled', notificationsEnabled.toString());
+    widget.env.userSettingRepository
+        .put('notificationHour', notificationTime.hour.toString());
+    widget.env.userSettingRepository
+        .put('notificationMinute', notificationTime.minute.toString());
+
+    if (notificationsEnabled) {
+      await reminderNotification.scheduleReminderCheck();
+    }
+  }
+
+  Future<void> _selectNotificationTime(BuildContext context) async {
+    if (!notificationsEnabled) {
+      return;
+    }
+
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: notificationTime,
+    );
+
+    if (picked != null && picked != notificationTime) {
+      setState(() {
+        notificationTime = picked;
+      });
+      _saveSettingsToDB();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Notification Settings'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Notification toggle switch
+            SwitchListTile(
+              title: Text("Enable Notifications"),
+              value: notificationsEnabled,
+              onChanged: (e) {
+                setState(() {
+                  notificationsEnabled = e;
+                });
+                _saveSettingsToDB();
+              },
+            ),
+
+            ListTile(
+              title: Text("Set Notification Time"),
+              subtitle: Text(
+                notificationsEnabled
+                    ? notificationTime.format(context)
+                    : "Notifications are disabled",
+              ),
+              onTap: notificationsEnabled
+                  ? () => _selectNotificationTime(context)
+                  : null,
+              enabled: notificationsEnabled,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -66,8 +175,6 @@ class DatabaseSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final dbManager = DBManager();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Database Settings"),
@@ -78,7 +185,6 @@ class DatabaseSettings extends StatelessWidget {
             title: const Text("Import Data"),
             leading: const Icon(Icons.file_upload),
             onTap: () async {
-              //await dbManager.importDatabase();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Import completed!")),
               );
@@ -88,7 +194,6 @@ class DatabaseSettings extends StatelessWidget {
             title: const Text("Export Data"),
             leading: const Icon(Icons.file_download),
             onTap: () async {
-              //await dbManager.exportDatabase();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Export completed!")),
               );
@@ -130,9 +235,10 @@ class CacheSettings extends StatelessWidget {
 }
 
 class AppInfo extends StatelessWidget {
+  final Environment env;
   final String appVersion;
 
-  const AppInfo({super.key, required this.appVersion});
+  const AppInfo({super.key, required this.env}) : appVersion = "Loading...";
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +251,27 @@ class AppInfo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Version: $appVersion"),
-            const Text("..."),
+            FutureBuilder(
+              future: _loadAppVersion(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Text("Error loading app version");
+                }
+
+                return Text("Version: ${snapshot.data}");
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<String> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
   }
 }
