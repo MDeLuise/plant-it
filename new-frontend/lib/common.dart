@@ -22,3 +22,35 @@ Color hexToColor(String hexString) {
 String formatDate(DateTime date) {
   return DateFormat('E, dd MMM yyyy').format(date);
 }
+
+String timeDiffStr(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+  
+  final isFuture = difference.isNegative;
+  final duration = isFuture ? -difference : difference;
+
+  if (duration.inDays >= 365) {
+    final years = duration.inDays ~/ 365;
+    return _buildTimeString(years, 'year', isFuture);
+  } else if (duration.inDays >= 30) {
+    final months = duration.inDays ~/ 30;
+    return _buildTimeString(months, 'month', isFuture);
+  } else if (duration.inDays >= 7) {
+    final weeks = duration.inDays ~/ 7;
+    return _buildTimeString(weeks, 'week', isFuture);
+  } else if (duration.inDays >= 1) {
+    return _buildTimeString(duration.inDays, 'day', isFuture);
+  } else {
+    return 'Today';
+  }
+}
+
+String _buildTimeString(int value, String unit, bool isFuture) {
+  String timeUnit = value == 1 ? unit : '$unit' 's';
+  if (isFuture) {
+    return 'in $value $timeUnit';
+  } else {
+    return '$value $timeUnit ago';
+  }
+}

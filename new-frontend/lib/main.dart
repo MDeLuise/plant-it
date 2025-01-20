@@ -4,11 +4,13 @@ import 'package:plant_it/cache/cache.dart';
 import 'package:plant_it/events/events_page.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/homepage.dart';
+import 'package:plant_it/homepage/homepage.dart';
 import 'package:plant_it/more/more_page.dart';
 import 'package:plant_it/repositories/event_repository.dart';
 import 'package:plant_it/repositories/event_type_repository.dart';
+import 'package:plant_it/repositories/image_repository.dart';
 import 'package:plant_it/repositories/plant_repository.dart';
+import 'package:plant_it/repositories/reminder_repository.dart';
 import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,8 @@ void main() async {
     EventTypeRepository(db, cache),
     PlantRepository(db, cache),
     EventRepository(db, cache),
+    ReminderRepository(db, cache),
+    ImageRepository(db, cache),
   );
   runApp(MyApp(env));
 }
