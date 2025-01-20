@@ -8,7 +8,7 @@ import 'package:plant_it/loading_button.dart';
 
 class EditEventPage extends StatefulWidget {
   final Environment env;
-  final Event event;
+  final EventType event;
 
   const EditEventPage(this.env, this.event, {super.key});
 
@@ -54,7 +54,7 @@ class _EditEventPageState extends State<EditEventPage> {
 
   Future<void> _updateEvent() async {
     if (_formKey.currentState!.validate()) {
-      final event = Event(
+      final event = EventType(
         id: widget.event.id,
         name: _nameController.text,
         description: _descriptionController.text,
@@ -63,7 +63,7 @@ class _EditEventPageState extends State<EditEventPage> {
       );
 
       try {
-        await widget.env.eventRepository.update(event);
+        await widget.env.eventTypeRepository.update(event);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event type updated successfully')),
         );
