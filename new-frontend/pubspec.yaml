@@ -30,23 +30,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   sqflite: ^2.4.1
   path: ^1.9.0
   dynamic_color: ^1.7.0
   intl: ^0.20.1
-  fl_chart: ^0.69.2 #
   flutter_cache_manager: ^3.4.1
   flutter_lucide: ^1.6.1
   package_info_plus: ^8.1.2
   path_provider: ^2.1.5
   file_picker: ^8.1.6
   json_serializable: ^6.9.0
-  currency_textfield: ^4.14.1 #
   flutter_launcher_icons: ^0.14.2
   drift: ^2.23.1
   drift_flutter: ^0.2.4
@@ -57,7 +51,8 @@ dependencies:
   quickalert: ^1.1.0
   flutter_carousel_widget: ^3.1.0
   flutter_local_notifications: ^18.0.1
-  # https://pub.dev/packages/table_calendar
+  table_calendar: ^3.2.0
+  dotted_border: ^2.1.0
   # https://pub.dev/packages/introduction_screen
   # https://pub.dev/packages/shimmer
   # https://pub.dev/packages/system_theme
