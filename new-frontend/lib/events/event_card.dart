@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -63,7 +64,11 @@ class _EventCardState extends State<EventCard> {
                       ),
                     ],
                   ),
-                  Text(timeDiffStr(widget.event.date)),
+                  Row(children: [
+                    Text(timeDiffStr(widget.event.date)),
+                    const SizedBox(width: 10),
+                    const Icon(LucideIcons.check),
+                  ]),
                 ],
               ),
             ),

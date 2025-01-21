@@ -142,4 +142,43 @@ class ReminderOccurrenceService {
     }
     return result;
   }
+
+  Future<List<ReminderOccurrence>> getForMonth(DateTime day) async {
+    final List<Reminder> reminders = await env.reminderRepository.getAll();
+    final List<ReminderOccurrence> result = [];
+
+    final DateTime startOfMonth = DateTime(day.year, day.month, 1);
+    final DateTime endOfMonth = DateTime(day.year, day.month + 1, 1)
+        .subtract(const Duration(seconds: 1));
+
+    for (final Reminder reminder in reminders) {
+      if (!reminder.enabled) continue;
+      if (reminder.endDate != null &&
+          reminder.endDate!.isBefore(startOfMonth)) {
+        continue;
+      }
+      if (reminder.startDate.isAfter(endOfMonth)) {
+        continue;
+      }
+
+      final Event? lastEvent = await env.eventRepository
+          .getLastFiltered([reminder.plant], [reminder.type]);
+
+      DateTime occurrence =
+          lastEvent != null ? lastEvent.date : reminder.startDate;
+
+      do {
+        occurrence = _calculateNextNotification(
+            occurrence, reminder.frequencyUnit, reminder.frequencyQuantity);
+      } while (occurrence.isBefore(startOfMonth));
+
+      while (occurrence.isBefore(endOfMonth)) {
+        result.add(ReminderOccurrence(reminder, occurrence));
+        occurrence = _calculateNextNotification(
+            occurrence, reminder.frequencyUnit, reminder.frequencyQuantity);
+      }
+    }
+
+    return result;
+  }
 }

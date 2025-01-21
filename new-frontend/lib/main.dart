@@ -1,7 +1,7 @@
 import 'package:plant_it/events/add_event.dart';
 import 'package:plant_it/bottombar.dart';
 import 'package:plant_it/cache/cache.dart';
-import 'package:plant_it/events/events_page.dart';
+import 'package:plant_it/activity/events_page.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/homepage/homepage.dart';

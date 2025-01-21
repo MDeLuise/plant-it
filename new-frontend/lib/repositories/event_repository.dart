@@ -41,6 +41,42 @@ class EventRepository extends BaseRepository<Event> {
     return db.update(db.events).replace(updated);
   }
 
+  // Future<List<Event>> getByDay(DateTime day) async {
+  //   final DateTime startOfDay = DateTime(day.year, day.month, day.day, 0, 0, 0);
+  //   final DateTime endOfDay =
+  //       DateTime(day.year, day.month, day.day, 23, 59, 59);
+
+  //   return (db.select(db.events)
+  //         ..where((e) =>
+  //             e.date.isBiggerOrEqualValue(startOfDay) &
+  //             e.date.isSmallerOrEqualValue(endOfDay))
+  //         ..orderBy([
+  //           (e) => OrderingTerm(
+  //                 expression: e.date,
+  //                 mode: OrderingMode.desc,
+  //               )
+  //         ]))
+  //       .get();
+  // }
+
+  Future<List<Event>> getByMonth(DateTime day) async {
+    final DateTime startOfMonth = DateTime(day.year, day.month, 1, 0, 0, 0);
+    final DateTime endOfMonth = DateTime(day.year, day.month + 1, 1, 0, 0, 0)
+        .subtract(const Duration(seconds: 1));
+
+    return (db.select(db.events)
+          ..where((e) =>
+              e.date.isBiggerOrEqualValue(startOfMonth) &
+              e.date.isSmallerOrEqualValue(endOfMonth))
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.date,
+                  mode: OrderingMode.desc,
+                )
+          ]))
+        .get();
+  }
+
   Future<List<Event>> getLast(int num) async {
     return (db.select(db.events)
           ..orderBy([

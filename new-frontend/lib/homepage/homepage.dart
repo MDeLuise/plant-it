@@ -7,7 +7,7 @@ import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
 import 'package:plant_it/homepage/plant_card.dart';
-import 'package:plant_it/reminder/reminder_card.dart';
+import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
 import 'package:plant_it/tab_bar.dart';
