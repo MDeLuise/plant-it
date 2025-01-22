@@ -58,7 +58,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   calendar_view: ^1.4.0
-  avatar_stack: ^1.2.0
+  avatar_stack: ^3.0.0
   auto_size_text: ^3.0.0
 
 dev_dependencies:

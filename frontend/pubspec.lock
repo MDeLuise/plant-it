@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: avatar_stack
-      sha256: e4a1576f7478add964bbb8aa5e530db39288fbbf81c30c4fb4b81162dd68aa49
+      sha256: "354527ba139956fd6439e2c49199d8298d72afdaa6c4cd6f37f26b97faf21f7e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
