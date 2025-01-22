@@ -233,10 +233,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           selectedTextColor: Colors.black,
                         ),
                         validator: (value) {
-                          // if (value == null || value.isEmpty) {
-                          //   return 'Please select an event';
-                          // }
-                          // return null;
+                          if (eventController.selectedItems.isEmpty) {
+                            return 'Please select an event';
+                          }
+                          return null;
                         },
                         onSelectionChange: (selectedItems) {
                           debugPrint("OnSelectionChange: $selectedItems");
@@ -306,10 +306,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           selectedTextColor: Colors.black,
                         ),
                         validator: (value) {
-                          // if (value == null || value.isEmpty) {
-                          //   return 'Please select a plant';
-                          // }
-                          // return null;
+                          if (plantController.selectedItems.isEmpty) {
+                            return 'Please select a plant';
+                          }
+                          return null;
                         },
                         onSelectionChange: (selectedItems) {
                           debugPrint("OnSelectionChange: $selectedItems");

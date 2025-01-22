@@ -140,8 +140,8 @@ class ReminderOccurrenceService {
     return result;
   }
 
-  Future<List<ReminderOccurrence>> getForMonth(DateTime day) async {
-    final List<Reminder> reminders = await env.reminderRepository.getAll();
+  Future<List<ReminderOccurrence>> getForMonth(DateTime day, List<int>? plantIds, List<int>? eventTypeIds) async {
+    final List<Reminder> reminders = await env.reminderRepository.getFiltered(plantIds, eventTypeIds);
     final List<ReminderOccurrence> result = [];
 
     final DateTime startOfMonth = DateTime(day.year, day.month, 1);
