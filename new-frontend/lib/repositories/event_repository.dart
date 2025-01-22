@@ -41,40 +41,33 @@ class EventRepository extends BaseRepository<Event> {
     return db.update(db.events).replace(updated);
   }
 
-  // Future<List<Event>> getByDay(DateTime day) async {
-  //   final DateTime startOfDay = DateTime(day.year, day.month, day.day, 0, 0, 0);
-  //   final DateTime endOfDay =
-  //       DateTime(day.year, day.month, day.day, 23, 59, 59);
-
-  //   return (db.select(db.events)
-  //         ..where((e) =>
-  //             e.date.isBiggerOrEqualValue(startOfDay) &
-  //             e.date.isSmallerOrEqualValue(endOfDay))
-  //         ..orderBy([
-  //           (e) => OrderingTerm(
-  //                 expression: e.date,
-  //                 mode: OrderingMode.desc,
-  //               )
-  //         ]))
-  //       .get();
-  // }
-
-  Future<List<Event>> getByMonth(DateTime day) async {
+  Future<List<Event>> getByMonth(
+      DateTime day, List<int>? plantIds, List<int>? eventTypeIds) async {
     final DateTime startOfMonth = DateTime(day.year, day.month, 1, 0, 0, 0);
     final DateTime endOfMonth = DateTime(day.year, day.month + 1, 1, 0, 0, 0)
         .subtract(const Duration(seconds: 1));
 
-    return (db.select(db.events)
-          ..where((e) =>
-              e.date.isBiggerOrEqualValue(startOfMonth) &
-              e.date.isSmallerOrEqualValue(endOfMonth))
-          ..orderBy([
-            (e) => OrderingTerm(
-                  expression: e.date,
-                  mode: OrderingMode.desc,
-                )
-          ]))
-        .get();
+    final query = db.select(db.events)
+      ..where((e) =>
+          e.date.isBiggerOrEqualValue(startOfMonth) &
+          e.date.isSmallerOrEqualValue(endOfMonth));
+
+    if (plantIds != null && plantIds.isNotEmpty) {
+      query.where((e) => e.plant.isIn(plantIds));
+    }
+
+    if (eventTypeIds != null && eventTypeIds.isNotEmpty) {
+      query.where((e) => e.type.isIn(eventTypeIds));
+    }
+
+    query.orderBy([
+      (e) => OrderingTerm(
+            expression: e.date,
+            mode: OrderingMode.desc,
+          )
+    ]);
+
+    return query.get();
   }
 
   Future<List<Event>> getLast(int num) async {
@@ -89,32 +82,32 @@ class EventRepository extends BaseRepository<Event> {
         .get();
   }
 
-  Future<int> count(List<int>? plantIds, List<int>? eventTypes) {
-    if (plantIds == null && eventTypes != null) {
-      return _countByEventTypes(eventTypes);
-    } else if (plantIds != null && eventTypes == null) {
-      return _countByPlants(plantIds);
-    } else if (plantIds != null && eventTypes != null) {
-      return _countByPlantsAndEventTypes(plantIds, eventTypes);
-    } else {
-      throw Exception(
-          "At least one of plantIds and eventTypes must be not null");
-    }
-  }
+  // Future<int> count(List<int>? plantIds, List<int>? eventTypes) {
+  //   if (plantIds == null && eventTypes != null) {
+  //     return _countByEventTypes(eventTypes);
+  //   } else if (plantIds != null && eventTypes == null) {
+  //     return _countByPlants(plantIds);
+  //   } else if (plantIds != null && eventTypes != null) {
+  //     return _countByPlantsAndEventTypes(plantIds, eventTypes);
+  //   } else {
+  //     throw Exception(
+  //         "At least one of plantIds and eventTypes must be not null");
+  //   }
+  // }
 
-  Future<int> _countByPlants(List<int> plantIds) {
-    return _selectByPlants(plantIds).then((r) => r.length);
-  }
+  // Future<int> _countByPlants(List<int> plantIds) {
+  //   return _selectByPlants(plantIds).then((r) => r.length);
+  // }
 
-  Future<int> _countByEventTypes(List<int> eventTypes) {
-    return _selectByEventTypes(eventTypes).then((r) => r.length);
-  }
+  // Future<int> _countByEventTypes(List<int> eventTypes) {
+  //   return _selectByEventTypes(eventTypes).then((r) => r.length);
+  // }
 
-  Future<int> _countByPlantsAndEventTypes(
-      List<int> plantIds, List<int> eventTypes) {
-    return _selectByPlantsAndEventTypes(plantIds, eventTypes)
-        .then((r) => r.length);
-  }
+  // Future<int> _countByPlantsAndEventTypes(
+  //     List<int> plantIds, List<int> eventTypes) {
+  //   return _selectByPlantsAndEventTypes(plantIds, eventTypes)
+  //       .then((r) => r.length);
+  // }
 
   Future<List<Event>> getFiltered(List<int>? plantIds, List<int>? eventTypes) {
     if (plantIds == null && eventTypes != null) {
@@ -136,6 +129,11 @@ class EventRepository extends BaseRepository<Event> {
       }
       return r.first;
     });
+  }
+
+  Future<List<Event>> getLastOfAllTypesFiltered(
+      List<int>? plantIds, List<int>? eventTypes) {
+    return getFiltered(plantIds, null);
   }
 
   Future<List<Event>> _selectByPlants(List<int> plantIds) {

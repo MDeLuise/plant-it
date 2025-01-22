@@ -55,4 +55,19 @@ class ReminderRepository extends BaseRepository<Reminder> {
       lastNotified: DateTime.now(),
     ));
   }
+
+  Future<List<Reminder>> getFiltered(
+      List<int>? plantIds, List<int>? eventTypeIds) async {
+    final query = db.select(db.reminders);
+
+    if (plantIds != null && plantIds.isNotEmpty) {
+      query.where((reminder) => reminder.plant.isIn(plantIds));
+    }
+
+    if (eventTypeIds != null && eventTypeIds.isNotEmpty) {
+      query.where((reminder) => reminder.type.isIn(eventTypeIds));
+    }
+
+    return query.get();
+  }
 }
