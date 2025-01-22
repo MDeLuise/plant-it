@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 class LoadingButton extends StatelessWidget {
   final Function callback;
   final String text;
+  final double? width;
+  final TextStyle? textStyle;
+  final Color? buttonColor;
 
-  const LoadingButton(this.text, this.callback, {super.key});
+  const LoadingButton(this.text, this.callback,
+      {super.key, this.width, this.textStyle, this.buttonColor});
 
   @override
   Widget build(BuildContext context) {
     return EasyButton(
       idleStateWidget: Text(
         text,
-        style: TextStyle(
+        style: textStyle ?? TextStyle(
           color: Theme.of(context).colorScheme.surfaceDim,
         ),
       ),
@@ -27,8 +31,9 @@ class LoadingButton extends StatelessWidget {
       borderRadius: 100,
       elevation: 2.0,
       contentGap: 6.0,
-      buttonColor: Theme.of(context).colorScheme.primary,
+      buttonColor: buttonColor ?? Theme.of(context).colorScheme.primary,
       onPressed: callback,
+      width: width ?? double.infinity,
     );
   }
 }

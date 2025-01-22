@@ -1,10 +1,10 @@
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/activity/activity_filter.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence_card.dart';
-import 'package:plant_it/reminder/reminder_occurrence.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -20,47 +20,62 @@ class _EventsPageState extends State<EventsPage> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  List<ReminderOccurrence> _allRemindersOccurrences = [];
-  List<Event> _allEvents = [];
-  Map<DateTime, List> _eventsMap = {};
+  Map<DateTime, List> _activityMap = {};
+  List<dynamic> _activityList = [];
+  List<int>? filteredPlantIds;
+  List<int>? filteredEventTypeIds;
+  ActivityFilterType? activityFilterType;
 
-  // Filter reminders and events for the selected day
-  List<ReminderOccurrence> get _filteredRemindersOccurrences {
-    return _allRemindersOccurrences
-        .where((r) => isSameDay(r.nextOccurrence, _selectedDay))
-        .toList();
+  List<dynamic> getActivityOfSelectedDay() {
+    return _activityList.where((a) {
+      if (a is Event) {
+        return isSameDay(a.date, _selectedDay);
+      } else {
+        return isSameDay(a.nextOccurrence, _selectedDay);
+      }
+    }).toList();
   }
 
-  List<Event> get _filteredEvents {
-    return _allEvents.where((e) => isSameDay(e.date, _selectedDay)).toList();
+  bool isFilterActive() {
+    return filteredPlantIds != null ||
+        filteredEventTypeIds != null ||
+        activityFilterType != null;
   }
 
-  Future<void> _updateStateForMonth(DateTime month) async {
+  Future<void> _updateStateForMonth(DateTime month, List<int>? plantIds,
+      List<int>? eventTypeIds, ActivityFilterType? activityType) async {
     // Fetch all events and reminders for the visible month
-    List<Event> newEvents = await widget.env.eventRepository.getByMonth(month);
-    List<ReminderOccurrence> newRemindersOccurrences =
-        await ReminderOccurrenceService(widget.env).getForMonth(month);
 
-    // Group events and reminders by day
-    Map<DateTime, List> newEventsMap = {};
-    for (var event in newEvents) {
-      DateTime eventDate =
-          DateTime(event.date.year, event.date.month, event.date.day);
-      newEventsMap[eventDate] = (newEventsMap[eventDate] ?? [])..add(event);
+    List<dynamic> activity = [];
+    if (activityType == null || activityType == ActivityFilterType.events) {
+      activity.addAll(await widget.env.eventRepository
+          .getByMonth(month, plantIds, eventTypeIds));
+    }
+    if (activityType == null || activityType == ActivityFilterType.reminders) {
+      activity.addAll(await ReminderOccurrenceService(widget.env)
+          .getForMonth(month, plantIds, eventTypeIds));
     }
 
-    for (var reminder in newRemindersOccurrences) {
-      DateTime reminderDate = DateTime(reminder.nextOccurrence.year,
-          reminder.nextOccurrence.month, reminder.nextOccurrence.day);
-      newEventsMap[reminderDate] = (newEventsMap[reminderDate] ?? [])
-        ..add(reminder);
+    // Group events and reminders by day
+    Map<DateTime, List> newActivityMap = {};
+    for (var activity in activity) {
+      if (activity is Event) {
+        DateTime eventDate = DateTime(
+            activity.date.year, activity.date.month, activity.date.day);
+        newActivityMap[eventDate] = (newActivityMap[eventDate] ?? [])
+          ..add(activity);
+      } else {
+        DateTime reminderDate = DateTime(activity.nextOccurrence.year,
+            activity.nextOccurrence.month, activity.nextOccurrence.day);
+        newActivityMap[reminderDate] = (newActivityMap[reminderDate] ?? [])
+          ..add(activity);
+      }
     }
 
     setState(() {
       _focusedDay = month;
-      _allEvents = newEvents;
-      _allRemindersOccurrences = newRemindersOccurrences;
-      _eventsMap = newEventsMap;
+      _activityMap = newActivityMap;
+      _activityList = activity;
     });
   }
 
@@ -73,10 +88,27 @@ class _EventsPageState extends State<EventsPage> {
     }
   }
 
+  void _showFilterDialog() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return ActivityFilter(widget.env,
+            ((plantIds, eventTypeIds, activityType) {
+          filteredPlantIds = plantIds;
+          filteredEventTypeIds = eventTypeIds;
+          activityFilterType = activityType;
+          _updateStateForMonth(_focusedDay, filteredPlantIds,
+              filteredEventTypeIds, activityType);
+        }), filteredPlantIds, filteredEventTypeIds, activityFilterType);
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    _updateStateForMonth(_focusedDay);
+    _updateStateForMonth(
+        _focusedDay, filteredPlantIds, filteredEventTypeIds, null);
   }
 
   @override
@@ -85,7 +117,27 @@ class _EventsPageState extends State<EventsPage> {
       appBar: AppBar(
         title: Text("Activity"),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(LucideIcons.filter)),
+          Stack(
+            children: [
+              IconButton(
+                onPressed: _showFilterDialog,
+                icon: const Icon(LucideIcons.filter),
+              ),
+              if (isFilterActive())
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
       body: SafeArea(
@@ -101,7 +153,8 @@ class _EventsPageState extends State<EventsPage> {
                 },
                 onDaySelected: _onDaySelected,
                 onPageChanged: (focusedDay) {
-                  _updateStateForMonth(focusedDay);
+                  _updateStateForMonth(focusedDay, filteredPlantIds,
+                      filteredEventTypeIds, activityFilterType);
                 },
                 calendarFormat: _calendarFormat,
                 onFormatChanged: (format) {
@@ -110,10 +163,9 @@ class _EventsPageState extends State<EventsPage> {
                   });
                 },
                 eventLoader: (day) {
-                  // return _eventsMap[DateTime(day.year, day.month, day.day)] ??
-                  //     [];
                   List<dynamic> dayActivity =
-                      _eventsMap[DateTime(day.year, day.month, day.day)] ?? [];
+                      _activityMap[DateTime(day.year, day.month, day.day)] ??
+                          [];
                   return dayActivity.isEmpty ? [] : [1];
                 },
                 availableCalendarFormats: const {CalendarFormat.month: 'Month'},
@@ -126,8 +178,7 @@ class _EventsPageState extends State<EventsPage> {
               const SizedBox(height: 40),
               ListOfActivity(
                 widget.env,
-                _filteredEvents,
-                _filteredRemindersOccurrences,
+                getActivityOfSelectedDay(),
                 key: UniqueKey(),
               ),
             ],
@@ -139,22 +190,20 @@ class _EventsPageState extends State<EventsPage> {
 }
 
 class ListOfActivity extends StatelessWidget {
-  final List<Event> events;
-  final List<ReminderOccurrence> remindersOccurrences;
+  final List<dynamic> activity;
   final Environment env;
 
-  const ListOfActivity(this.env, this.events, this.remindersOccurrences,
-      {super.key});
+  const ListOfActivity(this.env, this.activity, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> activityWidgets = [];
-    activityWidgets.addAll(remindersOccurrences.map((r) {
-      return ReminderOccurrenceCard(env, r);
-    }));
-    activityWidgets.addAll(events.map((e) {
-      return EventCard(env, e);
-    }));
+    final List<Widget> activityWidgets = activity.map((a) {
+      if (a is Event) {
+        return EventCard(env, a);
+      } else {
+        return ReminderOccurrenceCard(env, a);
+      }
+    }).toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
