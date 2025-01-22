@@ -26,7 +26,7 @@ String formatDate(DateTime date) {
 String timeDiffStr(DateTime dateTime) {
   final now = DateTime.now();
   final difference = now.difference(dateTime);
-  
+
   final isFuture = difference.isNegative;
   final duration = isFuture ? -difference : difference;
 
@@ -42,7 +42,11 @@ String timeDiffStr(DateTime dateTime) {
   } else if (duration.inDays >= 1) {
     return _buildTimeString(duration.inDays, 'day', isFuture);
   } else {
-    return 'Today';
+    if (now.day == dateTime.day) {
+      return 'Today';
+    } else {
+      return difference.isNegative ? "Tomorrow" : "Yesterday";
+    }
   }
 }
 
