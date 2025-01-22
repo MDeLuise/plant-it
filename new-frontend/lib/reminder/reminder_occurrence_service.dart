@@ -34,17 +34,14 @@ class ReminderOccurrenceService {
 
       DateTime occurrence = reminder.lastNotified ?? reminder.startDate;
 
-      while (occurrence.isBefore(endOfDay)) {
+      do {
         occurrence = _calculateNextNotification(
-          occurrence,
-          reminder.repeatAfterUnit,
-          reminder.repeatAfterQuantity,
-        );
+            occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
+      } while (occurrence.isBefore(endOfDay));
 
-        if (occurrence.isAfter(startOfDay) && occurrence.isBefore(endOfDay)) {
-          result.add(reminder);
-          break;
-        }
+      if (occurrence.isAfter(startOfDay) && occurrence.isBefore(endOfDay)) {
+        result.add(reminder);
+        break;
       }
     }
 
@@ -127,10 +124,10 @@ class ReminderOccurrenceService {
       dateIterator = reminder.startDate;
     }
 
-    while (dateIterator.isBefore(now)) {
+    do {
       dateIterator = _calculateNextNotification(
           dateIterator, reminder.frequencyUnit, reminder.frequencyQuantity);
-    }
+    } while (dateIterator.isBefore(now));
 
     while (result.length < num) {
       if (reminder.endDate != null && dateIterator.isAfter(reminder.endDate!)) {
