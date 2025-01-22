@@ -28,6 +28,19 @@ class Plants extends Table {
       textEnum<AvatarMode>().withDefault(const Constant("none"))();
 }
 
+class Species extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get scientificName => text().withLength(max: 50)();
+  TextColumn get family => text().withLength(max: 50)();
+  TextColumn get genus => text().withLength(max: 50)();
+  TextColumn get species => text().withLength(max: 50)();
+  TextColumn get author => text().withLength(max: 50).nullable()();
+  IntColumn get avatar => integer()
+      .references(Images, #id, onDelete: KeyAction.setNull)
+      .nullable()();
+  TextColumn get avatarUrl => text().withLength(max: 256).nullable()();
+}
+
 class Events extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get type =>
@@ -76,7 +89,15 @@ class UserSettings extends Table {
   Set<Column<Object>> get primaryKey => {key};
 }
 
-@DriftDatabase(tables: [EventTypes, Plants, Events, Reminders, Images, UserSettings])
+@DriftDatabase(tables: [
+  EventTypes,
+  Plants,
+  Species,
+  Events,
+  Reminders,
+  Images,
+  UserSettings
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
