@@ -80,7 +80,6 @@ void main() async {
           color: const Color(0xFF061913),
           child: Center(
             child: SizedBox(
-              width: maxWidth,
               child: MyApp(
                 env: env,
                 isLoggedIn: isLoggedIn,
