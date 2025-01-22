@@ -999,6 +999,432 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
   }
 }
 
+class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SpeciesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _scientificNameMeta =
+      const VerificationMeta('scientificName');
+  @override
+  late final GeneratedColumn<String> scientificName = GeneratedColumn<String>(
+      'scientific_name', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _familyMeta = const VerificationMeta('family');
+  @override
+  late final GeneratedColumn<String> family = GeneratedColumn<String>(
+      'family', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _genusMeta = const VerificationMeta('genus');
+  @override
+  late final GeneratedColumn<String> genus = GeneratedColumn<String>(
+      'genus', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _speciesMeta =
+      const VerificationMeta('species');
+  @override
+  late final GeneratedColumn<String> species = GeneratedColumn<String>(
+      'species', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _authorMeta = const VerificationMeta('author');
+  @override
+  late final GeneratedColumn<String> author = GeneratedColumn<String>(
+      'author', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
+  @override
+  late final GeneratedColumn<int> avatar = GeneratedColumn<int>(
+      'avatar', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES images (id) ON DELETE SET NULL'));
+  static const VerificationMeta _avatarUrlMeta =
+      const VerificationMeta('avatarUrl');
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+      'avatar_url', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, scientificName, family, genus, species, author, avatar, avatarUrl];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'species';
+  @override
+  VerificationContext validateIntegrity(Insertable<Specy> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('scientific_name')) {
+      context.handle(
+          _scientificNameMeta,
+          scientificName.isAcceptableOrUnknown(
+              data['scientific_name']!, _scientificNameMeta));
+    } else if (isInserting) {
+      context.missing(_scientificNameMeta);
+    }
+    if (data.containsKey('family')) {
+      context.handle(_familyMeta,
+          family.isAcceptableOrUnknown(data['family']!, _familyMeta));
+    } else if (isInserting) {
+      context.missing(_familyMeta);
+    }
+    if (data.containsKey('genus')) {
+      context.handle(
+          _genusMeta, genus.isAcceptableOrUnknown(data['genus']!, _genusMeta));
+    } else if (isInserting) {
+      context.missing(_genusMeta);
+    }
+    if (data.containsKey('species')) {
+      context.handle(_speciesMeta,
+          species.isAcceptableOrUnknown(data['species']!, _speciesMeta));
+    } else if (isInserting) {
+      context.missing(_speciesMeta);
+    }
+    if (data.containsKey('author')) {
+      context.handle(_authorMeta,
+          author.isAcceptableOrUnknown(data['author']!, _authorMeta));
+    }
+    if (data.containsKey('avatar')) {
+      context.handle(_avatarMeta,
+          avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(_avatarUrlMeta,
+          avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Specy map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Specy(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      scientificName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}scientific_name'])!,
+      family: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}family'])!,
+      genus: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}genus'])!,
+      species: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}species'])!,
+      author: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}author']),
+      avatar: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}avatar']),
+      avatarUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}avatar_url']),
+    );
+  }
+
+  @override
+  $SpeciesTable createAlias(String alias) {
+    return $SpeciesTable(attachedDatabase, alias);
+  }
+}
+
+class Specy extends DataClass implements Insertable<Specy> {
+  final int id;
+  final String scientificName;
+  final String family;
+  final String genus;
+  final String species;
+  final String? author;
+  final int? avatar;
+  final String? avatarUrl;
+  const Specy(
+      {required this.id,
+      required this.scientificName,
+      required this.family,
+      required this.genus,
+      required this.species,
+      this.author,
+      this.avatar,
+      this.avatarUrl});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['scientific_name'] = Variable<String>(scientificName);
+    map['family'] = Variable<String>(family);
+    map['genus'] = Variable<String>(genus);
+    map['species'] = Variable<String>(species);
+    if (!nullToAbsent || author != null) {
+      map['author'] = Variable<String>(author);
+    }
+    if (!nullToAbsent || avatar != null) {
+      map['avatar'] = Variable<int>(avatar);
+    }
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    return map;
+  }
+
+  SpeciesCompanion toCompanion(bool nullToAbsent) {
+    return SpeciesCompanion(
+      id: Value(id),
+      scientificName: Value(scientificName),
+      family: Value(family),
+      genus: Value(genus),
+      species: Value(species),
+      author:
+          author == null && nullToAbsent ? const Value.absent() : Value(author),
+      avatar:
+          avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+    );
+  }
+
+  factory Specy.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Specy(
+      id: serializer.fromJson<int>(json['id']),
+      scientificName: serializer.fromJson<String>(json['scientificName']),
+      family: serializer.fromJson<String>(json['family']),
+      genus: serializer.fromJson<String>(json['genus']),
+      species: serializer.fromJson<String>(json['species']),
+      author: serializer.fromJson<String?>(json['author']),
+      avatar: serializer.fromJson<int?>(json['avatar']),
+      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'scientificName': serializer.toJson<String>(scientificName),
+      'family': serializer.toJson<String>(family),
+      'genus': serializer.toJson<String>(genus),
+      'species': serializer.toJson<String>(species),
+      'author': serializer.toJson<String?>(author),
+      'avatar': serializer.toJson<int?>(avatar),
+      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+    };
+  }
+
+  Specy copyWith(
+          {int? id,
+          String? scientificName,
+          String? family,
+          String? genus,
+          String? species,
+          Value<String?> author = const Value.absent(),
+          Value<int?> avatar = const Value.absent(),
+          Value<String?> avatarUrl = const Value.absent()}) =>
+      Specy(
+        id: id ?? this.id,
+        scientificName: scientificName ?? this.scientificName,
+        family: family ?? this.family,
+        genus: genus ?? this.genus,
+        species: species ?? this.species,
+        author: author.present ? author.value : this.author,
+        avatar: avatar.present ? avatar.value : this.avatar,
+        avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+      );
+  Specy copyWithCompanion(SpeciesCompanion data) {
+    return Specy(
+      id: data.id.present ? data.id.value : this.id,
+      scientificName: data.scientificName.present
+          ? data.scientificName.value
+          : this.scientificName,
+      family: data.family.present ? data.family.value : this.family,
+      genus: data.genus.present ? data.genus.value : this.genus,
+      species: data.species.present ? data.species.value : this.species,
+      author: data.author.present ? data.author.value : this.author,
+      avatar: data.avatar.present ? data.avatar.value : this.avatar,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Specy(')
+          ..write('id: $id, ')
+          ..write('scientificName: $scientificName, ')
+          ..write('family: $family, ')
+          ..write('genus: $genus, ')
+          ..write('species: $species, ')
+          ..write('author: $author, ')
+          ..write('avatar: $avatar, ')
+          ..write('avatarUrl: $avatarUrl')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, scientificName, family, genus, species, author, avatar, avatarUrl);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Specy &&
+          other.id == this.id &&
+          other.scientificName == this.scientificName &&
+          other.family == this.family &&
+          other.genus == this.genus &&
+          other.species == this.species &&
+          other.author == this.author &&
+          other.avatar == this.avatar &&
+          other.avatarUrl == this.avatarUrl);
+}
+
+class SpeciesCompanion extends UpdateCompanion<Specy> {
+  final Value<int> id;
+  final Value<String> scientificName;
+  final Value<String> family;
+  final Value<String> genus;
+  final Value<String> species;
+  final Value<String?> author;
+  final Value<int?> avatar;
+  final Value<String?> avatarUrl;
+  const SpeciesCompanion({
+    this.id = const Value.absent(),
+    this.scientificName = const Value.absent(),
+    this.family = const Value.absent(),
+    this.genus = const Value.absent(),
+    this.species = const Value.absent(),
+    this.author = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+  });
+  SpeciesCompanion.insert({
+    this.id = const Value.absent(),
+    required String scientificName,
+    required String family,
+    required String genus,
+    required String species,
+    this.author = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+  })  : scientificName = Value(scientificName),
+        family = Value(family),
+        genus = Value(genus),
+        species = Value(species);
+  static Insertable<Specy> custom({
+    Expression<int>? id,
+    Expression<String>? scientificName,
+    Expression<String>? family,
+    Expression<String>? genus,
+    Expression<String>? species,
+    Expression<String>? author,
+    Expression<int>? avatar,
+    Expression<String>? avatarUrl,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (scientificName != null) 'scientific_name': scientificName,
+      if (family != null) 'family': family,
+      if (genus != null) 'genus': genus,
+      if (species != null) 'species': species,
+      if (author != null) 'author': author,
+      if (avatar != null) 'avatar': avatar,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+    });
+  }
+
+  SpeciesCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? scientificName,
+      Value<String>? family,
+      Value<String>? genus,
+      Value<String>? species,
+      Value<String?>? author,
+      Value<int?>? avatar,
+      Value<String?>? avatarUrl}) {
+    return SpeciesCompanion(
+      id: id ?? this.id,
+      scientificName: scientificName ?? this.scientificName,
+      family: family ?? this.family,
+      genus: genus ?? this.genus,
+      species: species ?? this.species,
+      author: author ?? this.author,
+      avatar: avatar ?? this.avatar,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (scientificName.present) {
+      map['scientific_name'] = Variable<String>(scientificName.value);
+    }
+    if (family.present) {
+      map['family'] = Variable<String>(family.value);
+    }
+    if (genus.present) {
+      map['genus'] = Variable<String>(genus.value);
+    }
+    if (species.present) {
+      map['species'] = Variable<String>(species.value);
+    }
+    if (author.present) {
+      map['author'] = Variable<String>(author.value);
+    }
+    if (avatar.present) {
+      map['avatar'] = Variable<int>(avatar.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpeciesCompanion(')
+          ..write('id: $id, ')
+          ..write('scientificName: $scientificName, ')
+          ..write('family: $family, ')
+          ..write('genus: $genus, ')
+          ..write('species: $species, ')
+          ..write('author: $author, ')
+          ..write('avatar: $avatar, ')
+          ..write('avatarUrl: $avatarUrl')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2086,6 +2512,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $EventTypesTable eventTypes = $EventTypesTable(this);
   late final $ImagesTable images = $ImagesTable(this);
   late final $PlantsTable plants = $PlantsTable(this);
+  late final $SpeciesTable species = $SpeciesTable(this);
   late final $EventsTable events = $EventsTable(this);
   late final $RemindersTable reminders = $RemindersTable(this);
   late final $UserSettingsTable userSettings = $UserSettingsTable(this);
@@ -2094,7 +2521,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [eventTypes, images, plants, events, reminders, userSettings];
+      [eventTypes, images, plants, species, events, reminders, userSettings];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -2103,6 +2530,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('plants', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('images',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('species', kind: UpdateKind.update),
             ],
           ),
           WritePropagation(
@@ -2498,6 +2932,20 @@ final class $$ImagesTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$SpeciesTable, List<Specy>> _speciesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.species,
+          aliasName: $_aliasNameGenerator(db.images.id, db.species.avatar));
+
+  $$SpeciesTableProcessedTableManager get speciesRefs {
+    final manager = $$SpeciesTableTableManager($_db, $_db.species)
+        .filter((f) => f.avatar.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_speciesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$ImagesTableFilterComposer
@@ -2534,6 +2982,27 @@ class $$ImagesTableFilterComposer
             $$PlantsTableFilterComposer(
               $db: $db,
               $table: $db.plants,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> speciesRefs(
+      Expression<bool> Function($$SpeciesTableFilterComposer f) f) {
+    final $$SpeciesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.avatar,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableFilterComposer(
+              $db: $db,
+              $table: $db.species,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -2606,6 +3075,27 @@ class $$ImagesTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> speciesRefs<T extends Object>(
+      Expression<T> Function($$SpeciesTableAnnotationComposer a) f) {
+    final $$SpeciesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.avatar,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$ImagesTableTableManager extends RootTableManager<
@@ -2619,7 +3109,7 @@ class $$ImagesTableTableManager extends RootTableManager<
     $$ImagesTableUpdateCompanionBuilder,
     (Image, $$ImagesTableReferences),
     Image,
-    PrefetchHooks Function({bool plantsRefs})> {
+    PrefetchHooks Function({bool plantsRefs, bool speciesRefs})> {
   $$ImagesTableTableManager(_$AppDatabase db, $ImagesTable table)
       : super(TableManagerState(
           db: db,
@@ -2658,10 +3148,13 @@ class $$ImagesTableTableManager extends RootTableManager<
               .map((e) =>
                   (e.readTable(table), $$ImagesTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({plantsRefs = false}) {
+          prefetchHooksCallback: ({plantsRefs = false, speciesRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (plantsRefs) db.plants],
+              explicitlyWatchedTables: [
+                if (plantsRefs) db.plants,
+                if (speciesRefs) db.species
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
@@ -2672,6 +3165,17 @@ class $$ImagesTableTableManager extends RootTableManager<
                             $$ImagesTableReferences._plantsRefsTable(db),
                         managerFromTypedResult: (p0) =>
                             $$ImagesTableReferences(db, table, p0).plantsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.avatar == item.id),
+                        typedResults: items),
+                  if (speciesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$ImagesTableReferences._speciesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ImagesTableReferences(db, table, p0).speciesRefs,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.avatar == item.id),
@@ -2694,7 +3198,7 @@ typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
     $$ImagesTableUpdateCompanionBuilder,
     (Image, $$ImagesTableReferences),
     Image,
-    PrefetchHooks Function({bool plantsRefs})>;
+    PrefetchHooks Function({bool plantsRefs, bool speciesRefs})>;
 typedef $$PlantsTableCreateCompanionBuilder = PlantsCompanion Function({
   Value<int> id,
   required String name,
@@ -3131,6 +3635,315 @@ typedef $$PlantsTableProcessedTableManager = ProcessedTableManager<
     (Plant, $$PlantsTableReferences),
     Plant,
     PrefetchHooks Function({bool avatar, bool eventsRefs, bool remindersRefs})>;
+typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
+  Value<int> id,
+  required String scientificName,
+  required String family,
+  required String genus,
+  required String species,
+  Value<String?> author,
+  Value<int?> avatar,
+  Value<String?> avatarUrl,
+});
+typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
+  Value<int> id,
+  Value<String> scientificName,
+  Value<String> family,
+  Value<String> genus,
+  Value<String> species,
+  Value<String?> author,
+  Value<int?> avatar,
+  Value<String?> avatarUrl,
+});
+
+final class $$SpeciesTableReferences
+    extends BaseReferences<_$AppDatabase, $SpeciesTable, Specy> {
+  $$SpeciesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ImagesTable _avatarTable(_$AppDatabase db) => db.images
+      .createAlias($_aliasNameGenerator(db.species.avatar, db.images.id));
+
+  $$ImagesTableProcessedTableManager? get avatar {
+    if ($_item.avatar == null) return null;
+    final manager = $$ImagesTableTableManager($_db, $_db.images)
+        .filter((f) => f.id($_item.avatar!));
+    final item = $_typedResult.readTableOrNull(_avatarTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$SpeciesTableFilterComposer
+    extends Composer<_$AppDatabase, $SpeciesTable> {
+  $$SpeciesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get scientificName => $composableBuilder(
+      column: $table.scientificName,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get family => $composableBuilder(
+      column: $table.family, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get genus => $composableBuilder(
+      column: $table.genus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get species => $composableBuilder(
+      column: $table.species, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get author => $composableBuilder(
+      column: $table.author, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+      column: $table.avatarUrl, builder: (column) => ColumnFilters(column));
+
+  $$ImagesTableFilterComposer get avatar {
+    final $$ImagesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.avatar,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableFilterComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SpeciesTable> {
+  $$SpeciesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get scientificName => $composableBuilder(
+      column: $table.scientificName,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get family => $composableBuilder(
+      column: $table.family, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get genus => $composableBuilder(
+      column: $table.genus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get species => $composableBuilder(
+      column: $table.species, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get author => $composableBuilder(
+      column: $table.author, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+      column: $table.avatarUrl, builder: (column) => ColumnOrderings(column));
+
+  $$ImagesTableOrderingComposer get avatar {
+    final $$ImagesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.avatar,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableOrderingComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SpeciesTable> {
+  $$SpeciesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get scientificName => $composableBuilder(
+      column: $table.scientificName, builder: (column) => column);
+
+  GeneratedColumn<String> get family =>
+      $composableBuilder(column: $table.family, builder: (column) => column);
+
+  GeneratedColumn<String> get genus =>
+      $composableBuilder(column: $table.genus, builder: (column) => column);
+
+  GeneratedColumn<String> get species =>
+      $composableBuilder(column: $table.species, builder: (column) => column);
+
+  GeneratedColumn<String> get author =>
+      $composableBuilder(column: $table.author, builder: (column) => column);
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  $$ImagesTableAnnotationComposer get avatar {
+    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.avatar,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SpeciesTable,
+    Specy,
+    $$SpeciesTableFilterComposer,
+    $$SpeciesTableOrderingComposer,
+    $$SpeciesTableAnnotationComposer,
+    $$SpeciesTableCreateCompanionBuilder,
+    $$SpeciesTableUpdateCompanionBuilder,
+    (Specy, $$SpeciesTableReferences),
+    Specy,
+    PrefetchHooks Function({bool avatar})> {
+  $$SpeciesTableTableManager(_$AppDatabase db, $SpeciesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SpeciesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SpeciesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SpeciesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> scientificName = const Value.absent(),
+            Value<String> family = const Value.absent(),
+            Value<String> genus = const Value.absent(),
+            Value<String> species = const Value.absent(),
+            Value<String?> author = const Value.absent(),
+            Value<int?> avatar = const Value.absent(),
+            Value<String?> avatarUrl = const Value.absent(),
+          }) =>
+              SpeciesCompanion(
+            id: id,
+            scientificName: scientificName,
+            family: family,
+            genus: genus,
+            species: species,
+            author: author,
+            avatar: avatar,
+            avatarUrl: avatarUrl,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String scientificName,
+            required String family,
+            required String genus,
+            required String species,
+            Value<String?> author = const Value.absent(),
+            Value<int?> avatar = const Value.absent(),
+            Value<String?> avatarUrl = const Value.absent(),
+          }) =>
+              SpeciesCompanion.insert(
+            id: id,
+            scientificName: scientificName,
+            family: family,
+            genus: genus,
+            species: species,
+            author: author,
+            avatar: avatar,
+            avatarUrl: avatarUrl,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$SpeciesTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({avatar = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (avatar) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.avatar,
+                    referencedTable: $$SpeciesTableReferences._avatarTable(db),
+                    referencedColumn:
+                        $$SpeciesTableReferences._avatarTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$SpeciesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SpeciesTable,
+    Specy,
+    $$SpeciesTableFilterComposer,
+    $$SpeciesTableOrderingComposer,
+    $$SpeciesTableAnnotationComposer,
+    $$SpeciesTableCreateCompanionBuilder,
+    $$SpeciesTableUpdateCompanionBuilder,
+    (Specy, $$SpeciesTableReferences),
+    Specy,
+    PrefetchHooks Function({bool avatar})>;
 typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<int> id,
   required int type,
@@ -4039,6 +4852,8 @@ class $AppDatabaseManager {
       $$ImagesTableTableManager(_db, _db.images);
   $$PlantsTableTableManager get plants =>
       $$PlantsTableTableManager(_db, _db.plants);
+  $$SpeciesTableTableManager get species =>
+      $$SpeciesTableTableManager(_db, _db.species);
   $$EventsTableTableManager get events =>
       $$EventsTableTableManager(_db, _db.events);
   $$RemindersTableTableManager get reminders =>

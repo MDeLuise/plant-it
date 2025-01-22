@@ -6,6 +6,7 @@ import 'package:plant_it/repositories/event_type_repository.dart';
 import 'package:plant_it/repositories/image_repository.dart';
 import 'package:plant_it/repositories/plant_repository.dart';
 import 'package:plant_it/repositories/reminder_repository.dart';
+import 'package:plant_it/repositories/species_repository.dart';
 import 'package:plant_it/repositories/user_setting_repository.dart';
 
 class Environment {
@@ -17,6 +18,7 @@ class Environment {
   final ReminderRepository reminderRepository;
   final ImageRepository imageRepository;
   final UserSettingRepository userSettingRepository;
+  final SpeciesRepository speciesRepository;
   late ReminderNotificationService reminderNotificationService;
 
   Environment(
@@ -28,5 +30,6 @@ class Environment {
     this.reminderRepository,
     this.imageRepository,
     this.userSettingRepository,
+    this.speciesRepository,
   );
 }
