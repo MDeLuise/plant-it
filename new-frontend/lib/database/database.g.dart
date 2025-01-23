@@ -1066,9 +1066,38 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
+  static const VerificationMeta _dataSourceMeta =
+      const VerificationMeta('dataSource');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, scientificName, family, genus, species, author, avatar, avatarUrl];
+  late final GeneratedColumnWithTypeConverter<SpeciesDataSource, String>
+      dataSource = GeneratedColumn<String>('data_source', aliasedName, false,
+              additionalChecks:
+                  GeneratedColumn.checkTextLength(maxTextLength: 50),
+              type: DriftSqlType.string,
+              requiredDuringInsert: false,
+              defaultValue: const Constant("local"))
+          .withConverter<SpeciesDataSource>($SpeciesTable.$converterdataSource);
+  static const VerificationMeta _externalIdMeta =
+      const VerificationMeta('externalId');
+  @override
+  late final GeneratedColumn<String> externalId = GeneratedColumn<String>(
+      'external_id', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        scientificName,
+        family,
+        genus,
+        species,
+        author,
+        avatar,
+        avatarUrl,
+        dataSource,
+        externalId
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1120,6 +1149,13 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       context.handle(_avatarUrlMeta,
           avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta));
     }
+    context.handle(_dataSourceMeta, const VerificationResult.success());
+    if (data.containsKey('external_id')) {
+      context.handle(
+          _externalIdMeta,
+          externalId.isAcceptableOrUnknown(
+              data['external_id']!, _externalIdMeta));
+    }
     return context;
   }
 
@@ -1145,6 +1181,11 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
           .read(DriftSqlType.int, data['${effectivePrefix}avatar']),
       avatarUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}avatar_url']),
+      dataSource: $SpeciesTable.$converterdataSource.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data_source'])!),
+      externalId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}external_id']),
     );
   }
 
@@ -1152,6 +1193,10 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
   $SpeciesTable createAlias(String alias) {
     return $SpeciesTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<SpeciesDataSource, String, String>
+      $converterdataSource =
+      const EnumNameConverter<SpeciesDataSource>(SpeciesDataSource.values);
 }
 
 class Specy extends DataClass implements Insertable<Specy> {
@@ -1163,6 +1208,8 @@ class Specy extends DataClass implements Insertable<Specy> {
   final String? author;
   final int? avatar;
   final String? avatarUrl;
+  final SpeciesDataSource dataSource;
+  final String? externalId;
   const Specy(
       {required this.id,
       required this.scientificName,
@@ -1171,7 +1218,9 @@ class Specy extends DataClass implements Insertable<Specy> {
       required this.species,
       this.author,
       this.avatar,
-      this.avatarUrl});
+      this.avatarUrl,
+      required this.dataSource,
+      this.externalId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1188,6 +1237,13 @@ class Specy extends DataClass implements Insertable<Specy> {
     }
     if (!nullToAbsent || avatarUrl != null) {
       map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    {
+      map['data_source'] = Variable<String>(
+          $SpeciesTable.$converterdataSource.toSql(dataSource));
+    }
+    if (!nullToAbsent || externalId != null) {
+      map['external_id'] = Variable<String>(externalId);
     }
     return map;
   }
@@ -1206,6 +1262,10 @@ class Specy extends DataClass implements Insertable<Specy> {
       avatarUrl: avatarUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(avatarUrl),
+      dataSource: Value(dataSource),
+      externalId: externalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(externalId),
     );
   }
 
@@ -1221,6 +1281,9 @@ class Specy extends DataClass implements Insertable<Specy> {
       author: serializer.fromJson<String?>(json['author']),
       avatar: serializer.fromJson<int?>(json['avatar']),
       avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+      dataSource: $SpeciesTable.$converterdataSource
+          .fromJson(serializer.fromJson<String>(json['dataSource'])),
+      externalId: serializer.fromJson<String?>(json['externalId']),
     );
   }
   @override
@@ -1235,6 +1298,9 @@ class Specy extends DataClass implements Insertable<Specy> {
       'author': serializer.toJson<String?>(author),
       'avatar': serializer.toJson<int?>(avatar),
       'avatarUrl': serializer.toJson<String?>(avatarUrl),
+      'dataSource': serializer.toJson<String>(
+          $SpeciesTable.$converterdataSource.toJson(dataSource)),
+      'externalId': serializer.toJson<String?>(externalId),
     };
   }
 
@@ -1246,7 +1312,9 @@ class Specy extends DataClass implements Insertable<Specy> {
           String? species,
           Value<String?> author = const Value.absent(),
           Value<int?> avatar = const Value.absent(),
-          Value<String?> avatarUrl = const Value.absent()}) =>
+          Value<String?> avatarUrl = const Value.absent(),
+          SpeciesDataSource? dataSource,
+          Value<String?> externalId = const Value.absent()}) =>
       Specy(
         id: id ?? this.id,
         scientificName: scientificName ?? this.scientificName,
@@ -1256,6 +1324,8 @@ class Specy extends DataClass implements Insertable<Specy> {
         author: author.present ? author.value : this.author,
         avatar: avatar.present ? avatar.value : this.avatar,
         avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+        dataSource: dataSource ?? this.dataSource,
+        externalId: externalId.present ? externalId.value : this.externalId,
       );
   Specy copyWithCompanion(SpeciesCompanion data) {
     return Specy(
@@ -1269,6 +1339,10 @@ class Specy extends DataClass implements Insertable<Specy> {
       author: data.author.present ? data.author.value : this.author,
       avatar: data.avatar.present ? data.avatar.value : this.avatar,
       avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      dataSource:
+          data.dataSource.present ? data.dataSource.value : this.dataSource,
+      externalId:
+          data.externalId.present ? data.externalId.value : this.externalId,
     );
   }
 
@@ -1282,14 +1356,16 @@ class Specy extends DataClass implements Insertable<Specy> {
           ..write('species: $species, ')
           ..write('author: $author, ')
           ..write('avatar: $avatar, ')
-          ..write('avatarUrl: $avatarUrl')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('dataSource: $dataSource, ')
+          ..write('externalId: $externalId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, scientificName, family, genus, species, author, avatar, avatarUrl);
+  int get hashCode => Object.hash(id, scientificName, family, genus, species,
+      author, avatar, avatarUrl, dataSource, externalId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1301,7 +1377,9 @@ class Specy extends DataClass implements Insertable<Specy> {
           other.species == this.species &&
           other.author == this.author &&
           other.avatar == this.avatar &&
-          other.avatarUrl == this.avatarUrl);
+          other.avatarUrl == this.avatarUrl &&
+          other.dataSource == this.dataSource &&
+          other.externalId == this.externalId);
 }
 
 class SpeciesCompanion extends UpdateCompanion<Specy> {
@@ -1313,6 +1391,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
   final Value<String?> author;
   final Value<int?> avatar;
   final Value<String?> avatarUrl;
+  final Value<SpeciesDataSource> dataSource;
+  final Value<String?> externalId;
   const SpeciesCompanion({
     this.id = const Value.absent(),
     this.scientificName = const Value.absent(),
@@ -1322,6 +1402,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     this.author = const Value.absent(),
     this.avatar = const Value.absent(),
     this.avatarUrl = const Value.absent(),
+    this.dataSource = const Value.absent(),
+    this.externalId = const Value.absent(),
   });
   SpeciesCompanion.insert({
     this.id = const Value.absent(),
@@ -1332,6 +1414,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     this.author = const Value.absent(),
     this.avatar = const Value.absent(),
     this.avatarUrl = const Value.absent(),
+    this.dataSource = const Value.absent(),
+    this.externalId = const Value.absent(),
   })  : scientificName = Value(scientificName),
         family = Value(family),
         genus = Value(genus),
@@ -1345,6 +1429,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     Expression<String>? author,
     Expression<int>? avatar,
     Expression<String>? avatarUrl,
+    Expression<String>? dataSource,
+    Expression<String>? externalId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1355,6 +1441,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       if (author != null) 'author': author,
       if (avatar != null) 'avatar': avatar,
       if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (dataSource != null) 'data_source': dataSource,
+      if (externalId != null) 'external_id': externalId,
     });
   }
 
@@ -1366,7 +1454,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       Value<String>? species,
       Value<String?>? author,
       Value<int?>? avatar,
-      Value<String?>? avatarUrl}) {
+      Value<String?>? avatarUrl,
+      Value<SpeciesDataSource>? dataSource,
+      Value<String?>? externalId}) {
     return SpeciesCompanion(
       id: id ?? this.id,
       scientificName: scientificName ?? this.scientificName,
@@ -1376,6 +1466,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       author: author ?? this.author,
       avatar: avatar ?? this.avatar,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      dataSource: dataSource ?? this.dataSource,
+      externalId: externalId ?? this.externalId,
     );
   }
 
@@ -1406,6 +1498,13 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     if (avatarUrl.present) {
       map['avatar_url'] = Variable<String>(avatarUrl.value);
     }
+    if (dataSource.present) {
+      map['data_source'] = Variable<String>(
+          $SpeciesTable.$converterdataSource.toSql(dataSource.value));
+    }
+    if (externalId.present) {
+      map['external_id'] = Variable<String>(externalId.value);
+    }
     return map;
   }
 
@@ -1419,7 +1518,603 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
           ..write('species: $species, ')
           ..write('author: $author, ')
           ..write('avatar: $avatar, ')
-          ..write('avatarUrl: $avatarUrl')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('dataSource: $dataSource, ')
+          ..write('externalId: $externalId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SpeciesSynonymsTable extends SpeciesSynonyms
+    with TableInfo<$SpeciesSynonymsTable, SpeciesSynonym> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SpeciesSynonymsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _speciesMeta =
+      const VerificationMeta('species');
+  @override
+  late final GeneratedColumn<int> species = GeneratedColumn<int>(
+      'species', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES species (id) ON DELETE CASCADE'));
+  static const VerificationMeta _synonymMeta =
+      const VerificationMeta('synonym');
+  @override
+  late final GeneratedColumn<String> synonym = GeneratedColumn<String>(
+      'synonym', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, species, synonym];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'species_synonyms';
+  @override
+  VerificationContext validateIntegrity(Insertable<SpeciesSynonym> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('species')) {
+      context.handle(_speciesMeta,
+          species.isAcceptableOrUnknown(data['species']!, _speciesMeta));
+    } else if (isInserting) {
+      context.missing(_speciesMeta);
+    }
+    if (data.containsKey('synonym')) {
+      context.handle(_synonymMeta,
+          synonym.isAcceptableOrUnknown(data['synonym']!, _synonymMeta));
+    } else if (isInserting) {
+      context.missing(_synonymMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SpeciesSynonym map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SpeciesSynonym(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      species: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}species'])!,
+      synonym: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}synonym'])!,
+    );
+  }
+
+  @override
+  $SpeciesSynonymsTable createAlias(String alias) {
+    return $SpeciesSynonymsTable(attachedDatabase, alias);
+  }
+}
+
+class SpeciesSynonym extends DataClass implements Insertable<SpeciesSynonym> {
+  final int id;
+  final int species;
+  final String synonym;
+  const SpeciesSynonym(
+      {required this.id, required this.species, required this.synonym});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['species'] = Variable<int>(species);
+    map['synonym'] = Variable<String>(synonym);
+    return map;
+  }
+
+  SpeciesSynonymsCompanion toCompanion(bool nullToAbsent) {
+    return SpeciesSynonymsCompanion(
+      id: Value(id),
+      species: Value(species),
+      synonym: Value(synonym),
+    );
+  }
+
+  factory SpeciesSynonym.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SpeciesSynonym(
+      id: serializer.fromJson<int>(json['id']),
+      species: serializer.fromJson<int>(json['species']),
+      synonym: serializer.fromJson<String>(json['synonym']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'species': serializer.toJson<int>(species),
+      'synonym': serializer.toJson<String>(synonym),
+    };
+  }
+
+  SpeciesSynonym copyWith({int? id, int? species, String? synonym}) =>
+      SpeciesSynonym(
+        id: id ?? this.id,
+        species: species ?? this.species,
+        synonym: synonym ?? this.synonym,
+      );
+  SpeciesSynonym copyWithCompanion(SpeciesSynonymsCompanion data) {
+    return SpeciesSynonym(
+      id: data.id.present ? data.id.value : this.id,
+      species: data.species.present ? data.species.value : this.species,
+      synonym: data.synonym.present ? data.synonym.value : this.synonym,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpeciesSynonym(')
+          ..write('id: $id, ')
+          ..write('species: $species, ')
+          ..write('synonym: $synonym')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, species, synonym);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SpeciesSynonym &&
+          other.id == this.id &&
+          other.species == this.species &&
+          other.synonym == this.synonym);
+}
+
+class SpeciesSynonymsCompanion extends UpdateCompanion<SpeciesSynonym> {
+  final Value<int> id;
+  final Value<int> species;
+  final Value<String> synonym;
+  const SpeciesSynonymsCompanion({
+    this.id = const Value.absent(),
+    this.species = const Value.absent(),
+    this.synonym = const Value.absent(),
+  });
+  SpeciesSynonymsCompanion.insert({
+    this.id = const Value.absent(),
+    required int species,
+    required String synonym,
+  })  : species = Value(species),
+        synonym = Value(synonym);
+  static Insertable<SpeciesSynonym> custom({
+    Expression<int>? id,
+    Expression<int>? species,
+    Expression<String>? synonym,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (species != null) 'species': species,
+      if (synonym != null) 'synonym': synonym,
+    });
+  }
+
+  SpeciesSynonymsCompanion copyWith(
+      {Value<int>? id, Value<int>? species, Value<String>? synonym}) {
+    return SpeciesSynonymsCompanion(
+      id: id ?? this.id,
+      species: species ?? this.species,
+      synonym: synonym ?? this.synonym,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (species.present) {
+      map['species'] = Variable<int>(species.value);
+    }
+    if (synonym.present) {
+      map['synonym'] = Variable<String>(synonym.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpeciesSynonymsCompanion(')
+          ..write('id: $id, ')
+          ..write('species: $species, ')
+          ..write('synonym: $synonym')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SpeciesCareTable extends SpeciesCare
+    with TableInfo<$SpeciesCareTable, SpeciesCareData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SpeciesCareTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _speciesMeta =
+      const VerificationMeta('species');
+  @override
+  late final GeneratedColumn<int> species = GeneratedColumn<int>(
+      'species', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES species (id) ON DELETE CASCADE'));
+  static const VerificationMeta _lightMeta = const VerificationMeta('light');
+  @override
+  late final GeneratedColumn<int> light = GeneratedColumn<int>(
+      'light', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _humidityMeta =
+      const VerificationMeta('humidity');
+  @override
+  late final GeneratedColumn<int> humidity = GeneratedColumn<int>(
+      'humidity', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _minTempMeta =
+      const VerificationMeta('minTemp');
+  @override
+  late final GeneratedColumn<int> minTemp = GeneratedColumn<int>(
+      'min_temp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _maxTempMeta =
+      const VerificationMeta('maxTemp');
+  @override
+  late final GeneratedColumn<int> maxTemp = GeneratedColumn<int>(
+      'max_temp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phMinMeta = const VerificationMeta('phMin');
+  @override
+  late final GeneratedColumn<int> phMin = GeneratedColumn<int>(
+      'ph_min', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phMaxMeta = const VerificationMeta('phMax');
+  @override
+  late final GeneratedColumn<int> phMax = GeneratedColumn<int>(
+      'ph_max', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [species, light, humidity, minTemp, maxTemp, phMin, phMax];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'species_care';
+  @override
+  VerificationContext validateIntegrity(Insertable<SpeciesCareData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('species')) {
+      context.handle(_speciesMeta,
+          species.isAcceptableOrUnknown(data['species']!, _speciesMeta));
+    }
+    if (data.containsKey('light')) {
+      context.handle(
+          _lightMeta, light.isAcceptableOrUnknown(data['light']!, _lightMeta));
+    } else if (isInserting) {
+      context.missing(_lightMeta);
+    }
+    if (data.containsKey('humidity')) {
+      context.handle(_humidityMeta,
+          humidity.isAcceptableOrUnknown(data['humidity']!, _humidityMeta));
+    } else if (isInserting) {
+      context.missing(_humidityMeta);
+    }
+    if (data.containsKey('min_temp')) {
+      context.handle(_minTempMeta,
+          minTemp.isAcceptableOrUnknown(data['min_temp']!, _minTempMeta));
+    } else if (isInserting) {
+      context.missing(_minTempMeta);
+    }
+    if (data.containsKey('max_temp')) {
+      context.handle(_maxTempMeta,
+          maxTemp.isAcceptableOrUnknown(data['max_temp']!, _maxTempMeta));
+    } else if (isInserting) {
+      context.missing(_maxTempMeta);
+    }
+    if (data.containsKey('ph_min')) {
+      context.handle(
+          _phMinMeta, phMin.isAcceptableOrUnknown(data['ph_min']!, _phMinMeta));
+    } else if (isInserting) {
+      context.missing(_phMinMeta);
+    }
+    if (data.containsKey('ph_max')) {
+      context.handle(
+          _phMaxMeta, phMax.isAcceptableOrUnknown(data['ph_max']!, _phMaxMeta));
+    } else if (isInserting) {
+      context.missing(_phMaxMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {species};
+  @override
+  SpeciesCareData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SpeciesCareData(
+      species: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}species'])!,
+      light: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}light'])!,
+      humidity: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}humidity'])!,
+      minTemp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}min_temp'])!,
+      maxTemp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}max_temp'])!,
+      phMin: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ph_min'])!,
+      phMax: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ph_max'])!,
+    );
+  }
+
+  @override
+  $SpeciesCareTable createAlias(String alias) {
+    return $SpeciesCareTable(attachedDatabase, alias);
+  }
+}
+
+class SpeciesCareData extends DataClass implements Insertable<SpeciesCareData> {
+  final int species;
+  final int light;
+  final int humidity;
+  final int minTemp;
+  final int maxTemp;
+  final int phMin;
+  final int phMax;
+  const SpeciesCareData(
+      {required this.species,
+      required this.light,
+      required this.humidity,
+      required this.minTemp,
+      required this.maxTemp,
+      required this.phMin,
+      required this.phMax});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['species'] = Variable<int>(species);
+    map['light'] = Variable<int>(light);
+    map['humidity'] = Variable<int>(humidity);
+    map['min_temp'] = Variable<int>(minTemp);
+    map['max_temp'] = Variable<int>(maxTemp);
+    map['ph_min'] = Variable<int>(phMin);
+    map['ph_max'] = Variable<int>(phMax);
+    return map;
+  }
+
+  SpeciesCareCompanion toCompanion(bool nullToAbsent) {
+    return SpeciesCareCompanion(
+      species: Value(species),
+      light: Value(light),
+      humidity: Value(humidity),
+      minTemp: Value(minTemp),
+      maxTemp: Value(maxTemp),
+      phMin: Value(phMin),
+      phMax: Value(phMax),
+    );
+  }
+
+  factory SpeciesCareData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SpeciesCareData(
+      species: serializer.fromJson<int>(json['species']),
+      light: serializer.fromJson<int>(json['light']),
+      humidity: serializer.fromJson<int>(json['humidity']),
+      minTemp: serializer.fromJson<int>(json['minTemp']),
+      maxTemp: serializer.fromJson<int>(json['maxTemp']),
+      phMin: serializer.fromJson<int>(json['phMin']),
+      phMax: serializer.fromJson<int>(json['phMax']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'species': serializer.toJson<int>(species),
+      'light': serializer.toJson<int>(light),
+      'humidity': serializer.toJson<int>(humidity),
+      'minTemp': serializer.toJson<int>(minTemp),
+      'maxTemp': serializer.toJson<int>(maxTemp),
+      'phMin': serializer.toJson<int>(phMin),
+      'phMax': serializer.toJson<int>(phMax),
+    };
+  }
+
+  SpeciesCareData copyWith(
+          {int? species,
+          int? light,
+          int? humidity,
+          int? minTemp,
+          int? maxTemp,
+          int? phMin,
+          int? phMax}) =>
+      SpeciesCareData(
+        species: species ?? this.species,
+        light: light ?? this.light,
+        humidity: humidity ?? this.humidity,
+        minTemp: minTemp ?? this.minTemp,
+        maxTemp: maxTemp ?? this.maxTemp,
+        phMin: phMin ?? this.phMin,
+        phMax: phMax ?? this.phMax,
+      );
+  SpeciesCareData copyWithCompanion(SpeciesCareCompanion data) {
+    return SpeciesCareData(
+      species: data.species.present ? data.species.value : this.species,
+      light: data.light.present ? data.light.value : this.light,
+      humidity: data.humidity.present ? data.humidity.value : this.humidity,
+      minTemp: data.minTemp.present ? data.minTemp.value : this.minTemp,
+      maxTemp: data.maxTemp.present ? data.maxTemp.value : this.maxTemp,
+      phMin: data.phMin.present ? data.phMin.value : this.phMin,
+      phMax: data.phMax.present ? data.phMax.value : this.phMax,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpeciesCareData(')
+          ..write('species: $species, ')
+          ..write('light: $light, ')
+          ..write('humidity: $humidity, ')
+          ..write('minTemp: $minTemp, ')
+          ..write('maxTemp: $maxTemp, ')
+          ..write('phMin: $phMin, ')
+          ..write('phMax: $phMax')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(species, light, humidity, minTemp, maxTemp, phMin, phMax);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SpeciesCareData &&
+          other.species == this.species &&
+          other.light == this.light &&
+          other.humidity == this.humidity &&
+          other.minTemp == this.minTemp &&
+          other.maxTemp == this.maxTemp &&
+          other.phMin == this.phMin &&
+          other.phMax == this.phMax);
+}
+
+class SpeciesCareCompanion extends UpdateCompanion<SpeciesCareData> {
+  final Value<int> species;
+  final Value<int> light;
+  final Value<int> humidity;
+  final Value<int> minTemp;
+  final Value<int> maxTemp;
+  final Value<int> phMin;
+  final Value<int> phMax;
+  const SpeciesCareCompanion({
+    this.species = const Value.absent(),
+    this.light = const Value.absent(),
+    this.humidity = const Value.absent(),
+    this.minTemp = const Value.absent(),
+    this.maxTemp = const Value.absent(),
+    this.phMin = const Value.absent(),
+    this.phMax = const Value.absent(),
+  });
+  SpeciesCareCompanion.insert({
+    this.species = const Value.absent(),
+    required int light,
+    required int humidity,
+    required int minTemp,
+    required int maxTemp,
+    required int phMin,
+    required int phMax,
+  })  : light = Value(light),
+        humidity = Value(humidity),
+        minTemp = Value(minTemp),
+        maxTemp = Value(maxTemp),
+        phMin = Value(phMin),
+        phMax = Value(phMax);
+  static Insertable<SpeciesCareData> custom({
+    Expression<int>? species,
+    Expression<int>? light,
+    Expression<int>? humidity,
+    Expression<int>? minTemp,
+    Expression<int>? maxTemp,
+    Expression<int>? phMin,
+    Expression<int>? phMax,
+  }) {
+    return RawValuesInsertable({
+      if (species != null) 'species': species,
+      if (light != null) 'light': light,
+      if (humidity != null) 'humidity': humidity,
+      if (minTemp != null) 'min_temp': minTemp,
+      if (maxTemp != null) 'max_temp': maxTemp,
+      if (phMin != null) 'ph_min': phMin,
+      if (phMax != null) 'ph_max': phMax,
+    });
+  }
+
+  SpeciesCareCompanion copyWith(
+      {Value<int>? species,
+      Value<int>? light,
+      Value<int>? humidity,
+      Value<int>? minTemp,
+      Value<int>? maxTemp,
+      Value<int>? phMin,
+      Value<int>? phMax}) {
+    return SpeciesCareCompanion(
+      species: species ?? this.species,
+      light: light ?? this.light,
+      humidity: humidity ?? this.humidity,
+      minTemp: minTemp ?? this.minTemp,
+      maxTemp: maxTemp ?? this.maxTemp,
+      phMin: phMin ?? this.phMin,
+      phMax: phMax ?? this.phMax,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (species.present) {
+      map['species'] = Variable<int>(species.value);
+    }
+    if (light.present) {
+      map['light'] = Variable<int>(light.value);
+    }
+    if (humidity.present) {
+      map['humidity'] = Variable<int>(humidity.value);
+    }
+    if (minTemp.present) {
+      map['min_temp'] = Variable<int>(minTemp.value);
+    }
+    if (maxTemp.present) {
+      map['max_temp'] = Variable<int>(maxTemp.value);
+    }
+    if (phMin.present) {
+      map['ph_min'] = Variable<int>(phMin.value);
+    }
+    if (phMax.present) {
+      map['ph_max'] = Variable<int>(phMax.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpeciesCareCompanion(')
+          ..write('species: $species, ')
+          ..write('light: $light, ')
+          ..write('humidity: $humidity, ')
+          ..write('minTemp: $minTemp, ')
+          ..write('maxTemp: $maxTemp, ')
+          ..write('phMin: $phMin, ')
+          ..write('phMax: $phMax')
           ..write(')'))
         .toString();
   }
@@ -2513,6 +3208,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ImagesTable images = $ImagesTable(this);
   late final $PlantsTable plants = $PlantsTable(this);
   late final $SpeciesTable species = $SpeciesTable(this);
+  late final $SpeciesSynonymsTable speciesSynonyms =
+      $SpeciesSynonymsTable(this);
+  late final $SpeciesCareTable speciesCare = $SpeciesCareTable(this);
   late final $EventsTable events = $EventsTable(this);
   late final $RemindersTable reminders = $RemindersTable(this);
   late final $UserSettingsTable userSettings = $UserSettingsTable(this);
@@ -2520,8 +3218,17 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [eventTypes, images, plants, species, events, reminders, userSettings];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        eventTypes,
+        images,
+        plants,
+        species,
+        speciesSynonyms,
+        speciesCare,
+        events,
+        reminders,
+        userSettings
+      ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -2537,6 +3244,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('species', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('species',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('species_synonyms', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('species',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('species_care', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(
@@ -3644,6 +4365,8 @@ typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
   Value<String?> author,
   Value<int?> avatar,
   Value<String?> avatarUrl,
+  Value<SpeciesDataSource> dataSource,
+  Value<String?> externalId,
 });
 typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
   Value<int> id,
@@ -3654,6 +4377,8 @@ typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
   Value<String?> author,
   Value<int?> avatar,
   Value<String?> avatarUrl,
+  Value<SpeciesDataSource> dataSource,
+  Value<String?> externalId,
 });
 
 final class $$SpeciesTableReferences
@@ -3671,6 +4396,38 @@ final class $$SpeciesTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$SpeciesSynonymsTable, List<SpeciesSynonym>>
+      _speciesSynonymsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.speciesSynonyms,
+              aliasName: $_aliasNameGenerator(
+                  db.species.id, db.speciesSynonyms.species));
+
+  $$SpeciesSynonymsTableProcessedTableManager get speciesSynonymsRefs {
+    final manager =
+        $$SpeciesSynonymsTableTableManager($_db, $_db.speciesSynonyms)
+            .filter((f) => f.species.id($_item.id));
+
+    final cache =
+        $_typedResult.readTableOrNull(_speciesSynonymsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$SpeciesCareTable, List<SpeciesCareData>>
+      _speciesCareRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.speciesCare,
+              aliasName:
+                  $_aliasNameGenerator(db.species.id, db.speciesCare.species));
+
+  $$SpeciesCareTableProcessedTableManager get speciesCareRefs {
+    final manager = $$SpeciesCareTableTableManager($_db, $_db.speciesCare)
+        .filter((f) => f.species.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_speciesCareRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
   }
 }
 
@@ -3705,6 +4462,14 @@ class $$SpeciesTableFilterComposer
   ColumnFilters<String> get avatarUrl => $composableBuilder(
       column: $table.avatarUrl, builder: (column) => ColumnFilters(column));
 
+  ColumnWithTypeConverterFilters<SpeciesDataSource, SpeciesDataSource, String>
+      get dataSource => $composableBuilder(
+          column: $table.dataSource,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get externalId => $composableBuilder(
+      column: $table.externalId, builder: (column) => ColumnFilters(column));
+
   $$ImagesTableFilterComposer get avatar {
     final $$ImagesTableFilterComposer composer = $composerBuilder(
         composer: this,
@@ -3723,6 +4488,48 @@ class $$SpeciesTableFilterComposer
                   $removeJoinBuilderFromRootComposer,
             ));
     return composer;
+  }
+
+  Expression<bool> speciesSynonymsRefs(
+      Expression<bool> Function($$SpeciesSynonymsTableFilterComposer f) f) {
+    final $$SpeciesSynonymsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.speciesSynonyms,
+        getReferencedColumn: (t) => t.species,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesSynonymsTableFilterComposer(
+              $db: $db,
+              $table: $db.speciesSynonyms,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> speciesCareRefs(
+      Expression<bool> Function($$SpeciesCareTableFilterComposer f) f) {
+    final $$SpeciesCareTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.speciesCare,
+        getReferencedColumn: (t) => t.species,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesCareTableFilterComposer(
+              $db: $db,
+              $table: $db.speciesCare,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
   }
 }
 
@@ -3756,6 +4563,12 @@ class $$SpeciesTableOrderingComposer
 
   ColumnOrderings<String> get avatarUrl => $composableBuilder(
       column: $table.avatarUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dataSource => $composableBuilder(
+      column: $table.dataSource, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get externalId => $composableBuilder(
+      column: $table.externalId, builder: (column) => ColumnOrderings(column));
 
   $$ImagesTableOrderingComposer get avatar {
     final $$ImagesTableOrderingComposer composer = $composerBuilder(
@@ -3808,6 +4621,13 @@ class $$SpeciesTableAnnotationComposer
   GeneratedColumn<String> get avatarUrl =>
       $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
 
+  GeneratedColumnWithTypeConverter<SpeciesDataSource, String> get dataSource =>
+      $composableBuilder(
+          column: $table.dataSource, builder: (column) => column);
+
+  GeneratedColumn<String> get externalId => $composableBuilder(
+      column: $table.externalId, builder: (column) => column);
+
   $$ImagesTableAnnotationComposer get avatar {
     final $$ImagesTableAnnotationComposer composer = $composerBuilder(
         composer: this,
@@ -3827,6 +4647,48 @@ class $$SpeciesTableAnnotationComposer
             ));
     return composer;
   }
+
+  Expression<T> speciesSynonymsRefs<T extends Object>(
+      Expression<T> Function($$SpeciesSynonymsTableAnnotationComposer a) f) {
+    final $$SpeciesSynonymsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.speciesSynonyms,
+        getReferencedColumn: (t) => t.species,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesSynonymsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.speciesSynonyms,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> speciesCareRefs<T extends Object>(
+      Expression<T> Function($$SpeciesCareTableAnnotationComposer a) f) {
+    final $$SpeciesCareTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.speciesCare,
+        getReferencedColumn: (t) => t.species,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesCareTableAnnotationComposer(
+              $db: $db,
+              $table: $db.speciesCare,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$SpeciesTableTableManager extends RootTableManager<
@@ -3840,7 +4702,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
     $$SpeciesTableUpdateCompanionBuilder,
     (Specy, $$SpeciesTableReferences),
     Specy,
-    PrefetchHooks Function({bool avatar})> {
+    PrefetchHooks Function(
+        {bool avatar, bool speciesSynonymsRefs, bool speciesCareRefs})> {
   $$SpeciesTableTableManager(_$AppDatabase db, $SpeciesTable table)
       : super(TableManagerState(
           db: db,
@@ -3860,6 +4723,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
             Value<String?> author = const Value.absent(),
             Value<int?> avatar = const Value.absent(),
             Value<String?> avatarUrl = const Value.absent(),
+            Value<SpeciesDataSource> dataSource = const Value.absent(),
+            Value<String?> externalId = const Value.absent(),
           }) =>
               SpeciesCompanion(
             id: id,
@@ -3870,6 +4735,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
             author: author,
             avatar: avatar,
             avatarUrl: avatarUrl,
+            dataSource: dataSource,
+            externalId: externalId,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -3880,6 +4747,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
             Value<String?> author = const Value.absent(),
             Value<int?> avatar = const Value.absent(),
             Value<String?> avatarUrl = const Value.absent(),
+            Value<SpeciesDataSource> dataSource = const Value.absent(),
+            Value<String?> externalId = const Value.absent(),
           }) =>
               SpeciesCompanion.insert(
             id: id,
@@ -3890,15 +4759,23 @@ class $$SpeciesTableTableManager extends RootTableManager<
             author: author,
             avatar: avatar,
             avatarUrl: avatarUrl,
+            dataSource: dataSource,
+            externalId: externalId,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
                   (e.readTable(table), $$SpeciesTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({avatar = false}) {
+          prefetchHooksCallback: (
+              {avatar = false,
+              speciesSynonymsRefs = false,
+              speciesCareRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [],
+              explicitlyWatchedTables: [
+                if (speciesSynonymsRefs) db.speciesSynonyms,
+                if (speciesCareRefs) db.speciesCare
+              ],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -3925,7 +4802,32 @@ class $$SpeciesTableTableManager extends RootTableManager<
                 return state;
               },
               getPrefetchedDataCallback: (items) async {
-                return [];
+                return [
+                  if (speciesSynonymsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$SpeciesTableReferences
+                            ._speciesSynonymsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$SpeciesTableReferences(db, table, p0)
+                                .speciesSynonymsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.species == item.id),
+                        typedResults: items),
+                  if (speciesCareRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$SpeciesTableReferences._speciesCareRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$SpeciesTableReferences(db, table, p0)
+                                .speciesCareRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.species == item.id),
+                        typedResults: items)
+                ];
               },
             );
           },
@@ -3943,7 +4845,543 @@ typedef $$SpeciesTableProcessedTableManager = ProcessedTableManager<
     $$SpeciesTableUpdateCompanionBuilder,
     (Specy, $$SpeciesTableReferences),
     Specy,
-    PrefetchHooks Function({bool avatar})>;
+    PrefetchHooks Function(
+        {bool avatar, bool speciesSynonymsRefs, bool speciesCareRefs})>;
+typedef $$SpeciesSynonymsTableCreateCompanionBuilder = SpeciesSynonymsCompanion
+    Function({
+  Value<int> id,
+  required int species,
+  required String synonym,
+});
+typedef $$SpeciesSynonymsTableUpdateCompanionBuilder = SpeciesSynonymsCompanion
+    Function({
+  Value<int> id,
+  Value<int> species,
+  Value<String> synonym,
+});
+
+final class $$SpeciesSynonymsTableReferences extends BaseReferences<
+    _$AppDatabase, $SpeciesSynonymsTable, SpeciesSynonym> {
+  $$SpeciesSynonymsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $SpeciesTable _speciesTable(_$AppDatabase db) =>
+      db.species.createAlias(
+          $_aliasNameGenerator(db.speciesSynonyms.species, db.species.id));
+
+  $$SpeciesTableProcessedTableManager get species {
+    final manager = $$SpeciesTableTableManager($_db, $_db.species)
+        .filter((f) => f.id($_item.species));
+    final item = $_typedResult.readTableOrNull(_speciesTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$SpeciesSynonymsTableFilterComposer
+    extends Composer<_$AppDatabase, $SpeciesSynonymsTable> {
+  $$SpeciesSynonymsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get synonym => $composableBuilder(
+      column: $table.synonym, builder: (column) => ColumnFilters(column));
+
+  $$SpeciesTableFilterComposer get species {
+    final $$SpeciesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableFilterComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesSynonymsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SpeciesSynonymsTable> {
+  $$SpeciesSynonymsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get synonym => $composableBuilder(
+      column: $table.synonym, builder: (column) => ColumnOrderings(column));
+
+  $$SpeciesTableOrderingComposer get species {
+    final $$SpeciesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableOrderingComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesSynonymsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SpeciesSynonymsTable> {
+  $$SpeciesSynonymsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get synonym =>
+      $composableBuilder(column: $table.synonym, builder: (column) => column);
+
+  $$SpeciesTableAnnotationComposer get species {
+    final $$SpeciesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesSynonymsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SpeciesSynonymsTable,
+    SpeciesSynonym,
+    $$SpeciesSynonymsTableFilterComposer,
+    $$SpeciesSynonymsTableOrderingComposer,
+    $$SpeciesSynonymsTableAnnotationComposer,
+    $$SpeciesSynonymsTableCreateCompanionBuilder,
+    $$SpeciesSynonymsTableUpdateCompanionBuilder,
+    (SpeciesSynonym, $$SpeciesSynonymsTableReferences),
+    SpeciesSynonym,
+    PrefetchHooks Function({bool species})> {
+  $$SpeciesSynonymsTableTableManager(
+      _$AppDatabase db, $SpeciesSynonymsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SpeciesSynonymsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SpeciesSynonymsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SpeciesSynonymsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> species = const Value.absent(),
+            Value<String> synonym = const Value.absent(),
+          }) =>
+              SpeciesSynonymsCompanion(
+            id: id,
+            species: species,
+            synonym: synonym,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int species,
+            required String synonym,
+          }) =>
+              SpeciesSynonymsCompanion.insert(
+            id: id,
+            species: species,
+            synonym: synonym,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$SpeciesSynonymsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({species = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (species) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.species,
+                    referencedTable:
+                        $$SpeciesSynonymsTableReferences._speciesTable(db),
+                    referencedColumn:
+                        $$SpeciesSynonymsTableReferences._speciesTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$SpeciesSynonymsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SpeciesSynonymsTable,
+    SpeciesSynonym,
+    $$SpeciesSynonymsTableFilterComposer,
+    $$SpeciesSynonymsTableOrderingComposer,
+    $$SpeciesSynonymsTableAnnotationComposer,
+    $$SpeciesSynonymsTableCreateCompanionBuilder,
+    $$SpeciesSynonymsTableUpdateCompanionBuilder,
+    (SpeciesSynonym, $$SpeciesSynonymsTableReferences),
+    SpeciesSynonym,
+    PrefetchHooks Function({bool species})>;
+typedef $$SpeciesCareTableCreateCompanionBuilder = SpeciesCareCompanion
+    Function({
+  Value<int> species,
+  required int light,
+  required int humidity,
+  required int minTemp,
+  required int maxTemp,
+  required int phMin,
+  required int phMax,
+});
+typedef $$SpeciesCareTableUpdateCompanionBuilder = SpeciesCareCompanion
+    Function({
+  Value<int> species,
+  Value<int> light,
+  Value<int> humidity,
+  Value<int> minTemp,
+  Value<int> maxTemp,
+  Value<int> phMin,
+  Value<int> phMax,
+});
+
+final class $$SpeciesCareTableReferences
+    extends BaseReferences<_$AppDatabase, $SpeciesCareTable, SpeciesCareData> {
+  $$SpeciesCareTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $SpeciesTable _speciesTable(_$AppDatabase db) => db.species
+      .createAlias($_aliasNameGenerator(db.speciesCare.species, db.species.id));
+
+  $$SpeciesTableProcessedTableManager get species {
+    final manager = $$SpeciesTableTableManager($_db, $_db.species)
+        .filter((f) => f.id($_item.species));
+    final item = $_typedResult.readTableOrNull(_speciesTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$SpeciesCareTableFilterComposer
+    extends Composer<_$AppDatabase, $SpeciesCareTable> {
+  $$SpeciesCareTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get light => $composableBuilder(
+      column: $table.light, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get humidity => $composableBuilder(
+      column: $table.humidity, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get minTemp => $composableBuilder(
+      column: $table.minTemp, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get maxTemp => $composableBuilder(
+      column: $table.maxTemp, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get phMin => $composableBuilder(
+      column: $table.phMin, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get phMax => $composableBuilder(
+      column: $table.phMax, builder: (column) => ColumnFilters(column));
+
+  $$SpeciesTableFilterComposer get species {
+    final $$SpeciesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableFilterComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesCareTableOrderingComposer
+    extends Composer<_$AppDatabase, $SpeciesCareTable> {
+  $$SpeciesCareTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get light => $composableBuilder(
+      column: $table.light, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get humidity => $composableBuilder(
+      column: $table.humidity, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get minTemp => $composableBuilder(
+      column: $table.minTemp, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get maxTemp => $composableBuilder(
+      column: $table.maxTemp, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get phMin => $composableBuilder(
+      column: $table.phMin, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get phMax => $composableBuilder(
+      column: $table.phMax, builder: (column) => ColumnOrderings(column));
+
+  $$SpeciesTableOrderingComposer get species {
+    final $$SpeciesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableOrderingComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesCareTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SpeciesCareTable> {
+  $$SpeciesCareTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get light =>
+      $composableBuilder(column: $table.light, builder: (column) => column);
+
+  GeneratedColumn<int> get humidity =>
+      $composableBuilder(column: $table.humidity, builder: (column) => column);
+
+  GeneratedColumn<int> get minTemp =>
+      $composableBuilder(column: $table.minTemp, builder: (column) => column);
+
+  GeneratedColumn<int> get maxTemp =>
+      $composableBuilder(column: $table.maxTemp, builder: (column) => column);
+
+  GeneratedColumn<int> get phMin =>
+      $composableBuilder(column: $table.phMin, builder: (column) => column);
+
+  GeneratedColumn<int> get phMax =>
+      $composableBuilder(column: $table.phMax, builder: (column) => column);
+
+  $$SpeciesTableAnnotationComposer get species {
+    final $$SpeciesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.species,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SpeciesCareTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SpeciesCareTable,
+    SpeciesCareData,
+    $$SpeciesCareTableFilterComposer,
+    $$SpeciesCareTableOrderingComposer,
+    $$SpeciesCareTableAnnotationComposer,
+    $$SpeciesCareTableCreateCompanionBuilder,
+    $$SpeciesCareTableUpdateCompanionBuilder,
+    (SpeciesCareData, $$SpeciesCareTableReferences),
+    SpeciesCareData,
+    PrefetchHooks Function({bool species})> {
+  $$SpeciesCareTableTableManager(_$AppDatabase db, $SpeciesCareTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SpeciesCareTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SpeciesCareTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SpeciesCareTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> species = const Value.absent(),
+            Value<int> light = const Value.absent(),
+            Value<int> humidity = const Value.absent(),
+            Value<int> minTemp = const Value.absent(),
+            Value<int> maxTemp = const Value.absent(),
+            Value<int> phMin = const Value.absent(),
+            Value<int> phMax = const Value.absent(),
+          }) =>
+              SpeciesCareCompanion(
+            species: species,
+            light: light,
+            humidity: humidity,
+            minTemp: minTemp,
+            maxTemp: maxTemp,
+            phMin: phMin,
+            phMax: phMax,
+          ),
+          createCompanionCallback: ({
+            Value<int> species = const Value.absent(),
+            required int light,
+            required int humidity,
+            required int minTemp,
+            required int maxTemp,
+            required int phMin,
+            required int phMax,
+          }) =>
+              SpeciesCareCompanion.insert(
+            species: species,
+            light: light,
+            humidity: humidity,
+            minTemp: minTemp,
+            maxTemp: maxTemp,
+            phMin: phMin,
+            phMax: phMax,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$SpeciesCareTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({species = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (species) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.species,
+                    referencedTable:
+                        $$SpeciesCareTableReferences._speciesTable(db),
+                    referencedColumn:
+                        $$SpeciesCareTableReferences._speciesTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$SpeciesCareTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SpeciesCareTable,
+    SpeciesCareData,
+    $$SpeciesCareTableFilterComposer,
+    $$SpeciesCareTableOrderingComposer,
+    $$SpeciesCareTableAnnotationComposer,
+    $$SpeciesCareTableCreateCompanionBuilder,
+    $$SpeciesCareTableUpdateCompanionBuilder,
+    (SpeciesCareData, $$SpeciesCareTableReferences),
+    SpeciesCareData,
+    PrefetchHooks Function({bool species})>;
 typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<int> id,
   required int type,
@@ -4854,6 +6292,10 @@ class $AppDatabaseManager {
       $$PlantsTableTableManager(_db, _db.plants);
   $$SpeciesTableTableManager get species =>
       $$SpeciesTableTableManager(_db, _db.species);
+  $$SpeciesSynonymsTableTableManager get speciesSynonyms =>
+      $$SpeciesSynonymsTableTableManager(_db, _db.speciesSynonyms);
+  $$SpeciesCareTableTableManager get speciesCare =>
+      $$SpeciesCareTableTableManager(_db, _db.speciesCare);
   $$EventsTableTableManager get events =>
       $$EventsTableTableManager(_db, _db.events);
   $$RemindersTableTableManager get reminders =>

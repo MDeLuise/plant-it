@@ -28,6 +28,8 @@ class Plants extends Table {
       textEnum<AvatarMode>().withDefault(const Constant("none"))();
 }
 
+enum SpeciesDataSource { local, trefle, floraCodex }
+
 class Species extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get scientificName => text().withLength(max: 50)();
@@ -39,6 +41,31 @@ class Species extends Table {
       .references(Images, #id, onDelete: KeyAction.setNull)
       .nullable()();
   TextColumn get avatarUrl => text().withLength(max: 256).nullable()();
+  TextColumn get dataSource => textEnum<SpeciesDataSource>()
+      .withLength(max: 50)
+      .withDefault(const Constant("local"))();
+  TextColumn get externalId => text().withLength(max: 256).nullable()();
+}
+
+class SpeciesSynonyms extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get species => integer()
+      .references(Species, #id, onDelete: KeyAction.cascade)();
+  TextColumn get synonym => text().withLength(max: 50)();
+}
+
+class SpeciesCare extends Table {
+  IntColumn get species => integer()
+      .references(Species, #id, onDelete: KeyAction.cascade)();
+  IntColumn get light => integer()();
+  IntColumn get humidity => integer()();
+  IntColumn get minTemp => integer()();
+  IntColumn get maxTemp => integer()();
+  IntColumn get phMin => integer()();
+  IntColumn get phMax => integer()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {species};
 }
 
 class Events extends Table {
@@ -93,10 +120,12 @@ class UserSettings extends Table {
   EventTypes,
   Plants,
   Species,
+  SpeciesSynonyms,
+  SpeciesCare,
   Events,
   Reminders,
   Images,
-  UserSettings
+  UserSettings,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
