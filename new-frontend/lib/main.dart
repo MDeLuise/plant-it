@@ -12,7 +12,9 @@ import 'package:plant_it/repositories/event_type_repository.dart';
 import 'package:plant_it/repositories/image_repository.dart';
 import 'package:plant_it/repositories/plant_repository.dart';
 import 'package:plant_it/repositories/reminder_repository.dart';
+import 'package:plant_it/repositories/species_care_repository.dart';
 import 'package:plant_it/repositories/species_repository.dart';
+import 'package:plant_it/repositories/species_synonym_repository.dart';
 import 'package:plant_it/repositories/user_setting_repository.dart';
 import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -45,6 +47,8 @@ void main() async {
     ImageRepository(db, cache),
     UserSettingRepository(db, cache),
     SpeciesRepository(db, cache),
+    SpeciesSynonymsRepository(db, cache),
+    SpeciesCareRepository(db, cache),
   );
   env.reminderNotificationService = ReminderNotificationService(env);
 

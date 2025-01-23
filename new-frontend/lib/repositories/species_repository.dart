@@ -3,7 +3,7 @@ import 'package:plant_it/cache/cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/repositories/base_repository.dart';
-import 'package:plant_it/search/species_fetcher.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 
 class SpeciesRepository extends BaseRepository<Specy> {
   final AppDatabase db;

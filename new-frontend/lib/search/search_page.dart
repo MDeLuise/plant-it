@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/search/flora_codex/flora_codex_fetcher.dart';
-import 'package:plant_it/search/local/local_fetcher.dart';
+import 'package:plant_it/search/fetcher/flora_codex/flora_codex_fetcher.dart';
+import 'package:plant_it/search/fetcher/local/local_fetcher.dart';
 import 'package:plant_it/search/search_filter.dart';
 import 'package:plant_it/search/search_species_card.dart';
-import 'package:plant_it/search/species_fetcher.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 
 class SearchPage extends StatefulWidget {
   final Environment env;
@@ -24,7 +24,9 @@ class _SearchPageState extends State<SearchPage> {
   List<SpeciesCompanion> _fetched = [];
   bool _isLoading = false;
   Timer? _debounceTimer;
-  final List<DataSourceFilterType> _enabledDataSource = [DataSourceFilterType.local];
+  final List<DataSourceFilterType> _enabledDataSource = [
+    DataSourceFilterType.local
+  ];
   List<DataSourceFilterType> _filteredDataSource = [DataSourceFilterType.local];
   String? _floraCodexApiKey;
 
@@ -87,11 +89,10 @@ class _SearchPageState extends State<SearchPage> {
         _filteredDataSource.add(DataSourceFilterType.floraCodex);
         _setAndGetFloraCodexApiKey().then((a) {
           _speciesFetcherFacade.addNext(FloraCodexFetcher(a));
+          _fetchSpecies('');
         });
       }
     });
-
-    _fetchSpecies('');
 
     _searchController.addListener(() {
       if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
@@ -213,6 +214,7 @@ class _SearchPageState extends State<SearchPage> {
                           itemCount: _fetched.length,
                           itemBuilder: (context, index) {
                             return SearchSpeciesCard(
+                              widget.env,
                               _fetched[index],
                               key: UniqueKey(),
                             );

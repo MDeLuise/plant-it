@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/search/species_fetcher.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:http/http.dart' as http;
 
 class FloraCodexFetcher extends SpeciesFetcher {
@@ -28,32 +28,48 @@ class FloraCodexFetcher extends SpeciesFetcher {
       return _FloraCodexSpeciesDTO.fromJson(item);
     }).toList();
 
-    final List<SpeciesCompanion> result = [];
-    for (_FloraCodexSpeciesDTO speciesDTO in floraCodexSpeciesDTOs) {
-      result.add(await _fillPlantInfoAndReturnSpecies(speciesDTO));
-    }
+    final List<SpeciesCompanion> result = floraCodexSpeciesDTOs.map((e) {
+      return SpeciesCompanion(
+        scientificName: Value(e.scientificName),
+        family: Value(e.family),
+        genus: Value(e.genus),
+        species: Value(e.scientificName),
+        author: Value(e.author),
+        avatarUrl: Value(e.imageUrl),
+        dataSource: const Value(SpeciesDataSource.floraCodex),
+        externalId: Value(e.id),
+      );
+    }).toList();
     return Future.value(result);
   }
 
-  Future<SpeciesCompanion> _fillPlantInfoAndReturnSpecies(
-      _FloraCodexSpeciesDTO speciesDTO) async {
-    final SpeciesCompanion result = SpeciesCompanion(
-      scientificName: Value(speciesDTO.scientificName),
-      family: Value(speciesDTO.family),
-      genus: Value(speciesDTO.genus),
-      species: Value(speciesDTO.scientificName),
-      author: Value(speciesDTO.author),
-      avatarUrl: Value(speciesDTO.imageUrl),
-    );
+  @override
+  SpeciesDataSource getSpeciesDataSource() {
+    return SpeciesDataSource.floraCodex;
+  }
 
+  @override
+  Future<SpeciesCareCompanion> getCare(SpeciesCompanion speciesCompanion) {
+    // TODO: implement getCare
     // final http.Response response =
     //     await http.get(Uri.parse("$baseUrl${speciesDTO.plantUrl}?key=$apiKey"));
     // if (response.statusCode != 200) {
     //   throw Exception("Error while loading species from Flora Codex");
     // }
     // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    return Future.value(SpeciesCareCompanion());
+  }
 
-    return Future.value(result);
+  @override
+  Future<List<String>> getSynonyms(SpeciesCompanion speciesCompanion) {
+    // TODO: implement getSynonyms
+    // final http.Response response =
+    //     await http.get(Uri.parse("$baseUrl${speciesDTO.plantUrl}?key=$apiKey"));
+    // if (response.statusCode != 200) {
+    //   throw Exception("Error while loading species from Flora Codex");
+    // }
+    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    return Future.value([]);
   }
 }
 
