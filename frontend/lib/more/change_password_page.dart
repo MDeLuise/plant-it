@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/toast/toast_manager.dart';
 
@@ -69,46 +70,50 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AutofillGroup(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              AppLocalizations.of(context).currentPassword,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          TextFormField(
-                            autofillHints: [AutofillHints.password],
-                            autofocus: true,
-                            controller: _currentPasswordController,
-                            obscureText: !_showCurrentPassword,
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                icon: Icon(_showCurrentPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _showCurrentPassword =
-                                        !_showCurrentPassword;
-                                  });
+                    SizedBox(
+                      width: maxWidth,
+                      child: 
+                        AutofillGroup(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  AppLocalizations.of(context).currentPassword,
+                                  style:
+                                      const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              TextFormField(
+                                autofillHints: [AutofillHints.password],
+                                autofocus: true,
+                                controller: _currentPasswordController,
+                                obscureText: !_showCurrentPassword,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_showCurrentPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showCurrentPassword =
+                                            !_showCurrentPassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context).enterValue;
+                                  }
+                                  return null;
                                 },
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context).enterValue;
-                              }
-                              return null;
-                            },
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
                     ),
                     const SizedBox(height: 20),
 
@@ -122,37 +127,41 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        TextFormField(
-                          autofillHints: [AutofillHints.password],
-                          controller: _newPasswordController,
-                          obscureText: !_showNewPassword,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: Icon(_showNewPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  _showNewPassword = !_showNewPassword;
-                                });
+                        SizedBox(
+                          width: maxWidth,
+                          child: 
+                            TextFormField(
+                              autofillHints: [AutofillHints.password],
+                              controller: _newPasswordController,
+                              obscureText: !_showNewPassword,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_showNewPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                  onPressed: () {
+                                    setState(() {
+                                      _showNewPassword = !_showNewPassword;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppLocalizations.of(context).enterValue;
+                                }
+                                if (value.length < 6 || value.length > 20) {
+                                  return AppLocalizations.of(context).passwordSize;
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (value) {
+                                if (_formKey.currentState!.validate()) {
+                                  _updatePassword();
+                                }
                               },
                             ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            if (value.length < 6 || value.length > 20) {
-                              return AppLocalizations.of(context).passwordSize;
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (value) {
-                            if (_formKey.currentState!.validate()) {
-                              _updatePassword();
-                            }
-                          },
                         ),
                       ],
                     ),
