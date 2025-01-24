@@ -42,6 +42,7 @@ class _SearchPageState extends State<SearchPage> {
   void _showFilterDialog() async {
     showModalBottomSheet<void>(
       context: context,
+      showDragHandle: true,
       builder: (BuildContext context) {
         return SearchFilter(widget.env, ((dataSources) async {
           final SpeciesFetcherFacade newSpeciesFetcherFacade =
@@ -216,6 +217,7 @@ class _SearchPageState extends State<SearchPage> {
                             return SearchSpeciesCard(
                               widget.env,
                               _fetched[index],
+                              _speciesFetcherFacade,
                               key: UniqueKey(),
                             );
                           },

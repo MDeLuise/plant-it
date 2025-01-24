@@ -21,6 +21,8 @@ class Plants extends Table {
   DateTimeColumn get startDate => dateTime().nullable()();
   TextColumn get note => text().withLength(max: 8500).nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
+  IntColumn get species =>
+      integer().references(Species, #id, onDelete: KeyAction.cascade)();
   IntColumn get avatar => integer()
       .references(Images, #id, onDelete: KeyAction.setNull)
       .nullable()();
@@ -49,20 +51,20 @@ class Species extends Table {
 
 class SpeciesSynonyms extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get species => integer()
-      .references(Species, #id, onDelete: KeyAction.cascade)();
+  IntColumn get species =>
+      integer().references(Species, #id, onDelete: KeyAction.cascade)();
   TextColumn get synonym => text().withLength(max: 50)();
 }
 
 class SpeciesCare extends Table {
-  IntColumn get species => integer()
-      .references(Species, #id, onDelete: KeyAction.cascade)();
-  IntColumn get light => integer()();
-  IntColumn get humidity => integer()();
-  IntColumn get minTemp => integer()();
-  IntColumn get maxTemp => integer()();
-  IntColumn get phMin => integer()();
-  IntColumn get phMax => integer()();
+  IntColumn get species =>
+      integer().references(Species, #id, onDelete: KeyAction.cascade)();
+  IntColumn get light => integer().nullable()();
+  IntColumn get humidity => integer().nullable()();
+  IntColumn get tempMax => integer().nullable()();
+  IntColumn get tempMin => integer().nullable()();
+  IntColumn get phMin => integer().nullable()();
+  IntColumn get phMax => integer().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {species};
@@ -172,22 +174,26 @@ class AppDatabase extends _$AppDatabase {
       id: const Value(1),
       name: 'Sedum palmeri',
       avatar: const Value(1),
+      species: 1,
     ));
 
     await into(plants).insertOnConflictUpdate(PlantsCompanion.insert(
       id: const Value(2),
       name: 'Lithops',
       avatar: const Value(2),
+      species: 1,
     ));
 
     await into(plants).insertOnConflictUpdate(PlantsCompanion.insert(
       id: const Value(3),
       name: 'Monstera adasonii',
       avatar: const Value(1),
+      species: 1,
     ));
 
     await into(plants).insertOnConflictUpdate(PlantsCompanion.insert(
       id: const Value(4),
+      species: 1,
       name: 'Kalanchoe jetpack',
     ));
 
@@ -213,6 +219,46 @@ class AppDatabase extends _$AppDatabase {
       repeatAfterUnit: FrequencyUnit.days,
       repeatAfterQuantity: 2,
       enabled: true,
+    ));
+
+    await into(species).insertOnConflictUpdate(SpeciesCompanion.insert(
+      id: const Value(1),
+      scientificName: "Sedum palmeri",
+      genus: "sedum",
+      family: "Crassulaceae",
+      species: "Sedum palmeri",
+      dataSource: const Value(SpeciesDataSource.local),
+    ));
+
+    await into(speciesCare).insertOnConflictUpdate(const SpeciesCareCompanion(
+      light: Value(9),
+      humidity: Value(2),
+      tempMax: Value(29),
+      tempMin: Value(-10),
+      phMax: Value(9),
+      phMin: Value(1),
+    ));
+
+    await into(speciesSynonyms)
+        .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      species: Value(1),
+      synonym: Value("palmerino"),
+    ));
+
+    await into(speciesSynonyms)
+        .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      species: Value(1),
+      synonym: Value("pane"),
+    ));
+    await into(speciesSynonyms)
+        .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      species: Value(1),
+      synonym: Value("vino"),
+    ));
+    await into(speciesSynonyms)
+        .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      species: Value(1),
+      synonym: Value("sisisi"),
     ));
   }
 }
