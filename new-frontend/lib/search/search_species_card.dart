@@ -3,14 +3,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:plant_it/search/species/species_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchSpeciesCard extends StatefulWidget {
   final Environment env;
   final SpeciesCompanion speciesPartial;
+  final SpeciesFetcherFacade speciesFetcherFacade;
 
-  const SearchSpeciesCard(this.env, this.speciesPartial, {super.key});
+  const SearchSpeciesCard(
+      this.env, this.speciesPartial, this.speciesFetcherFacade,
+      {super.key});
 
   @override
   State<SearchSpeciesCard> createState() => _SearchSpeciesCardState();
@@ -24,8 +28,10 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: GestureDetector(
-        onTap: () =>
-            navigateTo(context, SpeciesPage(widget.env, widget.speciesPartial)),
+        onTap: () => navigateTo(
+            context,
+            SpeciesPage(widget.env, widget.speciesPartial,
+                widget.speciesFetcherFacade)),
         child: Stack(
           children: [
             Container(

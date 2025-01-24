@@ -82,33 +82,6 @@ class EventRepository extends BaseRepository<Event> {
         .get();
   }
 
-  // Future<int> count(List<int>? plantIds, List<int>? eventTypes) {
-  //   if (plantIds == null && eventTypes != null) {
-  //     return _countByEventTypes(eventTypes);
-  //   } else if (plantIds != null && eventTypes == null) {
-  //     return _countByPlants(plantIds);
-  //   } else if (plantIds != null && eventTypes != null) {
-  //     return _countByPlantsAndEventTypes(plantIds, eventTypes);
-  //   } else {
-  //     throw Exception(
-  //         "At least one of plantIds and eventTypes must be not null");
-  //   }
-  // }
-
-  // Future<int> _countByPlants(List<int> plantIds) {
-  //   return _selectByPlants(plantIds).then((r) => r.length);
-  // }
-
-  // Future<int> _countByEventTypes(List<int> eventTypes) {
-  //   return _selectByEventTypes(eventTypes).then((r) => r.length);
-  // }
-
-  // Future<int> _countByPlantsAndEventTypes(
-  //     List<int> plantIds, List<int> eventTypes) {
-  //   return _selectByPlantsAndEventTypes(plantIds, eventTypes)
-  //       .then((r) => r.length);
-  // }
-
   Future<List<Event>> getFiltered(List<int>? plantIds, List<int>? eventTypes) {
     if (plantIds == null && eventTypes != null) {
       return _selectByEventTypes(eventTypes);
@@ -174,5 +147,45 @@ class EventRepository extends BaseRepository<Event> {
                 )
           ]))
         .get();
+  }
+
+  Future<List<Event>> getLastEventsForPlant(int plantId) async {
+    final events = db.events;
+
+    // Subquery: Get the latest date for each event type for the given plantId
+    final subquery = db.selectOnly(events)
+      ..addColumns([events.type, events.date.max()])
+      ..where(events.plant.equals(plantId))
+      ..groupBy([events.type]);
+
+    // Prepare the main query using the subquery result
+    final results = await subquery.get();
+
+    // Extract type-date pairs from the subquery result
+    final latestTypeDatePairs = results.map((row) {
+      final eventType = row.read(events.type)!;
+      final latestDate = row.read(events.date.max())!;
+      return {'eventType': eventType, 'latestDate': latestDate};
+    }).toList();
+
+    // Fetch the complete event details for each type-date pair
+    final List<Event> latestEvents = [];
+    for (final pair in latestTypeDatePairs) {
+      final eventType = pair['eventType'] as int;
+      final latestDate = pair['latestDate'] as DateTime;
+
+      // Query the events table for the matching type and date
+      final event = await (db.select(events)
+            ..where((e) =>
+                e.plant.equals(plantId) &
+                e.type.equals(eventType) &
+                e.date.equals(latestDate)))
+          .getSingleOrNull();
+      if (event != null) {
+        latestEvents.add(event);
+      }
+    }
+
+    return latestEvents;
   }
 }

@@ -90,6 +90,7 @@ class _EventsPageState extends State<EventsPage> {
 
   void _showFilterDialog() {
     showModalBottomSheet<void>(
+      showDragHandle: true,
       context: context,
       builder: (BuildContext context) {
         return ActivityFilter(widget.env,
