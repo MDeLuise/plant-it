@@ -49,27 +49,44 @@ class FloraCodexFetcher extends SpeciesFetcher {
   }
 
   @override
-  Future<SpeciesCareCompanion> getCare(SpeciesCompanion speciesCompanion) {
-    // TODO: implement getCare
-    // final http.Response response =
-    //     await http.get(Uri.parse("$baseUrl${speciesDTO.plantUrl}?key=$apiKey"));
-    // if (response.statusCode != 200) {
-    //   throw Exception("Error while loading species from Flora Codex");
-    // }
-    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  Future<SpeciesCareCompanion> getCare(
+      SpeciesCompanion speciesCompanion) async {
+    final String url =
+        "$baseUrl$version/plants/${speciesCompanion.externalId}?key=$apiKey";
+    final http.Response response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception("Error while loading species care from Flora Codex");
+    }
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
     return Future.value(SpeciesCareCompanion());
   }
 
   @override
-  Future<List<String>> getSynonyms(SpeciesCompanion speciesCompanion) {
-    // TODO: implement getSynonyms
-    // final http.Response response =
-    //     await http.get(Uri.parse("$baseUrl${speciesDTO.plantUrl}?key=$apiKey"));
-    // if (response.statusCode != 200) {
-    //   throw Exception("Error while loading species from Flora Codex");
-    // }
-    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    return Future.value([]);
+  Future<List<String>> getSynonyms(SpeciesCompanion speciesCompanion) async {
+    final String url =
+        "$baseUrl$version/plants/${speciesCompanion.externalId}?key=$apiKey";
+    final http.Response response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception("Error while loading species care from Flora Codex");
+    }
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final List<String> synonyms = [];
+    final dynamic commonNames = jsonResponse['main_species']?['common_names'];
+
+    if (commonNames != null && commonNames is List) {
+      for (final languageGroup in commonNames) {
+        if (languageGroup is Map<String, dynamic>) {
+          for (final names in languageGroup.values) {
+            if (names is List) {
+              synonyms.addAll(names.whereType<String>());
+            }
+          }
+        }
+      }
+    }
+
+    return synonyms;
   }
 }
 

@@ -2,19 +2,44 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SpeciesPage extends StatefulWidget {
   final Environment env;
   final SpeciesCompanion species;
+  final SpeciesFetcherFacade speciesFetcherFacade;
 
-  const SpeciesPage(this.env, this.species, {super.key});
+  const SpeciesPage(this.env, this.species, this.speciesFetcherFacade,
+      {super.key});
 
   @override
   State<SpeciesPage> createState() => _SpeciesPageState();
 }
 
 class _SpeciesPageState extends State<SpeciesPage> {
+  List<String> _speciesSynonyms = [];
+  bool _synonymsLoading = true;
+  SpeciesCareCompanion? _speciesCare;
+  bool _careLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.speciesFetcherFacade.getSynonyms(widget.species).then((r) {
+      setState(() {
+        _speciesSynonyms = r;
+        _synonymsLoading = false;
+      });
+    });
+    widget.speciesFetcherFacade.getCare(widget.species).then((r) {
+      setState(() {
+        _speciesCare = r;
+        _careLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +100,7 @@ class _SpeciesPageState extends State<SpeciesPage> {
               ),
             ),
             _ScientificClassification(widget.species),
-            _Synonyms(widget.species),
+            _Synonyms(_speciesSynonyms),
             _Care(widget.species),
           ],
         ),
@@ -170,9 +195,9 @@ class _ScientificClassification extends StatelessWidget {
 }
 
 class _Synonyms extends StatefulWidget {
-  final SpeciesCompanion species;
+  final List<String> synonyms;
 
-  const _Synonyms(this.species);
+  const _Synonyms(this.synonyms);
 
   @override
   State<_Synonyms> createState() => _SynonymsState();
@@ -184,17 +209,17 @@ class _SynonymsState extends State<_Synonyms> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> synonyms = [
-      'Flytrap',
-      'Fly trap',
-      'Snaptrap',
-      'Venus plant',
-      'Bug eater',
-      'Carnivorous plant'
-    ];
+    // final List<String> synonyms = [
+    //   'Flytrap',
+    //   'Fly trap',
+    //   'Snaptrap',
+    //   'Venus plant',
+    //   'Bug eater',
+    //   'Carnivorous plant'
+    // ];
 
     final List<String> visibleSynonyms =
-        _isExpanded ? synonyms : synonyms.take(_maxVisible).toList();
+        _isExpanded ? widget.synonyms : widget.synonyms.take(_maxVisible).toList();
 
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -228,7 +253,7 @@ class _SynonymsState extends State<_Synonyms> {
               const SizedBox(height: 10),
               _ListOfChip(
                 texts: visibleSynonyms,
-                hasToggleOption: synonyms.length > _maxVisible,
+                hasToggleOption: widget.synonyms.length > _maxVisible,
                 isExpanded: _isExpanded,
                 onTogglePressed: () {
                   setState(() {

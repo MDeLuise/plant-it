@@ -32,7 +32,7 @@ class LocalFetcher extends SpeciesFetcher {
 
   @override
   SpeciesDataSource getSpeciesDataSource() {
-    throw SpeciesDataSource.local;
+    return SpeciesDataSource.local;
   }
 
   @override
@@ -42,8 +42,8 @@ class LocalFetcher extends SpeciesFetcher {
         species: Value(r.species),
         light: Value(r.light),
         humidity: Value(r.humidity),
-        minTemp: Value(r.minTemp),
-        maxTemp: Value(r.maxTemp),
+        tempMin: Value(r.tempMin),
+        tempMax: Value(r.tempMax),
         phMin: Value(r.phMin),
         phMax: Value(r.phMax),
       ));
