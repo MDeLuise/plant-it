@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
 
-class PlantActivityWidgetGenerator {
+class PlantEventWidgetGenerator {
   final Environment env;
   final Plant plant;
   final Map<int, EventType> eventTypes = {};
 
-  PlantActivityWidgetGenerator(this.env, this.plant) {
+  PlantEventWidgetGenerator(this.env, this.plant) {
     env.eventTypeRepository.getAll().then((rl) {
       for (EventType eventType in rl) {
         eventTypes[eventType.id] = eventType;
@@ -18,11 +17,11 @@ class PlantActivityWidgetGenerator {
     });
   }
 
-  Future<List<PlantActivityInfoWidget>> getWidgets() async {
-    final List<PlantActivityInfoWidget> result = [];
+  Future<List<PlantEventInfoWidget>> getWidgets() async {
+    final List<PlantEventInfoWidget> result = [];
     env.eventRepository.getLastEventsForPlant(plant.id).then((el) {
       result.addAll(el.map((e) {
-        return PlantActivityInfoWidget(eventTypes[e.type]!.name,
+        return PlantEventInfoWidget(eventTypes[e.type]!.name,
             timeDiffStr(e.date), appIcons[eventTypes[e.type]!.icon]!);
       }));
     });
@@ -31,12 +30,12 @@ class PlantActivityWidgetGenerator {
   }
 }
 
-class PlantActivityInfoWidget extends StatelessWidget {
+class PlantEventInfoWidget extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
 
-  const PlantActivityInfoWidget(this.title, this.value, this.icon, {super.key});
+  const PlantEventInfoWidget(this.title, this.value, this.icon, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +67,10 @@ class PlantActivityInfoWidget extends StatelessWidget {
               Text(
                 value,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold),
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
+                    ),
               ),
             ],
           ),

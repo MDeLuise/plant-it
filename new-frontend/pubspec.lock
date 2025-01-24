@@ -166,14 +166,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  chip_list:
-    dependency: "direct main"
-    description:
-      name: chip_list
-      sha256: "9c6799907b95fdd5f8f17afa463e8c4ee40d3a0f87baeb323ec29f2671bd94ee"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   cli_util:
     dependency: transitive
     description:
