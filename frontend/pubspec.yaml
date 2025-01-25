@@ -52,7 +52,7 @@ dependencies:
   talker_flutter: ^4.5.4
   toastification: ^2.3.0
   image_picker: ^1.1.2
-  http_parser: ^4.0.2
+  http_parser: ^4.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
