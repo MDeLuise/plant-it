@@ -36,12 +36,12 @@ class _SettingsState extends State<Settings> {
             leading: const Icon(Icons.storage),
             onTap: () => navigateTo(context, const DatabaseSettings()),
           ),
-          ListTile(
-            title: const Text("Cache"),
-            subtitle: const Text("Manage cache"),
-            leading: const Icon(Icons.cached),
-            onTap: () => navigateTo(context, CacheSettings(widget.env.cache)),
-          ),
+          // ListTile(
+          //   title: const Text("Cache"),
+          //   subtitle: const Text("Manage cache"),
+          //   leading: const Icon(Icons.cached),
+          //   onTap: () => navigateTo(context, CacheSettings(widget.env.cache)),
+          // ),
           ListTile(
             title: const Text("About Plant-it"),
             subtitle: const Text("Details about the app"),
