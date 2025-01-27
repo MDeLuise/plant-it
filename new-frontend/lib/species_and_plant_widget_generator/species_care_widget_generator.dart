@@ -15,9 +15,7 @@ class SpeciesCareWidgetGenerator {
         speciesCare.light! > 3 &&
         speciesCare.light! < 5) {
       sunLightValue = "Medium";
-    } else if (speciesCare.light != null &&
-        speciesCare.light! > 3 &&
-        speciesCare.light! < 5) {
+    } else if (speciesCare.light != null && speciesCare.light! > 5) {
       sunLightValue = "High";
     }
     result

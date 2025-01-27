@@ -8,6 +8,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PlantPage extends StatefulWidget {
   final Environment env;
@@ -21,21 +22,19 @@ class PlantPage extends StatefulWidget {
 
 class _PlantPageState extends State<PlantPage> {
   DecorationImage? _avatar;
-  List<SpeciesCareInfoWidget>? speciesCareInfoWidgets;
-  List<PlantEventInfoWidget>? plantEventInfoWidgets;
-  List<PlantReminderInfoWidget>? plantReminderInfoWidgets;
+  List<SpeciesCareInfoWidget> speciesCareInfoWidgets = [];
+  List<PlantEventInfoWidget> plantEventInfoWidgets = [];
+  List<PlantReminderInfoWidget> plantReminderInfoWidgets = [];
   Specy? _species;
+  bool _isSpeciesCareLoading = true;
+  bool _isPlantEventLoading = true;
+  bool _isPlantReminderLoading = true;
+  bool _isSpeciesLoading = true;
 
   @override
   void initState() {
     super.initState();
-
-    widget.env.speciesRepository.get(widget.plant.id).then((s) {
-      setState(() {
-        _species = s;
-      });
-    });
-
+    _setSpecies();
     _setPlantCare();
     widget.env.imageRepository.get(widget.plant.avatar!).then((i) {
       final DecorationImage newAvatar = DecorationImage(
@@ -48,18 +47,30 @@ class _PlantPageState extends State<PlantPage> {
     });
   }
 
+  void _setSpecies() {
+    if (!mounted) return;
+    widget.env.speciesRepository.get(widget.plant.id).then((s) {
+      setState(() {
+        _species = s;
+        _isSpeciesLoading = false;
+      });
+    });
+  }
+
   void _setPlantCare() {
     widget.env.speciesCareRepository.get(widget.plant.species).then((c) {
       final List<SpeciesCareInfoWidget> newSpeciesCareInfoWidgets =
           SpeciesCareWidgetGenerator(c).getWidgets();
       setState(() {
         speciesCareInfoWidgets = newSpeciesCareInfoWidgets;
+        _isSpeciesCareLoading = false;
       });
     });
 
     PlantEventWidgetGenerator(widget.env, widget.plant).getWidgets().then((r) {
       setState(() {
         plantEventInfoWidgets = r;
+        _isPlantEventLoading = false;
       });
     });
 
@@ -68,6 +79,7 @@ class _PlantPageState extends State<PlantPage> {
         .then((r) {
       setState(() {
         plantReminderInfoWidgets = r;
+        _isPlantReminderLoading = false;
       });
     });
   }
@@ -144,7 +156,8 @@ class _PlantPageState extends State<PlantPage> {
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  _DynamicGridWidget(speciesCareInfoWidgets, 4),
+                  _DynamicGridWidget(
+                      speciesCareInfoWidgets, 4, _isSpeciesCareLoading),
                   const SizedBox(height: 16),
 
                   // Reminder
@@ -165,7 +178,8 @@ class _PlantPageState extends State<PlantPage> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _DynamicGridWidget(plantReminderInfoWidgets, 6),
+                  _DynamicGridWidget(
+                      plantReminderInfoWidgets, 6, _isPlantReminderLoading),
                   const SizedBox(height: 16),
 
                   // Events
@@ -175,7 +189,8 @@ class _PlantPageState extends State<PlantPage> {
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  _DynamicGridWidget(plantEventInfoWidgets, 6),
+                  _DynamicGridWidget(
+                      plantEventInfoWidgets, 6, _isPlantEventLoading),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -190,8 +205,10 @@ class _PlantPageState extends State<PlantPage> {
 class _DynamicGridWidget extends StatefulWidget {
   final int maxNum;
   final List<Widget>? plantEventInfoWidgets;
+  final bool isLoading;
 
-  const _DynamicGridWidget(this.plantEventInfoWidgets, this.maxNum);
+  const _DynamicGridWidget(
+      this.plantEventInfoWidgets, this.maxNum, this.isLoading);
 
   @override
   State<_DynamicGridWidget> createState() => _DynamicGridWidgetState();
@@ -208,6 +225,30 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isLoading) {
+      return _buildSinglePage([
+        Shimmer.fromColors(
+          baseColor: const Color.fromARGB(255, 217, 217, 217),
+          highlightColor: const Color.fromARGB(255, 192, 192, 192),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        Shimmer.fromColors(
+          baseColor: const Color.fromARGB(255, 217, 217, 217),
+          highlightColor: const Color.fromARGB(255, 192, 192, 192),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ]);
+    }
     if (pages == 1) {
       return _buildSinglePage(widget.plantEventInfoWidgets);
     }
@@ -239,7 +280,6 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
     final List<Widget> pageWidgets =
         pagesList.map((chunk) => _buildSinglePage(chunk)).toList();
 
-    // Use the pageWidgets in FlutterCarousel
     return FlutterCarousel(
       options: FlutterCarouselOptions(
         showIndicator: true,

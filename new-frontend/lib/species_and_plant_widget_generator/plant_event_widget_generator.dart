@@ -19,7 +19,7 @@ class PlantEventWidgetGenerator {
 
   Future<List<PlantEventInfoWidget>> getWidgets() async {
     final List<PlantEventInfoWidget> result = [];
-    env.eventRepository.getLastEventsForPlant(plant.id).then((el) {
+    await env.eventRepository.getLastEventsForPlant(plant.id).then((el) {
       result.addAll(el.map((e) {
         return PlantEventInfoWidget(eventTypes[e.type]!.name,
             timeDiffStr(e.date), appIcons[eventTypes[e.type]!.icon]!);

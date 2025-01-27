@@ -159,7 +159,13 @@ class EventRepository extends BaseRepository<Event> {
       ..groupBy([events.type]);
 
     // Prepare the main query using the subquery result
-    final results = await subquery.get();
+    List<TypedResult> results;
+    try {
+      results = await subquery.get();
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
 
     // Extract type-date pairs from the subquery result
     final latestTypeDatePairs = results.map((row) {
