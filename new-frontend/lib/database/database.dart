@@ -30,7 +30,7 @@ class Plants extends Table {
       textEnum<AvatarMode>().withDefault(const Constant("none"))();
 }
 
-enum SpeciesDataSource { local, trefle, floraCodex }
+enum SpeciesDataSource { custom, trefle, floraCodex }
 
 class Species extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -38,14 +38,14 @@ class Species extends Table {
   TextColumn get family => text().withLength(max: 50)();
   TextColumn get genus => text().withLength(max: 50)();
   TextColumn get species => text().withLength(max: 50)();
-  TextColumn get author => text().withLength(max: 50).nullable()();
+  TextColumn get author => text().withLength(max: 100).nullable()();
   IntColumn get avatar => integer()
       .references(Images, #id, onDelete: KeyAction.setNull)
       .nullable()();
   TextColumn get avatarUrl => text().withLength(max: 256).nullable()();
   TextColumn get dataSource => textEnum<SpeciesDataSource>()
       .withLength(max: 50)
-      .withDefault(const Constant("local"))();
+      .withDefault(const Constant("custom"))();
   TextColumn get externalId => text().withLength(max: 256).nullable()();
 }
 
@@ -53,7 +53,7 @@ class SpeciesSynonyms extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get species =>
       integer().references(Species, #id, onDelete: KeyAction.cascade)();
-  TextColumn get synonym => text().withLength(max: 50)();
+  TextColumn get synonym => text().withLength(max: 100)();
 }
 
 class SpeciesCare extends Table {
@@ -227,7 +227,7 @@ class AppDatabase extends _$AppDatabase {
       genus: "sedum",
       family: "Crassulaceae",
       species: "Sedum palmeri",
-      dataSource: const Value(SpeciesDataSource.local),
+      dataSource: const Value(SpeciesDataSource.custom),
     ));
 
     await into(speciesCare).insertOnConflictUpdate(const SpeciesCareCompanion(

@@ -9,10 +9,22 @@ class SpeciesFetcherFacade {
 
   Future<List<SpeciesCompanion>> fetch(
       String partialScientificName, Pageable pageable) async {
+    if (partialScientificName == "") {
+      return fetchAll(pageable);
+    }
     final List<SpeciesCompanion> result = [];
     for (SpeciesFetcher pf in chain) {
       final List<SpeciesCompanion> retrieved =
           await pf.fetch(partialScientificName, pageable);
+      result.addAll(retrieved);
+    }
+    return result;
+  }
+
+  Future<List<SpeciesCompanion>> fetchAll(Pageable pageable) async {
+    final List<SpeciesCompanion> result = [];
+    for (SpeciesFetcher pf in chain) {
+      final List<SpeciesCompanion> retrieved = await pf.fetchAll(pageable);
       result.addAll(retrieved);
     }
     return result;
@@ -40,6 +52,7 @@ class SpeciesFetcherFacade {
 abstract class SpeciesFetcher {
   Future<List<SpeciesCompanion>> fetch(
       String partialScientificName, Pageable pageable);
+  Future<List<SpeciesCompanion>> fetchAll(Pageable pageable);
   Future<List<String>> getSynonyms(SpeciesCompanion speciesCompanion);
   Future<SpeciesCareCompanion> getCare(SpeciesCompanion speciesCompanion);
   SpeciesDataSource getSpeciesDataSource();
