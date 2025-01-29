@@ -4,7 +4,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/flora_codex/flora_codex_fetcher.dart';
-import 'package:plant_it/search/fetcher/local/local_fetcher.dart';
+import 'package:plant_it/search/fetcher/custom/custom_fetcher.dart';
+import 'package:plant_it/search/fetcher/trefle/trefle_fetcher.dart';
 import 'package:plant_it/search/search_filter.dart';
 import 'package:plant_it/search/search_species_card.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
@@ -25,9 +26,11 @@ class _SearchPageState extends State<SearchPage> {
   bool _isLoading = false;
   Timer? _debounceTimer;
   final List<DataSourceFilterType> _enabledDataSource = [
-    DataSourceFilterType.local
+    DataSourceFilterType.custom
   ];
-  List<DataSourceFilterType> _filteredDataSource = [DataSourceFilterType.local];
+  List<DataSourceFilterType> _filteredDataSource = [
+    DataSourceFilterType.custom
+  ];
   String? _floraCodexApiKey;
 
   bool _isFilterActive() {
@@ -48,11 +51,13 @@ class _SearchPageState extends State<SearchPage> {
           final SpeciesFetcherFacade newSpeciesFetcherFacade =
               SpeciesFetcherFacade();
           for (DataSourceFilterType dataSource in dataSources) {
-            if (dataSource == DataSourceFilterType.local) {
-              newSpeciesFetcherFacade.addNext(LocalFetcher(widget.env));
+            if (dataSource == DataSourceFilterType.custom) {
+              newSpeciesFetcherFacade.addNext(CustomFetcher(widget.env));
             } else if (dataSource == DataSourceFilterType.floraCodex) {
               final String floraCodexApi = await _setAndGetFloraCodexApiKey();
               newSpeciesFetcherFacade.addNext(FloraCodexFetcher(floraCodexApi));
+            } else if (dataSource == DataSourceFilterType.trefle) {
+              newSpeciesFetcherFacade.addNext(TrefleFetcher(widget.env));
             }
           }
           setState(() {
@@ -80,7 +85,8 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
 
     _speciesFetcherFacade = SpeciesFetcherFacade();
-    _speciesFetcherFacade.addNext(LocalFetcher(widget.env));
+    _speciesFetcherFacade.addNext(CustomFetcher(widget.env));
+    _fetchSpecies('');
 
     widget.env.userSettingRepository
         .getOrDefault("dataSource_floraCodex_enabled", "false")
@@ -90,9 +96,16 @@ class _SearchPageState extends State<SearchPage> {
         _filteredDataSource.add(DataSourceFilterType.floraCodex);
         _setAndGetFloraCodexApiKey().then((a) {
           _speciesFetcherFacade.addNext(FloraCodexFetcher(a));
-          _fetchSpecies('');
         });
       }
+
+      widget.env.speciesRepository.existsTrefle().then((e) {
+        if (e) {
+          _enabledDataSource.add(DataSourceFilterType.trefle);
+          _filteredDataSource.add(DataSourceFilterType.trefle);
+          _speciesFetcherFacade.addNext(TrefleFetcher(widget.env));
+        }
+      });
     });
 
     _searchController.addListener(() {

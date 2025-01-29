@@ -44,6 +44,11 @@ class FloraCodexFetcher extends SpeciesFetcher {
   }
 
   @override
+  Future<List<SpeciesCompanion>> fetchAll(Pageable pageable) {
+    return fetch("*", pageable);
+  }
+
+  @override
   SpeciesDataSource getSpeciesDataSource() {
     return SpeciesDataSource.floraCodex;
   }

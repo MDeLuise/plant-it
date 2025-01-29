@@ -3,16 +3,17 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
 
-class LocalFetcher extends SpeciesFetcher {
+class TrefleFetcher extends SpeciesFetcher {
   final Environment env;
 
-  LocalFetcher(this.env);
+  TrefleFetcher(this.env);
 
   @override
   Future<List<SpeciesCompanion>> fetch(
       String partialScientificName, Pageable pageable) {
     return env.speciesRepository
-        .getFiltered(partialScientificName, pageable)
+        .getAllByScientificNameAndDataSource(
+            partialScientificName, SpeciesDataSource.trefle, pageable)
         .then((rl) {
       return rl.map((s) {
         return SpeciesCompanion(
@@ -24,7 +25,28 @@ class LocalFetcher extends SpeciesFetcher {
           author: Value(s.author),
           avatarUrl: Value(s.avatarUrl),
           avatar: Value(s.avatar),
-          dataSource: const Value(SpeciesDataSource.local),
+          dataSource: const Value(SpeciesDataSource.trefle),
+        );
+      }).toList();
+    });
+  }
+
+  @override
+  Future<List<SpeciesCompanion>> fetchAll(Pageable pageable) {
+    return env.speciesRepository
+        .getAllByDataSourcePaginated(SpeciesDataSource.trefle, pageable)
+        .then((rl) {
+      return rl.map((s) {
+        return SpeciesCompanion(
+          id: Value(s.id),
+          scientificName: Value(s.scientificName),
+          family: Value(s.family),
+          genus: Value(s.genus),
+          species: Value(s.species),
+          author: Value(s.author),
+          avatarUrl: Value(s.avatarUrl),
+          avatar: Value(s.avatar),
+          dataSource: const Value(SpeciesDataSource.trefle),
         );
       }).toList();
     });
@@ -32,7 +54,7 @@ class LocalFetcher extends SpeciesFetcher {
 
   @override
   SpeciesDataSource getSpeciesDataSource() {
-    return SpeciesDataSource.local;
+    return SpeciesDataSource.custom;
   }
 
   @override

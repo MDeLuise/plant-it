@@ -1,13 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:drift/drift.dart' as drift;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_it/common.dart';
+import 'package:plant_it/custom_loading_dialog.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:csv/csv.dart';
 
 class DataSources extends StatefulWidget {
   final Environment env;
@@ -316,14 +322,366 @@ class _TrefleSettingsState extends State<TrefleSettings> {
   //   }
   // }
 
-  void _importData() {
-    // Dummy function to handle the import action
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Import started..."),
-        duration: Duration(seconds: 2),
-      ),
-    );
+  void _importDataOLD() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['tsv', 'csv'],
+      );
+
+      if (result == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No file selected.")),
+        );
+        return;
+      }
+
+      // QuickAlert.show(
+      //   context: context,
+      //   type: QuickAlertType.loading,
+      //   title: 'Parsing the file...',
+      //   text:
+      //       'Parsing the file. Please do not close the app or dismiss the dialog.',
+      //   showCancelBtn: true,
+      //   showConfirmBtn: false,
+      //   barrierDismissible: false,
+      //   customAsset: "packages/quickalert/assets/loading.gif",
+      // );
+
+      int imported = 0;
+      final File file = File(result.files.single.path!);
+      final String fileContents = await file.readAsString();
+
+      final List<List<String>> rows = const CsvToListConverter(
+        fieldDelimiter: '\t',
+        shouldParseNumbers: false,
+        eol: '\n',
+        allowInvalid: false,
+        convertEmptyTo: "",
+      ).convert(fileContents);
+      rows.removeAt(0);
+
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.loading,
+        title: 'Importing Species...',
+        text:
+            '[$imported] Importing species (~${rows.length} species). This may take a few minutes. Please do not close the app or dismiss the dialog.',
+        showCancelBtn: true,
+        showConfirmBtn: false,
+        barrierDismissible: false,
+        customAsset: "packages/quickalert/assets/loading.gif",
+      );
+
+      for (var row in rows) {
+        print("imported $imported...");
+        final String id = row[0];
+        final String scientificName = row[1];
+        final String rank = row[2];
+        final String genus = row[3];
+        final String family = row[4];
+        final String? year = row[5];
+        final String? author = row[6];
+        final String? bibliography = row[7];
+        final String? commonName = row[8];
+        final String? familyCommonName = row[9];
+        final String? imageUrl = row[10];
+        final String? flowerColor = row[11];
+        final String? flowerConspicuous = row[12];
+        final String? foliageColor = row[13];
+        final String? foliageTexture = row[14];
+        final String? fruitColor = row[15];
+        final String? fruitConspicuous = row[16];
+        final String? fruitMonths = row[17];
+        final String? bloomMonths = row[18];
+        final String? groundHumidity = row[19];
+        final String? growthForm = row[20];
+        final String? growthHabit = row[21];
+        final String? growthMonths = row[22];
+        final String? growthRate = row[23];
+        final String? ediblePart = row[24];
+        final String? vegetable = row[25];
+        final String? edible = row[26];
+        final String? light = row[27];
+        final String? soilNutriments = row[28];
+        final String? soilSalinity = row[29];
+        final String? anaerobicTolerance = row[30];
+        final String? atmosphericHumidity = row[31];
+        final String? averageHeightCm = row[32];
+        final String? maximumHeightCm = row[33];
+        final String? minimumRootDepthCm = row[34];
+        final String? phMaximum = row[35];
+        final String? phMinimum = row[36];
+        final String? plantingDaysToHarvest = row[37];
+        final String? plantingDescription = row[38];
+        final String? plantingSowingDescription = row[39];
+        final String? plantingRowSpacingCm = row[40];
+        final String? plantingSpreadCm = row[41];
+        final String? synonyms = row[42];
+        final String? distributions = row[43];
+        final String? commonNames = row[44];
+        final String? urlUsda = row[45];
+        final String? urlTropicos = row[46];
+        final String? urlTelaBotanica = row[47];
+        final String? urlPowo = row[48];
+        final String? urlPlantnet = row[49];
+        final String? urlGbif = row[50];
+        final String? urlOpenfarm = row[51];
+        final String? urlCatminat = row[52];
+        final String? urlWikipediaEn = row[53];
+
+        if (rank != "species") {
+          continue;
+        }
+
+        final bool alreadyExists = (await widget.env.speciesRepository
+                .getExternal(SpeciesDataSource.trefle, id)) !=
+            null;
+
+        if (!alreadyExists) {
+          // insert species
+          int insertedId =
+              await widget.env.speciesRepository.insert(SpeciesCompanion.insert(
+            scientificName: scientificName,
+            family: family,
+            genus: genus,
+            species: scientificName,
+            author: drift.Value(author),
+            avatarUrl: drift.Value(imageUrl),
+            externalId: drift.Value(id),
+            dataSource: const drift.Value(SpeciesDataSource.trefle),
+          ));
+
+          // insert synonyms
+          if (synonyms != null && synonyms.isNotEmpty) {
+            var synonymsList = synonyms.split(',');
+            for (var synonym in synonymsList) {
+              await widget.env.speciesSynonymsRepository
+                  .insert(SpeciesSynonymsCompanion.insert(
+                species: insertedId,
+                synonym: synonym,
+              ));
+            }
+          }
+          //imported++;
+          setState(() {
+            imported = imported + 1;
+          });
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Data imported successfully ($imported species were imported).")),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error during import: $e")),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _importData() async {
+    final GlobalKey<CustomLoadingDialogState> dialogKey = GlobalKey();
+    const int batchSize = 2500;
+
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['tsv', 'csv'],
+      );
+
+      if (result == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No file selected.")),
+        );
+        return;
+      }
+
+      CustomLoadingDialog.show(
+        context: context,
+        title: 'Importing Species...',
+        text:
+            'Importing species. This may take a few minutes. Please do not close the app or dismiss the dialog.',
+        dialogKey: dialogKey,
+      );
+
+      final File file = File(result.files.single.path!);
+      final Stream<String> fileStream = file
+          .openRead()
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+
+      List<List<String>> rows = [];
+      int imported = 0;
+      int totalRows = 0;
+
+      await for (var line in fileStream) {
+        totalRows++;
+      }
+
+      // Reset the stream position
+      final Stream<String> resetFileStream = file
+          .openRead()
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+
+      await for (var line in resetFileStream) {
+        // Split line by tab to match the TSV format
+        List<String> row = line.split('\t');
+        rows.add(row);
+
+        if (rows.length >= batchSize) {
+          // Process the batch of rows
+          await _processBatch(rows, dialogKey);
+          imported += batchSize;
+
+          // Update progress dialog after processing the batch
+          double progress = (imported / totalRows) * 100;
+          if (dialogKey.currentState != null) {
+            dialogKey.currentState!.updatePercentage(progress);
+          }
+
+          rows.clear(); // Reset rows for the next batch
+        }
+      }
+
+      // Process any remaining rows in case the last batch is smaller than batchSize
+      if (rows.isNotEmpty) {
+        await _processBatch(rows, dialogKey);
+        imported += rows.length;
+        double progress = (imported / totalRows) * 100;
+        if (dialogKey.currentState != null) {
+          dialogKey.currentState!.updatePercentage(progress);
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Data imported successfully ($imported species were imported)."),
+        ),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error during import: $e")),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _processBatch(List<List<String>> rows,
+      GlobalKey<CustomLoadingDialogState> dialogKey) async {
+    final List<SpeciesCompanion> speciesToInsert = [];
+    final List<SpeciesSynonymsCompanion> synonymsToInsert = [];
+    for (var row in rows) {
+      if (row.length != 54) {
+        print("Skipped $row");
+        continue;
+      }
+      final String id = row[0];
+      final String scientificName = row[1];
+      final String rank = row[2];
+      final String genus = row[3];
+      final String family = row[4];
+      final String? year = row[5];
+      final String? author = row[6];
+      final String? bibliography = row[7];
+      final String? commonName = row[8];
+      final String? familyCommonName = row[9];
+      final String? imageUrl = row[10];
+      final String? flowerColor = row[11];
+      final String? flowerConspicuous = row[12];
+      final String? foliageColor = row[13];
+      final String? foliageTexture = row[14];
+      final String? fruitColor = row[15];
+      final String? fruitConspicuous = row[16];
+      final String? fruitMonths = row[17];
+      final String? bloomMonths = row[18];
+      final String? groundHumidity = row[19];
+      final String? growthForm = row[20];
+      final String? growthHabit = row[21];
+      final String? growthMonths = row[22];
+      final String? growthRate = row[23];
+      final String? ediblePart = row[24];
+      final String? vegetable = row[25];
+      final String? edible = row[26];
+      final String? light = row[27];
+      final String? soilNutriments = row[28];
+      final String? soilSalinity = row[29];
+      final String? anaerobicTolerance = row[30];
+      final String? atmosphericHumidity = row[31];
+      final String? averageHeightCm = row[32];
+      final String? maximumHeightCm = row[33];
+      final String? minimumRootDepthCm = row[34];
+      final String? phMaximum = row[35];
+      final String? phMinimum = row[36];
+      final String? plantingDaysToHarvest = row[37];
+      final String? plantingDescription = row[38];
+      final String? plantingSowingDescription = row[39];
+      final String? plantingRowSpacingCm = row[40];
+      final String? plantingSpreadCm = row[41];
+      final String? synonyms = row[42];
+      final String? distributions = row[43];
+      final String? commonNames = row[44];
+      final String? urlUsda = row[45];
+      final String? urlTropicos = row[46];
+      final String? urlTelaBotanica = row[47];
+      final String? urlPowo = row[48];
+      final String? urlPlantnet = row[49];
+      final String? urlGbif = row[50];
+      final String? urlOpenfarm = row[51];
+      final String? urlCatminat = row[52];
+      final String? urlWikipediaEn = row[53];
+
+      if (rank != "species") {
+        continue;
+      }
+
+      final bool alreadyExists = (await widget.env.speciesRepository
+              .getExternal(SpeciesDataSource.trefle, id)) !=
+          null;
+
+      if (!alreadyExists) {
+        speciesToInsert.add(SpeciesCompanion(
+          scientificName: drift.Value(scientificName),
+          family: drift.Value(family),
+          genus: drift.Value(genus),
+          species: drift.Value(scientificName),
+          author: drift.Value(author),
+          avatarUrl: drift.Value(imageUrl),
+          externalId: drift.Value(id),
+          dataSource: const drift.Value(SpeciesDataSource.trefle),
+        ));
+
+        if (synonyms != null && synonyms.isNotEmpty) {
+          var synonymsList = synonyms.split(',');
+          for (var synonym in synonymsList) {
+            synonymsToInsert.add(SpeciesSynonymsCompanion(
+              species: drift.Value(int.parse(id)),
+              synonym: drift.Value(synonym),
+            ));
+          }
+        }
+      }
+    }
+    await widget.env.speciesRepository.insertAll(speciesToInsert);
+
+    synonymsToInsert.map((synonym) async {
+      final int speciesId = (await widget.env.speciesRepository.getExternal(
+              SpeciesDataSource.trefle, synonym.id.value.toString()))!
+          .id;
+      return SpeciesSynonymsCompanion(
+        species: drift.Value(speciesId),
+        synonym: synonym.synonym,
+      );
+    });
+    widget.env.speciesSynonymsRepository.insertAll(synonymsToInsert);
   }
 
   @override

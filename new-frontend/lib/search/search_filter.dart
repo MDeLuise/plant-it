@@ -5,7 +5,8 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/loading_button.dart';
 
 enum DataSourceFilterType {
-  local,
+  custom,
+  trefle,
   floraCodex;
 }
 
