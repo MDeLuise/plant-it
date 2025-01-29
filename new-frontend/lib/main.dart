@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_it/events/add_event.dart';
 import 'package:plant_it/bottombar.dart';
 import 'package:plant_it/cache/cache.dart';
@@ -20,11 +21,35 @@ import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:plant_it/trefle_import/background_import.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  _initializeNotifications();
+  final env = _createEnvironment();
+  env.db.initDummyData();
+
+  await Workmanager().initialize(
+    _callbackDispatcher,
+    //isInDebugMode: true,
+  );
+
+  runApp(MyApp(env));
+}
+
+@pragma('vm:entry-point')
+void _callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    if (task == "import_species_task") {
+      await importSpecies(_createEnvironment(), inputData);
+    }
+    return Future.value(true);
+  });
+}
+
+Environment _createEnvironment() {
   final db = AppDatabase();
-  db.initDummyData();
   const String cacheKey = "customCacheManager";
   final cache = Cache(
       cacheManager: CacheManager(
@@ -37,7 +62,7 @@ void main() async {
       fileService: HttpFileService(),
     ),
   ));
-  final env = Environment(
+  final Environment result = Environment(
     db,
     cache,
     EventTypeRepository(db, cache),
@@ -50,9 +75,27 @@ void main() async {
     SpeciesSynonymsRepository(db, cache),
     SpeciesCareRepository(db, cache),
   );
-  env.reminderNotificationService = ReminderNotificationService(env);
 
-  runApp(MyApp(env));
+  result.reminderNotificationService = ReminderNotificationService(result);
+
+  return result;
+}
+
+Future<void> _initializeNotifications() {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestNotificationsPermission();
+
+  return flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
 class MyApp extends StatelessWidget {
