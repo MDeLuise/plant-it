@@ -46,4 +46,10 @@ class SpeciesSynonymsRepository extends BaseRepository<SpeciesSynonym> {
           ..where((s) => s.species.equals(speciesId)))
         .get();
   }
+
+  Future<void> insertAll(List<UpdateCompanion<SpeciesSynonym>> toInsert) async {
+    await db.batch((batch) {
+      batch.insertAll(db.speciesSynonyms, toInsert);
+    });
+  }
 }

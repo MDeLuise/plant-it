@@ -660,7 +660,7 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
   @override
   late final GeneratedColumn<String> author = GeneratedColumn<String>(
       'author', aliasedName, true,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
   static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
@@ -688,7 +688,7 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
                   GeneratedColumn.checkTextLength(maxTextLength: 50),
               type: DriftSqlType.string,
               requiredDuringInsert: false,
-              defaultValue: const Constant("local"))
+              defaultValue: const Constant("custom"))
           .withConverter<SpeciesDataSource>($SpeciesTable.$converterdataSource);
   static const VerificationMeta _externalIdMeta =
       const VerificationMeta('externalId');
@@ -1595,7 +1595,7 @@ class $SpeciesSynonymsTable extends SpeciesSynonyms
   @override
   late final GeneratedColumn<String> synonym = GeneratedColumn<String>(
       'synonym', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   @override

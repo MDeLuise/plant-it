@@ -29,7 +29,7 @@ class SpeciesRepository extends BaseRepository<Specy> {
 
   @override
   Future<int> insert(UpdateCompanion<Specy> toInsert) {
-    return db.into(db.species).insert(toInsert);
+    return db.into(db.species).insertOnConflictUpdate(toInsert);
   }
 
   @override
@@ -49,5 +49,55 @@ class SpeciesRepository extends BaseRepository<Specy> {
       ..limit(pageable.limit, offset: pageable.offset);
 
     return query.get();
+  }
+
+  Future<Specy?> getExternal(SpeciesDataSource dataSource, String externalId) {
+    return (db.select(db.species)
+          ..where((t) => Expression.and([
+                t.dataSource.equals(dataSource.name),
+                t.externalId.equals(externalId)
+              ])))
+        .getSingleOrNull();
+  }
+
+  Future<void> insertAll(List<UpdateCompanion<Specy>> toInsert) async {
+    await db.batch((batch) {
+      batch.insertAll(db.species, toInsert);
+    });
+  }
+
+  @override
+  Future<List<Specy>> getAllByDataSource(SpeciesDataSource dataSource) async {
+    return (db.select(db.species)
+          ..where((s) => s.dataSource.equals(dataSource.name)))
+        .get();
+  }
+
+  @override
+  Future<List<Specy>> getAllByScientificNameAndDataSource(String scientificName,
+      SpeciesDataSource dataSource, Pageable pageable) async {
+    final query = db.select(db.species)
+      ..where((s) => Expression.and([
+            s.scientificName.like('%$scientificName%'),
+            s.dataSource.equals(dataSource.name)
+          ]))
+      ..limit(pageable.limit, offset: pageable.offset);
+
+    return query.get();
+  }
+
+  @override
+  Future<List<Specy>> getAllByDataSourcePaginated(
+      SpeciesDataSource dataSource, Pageable pageable) async {
+    return (db.select(db.species)
+          ..where((s) => s.dataSource.equals(dataSource.name))
+          ..limit(pageable.limit, offset: pageable.offset))
+        .get();
+  }
+
+  Future<bool> existsTrefle() {
+    return db.managers.species
+        .filter((s) => s.dataSource.equals(SpeciesDataSource.trefle))
+        .exists();
   }
 }
