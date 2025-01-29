@@ -144,7 +144,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  void initDummyData() async {
+  Future<void> initDummyData() async {
     await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
       id: const Value(1),
       name: 'watering',
