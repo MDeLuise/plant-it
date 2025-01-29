@@ -91,13 +91,6 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _saveSettingsToDB() async {
-    final bool notificationsEnabledExists =
-        await widget.env.userSettingRepository.exists('notificationsEnabled');
-
-    if (!notificationsEnabledExists && notificationsEnabled) {
-      await ReminderNotificationService(widget.env).initialize();
-    }
-
     widget.env.userSettingRepository
         .put('notificationsEnabled', notificationsEnabled.toString());
     widget.env.userSettingRepository

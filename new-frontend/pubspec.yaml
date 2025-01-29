@@ -58,6 +58,7 @@ dependencies:
   cached_network_image: ^3.4.1
   permission_handler: ^11.3.1
   csv: ^6.0.0
+  workmanager: ^0.5.2
   # https://pub.dev/packages/chip_list
   # https://pub.dev/packages/advanced_chips_input
   # https://pub.dev/packages/introduction_screen

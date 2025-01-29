@@ -34,23 +34,6 @@ class ReminderNotificationService {
 
   ReminderNotificationService(this.env);
 
-  Future<void> initialize() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-
-    await _notificationsPlugin.initialize(initializationSettings);
-  }
-
   Future<void> showReminderNotification(Reminder reminderToNotify) async {
     final String plantName = await env.plantRepository
         .get(reminderToNotify.plant)
