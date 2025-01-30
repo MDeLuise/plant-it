@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:drift/drift.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/notification/background_import_notification_service.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 Future<void> importSpecies(
     Environment env, Map<String, dynamic>? inputData) async {
