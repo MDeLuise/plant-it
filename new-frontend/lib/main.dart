@@ -21,6 +21,7 @@ import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:plant_it/trefle_import/background_download.dart';
 import 'package:plant_it/trefle_import/background_import.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -43,6 +44,8 @@ void _callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     if (task == "import_species_task") {
       await importSpecies(_createEnvironment(), inputData);
+    } else if (task == "download_species_task") {
+      await downloadFile(inputData);
     }
     return Future.value(true);
   });
