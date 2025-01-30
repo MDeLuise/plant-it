@@ -1,12 +1,9 @@
-import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/environment.dart';
-import 'package:http/http.dart' as http;
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:workmanager/workmanager.dart';
@@ -153,170 +150,60 @@ class _TrefleSettingsState extends State<TrefleSettings> {
       "https://github.com/treflehq/dump/releases/download/1.0.0-alpha%2B20201015/species.csv";
 
   void _downloadData() async {
-    try {
-      // Request storage permission
-      var status = await Permission.manageExternalStorage.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Storage permission denied.")),
-        );
-        return;
-      }
-
-      // Define the Downloads folder path
-      String downloadsFolder;
-      if (Platform.isAndroid) {
-        downloadsFolder =
-            "/storage/emulated/0/Download"; // Common Downloads folder for Android
-      } else if (Platform.isIOS) {
-        Directory? iosDownloadsDirectory =
-            await getApplicationDocumentsDirectory();
-        downloadsFolder = iosDownloadsDirectory
-            .path; // iOS doesn't have a public Downloads folder
-      } else {
-        throw Exception("Unsupported platform");
-      }
-
-      // Ensure the folder exists
-      final directory = Directory(downloadsFolder);
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-
-      // Construct the file path
-      final filePath = "$downloadsFolder/species.csv";
-
-      // Show progress dialog with StatefulBuilder inside the widget parameter
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.loading,
-        title: 'Downloading...',
-        text:
-            'Downloading file (~178 MB). This may take a few minutes. Please do not close the app or dismiss the dialog.',
-        showCancelBtn: true,
-        showConfirmBtn: false,
-        barrierDismissible: false,
-        customAsset: "packages/quickalert/assets/loading.gif",
-      );
-
-      // Download the file
-      final url = Uri.parse(downloadUrl);
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("File downloaded successfully: $filePath")),
-        );
-        Navigator.of(context).pop();
-      } else {
-        throw Exception("Failed to download file: ${response.statusCode}");
-      }
-    } catch (e) {
+    var status = await Permission.manageExternalStorage.request();
+    if (!status.isGranted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Download failed: $e")),
+        const SnackBar(content: Text("Storage permission denied.")),
       );
-      Navigator.of(context).pop();
+      return;
     }
+
+    String? directoryPath = await FilePicker.platform
+        .getDirectoryPath(initialDirectory: "/storage/emulated/0/Download");
+
+    if (directoryPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No directory selected")),
+      );
+      return;
+    }
+
+    final filePath = "$directoryPath/species.csv";
+    bool procede = true;
+
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.info,
+      title: "Download in Background",
+      text:
+          'This operation will run in the background. If you want to track progress, please enable app notifications.',
+      showCancelBtn: true,
+      confirmBtnText: "OK",
+      cancelBtnText: "Cancel",
+      barrierDismissible: false,
+      customAsset: "packages/quickalert/assets/loading.gif",
+      onCancelBtnTap: () {
+        procede = false;
+        Navigator.of(context).pop();
+      },
+    );
+    if (!procede) {
+      return;
+    }
+
+    await Permission.notification.request();
+    await Workmanager().registerOneOffTask(
+      "download_species",
+      "download_species_task",
+      inputData: {
+        "filePath": filePath,
+        "downloadUrl": downloadUrl,
+      },
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Import started in the background.")),
+    );
   }
-
-  // void _downloadData() async {
-  //   try {
-  //     // Request storage permission
-  //     var status = await Permission.manageExternalStorage.request();
-  //     if (!status.isGranted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("Storage permission denied.")),
-  //       );
-  //       return;
-  //     }
-
-  //     // Define the Downloads folder path
-  //     String downloadsFolder;
-  //     if (Platform.isAndroid) {
-  //       downloadsFolder = "/storage/emulated/0/Download";
-  //     } else if (Platform.isIOS) {
-  //       Directory? iosDownloadsDirectory =
-  //           await getApplicationDocumentsDirectory();
-  //       downloadsFolder = iosDownloadsDirectory.path;
-  //     } else {
-  //       throw Exception("Unsupported platform");
-  //     }
-
-  //     // Ensure the folder exists
-  //     final directory = Directory(downloadsFolder);
-  //     if (!await directory.exists()) {
-  //       await directory.create(recursive: true);
-  //     }
-
-  //     // Construct the file path
-  //     final filePath = "$downloadsFolder/species.csv";
-  //     final url = Uri.parse(downloadUrl);
-
-  //     double progress = 0.0; // Initialize progress value
-
-  //     // Show progress dialog with StatefulBuilder inside the widget parameter
-  //     QuickAlert.show(
-  //       context: context,
-  //       type: QuickAlertType.loading,
-  //       title: 'Downloading...',
-  //       text: 'Please wait while the file is being downloaded (~178Mb). It will take some time.',
-  //       showCancelBtn: false,
-  //       customAsset: "packages/quickalert/assets/loading.gif",
-  //     );
-
-  //     // Download the file using a client for progress tracking
-  //     final client = http.Client();
-  //     final request = http.Request('GET', url);
-  //     final response = await client.send(request);
-
-  //     if (response.statusCode == 200) {
-  //       final contentLength = response.contentLength ?? 0;
-  //       final file = File(filePath);
-  //       final sink = file.openWrite();
-
-  //       int downloadedBytes = 0;
-
-  //       await response.stream.listen(
-  //         (chunk) {
-  //           downloadedBytes += chunk.length;
-  //           sink.add(chunk);
-
-  //           // Update progress and refresh the dialog's progress bar
-  //           print((downloadedBytes / contentLength) * 100);
-  //           setState(() {
-  //             progress = downloadedBytes / contentLength;
-  //           });
-  //         },
-  //         onDone: () async {
-  //           await sink.close();
-  //           Navigator.of(context).pop(); // Close progress dialog
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(
-  //                 content: Text("File downloaded successfully: $filePath")),
-  //           );
-  //         },
-  //         onError: (e) {
-  //           Navigator.of(context).pop(); // Close progress dialog
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(content: Text("Download failed: $e")),
-  //           );
-  //         },
-  //         cancelOnError: true,
-  //       );
-  //     } else {
-  //       Navigator.of(context).pop(); // Close progress dialog
-  //       throw Exception("Failed to download file: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     Navigator.of(context).pop(); // Close progress dialog
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Download failed: $e")),
-  //     );
-  //   }
-  // }
 
   void _importData() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
