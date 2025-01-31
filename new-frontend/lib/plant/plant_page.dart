@@ -127,7 +127,7 @@ class _PlantPageState extends State<PlantPage> {
                         .copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
                   Text(
-                    'Aspiditra Elatior Variegata',
+                    _species?.scientificName ?? '',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Colors.white70, fontStyle: FontStyle.italic),
                   ),
@@ -262,7 +262,7 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3,
+        childAspectRatio: 2.5, // 3
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
       ),
