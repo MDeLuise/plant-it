@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/more/reminder/reminder_list_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
@@ -198,7 +200,11 @@ class _PlantPageState extends State<PlantPage> {
                             .copyWith(
                                 color: Theme.of(context).colorScheme.secondary),
                       ),
-                      Text("Edit"),
+                      GestureDetector(
+                        onTap: () => navigateTo(context,
+                            ReminderListPage(widget.env, widget.plant)),
+                        child: Text("Edit"),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
