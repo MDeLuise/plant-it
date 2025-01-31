@@ -2,6 +2,7 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/more/data_sources_page.dart';
 import 'package:plant_it/more/event_type/event_type_list_page.dart';
+import 'package:plant_it/more/reminder/reminder_list_page.dart';
 import 'package:plant_it/more/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -35,6 +36,13 @@ class _MorePageState extends State<MorePage> {
             subtitle: const Text("Manage the event types"),
             leading: const Icon(LucideIcons.glass_water),
             onTap: () => navigateTo(context, EventTypeListPage(widget.env)),
+          ),
+          ListTile(
+            title: const Text("Reminders"),
+            subtitle: const Text("Manage the reminders"),
+            leading: const Icon(LucideIcons.clock),
+            onTap: () =>
+                navigateTo(context, ReminderListPage(widget.env, null)),
           ),
           ListTile(
             title: const Text("Data Sources"),
