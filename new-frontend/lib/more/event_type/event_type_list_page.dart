@@ -93,7 +93,7 @@ class _EventTypesListPageState extends State<EventTypeListPage> {
         title: const Text('Event Types'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(LucideIcons.plus),
             onPressed: _navigateToAddEvent,
           ),
         ],
