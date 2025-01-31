@@ -140,12 +140,36 @@ class _PlantPageState extends State<PlantPage> {
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    "${widget.plant.name} is a plant of the species ${_species!.species}, genus ${_species!.genus} and family ${_species!.family}.",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white70),
+                  RichText(
+                    text: TextSpan(
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Colors.white70),
+                      children: [
+                        TextSpan(
+                            text:
+                                "${widget.plant.name} is a plant of the species "),
+                        TextSpan(
+                          text: _species!.species,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        const TextSpan(text: ", genus "),
+                        TextSpan(
+                          text: _species!.genus,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        const TextSpan(text: " and family "),
+                        TextSpan(
+                          text: _species!.family,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        const TextSpan(text: "."),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
