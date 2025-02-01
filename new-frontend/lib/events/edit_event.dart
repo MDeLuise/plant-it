@@ -70,7 +70,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   void _updateEvent() async {
     if (_formKey.currentState!.validate()) {
       try {
-        widget.env.eventRepository.update(Event(
+        await widget.env.eventRepository.update(Event(
           id: widget.event.id,
           type: eventController.selectedItems.first.value.id,
           plant: plantController.selectedItems.first.value.id,
