@@ -55,7 +55,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       try {
         for (var e in eventController.selectedItems) {
           for (var p in plantController.selectedItems) {
-            widget.env.eventRepository.insert(EventsCompanion(
+            await widget.env.eventRepository.insert(EventsCompanion(
               type: drift.Value(e.value.id),
               plant: drift.Value(p.value.id),
               date: drift.Value(selectedDate),

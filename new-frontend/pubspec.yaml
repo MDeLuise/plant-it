@@ -59,6 +59,7 @@ dependencies:
   permission_handler: ^11.3.1
   csv: ^6.0.0
   workmanager: ^0.5.2
+  wheel_picker: ^0.2.1
   # https://pub.dev/packages/chip_list
   # https://pub.dev/packages/advanced_chips_input
   # https://pub.dev/packages/introduction_screen
