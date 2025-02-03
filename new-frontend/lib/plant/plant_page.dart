@@ -38,15 +38,24 @@ class _PlantPageState extends State<PlantPage> {
     super.initState();
     _setSpecies();
     _setPlantCare();
-    widget.env.imageRepository.get(widget.plant.avatar!).then((i) {
-      final DecorationImage newAvatar = DecorationImage(
-        image: MemoryImage(base64Decode(i.base64)),
-        fit: BoxFit.cover,
-      );
-      setState(() {
-        _avatar = newAvatar;
+    if (widget.plant.avatar != null) {
+      widget.env.imageRepository.get(widget.plant.avatar!).then((i) {
+        final DecorationImage newAvatar = DecorationImage(
+          image: MemoryImage(base64Decode(i.base64)),
+          fit: BoxFit.cover,
+        );
+        setState(() {
+          _avatar = newAvatar;
+        });
       });
-    });
+    } else {
+      setState(() {
+        _avatar = const DecorationImage(
+          image: AssetImage("assets/images/generic-plant.jpg"),
+          fit: BoxFit.cover,
+        );
+      });
+    }
   }
 
   void _setSpecies() {
