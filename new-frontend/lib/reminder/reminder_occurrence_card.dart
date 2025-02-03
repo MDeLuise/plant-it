@@ -1,6 +1,4 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -33,12 +31,6 @@ class _ReminderOccurrenceCardState extends State<ReminderOccurrenceCard> {
         .then((r) => setState(() => plant = r));
   }
 
-  Color _desaturate(Color color, double factor) {
-    final hslColor = HSLColor.fromColor(color);
-    final newSaturation = (hslColor.saturation * factor).clamp(0.0, 1.0);
-    return hslColor.withSaturation(newSaturation).toColor();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,52 +38,98 @@ class _ReminderOccurrenceCardState extends State<ReminderOccurrenceCard> {
         GestureDetector(
           onTap: () => navigateTo(context,
               EditReminderPage(widget.env, widget.reminderOccurrence.reminder)),
-          child: DottedBorder(
-            color: const Color.fromARGB(90, 255, 255, 255),
-            strokeWidth: 1,
-            borderType: BorderType.RRect,
-            radius: const Radius.circular(20),
-            dashPattern: const [5],
-            child: Container(
-              decoration: BoxDecoration(
-                color: eventType.color != null
-                    ? _desaturate(hexToColor(eventType.color!), .6)
-                    : _desaturate(Theme.of(context).colorScheme.primary, .6),
-                borderRadius: BorderRadius.circular(15),
+          child: Container(
+            decoration: BoxDecoration(
+              color: eventType.color != null
+                  ? adaptiveColor(context, hexToColor(eventType.color!))
+                  : adaptiveColor(
+                      context, Theme.of(context).colorScheme.primary),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                width: 2,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(appIcons[eventType.icon!]),
-                        const SizedBox(width: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(formatDate(
-                                widget.reminderOccurrence.nextOccurrence)),
-                            Text(plant.name),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(children: [
-                      Text(timeDiffStr(
-                          widget.reminderOccurrence.nextOccurrence)),
-                      const SizedBox(width: 10),
-                      const Icon(LucideIcons.bell),
-                    ]),
-                  ],
+              boxShadow: [
+                BoxShadow(
+                  color: adaptiveColor(context,
+                          Theme.of(context).colorScheme.onPrimaryContainer)
+                      .withOpacity(.2),
+                  blurRadius: 3,
+                  spreadRadius: 1,
+                  offset: const Offset(2, 2),
                 ),
-              ),
+              ],
             ),
+            child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${eventType.name.substring(0, 1).toUpperCase()}${eventType.name.substring(1)} Reminder",
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "Don't forget to ${eventType.name} your ${plant.name} every ${widget.reminderOccurrence.reminder.frequencyQuantity} ${widget.reminderOccurrence.reminder.frequencyUnit.name}.",
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .45,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                appIcons[eventType.icon],
+                                size: 17,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                timeDiffStr(
+                                    widget.reminderOccurrence.nextOccurrence),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                              ),
+                              const SizedBox(width: 2),
+                              const Text(" "),
+                              Expanded(
+                                child: Text(
+                                  eventType.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
           ),
         ),
-        const SizedBox(height: 20),
       ],
     );
   }

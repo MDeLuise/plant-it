@@ -98,7 +98,7 @@ class _PlantPageState extends State<PlantPage> {
               background: Container(
                 decoration: BoxDecoration(
                   image: _avatar,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(.7),
                 ),
               ),
             ),
@@ -130,8 +130,10 @@ class _PlantPageState extends State<PlantPage> {
                   ),
                   Text(
                     _species?.scientificName ?? '',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Colors.white70, fontStyle: FontStyle.italic),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontStyle: FontStyle.italic),
                   ),
                   const SizedBox(height: 16),
 
@@ -144,10 +146,7 @@ class _PlantPageState extends State<PlantPage> {
                   const SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.white70),
+                      style: Theme.of(context).textTheme.bodyMedium!,
                       children: [
                         TextSpan(
                             text:
@@ -317,6 +316,11 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
         viewportFraction: 1,
         indicatorMargin: 0,
         height: 230,
+        slideIndicator: CircularSlideIndicator(
+            slideIndicatorOptions: SlideIndicatorOptions(
+          currentIndicatorColor: Theme.of(context).colorScheme.primary,
+          indicatorBackgroundColor: Colors.grey.withOpacity(.5),
+        )),
       ),
       items: pageWidgets,
     );

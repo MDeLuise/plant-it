@@ -170,12 +170,12 @@ class _EditReminderPageState extends State<EditReminderPage> {
                     searchEnabled: true,
                     maxSelections: 1,
                     chipDecoration: ChipDecoration(
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       wrap: true,
                       runSpacing: 2,
                       spacing: 10,
                       labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.surfaceDim),
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     fieldDecoration: FieldDecoration(
                       hintText: 'Select Event',
@@ -183,22 +183,22 @@ class _EditReminderPageState extends State<EditReminderPage> {
                       showClearIcon: false,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
                     ),
                     dropdownDecoration: DropdownDecoration(
                       marginTop: 2,
                       maxHeight: 500,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      header: const Padding(
-                        padding: EdgeInsets.all(8),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      header: Padding(
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           'Select events from the list',
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -206,10 +206,11 @@ class _EditReminderPageState extends State<EditReminderPage> {
                     dropdownItemDecoration: DropdownItemDecoration(
                       selectedIcon: Icon(Icons.check_box,
                           color: Theme.of(context).colorScheme.surfaceDim),
-                      textColor: Colors.black,
+                      textColor: Theme.of(context).colorScheme.onPrimary,
                       selectedBackgroundColor:
                           Theme.of(context).colorScheme.primary,
-                      selectedTextColor: Colors.black,
+                      selectedTextColor:
+                          Theme.of(context).colorScheme.onPrimary,
                     ),
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please select an event'
@@ -225,27 +226,24 @@ class _EditReminderPageState extends State<EditReminderPage> {
                     searchEnabled: true,
                     maxSelections: 1,
                     chipDecoration: ChipDecoration(
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       wrap: true,
                       runSpacing: 2,
                       spacing: 10,
                       labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.surfaceDim),
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please select a plant'
                         : null,
                     fieldDecoration: FieldDecoration(
                       hintText: 'Plants',
-                      // hintStyle: TextStyle(
-                      //     color: Theme.of(context).colorScheme.primary),
                       prefixIcon: const Icon(LucideIcons.leaf),
                       showClearIcon: false,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Colors
-                              .grey, // Theme.of(context).colorScheme.primary),
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -259,7 +257,7 @@ class _EditReminderPageState extends State<EditReminderPage> {
                     dropdownDecoration: DropdownDecoration(
                       marginTop: 2,
                       maxHeight: 500,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       header: const Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(

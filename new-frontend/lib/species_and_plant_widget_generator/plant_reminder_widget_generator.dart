@@ -1,4 +1,3 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
@@ -51,55 +50,45 @@ class PlantReminderInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DottedBorder(
-      color: const Color.fromARGB(90, 255, 255, 255),
-      strokeWidth: 1,
-      borderType: BorderType.RRect,
-      radius: const Radius.circular(10),
-      dashPattern: const [5],
-      padding: EdgeInsets.zero,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(width: 10),
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 30,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(.2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(width: 10),
+          Icon(
+            icon,
+            size: 30,
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            // just to make the 2 TextOverflow.ellipsis work
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(overflow: TextOverflow.ellipsis),
+                ),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ],
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              // just to make the 2 TextOverflow.ellipsis work
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                  ),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

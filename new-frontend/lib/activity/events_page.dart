@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
+import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EventsPage extends StatefulWidget {
@@ -200,9 +201,19 @@ class ListOfActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Widget> activityWidgets = activity.map((a) {
       if (a is Event) {
-        return EventCard(env, a);
+        return Column(
+          children: [
+            EventCard(env, a),
+            const SizedBox(height: 10),
+          ],
+        );
       } else {
-        return ReminderOccurrenceCard(env, a);
+        return Column(
+          children: [
+            ReminderOccurrenceCard(env, a),
+            const SizedBox(height: 10),
+          ],
+        );
       }
     }).toList();
 

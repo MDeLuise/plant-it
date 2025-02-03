@@ -125,7 +125,7 @@ class MyApp extends StatelessWidget {
           colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
           useMaterial3: true,
         ),
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.system,
       );
     });
   }

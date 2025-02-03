@@ -178,24 +178,21 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         searchEnabled: true,
                         chipDecoration: ChipDecoration(
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           wrap: true,
                           runSpacing: 2,
                           spacing: 10,
                           labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.surfaceDim),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
                         fieldDecoration: FieldDecoration(
                           hintText: 'Events',
-                          // hintStyle: TextStyle(
-                          //     color: Theme.of(context).colorScheme.primary),
                           prefixIcon: const Icon(LucideIcons.glass_water),
                           showClearIcon: false,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .grey, // Theme.of(context).colorScheme.primary),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -210,7 +207,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           marginTop: 2,
                           maxHeight: 500,
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           header: const Padding(
                             padding: EdgeInsets.all(8),
                             child: Text(
@@ -226,7 +223,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         ),
                         dropdownItemDecoration: DropdownItemDecoration(
                           selectedIcon: Icon(Icons.check_box,
-                              color: Theme.of(context).colorScheme.surfaceDim),
+                              color: Theme.of(context).colorScheme.onPrimary),
                           textColor: Colors.black,
                           selectedBackgroundColor:
                               Theme.of(context).colorScheme.primary,
@@ -251,24 +248,21 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         searchEnabled: true,
                         chipDecoration: ChipDecoration(
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           wrap: true,
                           runSpacing: 2,
                           spacing: 10,
                           labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.surfaceDim),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
                         fieldDecoration: FieldDecoration(
                           hintText: 'Plants',
-                          // hintStyle: TextStyle(
-                          //     color: Theme.of(context).colorScheme.primary),
                           prefixIcon: const Icon(LucideIcons.leaf),
                           showClearIcon: false,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .grey, // Theme.of(context).colorScheme.primary),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -283,7 +277,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           marginTop: 2,
                           maxHeight: 500,
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           header: const Padding(
                             padding: EdgeInsets.all(8),
                             child: Text(
