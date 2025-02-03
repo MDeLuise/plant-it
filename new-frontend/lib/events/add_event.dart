@@ -130,12 +130,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         searchEnabled: true,
                         chipDecoration: ChipDecoration(
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           wrap: true,
                           runSpacing: 2,
                           spacing: 10,
                           labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.surfaceDim),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
                         fieldDecoration: FieldDecoration(
                           hintText: 'Events',
@@ -162,16 +162,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           marginTop: 2,
                           maxHeight: 500,
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          header: const Padding(
-                            padding: EdgeInsets.all(8),
+                              Theme.of(context).colorScheme.primary,
+                          header: Padding(
+                            padding: const EdgeInsets.all(8),
                             child: Text(
                               'Select events from the list',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                           ),
@@ -179,10 +179,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         dropdownItemDecoration: DropdownItemDecoration(
                           selectedIcon: Icon(Icons.check_box,
                               color: Theme.of(context).colorScheme.surfaceDim),
-                          textColor: Colors.black,
+                          textColor: Theme.of(context).colorScheme.onPrimary,
                           selectedBackgroundColor:
                               Theme.of(context).colorScheme.primary,
-                          selectedTextColor: Colors.black,
+                          selectedTextColor:
+                              Theme.of(context).colorScheme.onSecondary,
+                        ),
+                        searchDecoration: const SearchFieldDecoration(
+                          searchIcon: Icon(LucideIcons.search),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -202,17 +206,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         searchEnabled: true,
                         chipDecoration: ChipDecoration(
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           wrap: true,
                           runSpacing: 2,
                           spacing: 10,
                           labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.surfaceDim),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
                         fieldDecoration: FieldDecoration(
                           hintText: 'Plants',
-                          // hintStyle: TextStyle(
-                          //     color: Theme.of(context).colorScheme.primary),
                           prefixIcon: const Icon(LucideIcons.leaf),
                           showClearIcon: false,
                           border: OutlineInputBorder(
@@ -234,16 +236,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           marginTop: 2,
                           maxHeight: 500,
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          header: const Padding(
-                            padding: EdgeInsets.all(8),
+                              Theme.of(context).colorScheme.primary,
+                          header: Padding(
+                            padding: const EdgeInsets.all(8),
                             child: Text(
                               'Select plants from the list',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                           ),
@@ -251,10 +253,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         dropdownItemDecoration: DropdownItemDecoration(
                           selectedIcon: Icon(Icons.check_box,
                               color: Theme.of(context).colorScheme.surfaceDim),
-                          textColor: Colors.black,
+                          textColor: Theme.of(context).colorScheme.onPrimary,
                           selectedBackgroundColor:
                               Theme.of(context).colorScheme.primary,
-                          selectedTextColor: Colors.black,
+                          selectedTextColor:
+                              Theme.of(context).colorScheme.onSecondary,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
