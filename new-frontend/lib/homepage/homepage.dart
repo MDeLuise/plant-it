@@ -6,6 +6,7 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/homepage/plant_card.dart';
+import 'package:plant_it/homepage/set_name.dart';
 import 'package:plant_it/reminder/reminder_occurrence.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
 import 'package:plant_it/reminder/reminder_occurrence_card.dart';
@@ -73,7 +74,7 @@ class _HomepageState extends State<Homepage> {
                 height: MediaQuery.of(context).size.height * .3,
                 child: Container(
                   color: Theme.of(context).colorScheme.primary.withOpacity(.7),
-                  child: _Header(),
+                  child: _Header(widget.env),
                 ),
               ),
               Column(
@@ -166,7 +167,42 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatefulWidget {
+  final Environment env;
+
+  const _Header(this.env);
+
+  @override
+  State<_Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<_Header> {
+  String _currentName = "User";
+
+  @override
+  void initState() {
+    super.initState();
+    widget.env.userSettingRepository.getOrDefault("username", "User").then((u) {
+      setState(() => _currentName = u);
+    });
+  }
+
+  void _showEditNameDialog() {
+    showModalBottomSheet<void>(
+      showDragHandle: false,
+      context: context,
+      builder: (BuildContext context) {
+        return SetNamePanel(widget.env, _setUsername, _currentName);
+      },
+    );
+  }
+
+  void _setUsername(String username) {
+    final String toSave = username.isEmpty ? "User" : username;
+    widget.env.userSettingRepository.put("username", toSave);
+    setState(() => _currentName = username);
+  }
+
   String _getGreeting(int hour) {
     if (hour < 12) {
       return "Good morning";
@@ -196,12 +232,15 @@ class _Header extends StatelessWidget {
                   greeting,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Text(
-                  "User",
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                GestureDetector(
+                  onTap: _showEditNameDialog,
+                  child: Text(
+                    _currentName,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
               ],
             ),
