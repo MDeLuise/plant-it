@@ -5,6 +5,7 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
+import 'package:plant_it/more/reminder/edit_reminder.dart';
 import 'package:plant_it/reminder/reminder_occurrence.dart';
 
 class ReminderOccurrenceCard extends StatefulWidget {
@@ -32,13 +33,19 @@ class _ReminderOccurrenceCardState extends State<ReminderOccurrenceCard> {
         .then((r) => setState(() => plant = r));
   }
 
+  Color _desaturate(Color color, double factor) {
+    final hslColor = HSLColor.fromColor(color);
+    final newSaturation = (hslColor.saturation * factor).clamp(0.0, 1.0);
+    return hslColor.withSaturation(newSaturation).toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         GestureDetector(
-          // onTap: () =>
-          //     navigateTo(context, EditReminderScreen(widget.env, widget.event)),
+          onTap: () => navigateTo(context,
+              EditReminderPage(widget.env, widget.reminderOccurrence.reminder)),
           child: DottedBorder(
             color: const Color.fromARGB(90, 255, 255, 255),
             strokeWidth: 1,
@@ -48,8 +55,8 @@ class _ReminderOccurrenceCardState extends State<ReminderOccurrenceCard> {
             child: Container(
               decoration: BoxDecoration(
                 color: eventType.color != null
-                    ? hexToColor(eventType.color!).withOpacity(.7)
-                    : Theme.of(context).colorScheme.primary.withOpacity(.7),
+                    ? _desaturate(hexToColor(eventType.color!), .6)
+                    : _desaturate(Theme.of(context).colorScheme.primary, .6),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
