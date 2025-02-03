@@ -16,7 +16,14 @@ class EventTypeRepository extends BaseRepository<EventType> {
 
   @override
   Future<List<EventType>> getAll() async {
-    return db.select(db.eventTypes).get();
+    return (db.select(db.eventTypes)
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.name,
+                  mode: OrderingMode.asc,
+                )
+          ]))
+        .get();
   }
 
   @override

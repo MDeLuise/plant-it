@@ -50,8 +50,7 @@ class _PlantPageState extends State<PlantPage> {
   }
 
   void _setSpecies() {
-    if (!mounted) return;
-    widget.env.speciesRepository.get(widget.plant.id).then((s) {
+    widget.env.speciesRepository.get(widget.plant.species).then((s) {
       setState(() {
         _species = s;
         _isSpeciesLoading = false;
@@ -152,19 +151,19 @@ class _PlantPageState extends State<PlantPage> {
                             text:
                                 "${widget.plant.name} is a plant of the species "),
                         TextSpan(
-                          text: _species!.species,
+                          text: _species?.species,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.primary),
                         ),
                         const TextSpan(text: ", genus "),
                         TextSpan(
-                          text: _species!.genus,
+                          text: _species?.genus,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.primary),
                         ),
                         const TextSpan(text: " and family "),
                         TextSpan(
-                          text: _species!.family,
+                          text: _species?.family,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.primary),
                         ),

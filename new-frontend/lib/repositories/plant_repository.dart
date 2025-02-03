@@ -16,7 +16,14 @@ class PlantRepository extends BaseRepository<Plant> {
 
   @override
   Future<List<Plant>> getAll() async {
-    return db.select(db.plants).get();
+    return (db.select(db.plants)
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.name,
+                  mode: OrderingMode.asc,
+                )
+          ]))
+        .get();
   }
 
   @override
