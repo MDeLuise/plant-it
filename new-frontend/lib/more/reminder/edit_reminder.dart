@@ -146,13 +146,13 @@ class _EditReminderPageState extends State<EditReminderPage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text("Add Reminder")),
+        appBar: AppBar(title: const Text("Update Reminder")),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Reminder")),
+      appBar: AppBar(title: const Text("Update Reminder")),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
