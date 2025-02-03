@@ -34,12 +34,15 @@ class _PlantCardState extends State<PlantCard> {
 
   @override
   Widget build(BuildContext context) {
-    final DecorationImage? backgroundImage = base64Avatar != null
+    final DecorationImage backgroundImage = base64Avatar != null
         ? DecorationImage(
             image: MemoryImage(base64Decode(base64Avatar!)),
             fit: BoxFit.cover,
           )
-        : null;
+        : const DecorationImage(
+            image: AssetImage("assets/images/generic-plant.jpg"),
+            fit: BoxFit.cover,
+          );
 
     return GestureDetector(
       onTap: () => navigateTo(context, PlantPage(widget.env, widget.plant)),

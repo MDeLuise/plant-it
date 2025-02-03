@@ -6,6 +6,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:plant_it/search/species/species_page.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter/src/widgets/image.dart' as flutterImage;
 
 class SearchSpeciesCard extends StatefulWidget {
   final Environment env;
@@ -35,41 +36,50 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
         child: Stack(
           children: [
             Container(
-                height: MediaQuery.of(context).size.height * .5,
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).colorScheme.primary.withOpacity(.7),
-                ),
-                child: avatarUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: avatarUrl,
-                        fit: BoxFit.cover,
-                        imageBuilder: (context, imageProvider) => Container(
+              height: MediaQuery.of(context).size.height * .5,
+              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.primary.withOpacity(.7),
+              ),
+              child: avatarUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: avatarUrl,
+                      fit: BoxFit.cover,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                            color: Colors.grey,
                           ),
                         ),
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      )
-                    : null),
+                      ),
+                      errorWidget: (context, url, error) => ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: const flutterImage.Image(
+                            image:
+                                AssetImage("assets/images/generic-plant.jpg"),
+                            fit: BoxFit.cover),
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: const flutterImage.Image(
+                          image: AssetImage("assets/images/generic-plant.jpg"),
+                          fit: BoxFit.cover),
+                    ),
+            ),
             Positioned(
               bottom: 0,
               left: 0,
