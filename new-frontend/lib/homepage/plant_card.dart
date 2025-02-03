@@ -17,6 +17,7 @@ class PlantCard extends StatefulWidget {
 
 class _PlantCardState extends State<PlantCard> {
   String? base64Avatar;
+  String _speciesName = "";
 
   @override
   void initState() {
@@ -26,6 +27,9 @@ class _PlantCardState extends State<PlantCard> {
           .get(widget.plant.avatar!)
           .then((r) => setState(() => base64Avatar = r.base64));
     }
+    widget.env.speciesRepository
+        .get(widget.plant.species)
+        .then((s) => setState(() => _speciesName = s.scientificName));
   }
 
   @override
@@ -81,15 +85,13 @@ class _PlantCardState extends State<PlantCard> {
                 widget.plant.name,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
-              // Text(
-              //   widget.plant.species!,
-              //   softWrap: false,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: const TextStyle(color: Colors.grey),
-              // ),
-              Text("Monstera deliciosa"),
+              Text(_speciesName,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 177, 177, 177))),
             ],
           ),
         ),

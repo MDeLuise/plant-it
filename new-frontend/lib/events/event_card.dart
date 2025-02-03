@@ -41,9 +41,24 @@ class _EventCardState extends State<EventCard> {
           child: Container(
             decoration: BoxDecoration(
               color: eventType.color != null
-                  ? hexToColor(eventType.color!).withOpacity(.7)
-                  : Theme.of(context).colorScheme.primary.withOpacity(.7),
+                  ? adaptiveColor(context, hexToColor(eventType.color!))
+                  : adaptiveColor(
+                      context, Theme.of(context).colorScheme.primary),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                width: 2,
+              ),
               borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: adaptiveColor(context,
+                          Theme.of(context).colorScheme.onPrimaryContainer)
+                      .withOpacity(.2),
+                  blurRadius: 3,
+                  spreadRadius: 1,
+                  offset: const Offset(2, 2),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -59,22 +74,23 @@ class _EventCardState extends State<EventCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(formatDate(widget.event.date)),
-                          Text(plant.name),
+                          Text(
+                            plant.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  Row(children: [
-                    Text(timeDiffStr(widget.event.date)),
-                    const SizedBox(width: 10),
-                    const Icon(LucideIcons.check),
-                  ]),
+                  Text(
+                    timeDiffStr(widget.event.date),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        const SizedBox(height: 20),
       ],
     );
   }

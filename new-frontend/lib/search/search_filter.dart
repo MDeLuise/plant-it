@@ -71,12 +71,12 @@ class _SearchFilterState extends State<SearchFilter> {
                   enabled: true,
                   searchEnabled: true,
                   chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     wrap: true,
                     runSpacing: 2,
                     spacing: 10,
                     labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.surfaceDim),
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                   fieldDecoration: FieldDecoration(
                     hintText: 'Data Source',
@@ -84,9 +84,7 @@ class _SearchFilterState extends State<SearchFilter> {
                     showClearIcon: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -99,27 +97,27 @@ class _SearchFilterState extends State<SearchFilter> {
                   dropdownDecoration: DropdownDecoration(
                     marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    header: const Padding(
-                      padding: EdgeInsets.all(8),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    header: Padding(
+                      padding: const EdgeInsets.all(8),
                       child: Text(
                         'Select data source from the list',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ),
                   ),
                   dropdownItemDecoration: DropdownItemDecoration(
                     selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.surfaceDim),
+                        color: Theme.of(context).colorScheme.onPrimary),
                     textColor: Colors.black,
                     selectedBackgroundColor:
                         Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                    selectedTextColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   validator: (value) {
                     if (dataSourceTypeController.selectedItems.isEmpty) {

@@ -58,3 +58,17 @@ String _buildTimeString(int value, String unit, bool isFuture) {
     return '$value $timeUnit ago';
   }
 }
+
+Color adaptiveColor(BuildContext context, Color color) {
+  bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+  if (isDarkMode) {
+    return darkenColor(color, .12);
+  }
+  return color;
+}
+
+Color darkenColor(Color color, double factor) {
+  final hsl = HSLColor.fromColor(color);
+  return hsl.withLightness((hsl.lightness - factor).clamp(0.0, 1.0)).toColor();
+}

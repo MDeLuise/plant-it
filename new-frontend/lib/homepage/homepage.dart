@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/homepage/plant_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
-import 'package:plant_it/reminder/reminder_occurrence_widget.dart';
+import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 
 class Homepage extends StatefulWidget {
   final Environment env;
@@ -248,7 +248,7 @@ class _NextRemindersState extends State<_NextReminders> {
             builder: (BuildContext context) {
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: ReminderOccurrenceWidget(
+                child: ReminderOccurrenceCard(
                   widget.env,
                   o,
                 ),
