@@ -57,6 +57,7 @@ Future<void> importSpecies(
 Future<void> _processBatch(Environment env, List<List<String>> rows) async {
   final List<SpeciesCompanion> speciesToInsert = [];
   final List<SpeciesSynonymsCompanion> synonymsToInsert = [];
+  final List<SpeciesCareCompanion> speciesCareToInsert = [];
   for (var row in rows) {
     if (row.length != 54) {
       print("Skipped $row");
@@ -71,7 +72,7 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
     final String? author = row[6];
     final String? bibliography = row[7];
     final String? commonName = row[8];
-    final String? familyCommonName = row[9];
+    // final String? familyCommonName = row[9];
     final String? imageUrl = row[10];
     final String? flowerColor = row[11];
     final String? flowerConspicuous = row[12];
@@ -81,41 +82,41 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
     final String? fruitConspicuous = row[16];
     final String? fruitMonths = row[17];
     final String? bloomMonths = row[18];
-    final String? groundHumidity = row[19];
-    final String? growthForm = row[20];
-    final String? growthHabit = row[21];
-    final String? growthMonths = row[22];
-    final String? growthRate = row[23];
-    final String? ediblePart = row[24];
-    final String? vegetable = row[25];
-    final String? edible = row[26];
+    // final String? groundHumidity = row[19];
+    // final String? growthForm = row[20];
+    // final String? growthHabit = row[21];
+    // final String? growthMonths = row[22];
+    // final String? growthRate = row[23];
+    // final String? ediblePart = row[24];
+    // final String? vegetable = row[25];
+    // final String? edible = row[26];
     final String? light = row[27];
-    final String? soilNutriments = row[28];
-    final String? soilSalinity = row[29];
-    final String? anaerobicTolerance = row[30];
+    // final String? soilNutriments = row[28];
+    // final String? soilSalinity = row[29];
+    // final String? anaerobicTolerance = row[30];
     final String? atmosphericHumidity = row[31];
     final String? averageHeightCm = row[32];
     final String? maximumHeightCm = row[33];
     final String? minimumRootDepthCm = row[34];
     final String? phMaximum = row[35];
     final String? phMinimum = row[36];
-    final String? plantingDaysToHarvest = row[37];
-    final String? plantingDescription = row[38];
-    final String? plantingSowingDescription = row[39];
-    final String? plantingRowSpacingCm = row[40];
-    final String? plantingSpreadCm = row[41];
+    // final String? plantingDaysToHarvest = row[37];
+    // final String? plantingDescription = row[38];
+    // final String? plantingSowingDescription = row[39];
+    // final String? plantingRowSpacingCm = row[40];
+    // final String? plantingSpreadCm = row[41];
     final String? synonyms = row[42];
-    final String? distributions = row[43];
+    // final String? distributions = row[43];
     final String? commonNames = row[44];
-    final String? urlUsda = row[45];
-    final String? urlTropicos = row[46];
-    final String? urlTelaBotanica = row[47];
-    final String? urlPowo = row[48];
-    final String? urlPlantnet = row[49];
-    final String? urlGbif = row[50];
-    final String? urlOpenfarm = row[51];
-    final String? urlCatminat = row[52];
-    final String? urlWikipediaEn = row[53];
+    // final String? urlUsda = row[45];
+    // final String? urlTropicos = row[46];
+    // final String? urlTelaBotanica = row[47];
+    // final String? urlPowo = row[48];
+    // final String? urlPlantnet = row[49];
+    // final String? urlGbif = row[50];
+    // final String? urlOpenfarm = row[51];
+    // final String? urlCatminat = row[52];
+    // final String? urlWikipediaEn = row[53];
 
     if (rank != "species") {
       continue;
@@ -135,10 +136,17 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
         avatarUrl: Value(imageUrl),
         externalId: Value(id),
         dataSource: const Value(SpeciesDataSource.trefle),
+        year: _stringToInt(year),
       ));
 
       if (synonyms != null && synonyms.isNotEmpty) {
-        var synonymsList = synonyms.split(',');
+        List<String> synonymsList = synonyms.split(',');
+        if (commonNames != null) {
+          synonymsList.addAll(commonNames.split(','));
+        }
+        if (commonName != null) {
+          synonymsList.add(commonName);
+        }
         for (var synonym in synonymsList) {
           synonymsToInsert.add(SpeciesSynonymsCompanion(
             species: Value(int.parse(id)),
@@ -146,9 +154,27 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
           ));
         }
       }
+
+      speciesCareToInsert.add(SpeciesCareCompanion(
+        phMin: _stringToInt(phMinimum),
+        phMax: _stringToInt(phMaximum),
+        light: _stringToInt(light),
+        humidity: _stringToInt(atmosphericHumidity),
+        species: Value(int.parse(id)),
+      ));
     }
   }
   await env.speciesRepository.insertAll(speciesToInsert);
+
+  speciesCareToInsert.map((care) async {
+    final int speciesId = (await env.speciesRepository.getExternal(
+            SpeciesDataSource.trefle, care.species.value.toString()))!
+        .id;
+    return care.copyWith(
+      species: Value(speciesId),
+    );
+  });
+  env.speciesCareRepository.insertAll(speciesCareToInsert);
 
   synonymsToInsert.map((synonym) async {
     final int speciesId = (await env.speciesRepository.getExternal(
@@ -160,4 +186,8 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
     );
   });
   env.speciesSynonymsRepository.insertAll(synonymsToInsert);
+}
+
+Value<int> _stringToInt(String? toParse) {
+  return toParse != null ? Value(int.parse(toParse)) : const Value.absent();
 }

@@ -47,6 +47,8 @@ class Species extends Table {
       .withLength(max: 50)
       .withDefault(const Constant("custom"))();
   TextColumn get externalId => text().withLength(max: 256).nullable()();
+  IntColumn get year => integer().nullable()();
+  TextColumn get bibliography => text().withLength(max: 200).nullable()();
 }
 
 class SpeciesSynonyms extends Table {
