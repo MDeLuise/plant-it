@@ -40,4 +40,10 @@ class SpeciesCareRepository extends BaseRepository<SpeciesCareData> {
   Future<bool> update(SpeciesCareData updated) {
     return db.update(db.speciesCare).replace(updated);
   }
+
+  Future<void> insertAll(List<UpdateCompanion<SpeciesCareData>> toInsert) async {
+    await db.batch((batch) {
+      batch.insertAll(db.speciesCare, toInsert);
+    });
+  }
 }
