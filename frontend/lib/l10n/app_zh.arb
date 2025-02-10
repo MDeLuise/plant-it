@@ -302,6 +302,7 @@
   "noChangesDetected": "未检测到更新",
   "plantDeletedSuccessfully": "成功删除植物",
   "server": "服务器",
+  "app": "应用",
   "notifications": "提醒",
   "changeServer": "更改服务器",
   "serverUpdated": "服务器成功更新",

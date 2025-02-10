@@ -314,6 +314,7 @@
   "noChangesDetected": "No se detectaron cambios",
   "plantDeletedSuccessfully": "Planta eliminada con éxito",
   "server": "Servidor",
+  "app": "Aplicación",
   "notifications": "Notificaciones",
   "changeServer": "Cambiar servidor",
   "serverUpdated": "Servidor actualizado con éxito",

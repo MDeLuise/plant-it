@@ -313,6 +313,7 @@
   "noChangesDetected": "Изменений не обнаружено",
   "plantDeletedSuccessfully": "Растение успешно удалено",
   "server": "Сервер",
+  "app": "приложение",
   "notifications": "Уведомления",
   "changeServer": "Сменить сервер",
   "serverUpdated": "Сервер успешно обновлен",

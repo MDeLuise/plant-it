@@ -313,6 +313,7 @@
   "noChangesDetected": "Aucun changement détecté",
   "plantDeletedSuccessfully": "Plante supprimée avec succès",
   "server": "Serveur",
+  "app": "Application",
   "notifications": "Notifications",
   "changeServer": "Changer de serveur",
   "serverUpdated": "Serveur mis à jour avec succès",

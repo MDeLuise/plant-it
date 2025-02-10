@@ -313,6 +313,7 @@
   "noChangesDetected": "Зміни не знайдені",
   "plantDeletedSuccessfully": "Рослина була видалена",
   "server": "Сервер",
+  "app": "додаток",
   "notifications": "Сповіщення",
   "changeServer": "Змінити сервер",
   "serverUpdated": "Сервер успішно змінено",

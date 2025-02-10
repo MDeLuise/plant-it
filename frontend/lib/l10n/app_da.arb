@@ -313,6 +313,7 @@
   "noChangesDetected": "Ingen ændringer registreret",
   "plantDeletedSuccessfully": "Plante succesfuldt slettet",
   "server": "Server",
+  "app": "App",
   "notifications": "Notifikationer",
   "changeServer": "Skift server",
   "serverUpdated": "Server succesfuldt opdateret",

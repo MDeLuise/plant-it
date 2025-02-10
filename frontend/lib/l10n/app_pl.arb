@@ -298,6 +298,7 @@
   "noChangesDetected": "Nie wykryto żadnych zmian",
   "plantDeletedSuccessfully": "Roślina pomyślnie usunięta",
   "server": "Serwer",
+  "app": "Aplikacja",
   "notifications": "Powiadomienia",
   "changeServer": "Zmień serwer",
   "serverUpdated": "Serwer pomyślnie zaktualizowany",

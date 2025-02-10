@@ -299,6 +299,7 @@
   "noChangesDetected": "Nessuna modifica rilevata",
   "plantDeletedSuccessfully": "Pianta rimossa",
   "server": "Server",
+  "app": "App",
   "notifications": "Notifiche",
   "changeServer": "Modifica server",
   "serverUpdated": "Server modificato",
