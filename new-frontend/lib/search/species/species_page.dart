@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
+import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter/src/widgets/image.dart' as flutterImage;
 
 class SpeciesPage extends StatefulWidget {
   final Environment env;
@@ -20,8 +26,64 @@ class SpeciesPage extends StatefulWidget {
 class _SpeciesPageState extends State<SpeciesPage> {
   List<String> _speciesSynonyms = [];
   bool _synonymsLoading = true;
-  SpeciesCareCompanion? _speciesCare;
   bool _careLoading = true;
+  List<SpeciesCareInfoWidget> _speciesCareInfoWidgets = [];
+  Widget? _avatar;
+
+  Future<void> _setImage() async {
+    Widget imageWidget;
+
+    if (widget.species.avatarUrl.value != null) {
+      imageWidget = CachedNetworkImage(
+        imageUrl: widget.species.avatarUrl.value!,
+        fit: BoxFit.cover,
+        imageBuilder: (context, imageProvider) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        },
+        errorWidget: (context, url, error) => ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: const flutterImage.Image(
+              image: AssetImage("assets/images/generic-plant.jpg"),
+              fit: BoxFit.cover),
+        ),
+      );
+    } else if (widget.species.avatar.value == null) {
+      imageWidget = const flutterImage.Image(
+          image: AssetImage("assets/images/generic-plant.jpg"),
+          fit: BoxFit.cover);
+    } else {
+      imageWidget = await widget.env.imageRepository
+          .get(widget.species.avatar.value!)
+          .then((i) {
+        return flutterImage.Image(
+          image: MemoryImage(base64Decode(i.base64)),
+          fit: BoxFit.cover,
+        );
+      });
+    }
+    setState(() {
+      _avatar = imageWidget;
+    });
+  }
+
+  void _setSpeciesCare() {
+    widget.env.speciesCareRepository.get(widget.species.id.value).then((c) {
+      final List<SpeciesCareInfoWidget> newSpeciesCareInfoWidgets =
+          SpeciesCareWidgetGenerator(c).getWidgets();
+      setState(() {
+        _speciesCareInfoWidgets = newSpeciesCareInfoWidgets;
+        _careLoading = false;
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -31,374 +93,293 @@ class _SpeciesPageState extends State<SpeciesPage> {
         _speciesSynonyms = r;
         _synonymsLoading = false;
       });
+    }).catchError((err) {
+      // do nothing
     });
-    widget.speciesFetcherFacade.getCare(widget.species).then((r) {
-      setState(() {
-        _speciesCare = r;
-        _careLoading = false;
-      });
-    });
+    _setImage();
+    _setSpeciesCare();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.species.avatarUrl.present)
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .6,
-                child: CachedNetworkImage(
-                  imageUrl: widget.species.avatarUrl.value!,
-                  fit: BoxFit.cover,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: MediaQuery.of(context).size.height * 0.6,
+            elevation: 0,
+            leading: IconButton(
+              // just to add shadow
+              icon: const Icon(
+                Icons.arrow_back,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    blurRadius: 20,
+                    offset: Offset(1, 1),
                   ),
-                  placeholder: (context, url) => Shimmer.fromColors(
+                ],
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: _avatar ??
+                  Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.grey,
                       ),
                     ),
                   ),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  LucideIcons.ellipsis_vertical,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black,
+                      blurRadius: 20,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
                 ),
               ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(10),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
                 ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                  child: Text(
-                    widget.species.dataSource.value.name,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceDim,
+                color: Colors.transparent,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 8),
+                      child: Text(
+                        widget.species.dataSource.value.name,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Theme.of(context).colorScheme.surfaceDim,
+                            ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    textBaseline: TextBaseline.ideographic,
+                    children: [
+                      Text(
+                        widget.species.scientificName.value,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.primary),
+                      ),
+                      TextButton(
+                          onPressed: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Add",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                                  ),
+                                  Icon(LucideIcons.plus,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                ],
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Info
+                  Text(
+                    'Information',
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  const SizedBox(height: 8),
+                  RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyMedium!,
+                      children: [
+                        TextSpan(
+                            text:
+                                "${widget.species.scientificName.value} is a species "),
+                        const TextSpan(text: "of genus "),
+                        TextSpan(
+                          text: widget.species.genus.value,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
                         ),
-                  ),
-                ),
-              ),
-            ),
-            _ScientificClassification(widget.species),
-            _Synonyms(_speciesSynonyms),
-            _Care(widget.species),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ScientificClassification extends StatelessWidget {
-  final SpeciesCompanion species;
-
-  const _ScientificClassification(this.species);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withOpacity(.7),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: Theme.of(context).colorScheme.primary),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Scientific Classification",
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                        const TextSpan(text: " and family "),
+                        TextSpan(
+                          text: widget.species.family.value,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        const TextSpan(text: "."),
+                      ],
                     ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Family",
-                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
+                  const SizedBox(height: 16),
+
+                  // Care
                   Text(
-                    species.family.value,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    'Care',
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
+                  const SizedBox(height: 8),
+                  _DynamicGridWidget(_speciesCareInfoWidgets, 4, _careLoading),
+                  const SizedBox(height: 16),
                 ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Genus",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    species.genus.value,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Species",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    species.species.value,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Synonyms extends StatefulWidget {
-  final List<String> synonyms;
-
-  const _Synonyms(this.synonyms);
-
-  @override
-  State<_Synonyms> createState() => _SynonymsState();
-}
-
-class _SynonymsState extends State<_Synonyms> {
-  static const int _maxVisible = 5;
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    // final List<String> synonyms = [
-    //   'Flytrap',
-    //   'Fly trap',
-    //   'Snaptrap',
-    //   'Venus plant',
-    //   'Bug eater',
-    //   'Carnivorous plant'
-    // ];
-
-    final List<String> visibleSynonyms =
-        _isExpanded ? widget.synonyms : widget.synonyms.take(_maxVisible).toList();
-
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withOpacity(.7),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: Theme.of(context).colorScheme.primary),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Synonyms",
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const SizedBox(height: 10),
-              _ListOfChip(
-                texts: visibleSynonyms,
-                hasToggleOption: widget.synonyms.length > _maxVisible,
-                isExpanded: _isExpanded,
-                onTogglePressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ListOfChip extends StatelessWidget {
-  final List<String> texts;
-  final bool hasToggleOption;
-  final bool isExpanded;
-  final VoidCallback? onTogglePressed;
-
-  const _ListOfChip({
-    required this.texts,
-    this.hasToggleOption = false,
-    this.isExpanded = false,
-    this.onTogglePressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Wrap(
-        spacing: 5,
-        runSpacing: 1,
-        children: [
-          ...texts.map((text) {
-            return Chip(
-              label: Text(
-                text,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            );
-          }),
-          if (hasToggleOption)
-            GestureDetector(
-              onTap: onTogglePressed,
-              child: Chip(
-                label: Text(
-                  isExpanded ? "View Less" : "View More",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                ),
-                backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
             ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _Care extends StatelessWidget {
-  final SpeciesCompanion species;
+class _DynamicGridWidget extends StatefulWidget {
+  final int maxNum;
+  final List<Widget>? plantEventInfoWidgets;
+  final bool isLoading;
 
-  const _Care(this.species);
+  const _DynamicGridWidget(
+      this.plantEventInfoWidgets, this.maxNum, this.isLoading);
+
+  @override
+  State<_DynamicGridWidget> createState() => _DynamicGridWidgetState();
+}
+
+class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
+  late int pages;
+
+  @override
+  void initState() {
+    super.initState();
+    pages = (widget.plantEventInfoWidgets!.length / widget.maxNum).ceil();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withOpacity(.7),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: Theme.of(context).colorScheme.primary),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.secondary.withOpacity(.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 1),
+    if (widget.isLoading) {
+      return _buildSinglePage([
+        Shimmer.fromColors(
+          baseColor: const Color.fromARGB(255, 217, 217, 217),
+          highlightColor: const Color.fromARGB(255, 192, 192, 192),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey,
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Care",
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Light",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    "42 out of 10",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Water",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    "21 out of 42",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Ph Max",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    "2.8",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              )
-            ],
           ),
         ),
+        Shimmer.fromColors(
+          baseColor: const Color.fromARGB(255, 217, 217, 217),
+          highlightColor: const Color.fromARGB(255, 192, 192, 192),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ]);
+    }
+    if (pages == 1) {
+      return _buildSinglePage(widget.plantEventInfoWidgets);
+    }
+    return _buildMultiplePages();
+  }
+
+  Widget _buildSinglePage(List<Widget>? tiles) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(0),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 2.5, // 3
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
       ),
+      itemCount: tiles?.length ?? 0,
+      itemBuilder: (context, index) {
+        return tiles!.elementAt(index);
+      },
     );
+  }
+
+  Widget _buildMultiplePages() {
+    final List<List<Widget>> pagesList =
+        _chunkWidgets(widget.plantEventInfoWidgets!, widget.maxNum);
+
+    final List<Widget> pageWidgets =
+        pagesList.map((chunk) => _buildSinglePage(chunk)).toList();
+
+    return FlutterCarousel(
+      options: FlutterCarouselOptions(
+        showIndicator: true,
+        enableInfiniteScroll: false,
+        viewportFraction: 1,
+        indicatorMargin: 0,
+        height: 230,
+        slideIndicator: CircularSlideIndicator(
+            slideIndicatorOptions: SlideIndicatorOptions(
+          currentIndicatorColor: Theme.of(context).colorScheme.primary,
+          indicatorBackgroundColor: Colors.grey.withOpacity(.5),
+        )),
+      ),
+      items: pageWidgets,
+    );
+  }
+
+  List<List<Widget>> _chunkWidgets(List<Widget> widgets, int chunkSize) {
+    List<List<Widget>> chunks = [];
+    for (var i = 0; i < widgets.length; i += chunkSize) {
+      final chunk = widgets.sublist(
+          i, i + chunkSize > widgets.length ? widgets.length : i + chunkSize);
+      chunks.add(chunk);
+    }
+    return chunks;
   }
 }
