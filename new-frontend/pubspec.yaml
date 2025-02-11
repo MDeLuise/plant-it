@@ -60,6 +60,7 @@ dependencies:
   workmanager: ^0.5.2
   wheel_picker: ^0.2.1
   palette_generator: ^0.3.3+5
+  currency_textfield: ^4.14.1
   # https://pub.dev/packages/dotted_border
   # https://pub.dev/packages/chip_list
   # https://pub.dev/packages/advanced_chips_input

@@ -5,8 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/plant/add_plant_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
@@ -15,8 +17,7 @@ class SpeciesPage extends StatefulWidget {
   final Environment env;
   final SpeciesCompanion species;
 
-  const SpeciesPage(this.env, this.species,
-      {super.key});
+  const SpeciesPage(this.env, this.species, {super.key});
 
   @override
   State<SpeciesPage> createState() => _SpeciesPageState();
@@ -212,7 +213,8 @@ class _SpeciesPageState extends State<SpeciesPage> {
                                 color: Theme.of(context).colorScheme.primary),
                       ),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () => navigateTo(context,
+                              AddPlantPage(widget.env, widget.species)),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,

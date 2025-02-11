@@ -47,4 +47,10 @@ class PlantRepository extends BaseRepository<Plant> {
   Future<bool> update(Plant updated) {
     return db.update(db.plants).replace(updated);
   }
+
+  Future<int> countBySpecies(int speciesId) async {
+    return db.managers.plants
+        .filter((p) => p.species.id.equals(speciesId))
+        .count();
+  }
 }
