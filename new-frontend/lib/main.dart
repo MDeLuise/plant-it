@@ -17,6 +17,9 @@ import 'package:plant_it/repositories/species_care_repository.dart';
 import 'package:plant_it/repositories/species_repository.dart';
 import 'package:plant_it/repositories/species_synonym_repository.dart';
 import 'package:plant_it/repositories/user_setting_repository.dart';
+import 'package:plant_it/search/fetcher/custom/custom_fetcher.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
+import 'package:plant_it/search/fetcher/trefle/trefle_fetcher.dart';
 import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +83,9 @@ Environment _createEnvironment() {
   );
 
   result.reminderNotificationService = ReminderNotificationService(result);
+  result.speciesFetcherFacade = SpeciesFetcherFacade();
+  result.speciesFetcherFacade.addNext(CustomFetcher(result));
+  result.speciesFetcherFacade.addNext(TrefleFetcher(result));
 
   return result;
 }

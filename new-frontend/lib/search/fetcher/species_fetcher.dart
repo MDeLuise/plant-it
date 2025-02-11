@@ -1,9 +1,14 @@
 import 'package:plant_it/database/database.dart';
 
 class SpeciesFetcherFacade {
-  final List<SpeciesFetcher> chain = [];
+  List<SpeciesFetcher> chain = [];
 
   void addNext(SpeciesFetcher next) {
+    final bool alreadyExist = chain
+        .any((s) => s.getSpeciesDataSource() == next.getSpeciesDataSource());
+    if (alreadyExist) {
+      return;
+    }
     chain.add(next);
   }
 
@@ -46,6 +51,10 @@ class SpeciesFetcherFacade {
       }
     }
     throw Exception("Cannot find the correct fetcher for the species");
+  }
+
+  void remove(SpeciesDataSource dataSource) {
+    chain = chain.where((s) => s.getSpeciesDataSource() != dataSource).toList();
   }
 }
 

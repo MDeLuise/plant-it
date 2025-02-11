@@ -66,14 +66,14 @@ class SpeciesRepository extends BaseRepository<Specy> {
     });
   }
 
-  @override
+  
   Future<List<Specy>> getAllByDataSource(SpeciesDataSource dataSource) async {
     return (db.select(db.species)
           ..where((s) => s.dataSource.equals(dataSource.name)))
         .get();
   }
 
-  @override
+  
   Future<List<Specy>> getAllByScientificNameAndDataSource(String scientificName,
       SpeciesDataSource dataSource, Pageable pageable) async {
     final query = db.select(db.species)
@@ -86,7 +86,7 @@ class SpeciesRepository extends BaseRepository<Specy> {
     return query.get();
   }
 
-  @override
+  
   Future<List<Specy>> getAllByDataSourcePaginated(
       SpeciesDataSource dataSource, Pageable pageable) async {
     return (db.select(db.species)

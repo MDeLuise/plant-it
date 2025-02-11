@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_it/common.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
+import 'package:plant_it/search/fetcher/flora_codex/flora_codex_fetcher.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:workmanager/workmanager.dart';
@@ -67,6 +69,12 @@ class _FloraCodexSettingsState extends State<FloraCodexSettings> {
         .put('dataSource_floraCodex_enabled', enableDataSource.toString());
     widget.env.userSettingRepository
         .put('dataSource_floraCodex_apiKey', _apiKeyController.text);
+    if (enableDataSource && _apiKeyController.text.isNotEmpty) {
+      widget.env.speciesFetcherFacade
+          .addNext(FloraCodexFetcher(_apiKeyController.text));
+    } else {
+      widget.env.speciesFetcherFacade.remove(SpeciesDataSource.floraCodex);
+    }
   }
 
   Future<void> _loadSettingsFromDB() async {

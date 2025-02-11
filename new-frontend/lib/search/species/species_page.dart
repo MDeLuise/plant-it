@@ -7,7 +7,6 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
-import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
@@ -15,9 +14,8 @@ import 'package:flutter/src/widgets/image.dart' as flutter_image;
 class SpeciesPage extends StatefulWidget {
   final Environment env;
   final SpeciesCompanion species;
-  final SpeciesFetcherFacade speciesFetcherFacade;
 
-  const SpeciesPage(this.env, this.species, this.speciesFetcherFacade,
+  const SpeciesPage(this.env, this.species,
       {super.key});
 
   @override
@@ -105,7 +103,7 @@ class _SpeciesPageState extends State<SpeciesPage> {
   @override
   void initState() {
     super.initState();
-    widget.speciesFetcherFacade.getSynonyms(widget.species).then((r) {
+    widget.env.speciesFetcherFacade.getSynonyms(widget.species).then((r) {
       setState(() {
         _speciesSynonyms = r;
         _synonymsLoading = false;
