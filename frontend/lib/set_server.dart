@@ -104,27 +104,32 @@ class _SetServerState extends State<SetServer> {
                                 decoration: TextDecoration.none,
                               )),
                         ),
-                        TextFormField(
-                          autofocus: true,
-                          controller: _backendController,
-                          decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context).serverURL,
-                              border: const OutlineInputBorder(),
-                              hintText: "http://192.168.1.5:8080"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context).enterValue;
-                            }
-                            if (!isValidUrl(value)) {
-                              return AppLocalizations.of(context).enterValidURL;
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (value) {
-                            if (_formKey.currentState!.validate()) {
-                              _ping();
-                            }
-                          },
+                        
+                        SizedBox(
+                          width: maxWidth,
+                          child: 
+                            TextFormField(
+                              autofocus: true,
+                              controller: _backendController,
+                              decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context).serverURL,
+                                  border: const OutlineInputBorder(),
+                                  hintText: "http://192.168.1.5:8080"),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppLocalizations.of(context).enterValue;
+                                }
+                                if (!isValidUrl(value)) {
+                                  return AppLocalizations.of(context).enterValidURL;
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (value) {
+                                if (_formKey.currentState!.validate()) {
+                                  _ping();
+                                }
+                              },
+                            ),
                         ),
                         const SizedBox(height: 20),
                         ElevatedLoadingButton(
