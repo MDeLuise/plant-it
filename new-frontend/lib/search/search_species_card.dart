@@ -31,8 +31,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
       child: GestureDetector(
         onTap: () => navigateTo(
             context,
-            SpeciesPage(widget.env, widget.speciesPartial,
-                widget.speciesFetcherFacade)),
+            SpeciesPage(widget.env, widget.speciesPartial)),
         child: Stack(
           children: [
             Container(

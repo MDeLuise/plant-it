@@ -7,6 +7,7 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/more/reminder/reminder_list_page.dart';
+import 'package:plant_it/search/species/species_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
@@ -136,12 +137,23 @@ class _PlantPageState extends State<PlantPage> {
                         .headlineSmall!
                         .copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
-                  Text(
-                    _species?.scientificName ?? '',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontStyle: FontStyle.italic),
+                  GestureDetector(
+                    onTap: () => navigateTo(context,
+                        SpeciesPage(widget.env, _species!.toCompanion(true))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          _species?.scientificName ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontStyle: FontStyle.italic),
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(LucideIcons.external_link, size: 10),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
