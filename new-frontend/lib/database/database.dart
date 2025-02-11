@@ -244,22 +244,26 @@ class AppDatabase extends _$AppDatabase {
 
     await into(speciesSynonyms)
         .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      id: Value(1),
       species: Value(1),
       synonym: Value("palmerino"),
     ));
 
     await into(speciesSynonyms)
         .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      id: Value(2),
       species: Value(1),
       synonym: Value("pane"),
     ));
     await into(speciesSynonyms)
         .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      id: Value(3),
       species: Value(1),
       synonym: Value("vino"),
     ));
     await into(speciesSynonyms)
         .insertOnConflictUpdate(const SpeciesSynonymsCompanion(
+      id: Value(4),
       species: Value(1),
       synonym: Value("sisisi"),
     ));
