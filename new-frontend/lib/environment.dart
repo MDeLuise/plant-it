@@ -10,6 +10,7 @@ import 'package:plant_it/repositories/species_care_repository.dart';
 import 'package:plant_it/repositories/species_repository.dart';
 import 'package:plant_it/repositories/species_synonym_repository.dart';
 import 'package:plant_it/repositories/user_setting_repository.dart';
+import 'package:plant_it/search/fetcher/species_fetcher.dart';
 
 class Environment {
   final AppDatabase db;
@@ -24,6 +25,7 @@ class Environment {
   final SpeciesSynonymsRepository speciesSynonymsRepository;
   final SpeciesCareRepository speciesCareRepository;
   late ReminderNotificationService reminderNotificationService;
+  late SpeciesFetcherFacade speciesFetcherFacade;
 
   Environment(
     this.db,
