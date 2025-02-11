@@ -6,7 +6,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:plant_it/search/species/species_page.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:flutter/src/widgets/image.dart' as flutterImage;
+import 'package:flutter/src/widgets/image.dart' as flutter_image;
 
 class SearchSpeciesCard extends StatefulWidget {
   final Environment env;
@@ -67,7 +67,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                       ),
                       errorWidget: (context, url, error) => ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: const flutterImage.Image(
+                        child: const flutter_image.Image(
                             image:
                                 AssetImage("assets/images/generic-plant.jpg"),
                             fit: BoxFit.cover),
@@ -75,7 +75,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                     )
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: const flutterImage.Image(
+                      child: const flutter_image.Image(
                           image: AssetImage("assets/images/generic-plant.jpg"),
                           fit: BoxFit.cover),
                     ),

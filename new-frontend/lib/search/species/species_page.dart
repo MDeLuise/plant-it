@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:flutter/src/widgets/image.dart' as flutterImage;
+import 'package:flutter/src/widgets/image.dart' as flutter_image;
 
 class SpeciesPage extends StatefulWidget {
   final Environment env;
@@ -26,6 +27,7 @@ class SpeciesPage extends StatefulWidget {
 class _SpeciesPageState extends State<SpeciesPage> {
   List<String> _speciesSynonyms = [];
   bool _synonymsLoading = true;
+  bool _showAllSynonyms = false;
   bool _careLoading = true;
   List<SpeciesCareInfoWidget> _speciesCareInfoWidgets = [];
   Widget? _avatar;
@@ -50,20 +52,20 @@ class _SpeciesPageState extends State<SpeciesPage> {
         },
         errorWidget: (context, url, error) => ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: const flutterImage.Image(
+          child: const flutter_image.Image(
               image: AssetImage("assets/images/generic-plant.jpg"),
               fit: BoxFit.cover),
         ),
       );
     } else if (widget.species.avatar.value == null) {
-      imageWidget = const flutterImage.Image(
+      imageWidget = const flutter_image.Image(
           image: AssetImage("assets/images/generic-plant.jpg"),
           fit: BoxFit.cover);
     } else {
       imageWidget = await widget.env.imageRepository
           .get(widget.species.avatar.value!)
           .then((i) {
-        return flutterImage.Image(
+        return flutter_image.Image(
           image: MemoryImage(base64Decode(i.base64)),
           fit: BoxFit.cover,
         );
@@ -82,6 +84,21 @@ class _SpeciesPageState extends State<SpeciesPage> {
         _speciesCareInfoWidgets = newSpeciesCareInfoWidgets;
         _careLoading = false;
       });
+    });
+  }
+
+  List<Widget> _buildSynonymsList() {
+    int displayCount = _showAllSynonyms ? _speciesSynonyms.length : 5;
+    return List.generate(min(_speciesSynonyms.length, displayCount), (index) {
+      return Row(
+        children: [
+          const SizedBox(width: 4),
+          const Icon(Icons.circle, size: 6),
+          const SizedBox(width: 8),
+          Text(_speciesSynonyms[index],
+              style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      );
     });
   }
 
@@ -267,6 +284,47 @@ class _SpeciesPageState extends State<SpeciesPage> {
                   ),
                   const SizedBox(height: 8),
                   _DynamicGridWidget(_speciesCareInfoWidgets, 4, _careLoading),
+                  const SizedBox(height: 16),
+
+                  if (_speciesSynonyms.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Synonyms',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                        ),
+                        const SizedBox(height: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('The species is also known as:'),
+                            ..._buildSynonymsList(),
+                            if (_speciesSynonyms.length > 5)
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _showAllSynonyms = !_showAllSynonyms;
+                                  });
+                                },
+                                child: Text(
+                                  _showAllSynonyms ? 'Show Less' : 'Show More',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   const SizedBox(height: 16),
                 ],
               ),
