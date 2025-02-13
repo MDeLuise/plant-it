@@ -8,6 +8,7 @@ import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/more/reminder/reminder_list_page.dart';
+import 'package:plant_it/plant/edit_plant_page.dart';
 import 'package:plant_it/search/species/species_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
@@ -174,9 +175,7 @@ class _PlantPageState extends State<PlantPage> {
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       textColor: Theme.of(context).colorScheme.onSurface,
     );
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) =>
-            PlantPage(widget.env, duplicatedPlant)));
+    replaceTo(context, PlantPage(widget.env, duplicatedPlant));
   }
 
   @override
@@ -242,7 +241,13 @@ class _PlantPageState extends State<PlantPage> {
                     ],
                   ).then((value) {
                     if (value == 'edit') {
-                      //_editPlant();
+                      navigateTo(
+                              context, EditPlantPage(widget.env, widget.plant))
+                          .then((u) {
+                        if (u != null) {
+                          replaceTo(context, PlantPage(widget.env, u));
+                        }
+                      });
                     } else if (value == 'duplicate') {
                       _duplicatePlant();
                     } else if (value == 'remove') {

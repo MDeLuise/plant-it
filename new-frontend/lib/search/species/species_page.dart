@@ -194,9 +194,10 @@ class _SpeciesPageState extends State<SpeciesPage> {
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       textColor: Theme.of(context).colorScheme.onSurface,
     );
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) =>
-            SpeciesPage(widget.env, duplicatedSpecies.toCompanion(false))));
+    replaceTo(
+      context,
+      SpeciesPage(widget.env, duplicatedSpecies.toCompanion(false)),
+    );
   }
 
   @override

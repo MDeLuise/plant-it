@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-void navigateTo(BuildContext context, Widget page) {
-  Navigator.push(
+Future navigateTo(BuildContext context, Widget page) {
+  return Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => page),
+  );
+}
+
+Future replaceTo(BuildContext context, Widget page) {
+  return Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => page,
+    ),
   );
 }
 
