@@ -90,7 +90,6 @@ class FloraCodexFetcher extends SpeciesFetcher {
         }
       }
     }
-
     return synonyms;
   }
 }

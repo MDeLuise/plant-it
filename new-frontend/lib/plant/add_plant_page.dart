@@ -2,10 +2,12 @@ import 'package:currency_textfield/currency_textfield.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/loading_button.dart';
+import 'package:plant_it/plant/plant_page.dart';
 
 class AddPlantPage extends StatefulWidget {
   final Environment env;
@@ -18,7 +20,6 @@ class AddPlantPage extends StatefulWidget {
 }
 
 class _AddPlantPageState extends State<AddPlantPage> {
-  final ScrollController _scrollController = ScrollController();
   final TextEditingController _nameController = TextEditingController();
   final CurrencyTextFieldController _priceController =
       CurrencyTextFieldController(
@@ -188,17 +189,42 @@ class _AddPlantPageState extends State<AddPlantPage> {
   }
 
   void _addPlant() async {
+    PlantsCompanion toSave = PlantsCompanion(
+      name: drift.Value(_nameController.text),
+      note: drift.Value.absentIfNull(_noteController.text),
+      species: widget.species.id,
+      startDate: drift.Value.absentIfNull(_purchasedDate),
+      createdAt: drift.Value(DateTime.now()),
+    );
     if (!widget.species.id.present) {
-      // TODO create species and set species id
+      try {
+        final int speciesId =
+            await widget.env.speciesRepository.insert(widget.species);
+
+        final SpeciesCareCompanion speciesCare =
+            await widget.env.speciesFetcherFacade.getCare(widget.species);
+        await widget.env.speciesCareRepository.insert(speciesCare);
+
+        final List<String> speciesSynonyms =
+            await widget.env.speciesFetcherFacade.getSynonyms(widget.species);
+        for (String synonym in speciesSynonyms) {
+          await widget.env.speciesSynonymsRepository
+              .insert(SpeciesSynonymsCompanion(
+            species: drift.Value(speciesId),
+            synonym: drift.Value(synonym),
+          ));
+        }
+
+        toSave = toSave.copyWith(species: drift.Value(speciesId));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error adding species')),
+        );
+      }
     }
+    int insertedId = -1;
     try {
-      await widget.env.plantRepository.insert(PlantsCompanion(
-        name: drift.Value(_nameController.text),
-        note: drift.Value.absentIfNull(_noteController.text),
-        species: widget.species.id,
-        startDate: drift.Value.absentIfNull(_purchasedDate),
-        createdAt: drift.Value(DateTime.now()),
-      ));
+      insertedId = await widget.env.plantRepository.insert(toSave);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error adding plant')),
@@ -208,6 +234,8 @@ class _AddPlantPageState extends State<AddPlantPage> {
       const SnackBar(content: Text('Plant added successfully')),
     );
     Navigator.of(context).pop();
+    final Plant plantToNavigate = await widget.env.plantRepository.get(insertedId);
+    navigateTo(context, PlantPage(widget.env, plantToNavigate));
   }
 }
 

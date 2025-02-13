@@ -26,7 +26,7 @@ class SpeciesCareWidgetGenerator {
           "Humidity", "${speciesCare.humidity! * 10}%", LucideIcons.spray_can));
     }
 
-    String tempValue = "";
+    String? tempValue;
     if (speciesCare.tempMax != null && speciesCare.tempMin != null) {
       tempValue = "${speciesCare.tempMin} - ${speciesCare.tempMax} °C";
     } else if (speciesCare.tempMax == null && speciesCare.tempMin != null) {
@@ -34,10 +34,12 @@ class SpeciesCareWidgetGenerator {
     } else if (speciesCare.tempMax != null && speciesCare.tempMin == null) {
       tempValue = "max ${speciesCare.tempMax} °C";
     }
-    result.add(SpeciesCareInfoWidget(
-        "Temperature", tempValue, LucideIcons.thermometer));
+    if (tempValue != null) {
+      result.add(SpeciesCareInfoWidget(
+          "Temperature", tempValue, LucideIcons.thermometer));
+    }
 
-    String phValue = "";
+    String? phValue;
     if (speciesCare.phMax != null && speciesCare.tempMin != null) {
       phValue = "${speciesCare.phMin} - ${speciesCare.phMax}";
     } else if (speciesCare.phMax == null && speciesCare.phMin != null) {
@@ -45,7 +47,9 @@ class SpeciesCareWidgetGenerator {
     } else if (speciesCare.phMax != null && speciesCare.phMin == null) {
       phValue = "max ${speciesCare.phMax}";
     }
-    result.add(SpeciesCareInfoWidget("Ph", phValue, LucideIcons.test_tube));
+    if (phValue != null) {
+      result.add(SpeciesCareInfoWidget("Ph", phValue, LucideIcons.test_tube));
+    }
 
     return result;
   }
