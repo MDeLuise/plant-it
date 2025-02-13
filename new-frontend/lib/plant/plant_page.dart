@@ -12,10 +12,10 @@ import 'package:plant_it/search/species/species_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
-import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:drift/drift.dart' as drift;
 
 class PlantPage extends StatefulWidget {
   final Environment env;
@@ -107,7 +107,7 @@ class _PlantPageState extends State<PlantPage> {
       cancelBtnText: 'Cancel',
       title: "Delete plant?",
       text:
-          "Are you sure you want to delete the plant and all the activity on it?",
+          "Are you sure you want to delete the plant and all the linked data?",
       confirmBtnColor: Colors.red,
       textColor: Theme.of(context).colorScheme.onSurface,
       titleColor: Theme.of(context).colorScheme.onSurface,
@@ -143,6 +143,40 @@ class _PlantPageState extends State<PlantPage> {
         Navigator.of(context).pop();
       },
     );
+  }
+
+  void _duplicatePlant() async {
+    late final Plant duplicatedPlant;
+    try {
+      final String duplicateName = "${widget.plant.name} (duplicate)";
+      final int duplicatedId = await widget.env.plantRepository
+          .insert(widget.plant.toCompanion(false).copyWith(
+                name: drift.Value(duplicateName),
+                id: const drift.Value.absent(),
+              ));
+      duplicatedPlant = await widget.env.plantRepository.get(duplicatedId);
+    } catch (e) {
+      AlertInfo.show(
+        context: context,
+        text: 'Error duplicating plant',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        textColor: Theme.of(context).colorScheme.onSurface,
+      );
+      return;
+    }
+    AlertInfo.show(
+      context: context,
+      text: 'Plant duplicated',
+      typeInfo: TypeInfo.success,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      textColor: Theme.of(context).colorScheme.onSurface,
+    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            PlantPage(widget.env, duplicatedPlant)));
   }
 
   @override
@@ -210,7 +244,7 @@ class _PlantPageState extends State<PlantPage> {
                     if (value == 'edit') {
                       //_editPlant();
                     } else if (value == 'duplicate') {
-                      //_duplicatePlant();
+                      _duplicatePlant();
                     } else if (value == 'remove') {
                       _deletePlant();
                     }
