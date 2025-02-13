@@ -66,14 +66,12 @@ class SpeciesRepository extends BaseRepository<Specy> {
     });
   }
 
-  
   Future<List<Specy>> getAllByDataSource(SpeciesDataSource dataSource) async {
     return (db.select(db.species)
           ..where((s) => s.dataSource.equals(dataSource.name)))
         .get();
   }
 
-  
   Future<List<Specy>> getAllByScientificNameAndDataSource(String scientificName,
       SpeciesDataSource dataSource, Pageable pageable) async {
     final query = db.select(db.species)
@@ -86,7 +84,40 @@ class SpeciesRepository extends BaseRepository<Specy> {
     return query.get();
   }
 
-  
+  Future<List<Specy>> getAllBySynonymsAndDataSource(String scientificName,
+      SpeciesDataSource dataSource, Pageable pageable) async {
+    final query = db.select(db.species).join([
+      innerJoin(db.speciesSynonyms,
+          db.speciesSynonyms.species.equalsExp(db.species.id))
+    ])
+      ..where(db.speciesSynonyms.synonym.like('%$scientificName%'))
+      ..where(db.species.dataSource.equals(dataSource.name))
+      ..limit(pageable.limit, offset: pageable.offset);
+
+    return query.map((row) => row.readTable(db.species)).get();
+  }
+
+  Future<List<Specy>> getAllByScientificNameOrSynonymsAndDataSource(
+      String scientificName,
+      SpeciesDataSource dataSource,
+      Pageable pageable) async {
+    final query = db.select(db.species).join([
+      leftOuterJoin(db.speciesSynonyms,
+          db.speciesSynonyms.species.equalsExp(db.species.id))
+    ])
+      ..where(Expression.or([
+        db.species.scientificName.like('%$scientificName%'),
+        db.speciesSynonyms.synonym.like('%$scientificName%')
+      ]))
+      ..where(db.species.dataSource.equals(dataSource.name))
+      ..limit(pageable.limit, offset: pageable.offset);
+
+    // Remove duplicates
+    final speciesList =
+        await query.map((row) => row.readTable(db.species)).get();
+    return speciesList.toSet().toList();
+  }
+
   Future<List<Specy>> getAllByDataSourcePaginated(
       SpeciesDataSource dataSource, Pageable pageable) async {
     return (db.select(db.species)

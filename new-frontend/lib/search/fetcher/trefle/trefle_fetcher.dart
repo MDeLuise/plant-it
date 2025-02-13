@@ -12,7 +12,7 @@ class TrefleFetcher extends SpeciesFetcher {
   Future<List<SpeciesCompanion>> fetch(
       String partialScientificName, Pageable pageable) {
     return env.speciesRepository
-        .getAllByScientificNameAndDataSource(
+        .getAllByScientificNameOrSynonymsAndDataSource(
             partialScientificName, SpeciesDataSource.trefle, pageable)
         .then((rl) {
       return rl.map((s) {

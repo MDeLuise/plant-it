@@ -29,9 +29,8 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: GestureDetector(
-        onTap: () => navigateTo(
-            context,
-            SpeciesPage(widget.env, widget.speciesPartial)),
+        onTap: () =>
+            navigateTo(context, SpeciesPage(widget.env, widget.speciesPartial)),
         child: Stack(
           children: [
             Container(
@@ -131,12 +130,14 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(color: Colors.white),
                   ),
-                  Text(
-                    widget.speciesPartial.family.value,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
+                  if (widget.speciesPartial.family.present &&
+                      widget.speciesPartial.family.value != null)
+                    Text(
+                      widget.speciesPartial.family.value!,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                 ],
               ),
             ),
