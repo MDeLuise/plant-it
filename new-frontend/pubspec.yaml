@@ -42,7 +42,7 @@ dependencies:
   file_picker: ^8.1.6
   json_serializable: ^6.9.0
   flutter_launcher_icons: ^0.14.2
-  drift: ^2.23.1
+  drift: ^2.25.0
   drift_flutter: ^0.2.4
   multi_dropdown: ^3.0.1
   easy_loading_button: ^0.3.2
@@ -61,6 +61,7 @@ dependencies:
   wheel_picker: ^0.2.1
   palette_generator: ^0.3.3+5
   currency_textfield: ^4.14.1
+  syncfusion_flutter_sliders: ^28.2.5
   # https://pub.dev/packages/dotted_border
   # https://pub.dev/packages/chip_list
   # https://pub.dev/packages/advanced_chips_input
@@ -84,8 +85,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
-  drift_dev: ^2.23.1
-  build_runner: ^2.4.13
+  drift_dev: ^2.25.0
+  build_runner: ^2.4.14
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

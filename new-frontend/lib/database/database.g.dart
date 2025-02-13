@@ -637,17 +637,17 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
   static const VerificationMeta _familyMeta = const VerificationMeta('family');
   @override
   late final GeneratedColumn<String> family = GeneratedColumn<String>(
-      'family', aliasedName, false,
+      'family', aliasedName, true,
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
       type: DriftSqlType.string,
-      requiredDuringInsert: true);
+      requiredDuringInsert: false);
   static const VerificationMeta _genusMeta = const VerificationMeta('genus');
   @override
   late final GeneratedColumn<String> genus = GeneratedColumn<String>(
-      'genus', aliasedName, false,
+      'genus', aliasedName, true,
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
       type: DriftSqlType.string,
-      requiredDuringInsert: true);
+      requiredDuringInsert: false);
   static const VerificationMeta _speciesMeta =
       const VerificationMeta('species');
   @override
@@ -750,14 +750,10 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
     if (data.containsKey('family')) {
       context.handle(_familyMeta,
           family.isAcceptableOrUnknown(data['family']!, _familyMeta));
-    } else if (isInserting) {
-      context.missing(_familyMeta);
     }
     if (data.containsKey('genus')) {
       context.handle(
           _genusMeta, genus.isAcceptableOrUnknown(data['genus']!, _genusMeta));
-    } else if (isInserting) {
-      context.missing(_genusMeta);
     }
     if (data.containsKey('species')) {
       context.handle(_speciesMeta,
@@ -808,9 +804,9 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       scientificName: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}scientific_name'])!,
       family: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}family'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}family']),
       genus: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}genus'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}genus']),
       species: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}species'])!,
       author: attachedDatabase.typeMapping
@@ -844,8 +840,8 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
 class Specy extends DataClass implements Insertable<Specy> {
   final int id;
   final String scientificName;
-  final String family;
-  final String genus;
+  final String? family;
+  final String? genus;
   final String species;
   final String? author;
   final int? avatar;
@@ -857,8 +853,8 @@ class Specy extends DataClass implements Insertable<Specy> {
   const Specy(
       {required this.id,
       required this.scientificName,
-      required this.family,
-      required this.genus,
+      this.family,
+      this.genus,
       required this.species,
       this.author,
       this.avatar,
@@ -872,8 +868,12 @@ class Specy extends DataClass implements Insertable<Specy> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['scientific_name'] = Variable<String>(scientificName);
-    map['family'] = Variable<String>(family);
-    map['genus'] = Variable<String>(genus);
+    if (!nullToAbsent || family != null) {
+      map['family'] = Variable<String>(family);
+    }
+    if (!nullToAbsent || genus != null) {
+      map['genus'] = Variable<String>(genus);
+    }
     map['species'] = Variable<String>(species);
     if (!nullToAbsent || author != null) {
       map['author'] = Variable<String>(author);
@@ -904,8 +904,10 @@ class Specy extends DataClass implements Insertable<Specy> {
     return SpeciesCompanion(
       id: Value(id),
       scientificName: Value(scientificName),
-      family: Value(family),
-      genus: Value(genus),
+      family:
+          family == null && nullToAbsent ? const Value.absent() : Value(family),
+      genus:
+          genus == null && nullToAbsent ? const Value.absent() : Value(genus),
       species: Value(species),
       author:
           author == null && nullToAbsent ? const Value.absent() : Value(author),
@@ -931,8 +933,8 @@ class Specy extends DataClass implements Insertable<Specy> {
     return Specy(
       id: serializer.fromJson<int>(json['id']),
       scientificName: serializer.fromJson<String>(json['scientificName']),
-      family: serializer.fromJson<String>(json['family']),
-      genus: serializer.fromJson<String>(json['genus']),
+      family: serializer.fromJson<String?>(json['family']),
+      genus: serializer.fromJson<String?>(json['genus']),
       species: serializer.fromJson<String>(json['species']),
       author: serializer.fromJson<String?>(json['author']),
       avatar: serializer.fromJson<int?>(json['avatar']),
@@ -950,8 +952,8 @@ class Specy extends DataClass implements Insertable<Specy> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'scientificName': serializer.toJson<String>(scientificName),
-      'family': serializer.toJson<String>(family),
-      'genus': serializer.toJson<String>(genus),
+      'family': serializer.toJson<String?>(family),
+      'genus': serializer.toJson<String?>(genus),
       'species': serializer.toJson<String>(species),
       'author': serializer.toJson<String?>(author),
       'avatar': serializer.toJson<int?>(avatar),
@@ -967,8 +969,8 @@ class Specy extends DataClass implements Insertable<Specy> {
   Specy copyWith(
           {int? id,
           String? scientificName,
-          String? family,
-          String? genus,
+          Value<String?> family = const Value.absent(),
+          Value<String?> genus = const Value.absent(),
           String? species,
           Value<String?> author = const Value.absent(),
           Value<int?> avatar = const Value.absent(),
@@ -980,8 +982,8 @@ class Specy extends DataClass implements Insertable<Specy> {
       Specy(
         id: id ?? this.id,
         scientificName: scientificName ?? this.scientificName,
-        family: family ?? this.family,
-        genus: genus ?? this.genus,
+        family: family.present ? family.value : this.family,
+        genus: genus.present ? genus.value : this.genus,
         species: species ?? this.species,
         author: author.present ? author.value : this.author,
         avatar: avatar.present ? avatar.value : this.avatar,
@@ -1058,8 +1060,8 @@ class Specy extends DataClass implements Insertable<Specy> {
 class SpeciesCompanion extends UpdateCompanion<Specy> {
   final Value<int> id;
   final Value<String> scientificName;
-  final Value<String> family;
-  final Value<String> genus;
+  final Value<String?> family;
+  final Value<String?> genus;
   final Value<String> species;
   final Value<String?> author;
   final Value<int?> avatar;
@@ -1085,8 +1087,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
   SpeciesCompanion.insert({
     this.id = const Value.absent(),
     required String scientificName,
-    required String family,
-    required String genus,
+    this.family = const Value.absent(),
+    this.genus = const Value.absent(),
     required String species,
     this.author = const Value.absent(),
     this.avatar = const Value.absent(),
@@ -1096,8 +1098,6 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     this.year = const Value.absent(),
     this.bibliography = const Value.absent(),
   })  : scientificName = Value(scientificName),
-        family = Value(family),
-        genus = Value(genus),
         species = Value(species);
   static Insertable<Specy> custom({
     Expression<int>? id,
@@ -1132,8 +1132,8 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
   SpeciesCompanion copyWith(
       {Value<int>? id,
       Value<String>? scientificName,
-      Value<String>? family,
-      Value<String>? genus,
+      Value<String?>? family,
+      Value<String?>? genus,
       Value<String>? species,
       Value<String?>? author,
       Value<int?>? avatar,
@@ -3453,7 +3453,7 @@ final class $$EventTypesTableReferences
 
   $$EventsTableProcessedTableManager get eventsRefs {
     final manager = $$EventsTableTableManager($_db, $_db.events)
-        .filter((f) => f.type.id($_item.id));
+        .filter((f) => f.type.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_eventsRefsTable($_db));
     return ProcessedTableManager(
@@ -3467,7 +3467,7 @@ final class $$EventTypesTableReferences
 
   $$RemindersTableProcessedTableManager get remindersRefs {
     final manager = $$RemindersTableTableManager($_db, $_db.reminders)
-        .filter((f) => f.type.id($_item.id));
+        .filter((f) => f.type.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_remindersRefsTable($_db));
     return ProcessedTableManager(
@@ -3714,7 +3714,8 @@ class $$EventTypesTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (eventsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<EventType, $EventTypesTable,
+                            Event>(
                         currentTable: table,
                         referencedTable:
                             $$EventTypesTableReferences._eventsRefsTable(db),
@@ -3726,7 +3727,8 @@ class $$EventTypesTableTableManager extends RootTableManager<
                                 referencedItems.where((e) => e.type == item.id),
                         typedResults: items),
                   if (remindersRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<EventType, $EventTypesTable,
+                            Reminder>(
                         currentTable: table,
                         referencedTable:
                             $$EventTypesTableReferences._remindersRefsTable(db),
@@ -3780,7 +3782,7 @@ final class $$ImagesTableReferences
 
   $$SpeciesTableProcessedTableManager get speciesRefs {
     final manager = $$SpeciesTableTableManager($_db, $_db.species)
-        .filter((f) => f.avatar.id($_item.id));
+        .filter((f) => f.avatar.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_speciesRefsTable($_db));
     return ProcessedTableManager(
@@ -3794,7 +3796,7 @@ final class $$ImagesTableReferences
 
   $$PlantsTableProcessedTableManager get plantsRefs {
     final manager = $$PlantsTableTableManager($_db, $_db.plants)
-        .filter((f) => f.avatar.id($_item.id));
+        .filter((f) => f.avatar.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_plantsRefsTable($_db));
     return ProcessedTableManager(
@@ -4013,7 +4015,7 @@ class $$ImagesTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (speciesRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Image, $ImagesTable, Specy>(
                         currentTable: table,
                         referencedTable:
                             $$ImagesTableReferences._speciesRefsTable(db),
@@ -4024,7 +4026,7 @@ class $$ImagesTableTableManager extends RootTableManager<
                             referencedItems.where((e) => e.avatar == item.id),
                         typedResults: items),
                   if (plantsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Image, $ImagesTable, Plant>(
                         currentTable: table,
                         referencedTable:
                             $$ImagesTableReferences._plantsRefsTable(db),
@@ -4056,8 +4058,8 @@ typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
 typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
   Value<int> id,
   required String scientificName,
-  required String family,
-  required String genus,
+  Value<String?> family,
+  Value<String?> genus,
   required String species,
   Value<String?> author,
   Value<int?> avatar,
@@ -4070,8 +4072,8 @@ typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
 typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
   Value<int> id,
   Value<String> scientificName,
-  Value<String> family,
-  Value<String> genus,
+  Value<String?> family,
+  Value<String?> genus,
   Value<String> species,
   Value<String?> author,
   Value<int?> avatar,
@@ -4090,9 +4092,10 @@ final class $$SpeciesTableReferences
       .createAlias($_aliasNameGenerator(db.species.avatar, db.images.id));
 
   $$ImagesTableProcessedTableManager? get avatar {
-    if ($_item.avatar == null) return null;
+    final $_column = $_itemColumn<int>('avatar');
+    if ($_column == null) return null;
     final manager = $$ImagesTableTableManager($_db, $_db.images)
-        .filter((f) => f.id($_item.avatar!));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_avatarTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -4106,7 +4109,7 @@ final class $$SpeciesTableReferences
 
   $$PlantsTableProcessedTableManager get plantsRefs {
     final manager = $$PlantsTableTableManager($_db, $_db.plants)
-        .filter((f) => f.species.id($_item.id));
+        .filter((f) => f.species.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_plantsRefsTable($_db));
     return ProcessedTableManager(
@@ -4122,7 +4125,7 @@ final class $$SpeciesTableReferences
   $$SpeciesSynonymsTableProcessedTableManager get speciesSynonymsRefs {
     final manager =
         $$SpeciesSynonymsTableTableManager($_db, $_db.speciesSynonyms)
-            .filter((f) => f.species.id($_item.id));
+            .filter((f) => f.species.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache =
         $_typedResult.readTableOrNull(_speciesSynonymsRefsTable($_db));
@@ -4138,7 +4141,7 @@ final class $$SpeciesTableReferences
 
   $$SpeciesCareTableProcessedTableManager get speciesCareRefs {
     final manager = $$SpeciesCareTableTableManager($_db, $_db.speciesCare)
-        .filter((f) => f.species.id($_item.id));
+        .filter((f) => f.species.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_speciesCareRefsTable($_db));
     return ProcessedTableManager(
@@ -4496,8 +4499,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> scientificName = const Value.absent(),
-            Value<String> family = const Value.absent(),
-            Value<String> genus = const Value.absent(),
+            Value<String?> family = const Value.absent(),
+            Value<String?> genus = const Value.absent(),
             Value<String> species = const Value.absent(),
             Value<String?> author = const Value.absent(),
             Value<int?> avatar = const Value.absent(),
@@ -4524,8 +4527,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String scientificName,
-            required String family,
-            required String genus,
+            Value<String?> family = const Value.absent(),
+            Value<String?> genus = const Value.absent(),
             required String species,
             Value<String?> author = const Value.absent(),
             Value<int?> avatar = const Value.absent(),
@@ -4593,7 +4596,7 @@ class $$SpeciesTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (plantsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Specy, $SpeciesTable, Plant>(
                         currentTable: table,
                         referencedTable:
                             $$SpeciesTableReferences._plantsRefsTable(db),
@@ -4604,7 +4607,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
                             referencedItems.where((e) => e.species == item.id),
                         typedResults: items),
                   if (speciesSynonymsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Specy, $SpeciesTable,
+                            SpeciesSynonym>(
                         currentTable: table,
                         referencedTable: $$SpeciesTableReferences
                             ._speciesSynonymsRefsTable(db),
@@ -4616,7 +4620,8 @@ class $$SpeciesTableTableManager extends RootTableManager<
                             referencedItems.where((e) => e.species == item.id),
                         typedResults: items),
                   if (speciesCareRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Specy, $SpeciesTable,
+                            SpeciesCareData>(
                         currentTable: table,
                         referencedTable:
                             $$SpeciesTableReferences._speciesCareRefsTable(db),
@@ -4679,8 +4684,10 @@ final class $$PlantsTableReferences
       .createAlias($_aliasNameGenerator(db.plants.species, db.species.id));
 
   $$SpeciesTableProcessedTableManager get species {
+    final $_column = $_itemColumn<int>('species')!;
+
     final manager = $$SpeciesTableTableManager($_db, $_db.species)
-        .filter((f) => f.id($_item.species));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_speciesTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -4691,9 +4698,10 @@ final class $$PlantsTableReferences
       .createAlias($_aliasNameGenerator(db.plants.avatar, db.images.id));
 
   $$ImagesTableProcessedTableManager? get avatar {
-    if ($_item.avatar == null) return null;
+    final $_column = $_itemColumn<int>('avatar');
+    if ($_column == null) return null;
     final manager = $$ImagesTableTableManager($_db, $_db.images)
-        .filter((f) => f.id($_item.avatar!));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_avatarTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -4707,7 +4715,7 @@ final class $$PlantsTableReferences
 
   $$EventsTableProcessedTableManager get eventsRefs {
     final manager = $$EventsTableTableManager($_db, $_db.events)
-        .filter((f) => f.plant.id($_item.id));
+        .filter((f) => f.plant.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_eventsRefsTable($_db));
     return ProcessedTableManager(
@@ -4721,7 +4729,7 @@ final class $$PlantsTableReferences
 
   $$RemindersTableProcessedTableManager get remindersRefs {
     final manager = $$RemindersTableTableManager($_db, $_db.reminders)
-        .filter((f) => f.plant.id($_item.id));
+        .filter((f) => f.plant.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_remindersRefsTable($_db));
     return ProcessedTableManager(
@@ -5135,7 +5143,7 @@ class $$PlantsTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (eventsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Plant, $PlantsTable, Event>(
                         currentTable: table,
                         referencedTable:
                             $$PlantsTableReferences._eventsRefsTable(db),
@@ -5146,7 +5154,7 @@ class $$PlantsTableTableManager extends RootTableManager<
                             referencedItems.where((e) => e.plant == item.id),
                         typedResults: items),
                   if (remindersRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<Plant, $PlantsTable, Reminder>(
                         currentTable: table,
                         referencedTable:
                             $$PlantsTableReferences._remindersRefsTable(db),
@@ -5200,8 +5208,10 @@ final class $$SpeciesSynonymsTableReferences extends BaseReferences<
           $_aliasNameGenerator(db.speciesSynonyms.species, db.species.id));
 
   $$SpeciesTableProcessedTableManager get species {
+    final $_column = $_itemColumn<int>('species')!;
+
     final manager = $$SpeciesTableTableManager($_db, $_db.species)
-        .filter((f) => f.id($_item.species));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_speciesTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -5445,8 +5455,10 @@ final class $$SpeciesCareTableReferences
       .createAlias($_aliasNameGenerator(db.speciesCare.species, db.species.id));
 
   $$SpeciesTableProcessedTableManager get species {
+    final $_column = $_itemColumn<int>('species')!;
+
     final manager = $$SpeciesTableTableManager($_db, $_db.species)
-        .filter((f) => f.id($_item.species));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_speciesTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -5735,8 +5747,10 @@ final class $$EventsTableReferences
       .createAlias($_aliasNameGenerator(db.events.type, db.eventTypes.id));
 
   $$EventTypesTableProcessedTableManager get type {
+    final $_column = $_itemColumn<int>('type')!;
+
     final manager = $$EventTypesTableTableManager($_db, $_db.eventTypes)
-        .filter((f) => f.id($_item.type));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_typeTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -5747,8 +5761,10 @@ final class $$EventsTableReferences
       .createAlias($_aliasNameGenerator(db.events.plant, db.plants.id));
 
   $$PlantsTableProcessedTableManager get plant {
+    final $_column = $_itemColumn<int>('plant')!;
+
     final manager = $$PlantsTableTableManager($_db, $_db.plants)
-        .filter((f) => f.id($_item.plant));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_plantTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -6079,8 +6095,10 @@ final class $$RemindersTableReferences
       .createAlias($_aliasNameGenerator(db.reminders.type, db.eventTypes.id));
 
   $$EventTypesTableProcessedTableManager get type {
+    final $_column = $_itemColumn<int>('type')!;
+
     final manager = $$EventTypesTableTableManager($_db, $_db.eventTypes)
-        .filter((f) => f.id($_item.type));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_typeTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -6091,8 +6109,10 @@ final class $$RemindersTableReferences
       .createAlias($_aliasNameGenerator(db.reminders.plant, db.plants.id));
 
   $$PlantsTableProcessedTableManager get plant {
+    final $_column = $_itemColumn<int>('plant')!;
+
     final manager = $$PlantsTableTableManager($_db, $_db.plants)
-        .filter((f) => f.id($_item.plant));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_plantTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(

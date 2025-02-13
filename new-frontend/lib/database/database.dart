@@ -35,8 +35,8 @@ enum SpeciesDataSource { custom, trefle, floraCodex }
 class Species extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get scientificName => text().withLength(max: 50)();
-  TextColumn get family => text().withLength(max: 50)();
-  TextColumn get genus => text().withLength(max: 50)();
+  TextColumn get family => text().withLength(max: 50).nullable()();
+  TextColumn get genus => text().withLength(max: 50).nullable()();
   TextColumn get species => text().withLength(max: 50)();
   TextColumn get author => text().withLength(max: 100).nullable()();
   IntColumn get avatar => integer()
@@ -226,8 +226,8 @@ class AppDatabase extends _$AppDatabase {
     await into(species).insertOnConflictUpdate(SpeciesCompanion.insert(
       id: const Value(1),
       scientificName: "Sedum palmeri",
-      genus: "sedum",
-      family: "Crassulaceae",
+      genus: Value("sedum"),
+      family: Value("Crassulaceae"),
       species: "Sedum palmeri",
       dataSource: const Value(SpeciesDataSource.custom),
     ));

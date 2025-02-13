@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/search/fetcher/flora_codex/flora_codex_fetcher.dart';
@@ -9,6 +10,7 @@ import 'package:plant_it/search/fetcher/trefle/trefle_fetcher.dart';
 import 'package:plant_it/search/search_filter.dart';
 import 'package:plant_it/search/search_species_card.dart';
 import 'package:plant_it/search/fetcher/species_fetcher.dart';
+import 'package:plant_it/search/species/add_species_page.dart';
 
 class SearchPage extends StatefulWidget {
   final Environment env;
@@ -169,7 +171,12 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
           IconButton(
-            onPressed: _showFilterDialog,
+            onPressed: () => navigateTo(
+                context,
+                AddSpeciesPage(
+                  widget.env,
+                  name: _searchController.text,
+                )),
             icon: const Icon(LucideIcons.plus),
           ),
         ],
