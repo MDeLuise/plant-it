@@ -62,6 +62,8 @@ dependencies:
   palette_generator: ^0.3.3+5
   currency_textfield: ^4.14.1
   syncfusion_flutter_sliders: ^28.2.5
+  alert_info: ^0.0.3
+  # https://pub.dev/packages/flutter_popup
   # https://pub.dev/packages/dotted_border
   # https://pub.dev/packages/chip_list
   # https://pub.dev/packages/advanced_chips_input

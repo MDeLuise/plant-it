@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
@@ -217,8 +218,16 @@ class _AddPlantPageState extends State<AddPlantPage> {
 
         toSave = toSave.copyWith(species: drift.Value(speciesId));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error adding species')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error adding species')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error adding species',
+          typeInfo: TypeInfo.error,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
       }
     }
@@ -226,15 +235,32 @@ class _AddPlantPageState extends State<AddPlantPage> {
     try {
       insertedId = await widget.env.plantRepository.insert(toSave);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error adding plant')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Error adding plant')),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'Error adding plant',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Plant added successfully')),
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Plant added successfully')),
+    // );
+    AlertInfo.show(
+      context: context,
+      text: 'Plant added successfully',
+      typeInfo: TypeInfo.success,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
     Navigator.of(context).pop();
-    final Plant plantToNavigate = await widget.env.plantRepository.get(insertedId);
+    final Plant plantToNavigate =
+        await widget.env.plantRepository.get(insertedId);
     navigateTo(context, PlantPage(widget.env, plantToNavigate));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:plant_it/database/database.dart';
@@ -78,13 +79,29 @@ class _EditEventScreenState extends State<EditEventScreen> {
           note: noteController.text,
         ));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error updating event')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error updating event')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error updating event',
+          typeInfo: TypeInfo.error,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Event updated successfully')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Event updated successfully')),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'Event updated successfully',
+        typeInfo: TypeInfo.success,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
       Navigator.of(context).pop();
     }
@@ -97,23 +114,37 @@ class _EditEventScreenState extends State<EditEventScreen> {
       confirmBtnText: 'Delete',
       cancelBtnText: 'Cancel',
       title: "Delete event?",
+      text: "Are you sure you want to delete the event?",
       confirmBtnColor: Colors.red,
       showCancelBtn: true,
       cancelBtnTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.surfaceDim,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
-      backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(.8),
+      textColor: Theme.of(context).colorScheme.onSurface,
+      titleColor: Theme.of(context).colorScheme.onSurface,
+      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       onConfirmBtnTap: () {
         try {
           widget.env.eventRepository.delete(widget.event.id);
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error deleting event')),
+          AlertInfo.show(
+            context: context,
+            text: 'Error deleting event',
+            typeInfo: TypeInfo.error,
+            duration: 5,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            textColor: Theme.of(context).colorScheme.onSurface,
           );
           return;
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event deleted successfully')),
+        AlertInfo.show(
+          context: context,
+          text: 'Event deleted successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.of(context).pop();
         Navigator.of(context).pop();

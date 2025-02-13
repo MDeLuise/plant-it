@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:plant_it/cache/cache.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/environment.dart';
@@ -178,8 +179,16 @@ class DatabaseSettings extends StatelessWidget {
             title: const Text("Import Data"),
             leading: const Icon(Icons.file_upload),
             onTap: () async {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Import completed!")),
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text("Import completed!")),
+              // );
+              AlertInfo.show(
+                context: context,
+                text: 'Import completed',
+                typeInfo: TypeInfo.info,
+                duration: 5,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                textColor: Theme.of(context).colorScheme.onSurface,
               );
             },
           ),
@@ -187,8 +196,16 @@ class DatabaseSettings extends StatelessWidget {
             title: const Text("Export Data"),
             leading: const Icon(Icons.file_download),
             onTap: () async {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Export completed!")),
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text("Export completed!")),
+              // );
+              AlertInfo.show(
+                context: context,
+                text: 'Export completed',
+                typeInfo: TypeInfo.info,
+                duration: 5,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                textColor: Theme.of(context).colorScheme.onSurface,
               );
             },
           ),
@@ -216,8 +233,16 @@ class CacheSettings extends StatelessWidget {
             leading: const Icon(Icons.cleaning_services),
             onTap: () {
               cache.removeAll();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Cache cleaned!")),
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text("Cache cleaned!")),
+              // );
+              AlertInfo.show(
+                context: context,
+                text: 'Cache cleaned',
+                typeInfo: TypeInfo.success,
+                duration: 5,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                textColor: Theme.of(context).colorScheme.onSurface,
               );
             },
           ),

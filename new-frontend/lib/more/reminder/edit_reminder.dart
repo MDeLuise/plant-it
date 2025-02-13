@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:plant_it/database/database.dart';
@@ -96,13 +97,29 @@ class _EditReminderPageState extends State<EditReminderPage> {
           enabled: const drift.Value(true),
         ));
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reminder added successfully')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Reminder added successfully')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Reminder added successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.of(context).pop(true);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error adding reminder')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error adding reminder')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error adding reminder',
+          typeInfo: TypeInfo.error,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
       }
     }

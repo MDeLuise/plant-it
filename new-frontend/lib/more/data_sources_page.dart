@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -160,8 +161,16 @@ class _TrefleSettingsState extends State<TrefleSettings> {
   void _downloadData() async {
     var status = await Permission.manageExternalStorage.request();
     if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Storage permission denied.")),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("Storage permission denied.")),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'Storage permission denied',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
       return;
     }
@@ -170,8 +179,16 @@ class _TrefleSettingsState extends State<TrefleSettings> {
         .getDirectoryPath(initialDirectory: "/storage/emulated/0/Download");
 
     if (directoryPath == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No directory selected")),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("No directory selected")),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'No directory selected',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
       return;
     }
@@ -188,6 +205,12 @@ class _TrefleSettingsState extends State<TrefleSettings> {
       showCancelBtn: true,
       confirmBtnText: "OK",
       cancelBtnText: "Cancel",
+      textColor: Theme.of(context).colorScheme.onSurface,
+      titleColor: Theme.of(context).colorScheme.onSurface,
+      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
       barrierDismissible: false,
       customAsset: "packages/quickalert/assets/loading.gif",
       onCancelBtnTap: () {
@@ -208,8 +231,16 @@ class _TrefleSettingsState extends State<TrefleSettings> {
         "downloadUrl": downloadUrl,
       },
     );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Import started in the background.")),
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text("Import started in the background.")),
+    // );
+    AlertInfo.show(
+      context: context,
+      text: 'Import started in the background',
+      typeInfo: TypeInfo.info,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
   }
 
@@ -220,8 +251,16 @@ class _TrefleSettingsState extends State<TrefleSettings> {
     );
 
     if (result == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No file selected.")),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("No file selected.")),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'No file selected',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
       return;
     }
@@ -238,6 +277,13 @@ class _TrefleSettingsState extends State<TrefleSettings> {
       confirmBtnText: "OK",
       cancelBtnText: "Cancel",
       barrierDismissible: false,
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      textColor: Theme.of(context).colorScheme.onSurface,
+      titleColor: Theme.of(context).colorScheme.onSurface,
+      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       customAsset: "packages/quickalert/assets/loading.gif",
       onCancelBtnTap: () {
         procede = false;
@@ -254,8 +300,16 @@ class _TrefleSettingsState extends State<TrefleSettings> {
       "import_species_task",
       inputData: {"filePath": result.files.single.path},
     );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Import started in the background.")),
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text("Import started in the background.")),
+    // );
+    AlertInfo.show(
+      context: context,
+      text: 'Import started in the background',
+      typeInfo: TypeInfo.info,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
   }
 

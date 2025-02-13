@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:alert_info/alert_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -11,6 +12,9 @@ import 'package:plant_it/search/species/species_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_event_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/plant_reminder_widget_generator.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
+import 'package:quickalert/models/quickalert_animtype.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PlantPage extends StatefulWidget {
@@ -95,6 +99,52 @@ class _PlantPageState extends State<PlantPage> {
     });
   }
 
+  void _deletePlant() async {
+    return QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      confirmBtnText: 'Delete',
+      cancelBtnText: 'Cancel',
+      title: "Delete plant?",
+      text:
+          "Are you sure you want to delete the plant and all the activity on it?",
+      confirmBtnColor: Colors.red,
+      textColor: Theme.of(context).colorScheme.onSurface,
+      titleColor: Theme.of(context).colorScheme.onSurface,
+      showCancelBtn: true,
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      onConfirmBtnTap: () {
+        try {
+          widget.env.plantRepository.delete(widget.plant.id);
+        } catch (e) {
+          AlertInfo.show(
+            context: context,
+            text: 'Error deleting plant',
+            typeInfo: TypeInfo.error,
+            duration: 5,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            textColor: Theme.of(context).colorScheme.onSurface,
+          );
+          return;
+        }
+        AlertInfo.show(
+          context: context,
+          text: 'Plant deleted successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +153,22 @@ class _PlantPageState extends State<PlantPage> {
           SliverAppBar(
             expandedHeight: MediaQuery.of(context).size.height * 0.6,
             elevation: 0,
+            leading: IconButton(
+              // just to add shadow
+              icon: const Icon(
+                Icons.arrow_back,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    blurRadius: 20,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
@@ -113,8 +179,53 @@ class _PlantPageState extends State<PlantPage> {
             ),
             actions: [
               IconButton(
-                onPressed: () {},
-                icon: const Icon(LucideIcons.ellipsis_vertical),
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: const RelativeRect.fromLTRB(1000, 80, 0, 0),
+                    items: [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.pencil),
+                          title: Text('Edit'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'duplicate',
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.copy),
+                          title: Text('Duplicate'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'remove',
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.trash),
+                          title: Text('Remove'),
+                        ),
+                      ),
+                    ],
+                  ).then((value) {
+                    if (value == 'edit') {
+                      //_editPlant();
+                    } else if (value == 'duplicate') {
+                      //_duplicatePlant();
+                    } else if (value == 'remove') {
+                      _deletePlant();
+                    }
+                  });
+                },
+                icon: const Icon(
+                  LucideIcons.ellipsis_vertical,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black,
+                      blurRadius: 20,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

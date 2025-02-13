@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:plant_it/color_banner.dart';
@@ -48,13 +49,29 @@ class _AddEventTypePageState extends State<AddEventTypePage> {
 
       try {
         await widget.env.eventTypeRepository.insert(event);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event added successfully')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Event added successfully')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Event added successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.pop(context, true);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error adding event')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error adding event')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error adding event',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
       }
     }
