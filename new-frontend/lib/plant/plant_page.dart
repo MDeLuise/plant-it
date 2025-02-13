@@ -140,7 +140,7 @@ class _PlantPageState extends State<PlantPage> {
           textColor: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       },
     );
   }
