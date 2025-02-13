@@ -204,13 +204,16 @@ class _SpeciesPageState extends State<SpeciesPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     textBaseline: TextBaseline.ideographic,
                     children: [
-                      Text(
-                        widget.species.scientificName.value,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                                color: Theme.of(context).colorScheme.primary),
+                      Expanded(
+                        child: Text(
+                          widget.species.scientificName.value,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                  color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
                       TextButton(
                           onPressed: () => navigateTo(context,

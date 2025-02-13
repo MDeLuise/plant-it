@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -257,12 +258,28 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
         await widget.env.speciesSynonymsRepository.insert(synonym);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error adding species')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Error adding species')),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'Error adding species',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Species added successfully')),
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Species added successfully')),
+    // );
+    AlertInfo.show(
+      context: context,
+      text: 'Species added successfully',
+      typeInfo: TypeInfo.success,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      textColor: Theme.of(context).colorScheme.onSurface,
     );
   }
 }
