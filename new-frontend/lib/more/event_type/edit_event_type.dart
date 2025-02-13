@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_it/color_banner.dart';
 import 'package:plant_it/common.dart';
@@ -64,13 +65,29 @@ class _EditEventTypePageState extends State<EditEventTypePage> {
 
       try {
         await widget.env.eventTypeRepository.update(event);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event type updated successfully')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Event type updated successfully')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Event type updated successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.pop(context, true);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error edit event type')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error edit event type')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error adding event',
+          typeInfo: TypeInfo.error,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
       }
     }

@@ -1,3 +1,4 @@
+import 'package:alert_info/alert_info.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
@@ -65,12 +66,28 @@ class _AddEventScreenState extends State<AddEventScreen> {
           }
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error adding events')),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Error adding events')),
+        // );
+        AlertInfo.show(
+          context: context,
+          text: 'Error adding events',
+          typeInfo: TypeInfo.error,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
         );
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Events added successfully')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Events added successfully')),
+      // );
+      AlertInfo.show(
+        context: context,
+        text: 'Events added successfully',
+        typeInfo: TypeInfo.success,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurface,
       );
       Navigator.of(context).pop();
     }
