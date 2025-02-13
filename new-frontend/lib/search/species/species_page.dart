@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:alert_info/alert_info.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -10,7 +11,10 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/plant/add_plant_page.dart';
 import 'package:plant_it/species_and_plant_widget_generator/species_care_widget_generator.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 
 class SpeciesPage extends StatefulWidget {
@@ -101,6 +105,100 @@ class _SpeciesPageState extends State<SpeciesPage> {
     });
   }
 
+  void _deleteSpecies() async {
+    return QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      confirmBtnText: 'Delete',
+      cancelBtnText: 'Cancel',
+      title: "Delete species?",
+      text:
+          "Are you sure you want to delete the species? This will delete also all the linked plants",
+      confirmBtnColor: Colors.red,
+      textColor: Theme.of(context).colorScheme.onSurface,
+      titleColor: Theme.of(context).colorScheme.onSurface,
+      showCancelBtn: true,
+      cancelBtnTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      onConfirmBtnTap: () {
+        try {
+          widget.env.speciesRepository.delete(widget.species.id.value);
+        } catch (e) {
+          AlertInfo.show(
+            context: context,
+            text: 'Error deleting species',
+            typeInfo: TypeInfo.error,
+            duration: 5,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            textColor: Theme.of(context).colorScheme.onSurface,
+          );
+          return;
+        }
+        AlertInfo.show(
+          context: context,
+          text: 'Species deleted successfully',
+          typeInfo: TypeInfo.success,
+          duration: 5,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          textColor: Theme.of(context).colorScheme.onSurface,
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
+      },
+    );
+  }
+
+  void _duplicateSpecies() async {
+    late final Specy duplicatedSpecies;
+    try {
+      final String duplicateName =
+          "${widget.species.scientificName.value} (duplicate)";
+      final int duplicatedId = await widget.env.speciesRepository.insert(
+          widget.species.copyWith(
+              scientificName: drift.Value(duplicateName),
+              id: const drift.Value.absent(),
+              species: drift.Value(duplicateName),
+              dataSource: const drift.Value(SpeciesDataSource.custom)));
+      duplicatedSpecies = await widget.env.speciesRepository.get(duplicatedId);
+
+      await widget.env.speciesCareRepository.get(widget.species.id.value).then(
+          (c) => widget.env.speciesCareRepository
+              .insert(c.copyWith(species: duplicatedId).toCompanion(false)));
+      for (SpeciesSynonym synonym in await widget.env.speciesSynonymsRepository
+          .getBySpecies(widget.species.id.value)) {
+        await widget.env.speciesSynonymsRepository
+            .insert(synonym.toCompanion(false).copyWith(
+                  species: drift.Value(duplicatedId),
+                  id: const drift.Value.absent(),
+                ));
+      }
+    } catch (e) {
+      AlertInfo.show(
+        context: context,
+        text: 'Error duplicating species',
+        typeInfo: TypeInfo.error,
+        duration: 5,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        textColor: Theme.of(context).colorScheme.onSurface,
+      );
+      return;
+    }
+    AlertInfo.show(
+      context: context,
+      text: 'Species duplicated',
+      typeInfo: TypeInfo.success,
+      duration: 5,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      textColor: Theme.of(context).colorScheme.onSurface,
+    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            SpeciesPage(widget.env, duplicatedSpecies.toCompanion(false))));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -155,7 +253,45 @@ class _SpeciesPageState extends State<SpeciesPage> {
             ),
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: const RelativeRect.fromLTRB(1000, 80, 0, 0),
+                    items: [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.pencil),
+                          title: Text('Edit'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'duplicate',
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.copy),
+                          title: Text('Duplicate'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'remove',
+                        enabled: widget.species.dataSource.value ==
+                            SpeciesDataSource.custom,
+                        child: ListTile(
+                          leading: const Icon(LucideIcons.trash),
+                          title: Text('Remove'),
+                        ),
+                      ),
+                    ],
+                  ).then((value) {
+                    if (value == 'edit') {
+                      //_editSpecies();
+                    } else if (value == 'duplicate') {
+                      _duplicateSpecies();
+                    } else if (value == 'remove') {
+                      _deleteSpecies();
+                    }
+                  });
+                },
                 icon: const Icon(
                   LucideIcons.ellipsis_vertical,
                   shadows: [
