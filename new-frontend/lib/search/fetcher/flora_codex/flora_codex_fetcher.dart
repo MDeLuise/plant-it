@@ -63,7 +63,7 @@ class FloraCodexFetcher extends SpeciesFetcher {
       throw Exception("Error while loading species care from Flora Codex");
     }
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    return Future.value(SpeciesCareCompanion());
+    return Future.value(const SpeciesCareCompanion());
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class BackgroundDownloadNotificationService {
@@ -14,6 +15,8 @@ class BackgroundDownloadNotificationService {
     maxProgress: 100,
     enableVibration: false,
     playSound: false,
+    icon: 'ic_notification',
+    color: Color.fromARGB(255, 58, 133, 60),
   );
 
   static const NotificationDetails _platformChannelSpecifics =

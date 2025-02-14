@@ -1,0 +1,1 @@
+/Users/massimiliano.deluise/dev/plant-it/new-frontend/build/app/intermediates/cxx/Debug/5g23q2b2/obj/arm64-v8a

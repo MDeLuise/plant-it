@@ -1,6 +1,7 @@
-import 'package:alert_info/alert_info.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:plant_it/app_pages.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
@@ -97,30 +98,12 @@ class _EditReminderPageState extends State<EditReminderPage> {
           enabled: const drift.Value(true),
         ));
 
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Reminder added successfully')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Reminder added successfully',
-          typeInfo: TypeInfo.success,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(context, FeedbackLevel.success,
+            "Reminder added successfully", null);
         Navigator.of(context).pop(true);
       } catch (e) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Error adding reminder')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Error adding reminder',
-          typeInfo: TypeInfo.error,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(
+            context, FeedbackLevel.error, "Error adding reminder", null);
       }
     }
   }
@@ -162,250 +145,231 @@ class _EditReminderPageState extends State<EditReminderPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Update Reminder")),
-        body: const Center(child: CircularProgressIndicator()),
+      return const AppPage(
+        title: "Edit a reminder",
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Update Reminder")),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Event Dropdown
-                  MultiDropdown<EventType>(
-                    items: events,
-                    controller: eventController,
-                    enabled: true,
-                    searchEnabled: true,
-                    maxSelections: 1,
-                    chipDecoration: ChipDecoration(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      wrap: true,
-                      runSpacing: 2,
-                      spacing: 10,
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                    fieldDecoration: FieldDecoration(
-                      hintText: 'Select Event',
-                      prefixIcon: const Icon(LucideIcons.glass_water),
-                      showClearIcon: false,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    dropdownDecoration: DropdownDecoration(
-                      marginTop: 2,
-                      maxHeight: 500,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      header: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          'Select events from the list',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                    dropdownItemDecoration: DropdownItemDecoration(
-                      selectedIcon: Icon(Icons.check_box,
-                          color: Theme.of(context).colorScheme.surfaceDim),
-                      textColor: Theme.of(context).colorScheme.onPrimary,
-                      selectedBackgroundColor:
-                          Theme.of(context).colorScheme.primary,
-                      selectedTextColor:
-                          Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please select an event'
-                        : null,
-                  ),
-                  const SizedBox(height: 20),
+    return AppPage(
+      title: "Edit a reminder",
+      mainActionBtn: LoadingButton('Update', _updateReminder),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Event type
+            const Text("Event type"),
+            MultiDropdown<EventType>(
+              items: events,
+              controller: eventController,
+              enabled: true,
+              searchEnabled: true,
+              maxSelections: 1,
+              fieldDecoration: FieldDecoration(
+                hintText: "i.e. watering, fertilizing",
+                showClearIcon: false,
+                suffixIcon: null,
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              ),
+              dropdownDecoration: DropdownDecoration(
+                maxHeight: 500,
+                backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+                elevation: 2,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+              searchDecoration: const SearchFieldDecoration(
+                searchIcon: Icon(LucideIcons.search),
+              ),
+              chipDecoration: const ChipDecoration(
+                  labelStyle: TextStyle(
+                color: Colors.black87,
+              )),
+              dropdownItemDecoration: DropdownItemDecoration(
+                selectedBackgroundColor: const Color(0xFFE0E0E0),
+                selectedTextColor: Colors.black87,
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please select an event'
+                  : null,
+            ),
+            const SizedBox(height: 20),
 
-                  // Plant Dropdown
-                  MultiDropdown<Plant>(
-                    items: plants,
-                    controller: plantController,
-                    enabled: true,
-                    searchEnabled: true,
-                    maxSelections: 1,
-                    chipDecoration: ChipDecoration(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      wrap: true,
-                      runSpacing: 2,
-                      spacing: 10,
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please select a plant'
-                        : null,
-                    fieldDecoration: FieldDecoration(
-                      hintText: 'Plants',
-                      prefixIcon: const Icon(LucideIcons.leaf),
-                      showClearIcon: false,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                      labelStyle: const TextStyle(color: Colors.black),
-                    ),
-                    dropdownDecoration: DropdownDecoration(
-                      marginTop: 2,
-                      maxHeight: 500,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      header: const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          'Select plants from the list',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    dropdownItemDecoration: DropdownItemDecoration(
-                      selectedIcon: Icon(Icons.check_box,
-                          color: Theme.of(context).colorScheme.surfaceDim),
-                      textColor: Colors.black,
-                      selectedBackgroundColor:
-                          Theme.of(context).colorScheme.primary,
-                      selectedTextColor: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+            // Plant
+            const Text("Plant"),
+            MultiDropdown<Plant>(
+              items: plants,
+              controller: plantController,
+              enabled: true,
+              searchEnabled: true,
+              maxSelections: 1,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please select a plant'
+                  : null,
+              fieldDecoration: FieldDecoration(
+                hintText: "i.e. watering, fertilizing",
+                showClearIcon: false,
+                suffixIcon: null,
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              ),
+              dropdownDecoration: DropdownDecoration(
+                maxHeight: 500,
+                backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+                elevation: 2,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+              chipDecoration: const ChipDecoration(
+                  labelStyle: TextStyle(
+                color: Colors.black87,
+              )),
+              dropdownItemDecoration: DropdownItemDecoration(
+                selectedBackgroundColor:
+                    Theme.of(context).colorScheme.onSurface,
+                selectedTextColor: Colors.black87,
+              ),
+              searchDecoration: const SearchFieldDecoration(
+                searchIcon: Icon(LucideIcons.search),
+              ),
+            ),
+            const SizedBox(height: 20),
 
-                  // Dates
-                  Row(
+            // Dates
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            hintText: "Start Date",
-                            prefixIcon: const Icon(LucideIcons.calendar),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                      const Text("Start"),
+                      TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: "",
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).dividerColor,
+                                width: 1),
                           ),
-                          controller: TextEditingController(
-                            text:
-                                "${selectedStartDate.toLocal()}".split(' ')[0],
-                          ),
-                          onTap: () => _selectDate(context, true),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            hintText: "No End",
-                            prefixIcon: const Icon(LucideIcons.calendar),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          controller: TextEditingController(
-                            text: selectedEndDate != null
-                                ? "${selectedEndDate!.toLocal()}".split(' ')[0]
-                                : "",
-                          ),
-                          onTap: () => _selectDate(context, false),
+                        controller: TextEditingController(
+                          text: "${selectedStartDate.toLocal()}".split(' ')[0],
                         ),
+                        onTap: () => _selectDate(context, true),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
-                  // Frequency
-                  TextFormField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: "Frequency",
-                      prefixIcon: const Icon(LucideIcons.clock),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onTap: () => _showFrequencyDialog(
-                      (q, u) {
-                        setState(() {
-                          _selectedFrequencyUnit = u;
-                          _selectedFrequencyQuantity = q;
-                          _frequencyController.text = "Every $q ${u.name}";
-                        });
-                      },
-                      _selectedFrequencyQuantity,
-                      _selectedFrequencyUnit,
-                    ),
-                    controller: _frequencyController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a value';
-                      }
-                      return null;
-                    },
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("End"),
+                      TextFormField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: "No End",
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).dividerColor,
+                                width: 1),
+                          ),
+                        ),
+                        controller: TextEditingController(
+                          text: selectedEndDate != null
+                              ? "${selectedEndDate!.toLocal()}".split(' ')[0]
+                              : "",
+                        ),
+                        onTap: () => _selectDate(context, false),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-
-                  // Repeat After
-                  TextFormField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: "Repeat After",
-                      prefixIcon: const Icon(LucideIcons.repeat),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onTap: () => _showFrequencyDialog(
-                      (q, u) {
-                        setState(() {
-                          _selectedRepeatAfterUnit = u;
-                          _selectedRepeatAfterQuantity = q;
-                        });
-                        _repeatAfterController.text = "After $q ${u.name}";
-                      },
-                      _selectedRepeatAfterQuantity,
-                      _selectedRepeatAfterUnit,
-                    ),
-                    controller: _repeatAfterController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a value';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Save Button
-                  LoadingButton('Update Reminder', _updateReminder),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
+            const SizedBox(height: 20),
+
+            // Frequency
+            const Text("Frequency"),
+            TextFormField(
+              readOnly: true,
+              decoration: InputDecoration(
+                hintText: "i.e. every 3 weeks",
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1),
+                ),
+              ),
+              onTap: () => _showFrequencyDialog(
+                (q, u) {
+                  setState(() {
+                    _selectedFrequencyUnit = u;
+                    _selectedFrequencyQuantity = q;
+                    _frequencyController.text = "Every $q ${u.name}";
+                  });
+                },
+                _selectedFrequencyQuantity,
+                _selectedFrequencyUnit,
+              ),
+              controller: _frequencyController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a value';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Repeat After
+            const Text("Repetition"),
+            TextFormField(
+              readOnly: true,
+              decoration: InputDecoration(
+                hintText: "i.e. after 2 days",
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1),
+                ),
+              ),
+              onTap: () => _showFrequencyDialog(
+                (q, u) {
+                  setState(() {
+                    _selectedRepeatAfterUnit = u;
+                    _selectedRepeatAfterQuantity = q;
+                  });
+                  _repeatAfterController.text = "After $q ${u.name}";
+                },
+                _selectedRepeatAfterQuantity,
+                _selectedRepeatAfterUnit,
+              ),
+              controller: _repeatAfterController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a value';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );

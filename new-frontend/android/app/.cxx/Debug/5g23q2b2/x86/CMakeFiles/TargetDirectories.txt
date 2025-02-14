@@ -1,0 +1,2 @@
+/Users/massimiliano.deluise/dev/plant-it/new-frontend/android/app/.cxx/Debug/5g23q2b2/x86/CMakeFiles/edit_cache.dir
+/Users/massimiliano.deluise/dev/plant-it/new-frontend/android/app/.cxx/Debug/5g23q2b2/x86/CMakeFiles/rebuild_cache.dir

@@ -41,8 +41,15 @@ class PlantEventInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(.2),
+        color: const Color.fromARGB(255, 225, 225, 225),
         borderRadius: BorderRadius.circular(10),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Theme.of(context).colorScheme.shadow,
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 0),
+        //   ),
+        // ],
       ),
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -62,15 +69,15 @@ class PlantEventInfoWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(overflow: TextOverflow.ellipsis),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        overflow: TextOverflow.ellipsis,
+                        color: Colors.black87,
+                      ),
                 ),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis),
                 ),

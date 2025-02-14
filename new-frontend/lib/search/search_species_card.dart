@@ -38,7 +38,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).colorScheme.primary.withOpacity(.7),
+                color: Theme.of(context).primaryColor.withOpacity(.7),
               ),
               child: avatarUrl != null
                   ? CachedNetworkImage(
@@ -108,8 +108,8 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -119,7 +119,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Theme.of(context).colorScheme.surfaceDim,
+                              color: Colors.white,
                             ),
                       ),
                     ),

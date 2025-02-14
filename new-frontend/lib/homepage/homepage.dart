@@ -66,102 +66,117 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .3,
-                child: Container(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(.7),
-                  child: _Header(widget.env),
-                ),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Header(widget.env),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                "Next Reminders",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
-              Column(
+            ),
+            const SizedBox(height: 5),
+            _NextReminders(widget.env),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 100),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Manage Your Plants",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w800,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                        Text(
+                          "Your Collection",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w500,
                                   ),
-                            ),
-                            Text(
-                              "${_plants.length} Plants",
-                            ),
-                          ],
                         ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: "Search plants",
-                            prefixIcon: const Icon(LucideIcons.search),
-                            suffixIcon: _searchController.text.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(LucideIcons.x),
-                                    onPressed: _clearSearch,
-                                  )
-                                : null,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ),
+                        Text(
+                          "You currently have ${_plants.length} plants",
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .5,
-                    child: FlutterCarousel(
-                      options: FlutterCarouselOptions(
-                        height: 400.0,
-                        showIndicator: false,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).colorScheme.shadow,
+                            blurRadius: 10,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
                       ),
-                      items: _filteredPlants.map((plant) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return PlantCard(
-                              widget.env,
-                              plant,
-                              key: UniqueKey(),
-                            );
-                          },
-                        );
-                      }).toList(),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: "Search plants",
+                          prefixIcon: const Icon(LucideIcons.search),
+                          filled: true,
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(
+                                    LucideIcons.x,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                  onPressed: _clearSearch,
+                                )
+                              : null,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 10,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 50),
+                  )
                 ],
-              )
-            ],
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * .2,
-            left: 0,
-            right: 0,
-            child: _NextReminders(widget.env),
-          ),
-        ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .5,
+              child: FlutterCarousel(
+                options: FlutterCarouselOptions(
+                  height: 400.0,
+                  showIndicator: false,
+                ),
+                items: _filteredPlants.map((plant) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return PlantCard(
+                        widget.env,
+                        plant,
+                        key: UniqueKey(),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 50),
+          ],
+        ),
       ),
     );
   }
@@ -191,6 +206,7 @@ class _HeaderState extends State<_Header> {
     showModalBottomSheet<void>(
       showDragHandle: false,
       context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (BuildContext context) {
         return SetNamePanel(widget.env, _setUsername, _currentName);
       },
@@ -237,7 +253,7 @@ class _HeaderState extends State<_Header> {
                   child: Text(
                     _currentName,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
