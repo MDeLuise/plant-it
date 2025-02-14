@@ -360,10 +360,11 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _base64Meta = const VerificationMeta('base64');
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
   @override
-  late final GeneratedColumn<String> base64 = GeneratedColumn<String>(
-      'base64', aliasedName, false,
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
@@ -380,7 +381,7 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       'created_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns => [id, base64, description, createdAt];
+  List<GeneratedColumn> get $columns => [id, imagePath, description, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -394,11 +395,11 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('base64')) {
-      context.handle(_base64Meta,
-          base64.isAcceptableOrUnknown(data['base64']!, _base64Meta));
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
     } else if (isInserting) {
-      context.missing(_base64Meta);
+      context.missing(_imagePathMeta);
     }
     if (data.containsKey('description')) {
       context.handle(
@@ -421,8 +422,8 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
     return Image(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      base64: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}base64'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       createdAt: attachedDatabase.typeMapping
@@ -438,19 +439,19 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
 
 class Image extends DataClass implements Insertable<Image> {
   final int id;
-  final String base64;
+  final String imagePath;
   final String? description;
   final DateTime? createdAt;
   const Image(
       {required this.id,
-      required this.base64,
+      required this.imagePath,
       this.description,
       this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['base64'] = Variable<String>(base64);
+    map['image_path'] = Variable<String>(imagePath);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
@@ -463,7 +464,7 @@ class Image extends DataClass implements Insertable<Image> {
   ImagesCompanion toCompanion(bool nullToAbsent) {
     return ImagesCompanion(
       id: Value(id),
-      base64: Value(base64),
+      imagePath: Value(imagePath),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
@@ -478,7 +479,7 @@ class Image extends DataClass implements Insertable<Image> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Image(
       id: serializer.fromJson<int>(json['id']),
-      base64: serializer.fromJson<String>(json['base64']),
+      imagePath: serializer.fromJson<String>(json['imagePath']),
       description: serializer.fromJson<String?>(json['description']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
@@ -488,7 +489,7 @@ class Image extends DataClass implements Insertable<Image> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'base64': serializer.toJson<String>(base64),
+      'imagePath': serializer.toJson<String>(imagePath),
       'description': serializer.toJson<String?>(description),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
@@ -496,19 +497,19 @@ class Image extends DataClass implements Insertable<Image> {
 
   Image copyWith(
           {int? id,
-          String? base64,
+          String? imagePath,
           Value<String?> description = const Value.absent(),
           Value<DateTime?> createdAt = const Value.absent()}) =>
       Image(
         id: id ?? this.id,
-        base64: base64 ?? this.base64,
+        imagePath: imagePath ?? this.imagePath,
         description: description.present ? description.value : this.description,
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
       );
   Image copyWithCompanion(ImagesCompanion data) {
     return Image(
       id: data.id.present ? data.id.value : this.id,
-      base64: data.base64.present ? data.base64.value : this.base64,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
       description:
           data.description.present ? data.description.value : this.description,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -519,7 +520,7 @@ class Image extends DataClass implements Insertable<Image> {
   String toString() {
     return (StringBuffer('Image(')
           ..write('id: $id, ')
-          ..write('base64: $base64, ')
+          ..write('imagePath: $imagePath, ')
           ..write('description: $description, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -527,43 +528,43 @@ class Image extends DataClass implements Insertable<Image> {
   }
 
   @override
-  int get hashCode => Object.hash(id, base64, description, createdAt);
+  int get hashCode => Object.hash(id, imagePath, description, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Image &&
           other.id == this.id &&
-          other.base64 == this.base64 &&
+          other.imagePath == this.imagePath &&
           other.description == this.description &&
           other.createdAt == this.createdAt);
 }
 
 class ImagesCompanion extends UpdateCompanion<Image> {
   final Value<int> id;
-  final Value<String> base64;
+  final Value<String> imagePath;
   final Value<String?> description;
   final Value<DateTime?> createdAt;
   const ImagesCompanion({
     this.id = const Value.absent(),
-    this.base64 = const Value.absent(),
+    this.imagePath = const Value.absent(),
     this.description = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   ImagesCompanion.insert({
     this.id = const Value.absent(),
-    required String base64,
+    required String imagePath,
     this.description = const Value.absent(),
     this.createdAt = const Value.absent(),
-  }) : base64 = Value(base64);
+  }) : imagePath = Value(imagePath);
   static Insertable<Image> custom({
     Expression<int>? id,
-    Expression<String>? base64,
+    Expression<String>? imagePath,
     Expression<String>? description,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (base64 != null) 'base64': base64,
+      if (imagePath != null) 'image_path': imagePath,
       if (description != null) 'description': description,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -571,12 +572,12 @@ class ImagesCompanion extends UpdateCompanion<Image> {
 
   ImagesCompanion copyWith(
       {Value<int>? id,
-      Value<String>? base64,
+      Value<String>? imagePath,
       Value<String?>? description,
       Value<DateTime?>? createdAt}) {
     return ImagesCompanion(
       id: id ?? this.id,
-      base64: base64 ?? this.base64,
+      imagePath: imagePath ?? this.imagePath,
       description: description ?? this.description,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -588,8 +589,8 @@ class ImagesCompanion extends UpdateCompanion<Image> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (base64.present) {
-      map['base64'] = Variable<String>(base64.value);
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
@@ -604,7 +605,7 @@ class ImagesCompanion extends UpdateCompanion<Image> {
   String toString() {
     return (StringBuffer('ImagesCompanion(')
           ..write('id: $id, ')
-          ..write('base64: $base64, ')
+          ..write('imagePath: $imagePath, ')
           ..write('description: $description, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -679,8 +680,6 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
-  static const VerificationMeta _dataSourceMeta =
-      const VerificationMeta('dataSource');
   @override
   late final GeneratedColumnWithTypeConverter<SpeciesDataSource, String>
       dataSource = GeneratedColumn<String>('data_source', aliasedName, false,
@@ -773,7 +772,6 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       context.handle(_avatarUrlMeta,
           avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta));
     }
-    context.handle(_dataSourceMeta, const VerificationResult.success());
     if (data.containsKey('external_id')) {
       context.handle(
           _externalIdMeta,
@@ -1279,8 +1277,6 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'REFERENCES images (id) ON DELETE SET NULL'));
-  static const VerificationMeta _avatarModeMeta =
-      const VerificationMeta('avatarMode');
   @override
   late final GeneratedColumnWithTypeConverter<AvatarMode, String> avatarMode =
       GeneratedColumn<String>('avatar_mode', aliasedName, false,
@@ -1332,7 +1328,6 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
       context.handle(_avatarMeta,
           avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
     }
-    context.handle(_avatarModeMeta, const VerificationResult.success());
     return context;
   }
 
@@ -2589,8 +2584,6 @@ class $RemindersTable extends Reminders
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _frequencyUnitMeta =
-      const VerificationMeta('frequencyUnit');
   @override
   late final GeneratedColumnWithTypeConverter<FrequencyUnit, String>
       frequencyUnit = GeneratedColumn<String>(
@@ -2604,8 +2597,6 @@ class $RemindersTable extends Reminders
   late final GeneratedColumn<int> frequencyQuantity = GeneratedColumn<int>(
       'frequency_quantity', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _repeatAfterUnitMeta =
-      const VerificationMeta('repeatAfterUnit');
   @override
   late final GeneratedColumnWithTypeConverter<FrequencyUnit, String>
       repeatAfterUnit = GeneratedColumn<String>(
@@ -2683,7 +2674,6 @@ class $RemindersTable extends Reminders
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
     }
-    context.handle(_frequencyUnitMeta, const VerificationResult.success());
     if (data.containsKey('frequency_quantity')) {
       context.handle(
           _frequencyQuantityMeta,
@@ -2692,7 +2682,6 @@ class $RemindersTable extends Reminders
     } else if (isInserting) {
       context.missing(_frequencyQuantityMeta);
     }
-    context.handle(_repeatAfterUnitMeta, const VerificationResult.success());
     if (data.containsKey('repeat_after_quantity')) {
       context.handle(
           _repeatAfterQuantityMeta,
@@ -3760,13 +3749,13 @@ typedef $$EventTypesTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function({bool eventsRefs, bool remindersRefs})>;
 typedef $$ImagesTableCreateCompanionBuilder = ImagesCompanion Function({
   Value<int> id,
-  required String base64,
+  required String imagePath,
   Value<String?> description,
   Value<DateTime?> createdAt,
 });
 typedef $$ImagesTableUpdateCompanionBuilder = ImagesCompanion Function({
   Value<int> id,
-  Value<String> base64,
+  Value<String> imagePath,
   Value<String?> description,
   Value<DateTime?> createdAt,
 });
@@ -3816,8 +3805,8 @@ class $$ImagesTableFilterComposer
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get base64 => $composableBuilder(
-      column: $table.base64, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
@@ -3880,8 +3869,8 @@ class $$ImagesTableOrderingComposer
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get base64 => $composableBuilder(
-      column: $table.base64, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
@@ -3902,8 +3891,8 @@ class $$ImagesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get base64 =>
-      $composableBuilder(column: $table.base64, builder: (column) => column);
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
@@ -3978,25 +3967,25 @@ class $$ImagesTableTableManager extends RootTableManager<
               $$ImagesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> base64 = const Value.absent(),
+            Value<String> imagePath = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
           }) =>
               ImagesCompanion(
             id: id,
-            base64: base64,
+            imagePath: imagePath,
             description: description,
             createdAt: createdAt,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            required String base64,
+            required String imagePath,
             Value<String?> description = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
           }) =>
               ImagesCompanion.insert(
             id: id,
-            base64: base64,
+            imagePath: imagePath,
             description: description,
             createdAt: createdAt,
           ),

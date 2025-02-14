@@ -1,4 +1,5 @@
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:intl/intl.dart';
 import 'package:plant_it/activity/activity_filter.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/events/event_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
-import 'package:plant_it/reminder/reminder_occurrence_card.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EventsPage extends StatefulWidget {
@@ -91,17 +91,36 @@ class _EventsPageState extends State<EventsPage> {
 
   void _showFilterDialog() {
     showModalBottomSheet<void>(
-      showDragHandle: true,
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (BuildContext context) {
-        return ActivityFilter(widget.env,
-            ((plantIds, eventTypeIds, activityType) {
-          filteredPlantIds = plantIds;
-          filteredEventTypeIds = eventTypeIds;
-          activityFilterType = activityType;
-          _updateStateForMonth(_focusedDay, filteredPlantIds,
-              filteredEventTypeIds, activityType);
-        }), filteredPlantIds, filteredEventTypeIds, activityFilterType);
+        return DraggableScrollableSheet(
+          initialChildSize: .5,
+          minChildSize: .3,
+          maxChildSize: .9,
+          expand: false,
+          builder: (context, scrollController) {
+            return ActivityFilter(
+              widget.env,
+              (plantIds, eventTypeIds, activityType) {
+                filteredPlantIds = plantIds;
+                filteredEventTypeIds = eventTypeIds;
+                activityFilterType = activityType;
+                _updateStateForMonth(
+                  _focusedDay,
+                  filteredPlantIds,
+                  filteredEventTypeIds,
+                  activityType,
+                );
+              },
+              filteredPlantIds,
+              filteredEventTypeIds,
+              activityFilterType,
+              scrollController: scrollController,
+            );
+          },
+        );
       },
     );
   }
@@ -115,78 +134,158 @@ class _EventsPageState extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Activity"),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                onPressed: _showFilterDialog,
-                icon: const Icon(LucideIcons.filter),
-              ),
-              if (isFilterActive())
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(height: 30),
+            _CustomHeader(
+              month: _focusedDay,
+              onPreviousMonth: () {
+                setState(() {
+                  _focusedDay =
+                      DateTime(_focusedDay.year, _focusedDay.month - 1, 1);
+                });
+                _updateStateForMonth(_focusedDay, filteredPlantIds,
+                    filteredEventTypeIds, activityFilterType);
+              },
+              onNextMonth: () {
+                setState(() {
+                  _focusedDay =
+                      DateTime(_focusedDay.year, _focusedDay.month + 1, 1);
+                });
+                _updateStateForMonth(_focusedDay, filteredPlantIds,
+                    filteredEventTypeIds, activityFilterType);
+              },
+              showFilterDialog: _showFilterDialog,
+              isFilterActive: isFilterActive(),
+            ),
+            const SizedBox(height: 5),
+            TableCalendar(
+              firstDay: DateTime.utc(2000, 1, 1),
+              lastDay: DateTime.utc(2100, 1, 1),
+              focusedDay: _focusedDay,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: _onDaySelected,
+              onPageChanged: (focusedDay) {
+                _updateStateForMonth(focusedDay, filteredPlantIds,
+                    filteredEventTypeIds, activityFilterType);
+              },
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              eventLoader: (day) {
+                List<dynamic> dayActivity =
+                    _activityMap[DateTime(day.year, day.month, day.day)] ?? [];
+                return dayActivity.isEmpty ? [] : [1];
+              },
+              availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withAlpha(150),
+                  shape: BoxShape.circle,
                 ),
-            ],
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TableCalendar(
-                firstDay: DateTime.utc(2000, 1, 1),
-                lastDay: DateTime.utc(2100, 1, 1),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: _onDaySelected,
-                onPageChanged: (focusedDay) {
-                  _updateStateForMonth(focusedDay, filteredPlantIds,
-                      filteredEventTypeIds, activityFilterType);
-                },
-                calendarFormat: _calendarFormat,
-                onFormatChanged: (format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                },
-                eventLoader: (day) {
-                  List<dynamic> dayActivity =
-                      _activityMap[DateTime(day.year, day.month, day.day)] ??
-                          [];
-                  return dayActivity.isEmpty ? [] : [1];
-                },
-                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-                calendarStyle: CalendarStyle(
-                    markerDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(50),
-                )),
+                markerDecoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withAlpha(200),
+                  shape: BoxShape.circle,
+                ),
               ),
-              const SizedBox(height: 40),
-              ListOfActivity(
-                widget.env,
-                getActivityOfSelectedDay(),
-                key: UniqueKey(),
-              ),
-            ],
-          ),
+              headerVisible: false,
+            ),
+            const SizedBox(height: 40),
+            ListOfActivity(
+              widget.env,
+              getActivityOfSelectedDay(),
+              key: UniqueKey(),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class _CustomHeader extends StatelessWidget {
+  final DateTime month;
+  final VoidCallback onPreviousMonth;
+  final VoidCallback onNextMonth;
+  final VoidCallback showFilterDialog;
+  final bool isFilterActive;
+
+  const _CustomHeader({
+    required this.month,
+    required this.onPreviousMonth,
+    required this.onNextMonth,
+    required this.showFilterDialog,
+    required this.isFilterActive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String formattedMonth = DateFormat('MMMM yyyy').format(month);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: onPreviousMonth,
+          icon: Icon(
+            LucideIcons.chevron_left,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        Text(
+          formattedMonth,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.normal,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+        ),
+        IconButton(
+          onPressed: onNextMonth,
+          icon: Icon(
+            LucideIcons.chevron_right,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        // IconButton(
+        //     onPressed: showFilterDialog,
+        //     icon: const Icon(LucideIcons.list_filter)),
+        Stack(
+          children: [
+            IconButton(
+              onPressed: showFilterDialog,
+              icon: Icon(
+                LucideIcons.filter,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            if (isFilterActive)
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

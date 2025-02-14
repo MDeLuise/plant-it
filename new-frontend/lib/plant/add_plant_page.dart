@@ -1,4 +1,3 @@
-import 'package:alert_info/alert_info.dart';
 import 'package:currency_textfield/currency_textfield.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
@@ -53,51 +52,83 @@ class _AddPlantPageState extends State<AddPlantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 250.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: flutter_image.Image.asset(
-                "assets/images/generic-plant.jpg",
-                fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 250.0,
+                floating: false,
+                pinned: true,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: flutter_image.Image.asset(
+                    "assets/images/generic-plant.jpg",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Collapsable(
+                    "General",
+                    [
+                      _buildTextField("Name", _nameController),
+                      _buildMultilineTextField("Note", _noteController),
+                      _buildTextField("Location", _locationController),
+                    ],
+                    expandedAtStart: true,
+                  ),
+                  Collapsable(
+                    "Purchased",
+                    [
+                      _buildDateField(),
+                      _buildNumberField("Price", _priceController),
+                      _buildTextField("Seller", _sellerController),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: LoadingButton(
+                      'Add Plant',
+                      _addPlant,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              )),
+            ],
+          ),
+          Positioned(
+            top: 45,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surfaceBright,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ),
-          SliverToBoxAdapter(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Collapsable(
-                "General",
-                [
-                  _buildTextField("Name", _nameController),
-                  _buildMultilineTextField("Note", _noteController),
-                  _buildTextField("Location", _locationController),
-                ],
-                expandedAtStart: true,
-              ),
-              Collapsable(
-                "Purchased",
-                [
-                  _buildDateField(),
-                  _buildNumberField("Price", _priceController),
-                  _buildTextField("Seller", _sellerController),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: LoadingButton(
-                  'Add Plant',
-                  _addPlant,
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-          )),
         ],
       ),
     );
@@ -106,12 +137,14 @@ class _AddPlantPageState extends State<AddPlantPage> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          TextField(
+            controller: controller,
+          ),
+        ],
       ),
     );
   }
@@ -120,13 +153,15 @@ class _AddPlantPageState extends State<AddPlantPage> {
       String label, CurrencyTextFieldController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          TextField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
+        ],
       ),
     );
   }
@@ -164,11 +199,16 @@ class _AddPlantPageState extends State<AddPlantPage> {
           if (_hasPurchasedDate)
             TextButton(
               onPressed: _pickDate,
-              child: Text(
-                _purchasedDate != null
-                    ? DateFormat.yMMMd().format(_purchasedDate!)
-                    : "Select Date",
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.transparent),
               ),
+              child: Text(
+                  _purchasedDate != null
+                      ? DateFormat.yMMMd().format(_purchasedDate!)
+                      : "Select Date",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  )),
             ),
         ],
       ),
@@ -218,46 +258,18 @@ class _AddPlantPageState extends State<AddPlantPage> {
 
         toSave = toSave.copyWith(species: drift.Value(speciesId));
       } catch (e) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Error adding species')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Error adding species',
-          typeInfo: TypeInfo.error,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(
+            context, FeedbackLevel.error, "Error adding species", null);
       }
     }
     int insertedId = -1;
     try {
       insertedId = await widget.env.plantRepository.insert(toSave);
     } catch (e) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Error adding plant')),
-      // );
-      AlertInfo.show(
-        context: context,
-        text: 'Error adding plant',
-        typeInfo: TypeInfo.error,
-        duration: 5,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        textColor: Theme.of(context).colorScheme.onSurface,
-      );
+      showSnackbar(context, FeedbackLevel.error, "Error adding plant", null);
     }
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Plant added successfully')),
-    // );
-    AlertInfo.show(
-      context: context,
-      text: 'Plant added successfully',
-      typeInfo: TypeInfo.success,
-      duration: 5,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      textColor: Theme.of(context).colorScheme.onSurface,
-    );
+    showSnackbar(
+        context, FeedbackLevel.success, "Plant added successfully", null);
     Navigator.of(context).pop();
     final Plant plantToNavigate =
         await widget.env.plantRepository.get(insertedId);
@@ -298,7 +310,6 @@ class _CollapsableState extends State<Collapsable> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -306,7 +317,7 @@ class _CollapsableState extends State<Collapsable> {
             title: Text(widget.title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).primaryColor,
                 )),
             trailing: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
             onTap: _toggleCollapse,

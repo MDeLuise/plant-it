@@ -10,6 +10,20 @@ class ReminderNotificationService {
   final Environment env;
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  final List<String> notificationEmoji = [
+    "🌺",
+    "🍀",
+    "🌷",
+    "🌻",
+    "🌼",
+    "🪴",
+    "🌹",
+    "🌸",
+    "🌿",
+    "🌱",
+    "🌵",
+    "🪻"
+  ];
   final List<String> notificationTitles = [
     "Oops, You Did It Again!",
     "Plant SOS!",
@@ -21,14 +35,14 @@ class ReminderNotificationService {
     "You've Been 'Leafing' It Alone"
   ];
   final List<String> notificationBodies = [
-    "{plantName} needs its {eventType}. Don't keep it waiting!",
-    "{plantName} is calling for {eventType}. Time to save the day!",
-    "{plantName} needs {eventType}. It's waiting for you!",
-    "{plantName} is tired of waiting for {eventType}. Show it some TLC!",
-    "{plantName} is overdue for {eventType}. Give it a boost!",
-    "{plantName} is ready for {eventType}. Don't let it down!",
-    "{plantName} needs its {eventType}. You're the hero it deserves!",
-    "{plantName} misses its {eventType}. Time to make it happy again!"
+    "{emoji} {plantName} needs its {eventType}. Don't keep it waiting!",
+    "{emoji} {plantName} is calling for {eventType}. Time to save the day!",
+    "{emoji} {plantName} needs {eventType}. It's waiting for you!",
+    "{emoji} {plantName} is tired of waiting for {eventType}. Show it some TLC!",
+    "{emoji} {plantName} is overdue for {eventType}. Give it a boost!",
+    "{emoji} {plantName} is ready for {eventType}. Don't let it down!",
+    "{emoji} {plantName} needs its {eventType}. You're the hero it deserves!",
+    "{emoji} {plantName} misses its {eventType}. Time to make it happy again!"
   ];
   Timer? ongoingTimer;
 
@@ -42,10 +56,14 @@ class ReminderNotificationService {
         .get(reminderToNotify.type)
         .then((t) => t.name);
 
+    final int randomIndexEmoji = Random().nextInt(notificationEmoji.length);
     final int randomIndexTitle = Random().nextInt(notificationTitles.length);
     final int randomIndexBody = Random().nextInt(notificationBodies.length);
+    final emoji = notificationEmoji.elementAt(randomIndexEmoji);
     final title = notificationTitles.elementAt(randomIndexTitle);
-    final body = notificationBodies.elementAt(randomIndexBody)
+    final body = notificationBodies
+        .elementAt(randomIndexBody)
+        .replaceAll('{emoji}', emoji)
         .replaceAll('{plantName}', plantName)
         .replaceAll('{eventType}', eventTypeName);
 
@@ -56,6 +74,8 @@ class ReminderNotificationService {
       channelDescription: 'Notification channel for reminders',
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
+      icon: 'ic_notification',
+      color: Color.fromARGB(255, 58, 133, 60),
     );
 
     const NotificationDetails notificationDetails =
@@ -82,16 +102,18 @@ class ReminderNotificationService {
     DateTime targetTime = DateTime(now.year, now.month, now.day,
         notificationTime.hour, notificationTime.minute);
 
-    if (targetTime.isBefore(now)) {
-      targetTime = targetTime
-          .add(const Duration(days: 1))
-          .subtract(const Duration(seconds: 10));
+    final bool isToFire = targetTime.isBefore(now);
+    if (isToFire) {
+      await _checkReminders();
+      targetTime = targetTime.add(const Duration(days: 1));
     }
 
-    final durationUntilTarget = targetTime.difference(now);
+    final Duration durationUntilTarget = targetTime.difference(now);
 
     ongoingTimer = Timer(durationUntilTarget, () async {
-      await _checkReminders();
+      if (!isToFire) {
+        await _checkReminders();
+      }
       scheduleReminderCheck();
     });
   }
@@ -104,6 +126,33 @@ class ReminderNotificationService {
     for (final Reminder reminder in reminderIdsToNotify) {
       await showReminderNotification(reminder);
     }
+  }
+
+  Future<void> sendTestNotification() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      'reminder_channel',
+      'Reminders',
+      channelDescription: 'Notification channel for reminders',
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+      icon: 'ic_notification',
+      color: Color.fromARGB(255, 58, 133, 60),
+    );
+
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    const String testTitle = '🌵 Testing… 1, 2, Leaf';
+    const String testBody =
+        "We're testing your notification system. Your plant said it's fine. For now.";
+
+    await _notificationsPlugin.show(
+      0,
+      testTitle,
+      testBody,
+      notificationDetails,
+    );
   }
 
   Future<bool> _getNotificationsEnabled() async {

@@ -42,14 +42,25 @@ class _ReminderFilterState extends State<ReminderFilter> {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .7,
       width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
                 Row(
                   children: [
                     Text(
@@ -62,6 +73,8 @@ class _ReminderFilterState extends State<ReminderFilter> {
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                const Text("Event"),
                 MultiDropdown<EventType>(
                   items: widget.eventTypes.map((t) {
                     return DropdownItem(label: t.name, value: t);
@@ -69,57 +82,29 @@ class _ReminderFilterState extends State<ReminderFilter> {
                   controller: eventTypeController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Event Types',
-                    prefixIcon: const Icon(LucideIcons.text_search),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. Watering",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    header: const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Select event type from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (eventTypeController.selectedItems.isEmpty) {
                       return 'Please select an event type';
@@ -128,6 +113,9 @@ class _ReminderFilterState extends State<ReminderFilter> {
                   },
                 ),
                 const SizedBox(height: 20),
+
+                // Plants
+                const Text("Plants"),
                 MultiDropdown<Plant>(
                   items: widget.plants.map((p) {
                     return DropdownItem(label: p.name, value: p);
@@ -135,57 +123,29 @@ class _ReminderFilterState extends State<ReminderFilter> {
                   controller: plantController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Plants',
-                    prefixIcon: const Icon(LucideIcons.text_search),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. Strelitzia nicolai",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    header: const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Select plants from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (eventTypeController.selectedItems.isEmpty) {
                       return 'Please select a plant';
