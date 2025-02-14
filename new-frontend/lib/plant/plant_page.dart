@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:alert_info/alert_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -116,30 +115,18 @@ class _PlantPageState extends State<PlantPage> {
       cancelBtnTextStyle: TextStyle(
         color: Theme.of(context).colorScheme.onSurface,
       ),
-      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      barrierColor: Colors.grey.withAlpha(200),
       backgroundColor: Theme.of(context).colorScheme.surface,
       onConfirmBtnTap: () {
         try {
           widget.env.plantRepository.delete(widget.plant.id);
         } catch (e) {
-          AlertInfo.show(
-            context: context,
-            text: 'Error deleting plant',
-            typeInfo: TypeInfo.error,
-            duration: 5,
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            textColor: Theme.of(context).colorScheme.onSurface,
-          );
+          showSnackbar(
+              context, FeedbackLevel.error, "Error deleting plant", null);
           return;
         }
-        AlertInfo.show(
-          context: context,
-          text: 'Plant deleted successfully',
-          typeInfo: TypeInfo.success,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(
+            context, FeedbackLevel.success, "Plant deleted successfully", null);
         Navigator.of(context).pop();
         Navigator.of(context).pop(true);
       },
@@ -157,84 +144,241 @@ class _PlantPageState extends State<PlantPage> {
               ));
       duplicatedPlant = await widget.env.plantRepository.get(duplicatedId);
     } catch (e) {
-      AlertInfo.show(
-        context: context,
-        text: 'Error duplicating plant',
-        typeInfo: TypeInfo.error,
-        duration: 5,
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        textColor: Theme.of(context).colorScheme.onSurface,
-      );
+      showSnackbar(
+          context, FeedbackLevel.error, "Error duplicating plant", null);
       return;
     }
-    AlertInfo.show(
-      context: context,
-      text: 'Plant duplicated',
-      typeInfo: TypeInfo.success,
-      duration: 5,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-      textColor: Theme.of(context).colorScheme.onSurface,
-    );
+    showSnackbar(context, FeedbackLevel.success, "Plant duplicated", null);
     replaceTo(context, PlantPage(widget.env, duplicatedPlant));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height * 0.6,
-            elevation: 0,
-            leading: IconButton(
-              // just to add shadow
-              icon: const Icon(
-                Icons.arrow_back,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    blurRadius: 20,
-                    offset: Offset(1, 1),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: MediaQuery.of(context).size.height * .6,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    decoration: BoxDecoration(
+                      image: _avatar,
+                      color: Theme.of(context).primaryColor.withAlpha(200),
+                    ),
                   ),
-                ],
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  image: _avatar,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(.7),
                 ),
               ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    color: Colors.transparent,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.plant.name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(color: Theme.of(context).primaryColor),
+                      ),
+                      GestureDetector(
+                        onTap: () => navigateTo(
+                            context,
+                            SpeciesPage(
+                                widget.env, _species!.toCompanion(true))),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _species?.scientificName ?? '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                            const SizedBox(width: 5),
+                            Icon(LucideIcons.external_link,
+                                size: 10,
+                                color: Theme.of(context).primaryColor),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Info
+                      Text(
+                        'Information',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                          children: [
+                            TextSpan(
+                                text:
+                                    "${widget.plant.name} is a plant of the species "),
+                            TextSpan(
+                              text: _species?.species,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: ", genus "),
+                            TextSpan(
+                              text: _species?.genus,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: " and family "),
+                            TextSpan(
+                              text: _species?.family,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: "."),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Care
+                      Text(
+                        'Care',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          speciesCareInfoWidgets, 4, _isSpeciesCareLoading),
+                      const SizedBox(height: 16),
+
+                      // Reminder
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            'Reminders',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          GestureDetector(
+                            onTap: () => navigateTo(context,
+                                ReminderListPage(widget.env, widget.plant)),
+                            child: const Text("Edit"),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          plantReminderInfoWidgets, 6, _isPlantReminderLoading),
+                      const SizedBox(height: 16),
+
+                      // Events
+                      Text(
+                        'Events',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          plantEventInfoWidgets, 6, _isPlantEventLoading),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 45,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            actions: [
-              IconButton(
+          ),
+          Positioned(
+            top: 45,
+            right: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
                 onPressed: () {
                   showMenu(
                     context: context,
                     position: const RelativeRect.fromLTRB(1000, 80, 0, 0),
+                    color: Theme.of(context).colorScheme.surface,
                     items: [
                       PopupMenuItem(
                         value: 'edit',
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface),
                         child: ListTile(
-                          leading: const Icon(LucideIcons.pencil),
+                          leading: Icon(
+                            LucideIcons.pencil,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                           title: Text('Edit'),
                         ),
                       ),
                       PopupMenuItem(
                         value: 'duplicate',
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface),
                         child: ListTile(
-                          leading: const Icon(LucideIcons.copy),
+                          leading: Icon(
+                            LucideIcons.copy,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                           title: Text('Duplicate'),
                         ),
                       ),
                       PopupMenuItem(
                         value: 'remove',
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface),
                         child: ListTile(
-                          leading: const Icon(LucideIcons.trash),
+                          leading: Icon(
+                            LucideIcons.trash,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                           title: Text('Remove'),
                         ),
                       ),
@@ -255,143 +399,11 @@ class _PlantPageState extends State<PlantPage> {
                     }
                   });
                 },
-                icon: const Icon(
+                icon: Icon(
                   LucideIcons.ellipsis_vertical,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black,
-                      blurRadius: 20,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.plant.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
-                  GestureDetector(
-                    onTap: () => navigateTo(context,
-                        SpeciesPage(widget.env, _species!.toCompanion(true))),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          _species?.scientificName ?? '',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontStyle: FontStyle.italic),
-                        ),
-                        const SizedBox(width: 5),
-                        const Icon(LucideIcons.external_link, size: 10),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Info
-                  Text(
-                    'Information',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyMedium!,
-                      children: [
-                        TextSpan(
-                            text:
-                                "${widget.plant.name} is a plant of the species "),
-                        TextSpan(
-                          text: _species?.species,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: ", genus "),
-                        TextSpan(
-                          text: _species?.genus,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: " and family "),
-                        TextSpan(
-                          text: _species?.family,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: "."),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Care
-                  Text(
-                    'Care',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      speciesCareInfoWidgets, 4, _isSpeciesCareLoading),
-                  const SizedBox(height: 16),
-
-                  // Reminder
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        'Reminders',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                                color: Theme.of(context).colorScheme.secondary),
-                      ),
-                      GestureDetector(
-                        onTap: () => navigateTo(context,
-                            ReminderListPage(widget.env, widget.plant)),
-                        child: Text("Edit"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      plantReminderInfoWidgets, 6, _isPlantReminderLoading),
-                  const SizedBox(height: 16),
-
-                  // Events
-                  Text(
-                    'Events',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      plantEventInfoWidgets, 6, _isPlantEventLoading),
-                  const SizedBox(height: 16),
-                ],
               ),
             ),
           ),
@@ -488,7 +500,7 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
         height: 230,
         slideIndicator: CircularSlideIndicator(
             slideIndicatorOptions: SlideIndicatorOptions(
-          currentIndicatorColor: Theme.of(context).colorScheme.primary,
+          currentIndicatorColor: Theme.of(context).primaryColor,
           indicatorBackgroundColor: Colors.grey.withOpacity(.5),
         )),
       ),

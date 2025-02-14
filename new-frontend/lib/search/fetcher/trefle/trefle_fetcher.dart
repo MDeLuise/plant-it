@@ -54,7 +54,7 @@ class TrefleFetcher extends SpeciesFetcher {
 
   @override
   SpeciesDataSource getSpeciesDataSource() {
-    return SpeciesDataSource.custom;
+    return SpeciesDataSource.trefle;
   }
 
   @override
