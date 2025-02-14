@@ -37,12 +37,12 @@ class ReminderOccurrenceService {
       do {
         occurrence = _calculateNextNotification(
             occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
-      } while (occurrence.isBefore(endOfDay));
 
-      if (occurrence.isAfter(startOfDay) && occurrence.isBefore(endOfDay)) {
-        result.add(reminder);
-        break;
-      }
+        if (occurrence.isAfter(startOfDay) && occurrence.isBefore(endOfDay)) {
+          result.add(reminder);
+          break;
+        }
+      } while (occurrence.isBefore(endOfDay));
     }
 
     return result;
@@ -140,8 +140,10 @@ class ReminderOccurrenceService {
     return result;
   }
 
-  Future<List<ReminderOccurrence>> getForMonth(DateTime day, List<int>? plantIds, List<int>? eventTypeIds) async {
-    final List<Reminder> reminders = await env.reminderRepository.getFiltered(plantIds, eventTypeIds);
+  Future<List<ReminderOccurrence>> getForMonth(
+      DateTime day, List<int>? plantIds, List<int>? eventTypeIds) async {
+    final List<Reminder> reminders =
+        await env.reminderRepository.getFiltered(plantIds, eventTypeIds);
     final List<ReminderOccurrence> result = [];
 
     final DateTime startOfMonth = DateTime(day.year, day.month, 1);

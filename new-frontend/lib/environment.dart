@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:plant_it/cache/cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/notification/reminder_notification_service.dart';
@@ -26,6 +28,7 @@ class Environment {
   final SpeciesCareRepository speciesCareRepository;
   late ReminderNotificationService reminderNotificationService;
   late SpeciesFetcherFacade speciesFetcherFacade;
+  late Color primaryColor;
 
   Environment(
     this.db,

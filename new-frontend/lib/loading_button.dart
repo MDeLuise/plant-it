@@ -8,17 +8,21 @@ class LoadingButton extends StatelessWidget {
   final TextStyle? textStyle;
   final Color? buttonColor;
 
-  const LoadingButton(this.text, this.callback,
-      {super.key, this.width, this.textStyle, this.buttonColor});
+  const LoadingButton(
+    this.text,
+    this.callback, {
+    super.key,
+    this.width,
+    this.textStyle,
+    this.buttonColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return EasyButton(
       idleStateWidget: Text(
         text,
-        style: textStyle ?? TextStyle(
-          color: Theme.of(context).colorScheme.surfaceDim,
-        ),
+        style: textStyle,
       ),
       loadingStateWidget: CircularProgressIndicator(
         strokeWidth: 3.0,
@@ -28,10 +32,9 @@ class LoadingButton extends StatelessWidget {
       ),
       useEqualLoadingStateWidgetDimension: true,
       useWidthAnimation: false,
-      borderRadius: 100,
-      elevation: 2.0,
-      contentGap: 6.0,
-      buttonColor: buttonColor ?? Theme.of(context).colorScheme.primary,
+      borderRadius: 5,
+      height: 50,
+      buttonColor: buttonColor ?? Theme.of(context).primaryColor,
       onPressed: callback,
       width: width ?? double.infinity,
     );

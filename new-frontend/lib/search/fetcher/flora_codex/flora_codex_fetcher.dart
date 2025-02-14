@@ -35,9 +35,10 @@ class FloraCodexFetcher extends SpeciesFetcher {
         genus: Value(e.genus),
         species: Value(e.scientificName),
         author: Value(e.author),
-        avatarUrl: Value(e.imageUrl),
+        externalAvatarUrl: Value(e.imageUrl),
         dataSource: const Value(SpeciesDataSource.floraCodex),
         externalId: Value(e.id),
+
       );
     }).toList();
     return Future.value(result);
@@ -63,7 +64,7 @@ class FloraCodexFetcher extends SpeciesFetcher {
       throw Exception("Error while loading species care from Flora Codex");
     }
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    return Future.value(SpeciesCareCompanion());
+    return Future.value(const SpeciesCareCompanion());
   }
 
   @override

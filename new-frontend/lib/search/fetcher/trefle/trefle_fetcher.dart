@@ -23,8 +23,6 @@ class TrefleFetcher extends SpeciesFetcher {
           genus: Value(s.genus),
           species: Value(s.species),
           author: Value(s.author),
-          avatarUrl: Value(s.avatarUrl),
-          avatar: Value(s.avatar),
           dataSource: const Value(SpeciesDataSource.trefle),
         );
       }).toList();
@@ -44,8 +42,6 @@ class TrefleFetcher extends SpeciesFetcher {
           genus: Value(s.genus),
           species: Value(s.species),
           author: Value(s.author),
-          avatarUrl: Value(s.avatarUrl),
-          avatar: Value(s.avatar),
           dataSource: const Value(SpeciesDataSource.trefle),
         );
       }).toList();
@@ -54,7 +50,7 @@ class TrefleFetcher extends SpeciesFetcher {
 
   @override
   SpeciesDataSource getSpeciesDataSource() {
-    return SpeciesDataSource.custom;
+    return SpeciesDataSource.trefle;
   }
 
   @override

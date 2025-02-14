@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/events/add_event.dart';
 import 'package:plant_it/bottombar.dart';
 import 'package:plant_it/cache/cache.dart';
@@ -24,6 +25,7 @@ import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:plant_it/theme.dart';
 import 'package:plant_it/trefle_import/background_download.dart';
 import 'package:plant_it/trefle_import/background_import.dart';
 import 'package:workmanager/workmanager.dart';
@@ -31,15 +33,22 @@ import 'package:workmanager/workmanager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _initializeNotifications();
-  final env = _createEnvironment();
+  final Environment env = _createEnvironment();
   env.db.initDummyData();
+  env.primaryColor = await _getSavedColor(env);
 
   await Workmanager().initialize(
     _callbackDispatcher,
-    //isInDebugMode: true,
+    isInDebugMode: true,
   );
 
   runApp(MyApp(env));
+}
+
+Future<Color> _getSavedColor(Environment env) async {
+  final String colorString =
+      await env.userSettingRepository.getOrDefault('primaryColor', 'FF4CAF50');
+  return hexToColor(colorString);
 }
 
 @pragma('vm:entry-point')
@@ -49,6 +58,11 @@ void _callbackDispatcher() {
       await importSpecies(_createEnvironment(), inputData);
     } else if (task == "download_species_task") {
       await downloadFile(inputData);
+    } else if (task == "daily-reminder-task-id") {
+      final Environment env = _createEnvironment();
+      final ReminderNotificationService reminderNotificationService =
+          env.reminderNotificationService;
+      await reminderNotificationService.checkReminders();
     }
     return Future.value(true);
   });
@@ -57,7 +71,7 @@ void _callbackDispatcher() {
 Environment _createEnvironment() {
   final db = AppDatabase();
   const String cacheKey = "customCacheManager";
-  final cache = Cache(
+  final Cache cache = Cache(
       cacheManager: CacheManager(
     Config(
       cacheKey,
@@ -92,7 +106,7 @@ Environment _createEnvironment() {
 
 Future<void> _initializeNotifications() {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('ic_notification');
 
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
@@ -110,12 +124,6 @@ Future<void> _initializeNotifications() {
 class MyApp extends StatelessWidget {
   final Environment env;
 
-  static final _defaultLightColorScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.green);
-
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.green, brightness: Brightness.dark);
-
   const MyApp(this.env, {super.key});
 
   @override
@@ -123,14 +131,8 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: MyHomePage(env),
-        theme: ThemeData(
-          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-          useMaterial3: true,
-        ),
+        theme: getLightTheme(context, env.primaryColor),
+        darkTheme: getDarkTheme(context, env.primaryColor),
         themeMode: ThemeMode.system,
       );
     });
@@ -174,9 +176,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBody: true,
       floatingActionButton: _currentPageIndex < 3
           ? FloatingActionButton(
               onPressed: _showAddEventScreen,
+              backgroundColor: widget.env.primaryColor,
               child: const Icon(Icons.add),
             )
           : null,

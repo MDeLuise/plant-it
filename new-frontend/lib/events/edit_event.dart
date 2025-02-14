@@ -1,6 +1,7 @@
-import 'package:alert_info/alert_info.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:plant_it/app_pages.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
@@ -79,30 +80,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
           note: noteController.text,
         ));
       } catch (e) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Error updating event')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Error updating event',
-          typeInfo: TypeInfo.error,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(
+            context, FeedbackLevel.error, "Error updating event", null);
         return;
       }
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Event updated successfully')),
-      // );
-      AlertInfo.show(
-        context: context,
-        text: 'Event updated successfully',
-        typeInfo: TypeInfo.success,
-        duration: 5,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        textColor: Theme.of(context).colorScheme.onSurface,
-      );
+      showSnackbar(context, FeedbackLevel.error, "Error updated event", null);
       Navigator.of(context).pop();
     }
   }
@@ -122,30 +104,18 @@ class _EditEventScreenState extends State<EditEventScreen> {
       ),
       textColor: Theme.of(context).colorScheme.onSurface,
       titleColor: Theme.of(context).colorScheme.onSurface,
-      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      barrierColor: Colors.grey.withAlpha(200),
       backgroundColor: Theme.of(context).colorScheme.surface,
       onConfirmBtnTap: () {
         try {
           widget.env.eventRepository.delete(widget.event.id);
         } catch (e) {
-          AlertInfo.show(
-            context: context,
-            text: 'Error deleting event',
-            typeInfo: TypeInfo.error,
-            duration: 5,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            textColor: Theme.of(context).colorScheme.onSurface,
-          );
+          showSnackbar(
+              context, FeedbackLevel.error, "Error deleting event", null);
           return;
         }
-        AlertInfo.show(
-          context: context,
-          text: 'Event deleted successfully',
-          typeInfo: TypeInfo.success,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(
+            context, FeedbackLevel.success, "Event deleted successfully", null);
         Navigator.of(context).pop();
         Navigator.of(context).pop();
       },
@@ -169,216 +139,185 @@ class _EditEventScreenState extends State<EditEventScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Edit Event"),
-        ),
-        body: const Center(
+      return const AppPage(
+        title: "Edit an event",
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Edit Event"),
-        actions: [
-          IconButton(
-              onPressed: _deleteEvent, icon: const Icon(LucideIcons.trash_2)),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(height: 4),
-                      MultiDropdown<EventType>(
-                        items: events,
-                        controller: eventController,
-                        enabled: true,
-                        maxSelections: 1,
-                        searchEnabled: true,
-                        chipDecoration: ChipDecoration(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          wrap: true,
-                          runSpacing: 2,
-                          spacing: 10,
-                          labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        fieldDecoration: FieldDecoration(
-                          hintText: 'Events',
-                          prefixIcon: const Icon(LucideIcons.glass_water),
-                          showClearIcon: false,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          labelStyle: const TextStyle(color: Colors.black),
-                        ),
-                        dropdownDecoration: DropdownDecoration(
-                          marginTop: 2,
-                          maxHeight: 500,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          header: const Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              'Select events from the list',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        dropdownItemDecoration: DropdownItemDecoration(
-                          selectedIcon: Icon(Icons.check_box,
-                              color: Theme.of(context).colorScheme.onPrimary),
-                          textColor: Colors.black,
-                          selectedBackgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          selectedTextColor: Colors.black,
-                        ),
-                        validator: (value) {
-                          if (eventController.selectedItems.isEmpty) {
-                            return 'Please select an event';
-                          }
-                          return null;
-                        },
-                        onSelectionChange: (selectedItems) {
-                          debugPrint("OnSelectionChange: $selectedItems");
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      MultiDropdown<Plant>(
-                        items: plants,
-                        maxSelections: 1,
-                        controller: plantController,
-                        enabled: true,
-                        searchEnabled: true,
-                        chipDecoration: ChipDecoration(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          wrap: true,
-                          runSpacing: 2,
-                          spacing: 10,
-                          labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        fieldDecoration: FieldDecoration(
-                          hintText: 'Plants',
-                          prefixIcon: const Icon(LucideIcons.leaf),
-                          showClearIcon: false,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          labelStyle: const TextStyle(color: Colors.black),
-                        ),
-                        dropdownDecoration: DropdownDecoration(
-                          marginTop: 2,
-                          maxHeight: 500,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          header: const Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              'Select plants from the list',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        dropdownItemDecoration: DropdownItemDecoration(
-                          selectedIcon: Icon(Icons.check_box,
-                              color: Theme.of(context).colorScheme.surfaceDim),
-                          textColor: Colors.black,
-                          selectedBackgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          selectedTextColor: Colors.black,
-                        ),
-                        validator: (value) {
-                          if (plantController.selectedItems.isEmpty) {
-                            return 'Please select a plant';
-                          }
-                          return null;
-                        },
-                        onSelectionChange: (selectedItems) {
-                          debugPrint("OnSelectionChange: $selectedItems");
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      // Date picker
-                      TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          hintText: "Date",
-                          prefixIcon: const Icon(Icons.calendar_today),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        controller: TextEditingController(
-                          text: "${selectedDate.toLocal()}".split(' ')[0],
-                        ),
-                        onTap: () => _selectDate(context),
-                      ),
-                      const SizedBox(height: 20),
-                      // Note field
-                      TextFormField(
-                        controller: noteController,
-                        decoration: InputDecoration(
-                          hintText: "Note",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
+    return AppPage(
+      title: "Edit an event",
+      actions: [
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: Theme.of(context).colorScheme.surface,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.shadow,
+                  blurRadius: 10,
+                  offset: const Offset(0, 0),
                 ),
-                LoadingButton(
-                  'Update Event',
-                  _updateEvent,
-                ),
-              ],
-            ),
+              ]),
+          child: IconButton(
+            onPressed: _deleteEvent,
+            icon: const Icon(LucideIcons.trash_2),
+            iconSize: 18,
           ),
+        ),
+      ],
+      mainActionBtn: LoadingButton(
+        'Update',
+        _updateEvent,
+      ),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(height: 4),
+
+                  // Event
+                  const Text("Event"),
+                  MultiDropdown<EventType>(
+                    items: events,
+                    controller: eventController,
+                    enabled: true,
+                    maxSelections: 1,
+                    searchEnabled: true,
+                    fieldDecoration: FieldDecoration(
+                      hintText: "i.e. watering, fertilizing",
+                      showClearIcon: false,
+                      suffixIcon: null,
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor, width: 1),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0, vertical: 10),
+                    ),
+                    dropdownDecoration: DropdownDecoration(
+                      maxHeight: 500,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceBright,
+                      elevation: 2,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                    ),
+                    searchDecoration: const SearchFieldDecoration(
+                      searchIcon: Icon(LucideIcons.search),
+                    ),
+                    chipDecoration: const ChipDecoration(
+                        labelStyle: TextStyle(
+                      color: Colors.black87,
+                    )),
+                    dropdownItemDecoration: DropdownItemDecoration(
+                      selectedBackgroundColor: const Color(0xFFE0E0E0),
+                      selectedTextColor: Colors.black87,
+                    ),
+                    validator: (value) {
+                      if (eventController.selectedItems.isEmpty) {
+                        return 'Please select an event';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Plant
+                  const Text("Plant"),
+                  MultiDropdown<Plant>(
+                    items: plants,
+                    maxSelections: 1,
+                    controller: plantController,
+                    enabled: true,
+                    searchEnabled: true,
+                    fieldDecoration: FieldDecoration(
+                      hintText: "i.e. watering, fertilizing",
+                      showClearIcon: false,
+                      suffixIcon: null,
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor, width: 1),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0, vertical: 10),
+                    ),
+                    dropdownDecoration: DropdownDecoration(
+                      maxHeight: 500,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceBright,
+                      elevation: 2,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                    ),
+                    searchDecoration: const SearchFieldDecoration(
+                      searchIcon: Icon(LucideIcons.search),
+                    ),
+                    chipDecoration: const ChipDecoration(
+                        labelStyle: TextStyle(
+                      color: Colors.black87,
+                    )),
+                    dropdownItemDecoration: DropdownItemDecoration(
+                      selectedBackgroundColor:
+                          Theme.of(context).colorScheme.onSurface,
+                      selectedTextColor: Colors.black87,
+                    ),
+                    validator: (value) {
+                      if (plantController.selectedItems.isEmpty) {
+                        return 'Please select a plant';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Date
+                  const Text("Date"),
+                  TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: "",
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor, width: 1),
+                      ),
+                    ),
+                    controller: TextEditingController(
+                      text: "${selectedDate.toLocal()}".split(' ')[0],
+                    ),
+                    onTap: () => _selectDate(context),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Note field
+                  const Text("Note"),
+                  TextFormField(
+                    controller: noteController,
+                    decoration: InputDecoration(
+                      hintText: "",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    maxLines: 5,
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

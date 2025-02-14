@@ -18,17 +18,22 @@ class PlantCard extends StatefulWidget {
 class _PlantCardState extends State<PlantCard> {
   String? base64Avatar;
   String _speciesName = "";
+  late Plant _updatedPlant;
 
   @override
   void initState() {
     super.initState();
-    if (widget.plant.avatar != null) {
-      widget.env.imageRepository
-          .get(widget.plant.avatar!)
-          .then((r) => setState(() => base64Avatar = r.base64));
-    }
+    _updatedPlant = widget.plant;
+
+    widget.env.imageRepository
+        .getSpecifiedAvatarForPlantBase64(_updatedPlant.id)
+        .then((i) async {
+      if (i != null) {
+        setState(() => base64Avatar = i);
+      }
+    });
     widget.env.speciesRepository
-        .get(widget.plant.species)
+        .get(_updatedPlant.species)
         .then((s) => setState(() => _speciesName = s.scientificName));
   }
 
@@ -45,15 +50,27 @@ class _PlantCardState extends State<PlantCard> {
           );
 
     return GestureDetector(
-      onTap: () => navigateTo(context, PlantPage(widget.env, widget.plant)),
+      onTap: () async {
+        await navigateTo(context, PlantPage(widget.env, _updatedPlant))
+            .then((a) {
+          setState(() {});
+        });
+      },
       child: Stack(children: [
         Container(
           width: MediaQuery.of(context).size.width,
           margin: const EdgeInsets.symmetric(horizontal: 5.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(5),
             image: backgroundImage,
             color: Theme.of(context).colorScheme.primary.withOpacity(.7),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.shadow,
+                blurRadius: 5,
+                offset: const Offset(0, 0),
+              ),
+            ],
           ),
         ),
         Positioned(
@@ -65,7 +82,7 @@ class _PlantCardState extends State<PlantCard> {
             margin: const EdgeInsets.symmetric(horizontal: 5.0),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(15),
+                bottom: Radius.circular(5),
               ),
               gradient: LinearGradient(
                 colors: [
@@ -85,7 +102,7 @@ class _PlantCardState extends State<PlantCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.plant.name,
+                _updatedPlant.name,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(color: Colors.white),

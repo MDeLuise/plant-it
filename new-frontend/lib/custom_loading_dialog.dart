@@ -91,7 +91,7 @@ class CustomLoadingDialogState extends State<CustomLoadingDialog> {
                 if (_percentage != null && _percentage! >= 0)
                   Text(
                     '${_percentage!.toStringAsFixed(1)}%',
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
               ],
             ),

@@ -23,8 +23,6 @@ class CustomFetcher extends SpeciesFetcher {
           genus: Value(s.genus),
           species: Value(s.species),
           author: Value(s.author),
-          avatarUrl: Value(s.avatarUrl),
-          avatar: Value(s.avatar),
           dataSource: const Value(SpeciesDataSource.custom),
         );
       }).toList();
@@ -44,8 +42,6 @@ class CustomFetcher extends SpeciesFetcher {
           genus: Value(s.genus),
           species: Value(s.species),
           author: Value(s.author),
-          avatarUrl: Value(s.avatarUrl),
-          avatar: Value(s.avatar),
           dataSource: const Value(SpeciesDataSource.custom),
         );
       }).toList();

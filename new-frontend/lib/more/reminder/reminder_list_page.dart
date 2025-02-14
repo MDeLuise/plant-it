@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/app_pages.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -111,7 +112,7 @@ class _RemindersListPageState extends State<ReminderListPage> {
       ),
       textColor: Theme.of(context).colorScheme.onSurface,
       titleColor: Theme.of(context).colorScheme.onSurface,
-      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
+      barrierColor: Colors.grey.withAlpha(200),
       backgroundColor: Theme.of(context).colorScheme.surface,
       onConfirmBtnTap: () {
         widget.env.reminderRepository.delete(eventId);
@@ -121,75 +122,122 @@ class _RemindersListPageState extends State<ReminderListPage> {
     );
   }
 
-  void _showFilterDialog() async {
+  void _showFilterDialog() {
     showModalBottomSheet<void>(
-        context: context,
-        showDragHandle: true,
-        builder: (BuildContext context) {
-          return ReminderFilter(
-              widget.env,
-              _eventTypes.values.toList(),
-              _plants.values.toList(),
-              _selectedEventTypes,
-              _selectedPlants, (e, p) {
-            setState(() {
-              _selectedEventTypes = e;
-              _selectedPlants = p;
-            });
-            _fetchReminders();
-          });
-        });
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: .7,
+          minChildSize: .5,
+          maxChildSize: .9,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: ReminderFilter(
+                widget.env,
+                _eventTypes.values.toList(),
+                _plants.values.toList(),
+                _selectedEventTypes,
+                _selectedPlants,
+                (e, p) {
+                  setState(() {
+                    _selectedEventTypes = e;
+                    _selectedPlants = p;
+                  });
+                  _fetchReminders();
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reminders'),
-        actions: [
-          Stack(children: [
-            IconButton(
-              icon: const Icon(LucideIcons.list_filter),
-              onPressed: _showFilterDialog,
-            ),
-            if (_isFilterActive())
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.inverseSurface,
-                    shape: BoxShape.circle,
+    return ListPageWithActions(
+      title: 'Reminders',
+      actions: [
+        Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Theme.of(context).colorScheme.surfaceBright,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.shadow,
+                    blurRadius: 10,
+                    offset: const Offset(0, 0),
                   ),
-                ),
+                ],
               ),
-          ]),
-          IconButton(
-            icon: const Icon(LucideIcons.plus),
-            onPressed: _navigateToAddReminder,
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _reminders.length,
-        itemBuilder: (context, index) {
-          final reminder = _reminders[index];
-          final reminderIcon = _eventTypes[reminder.type]!.icon;
-
+              child: Stack(children: [
+                IconButton(
+                  icon: Icon(
+                    LucideIcons.list_filter,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  onPressed: _showFilterDialog,
+                ),
+                if (_isFilterActive())
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ]),
+            ),
+            const SizedBox(width: 10),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Theme.of(context).colorScheme.surfaceBright,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.shadow,
+                    blurRadius: 10,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: Icon(LucideIcons.plus,
+                    color: Theme.of(context).primaryColor, size: 18),
+                onPressed: _navigateToAddReminder,
+              ),
+            ),
+          ],
+        )
+      ],
+      child: Column(
+        children: _reminders.map((r) {
           return GestureDetector(
-            onTap: () => _navigateToEditReminder(context, reminder),
+            onTap: () => _navigateToEditReminder(context, r),
             child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              contentPadding: const EdgeInsets.symmetric(vertical: 8),
               leading: CircleAvatar(
                 radius: 24,
-                backgroundColor: _eventTypes[reminder.type]!.color != null
-                    ? hexToColor(_eventTypes[reminder.type]!.color!)
-                    : Theme.of(context).colorScheme.primary,
+                backgroundColor: _eventTypes[r.type]!.color != null
+                    ? hexToColor(_eventTypes[r.type]!.color!)
+                    : Theme.of(context).primaryColor,
                 child: Icon(
-                  appIcons[reminderIcon],
+                  appIcons[_eventTypes[r.type]!.icon],
                   color: Theme.of(context).colorScheme.surfaceDim,
                 ),
               ),
@@ -201,11 +249,11 @@ class _RemindersListPageState extends State<ReminderListPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _eventTypes[reminder.type]!.name,
+                          _eventTypes[r.type]!.name,
                           style: const TextStyle(fontSize: 16.0),
                         ),
                         Text(
-                          _plants[reminder.plant]!.name,
+                          _plants[r.plant]!.name,
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 14.0,
@@ -217,12 +265,16 @@ class _RemindersListPageState extends State<ReminderListPage> {
                 ],
               ),
               trailing: GestureDetector(
-                onTap: () => _confirmAndDelete(context, reminder.id),
-                child: const Icon(LucideIcons.trash_2),
+                onTap: () => _confirmAndDelete(context, r.id),
+                child: Icon(
+                  LucideIcons.trash_2,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }

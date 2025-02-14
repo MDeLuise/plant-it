@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:plant_it/common.dart';
@@ -22,9 +24,25 @@ class SearchSpeciesCard extends StatefulWidget {
 }
 
 class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
+  String? base64Avatar;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.env.imageRepository
+        .getSpecifiedAvatarForSpeciesBase64(widget.speciesPartial.id.value)
+        .then((i) {
+      if (i != null) {
+        setState(() {
+          base64Avatar = i;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String? avatarUrl = widget.speciesPartial.avatarUrl.value;
+    final String? avatarUrl = widget.speciesPartial.externalAvatarUrl.value;
 
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -38,7 +56,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).colorScheme.primary.withOpacity(.7),
+                color: Theme.of(context).primaryColor.withOpacity(.7),
               ),
               child: avatarUrl != null
                   ? CachedNetworkImage(
@@ -73,8 +91,10 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                     )
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: const flutter_image.Image(
-                          image: AssetImage("assets/images/generic-plant.jpg"),
+                      child: flutter_image.Image(
+                          image: base64Avatar == null
+                              ? AssetImage("assets/images/generic-plant.jpg")
+                              : MemoryImage(base64Decode(base64Avatar!)),
                           fit: BoxFit.cover),
                     ),
             ),
@@ -108,8 +128,8 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -119,7 +139,7 @@ class _SearchSpeciesCardState extends State<SearchSpeciesCard> {
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Theme.of(context).colorScheme.surfaceDim,
+                              color: Colors.white,
                             ),
                       ),
                     ),

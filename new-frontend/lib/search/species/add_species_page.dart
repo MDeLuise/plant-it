@@ -1,13 +1,18 @@
-import 'package:alert_info/alert_info.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/loading_button.dart';
 import 'package:plant_it/plant/add_plant_page.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:drift/drift.dart' as drift;
+
+enum _ImageMode { none, upload, url }
 
 class AddSpeciesPage extends StatefulWidget {
   final Environment env;
@@ -25,14 +30,18 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
   final TextEditingController _genusController = TextEditingController();
   final TextEditingController _familyController = TextEditingController();
   final List<TextEditingController> _synonymControllers = [];
+  final ImagePicker _picker = ImagePicker();
   SfRangeValues _phValues = const SfRangeValues(4, 6);
   SfRangeValues _temperatureValues = const SfRangeValues(-5, 20);
   double _lightValue = 5;
-  double _humidityValue = 5;
+  double _humidityValue = 80;
   bool _usePhValue = false;
   bool _useTemperatureValue = false;
   bool _useLightValue = false;
   bool _useHumidityValue = false;
+  File? _image;
+  _ImageMode _imageMode = _ImageMode.none;
+  final TextEditingController _imageUrlController = TextEditingController();
 
   @override
   void initState() {
@@ -55,118 +64,225 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
     });
   }
 
+  Future<void> _uploadNewPhoto() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 250.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: flutter_image.Image.asset(
-                "assets/images/generic-plant.jpg",
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Collapsable(
-                  "Classification",
-                  [
-                    _buildTextField("Family", _familyController),
-                    _buildTextField("Genus", _genusController),
-                    _buildTextField("Species", _scientificNameController),
-                  ],
-                  expandedAtStart: true,
-                ),
-                Collapsable(
-                  "Synonyms",
-                  _buildSynonymFields(),
-                ),
-                Collapsable(
-                  "Care",
-                  [
-                    _RangeSlider(
-                      label: "Temperature",
-                      min: -50,
-                      max: 50,
-                      callback: (r) => setState(() => _temperatureValues = r),
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      interval: 20,
-                      minorTicksPerInterval: 1,
-                      stepSize: 5,
-                      initial: const SfRangeValues(-5, 25),
-                      enabled: _useTemperatureValue,
-                      setEnabled: (e) =>
-                          setState(() => _useTemperatureValue = e),
-                    ),
-                    if (_useTemperatureValue) const SizedBox(height: 20),
-                    _Slider(
-                      label: "Light",
-                      min: 1,
-                      max: 10,
-                      callback: (r) => setState(() => _lightValue = r),
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      interval: 2,
-                      minorTicksPerInterval: 1,
-                      stepSize: 1,
-                      initial: _lightValue,
-                      enabled: _useLightValue,
-                      setEnabled: (e) => setState(() => _useLightValue = e),
-                    ),
-                    if (_useLightValue) const SizedBox(height: 20),
-                    _Slider(
-                      label: "Humidity",
-                      min: 0,
-                      max: 100,
-                      callback: (r) => setState(() => _humidityValue = r),
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      interval: 10,
-                      minorTicksPerInterval: 0,
-                      stepSize: 10,
-                      initial: _humidityValue,
-                      enabled: _useHumidityValue,
-                      setEnabled: (e) => setState(() => _useHumidityValue = e),
-                    ),
-                    if (_useHumidityValue) const SizedBox(height: 20),
-                    _RangeSlider(
-                      label: "Ph",
-                      min: 1,
-                      max: 14,
-                      callback: (r) => setState(() => _phValues = r),
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      interval: 2,
-                      minorTicksPerInterval: 1,
-                      stepSize: 1,
-                      initial: const SfRangeValues(5, 9),
-                      enabled: _usePhValue,
-                      setEnabled: (e) => setState(() => _usePhValue = e),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: LoadingButton(
-                    'Add Species',
-                    _addSpecies,
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 250.0,
+                floating: false,
+                pinned: true,
+                automaticallyImplyLeading: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: flutter_image.Image.asset(
+                    "assets/images/generic-plant.jpg",
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 16),
-              ],
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Collapsable(
+                      "Classification",
+                      [
+                        _buildTextField("Family", _familyController),
+                        _buildTextField("Genus", _genusController),
+                        _buildTextField("Species", _scientificNameController),
+                      ],
+                      expandedAtStart: true,
+                    ),
+                    Collapsable(
+                      "Synonyms",
+                      _buildSynonymFields(),
+                    ),
+                    Collapsable(
+                      "Care",
+                      [
+                        _RangeSlider(
+                          label: "Temperature",
+                          min: -50,
+                          max: 50,
+                          callback: (r) =>
+                              setState(() => _temperatureValues = r),
+                          showTicks: true,
+                          showLabels: true,
+                          enableTooltip: true,
+                          interval: 20,
+                          minorTicksPerInterval: 1,
+                          stepSize: 5,
+                          initial: const SfRangeValues(-5, 25),
+                          enabled: _useTemperatureValue,
+                          setEnabled: (e) =>
+                              setState(() => _useTemperatureValue = e),
+                        ),
+                        if (_useTemperatureValue) const SizedBox(height: 20),
+                        _Slider(
+                          label: "Light",
+                          min: 1,
+                          max: 10,
+                          callback: (r) => setState(() => _lightValue = r),
+                          showTicks: true,
+                          showLabels: true,
+                          enableTooltip: true,
+                          interval: 2,
+                          minorTicksPerInterval: 1,
+                          stepSize: 1,
+                          initial: _lightValue,
+                          enabled: _useLightValue,
+                          setEnabled: (e) => setState(() => _useLightValue = e),
+                        ),
+                        if (_useLightValue) const SizedBox(height: 20),
+                        _Slider(
+                          label: "Humidity",
+                          min: 0,
+                          max: 100,
+                          callback: (r) => setState(() => _humidityValue = r),
+                          showTicks: true,
+                          showLabels: true,
+                          enableTooltip: true,
+                          interval: 10,
+                          minorTicksPerInterval: 0,
+                          stepSize: 10,
+                          initial: _humidityValue,
+                          enabled: _useHumidityValue,
+                          setEnabled: (e) =>
+                              setState(() => _useHumidityValue = e),
+                        ),
+                        if (_useHumidityValue) const SizedBox(height: 20),
+                        _RangeSlider(
+                          label: "Ph",
+                          min: 1,
+                          max: 14,
+                          callback: (r) => setState(() => _phValues = r),
+                          showTicks: true,
+                          showLabels: true,
+                          enableTooltip: true,
+                          interval: 2,
+                          minorTicksPerInterval: 1,
+                          stepSize: 1,
+                          initial: const SfRangeValues(5, 9),
+                          enabled: _usePhValue,
+                          setEnabled: (e) => setState(() => _usePhValue = e),
+                        ),
+                      ],
+                    ),
+                    Collapsable('Image', [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RadioListTile<_ImageMode>(
+                            title: const Text("No Image"),
+                            value: _ImageMode.none,
+                            groupValue: _imageMode,
+                            onChanged: (value) {
+                              setState(() {
+                                _imageMode = value!;
+                                _image = null;
+                                _imageUrlController.clear();
+                              });
+                            },
+                          ),
+                          RadioListTile<_ImageMode>(
+                            title: const Text("Upload Custom Image"),
+                            value: _ImageMode.upload,
+                            groupValue: _imageMode,
+                            onChanged: (value) {
+                              setState(() {
+                                _imageMode = value!;
+                                _imageUrlController.clear();
+                              });
+                            },
+                          ),
+                          if (_imageMode == _ImageMode.upload)
+                            TextButton(
+                              onPressed: _uploadNewPhoto,
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.transparent),
+                              ),
+                              child: Text(
+                                _image != null ? _image!.path : "Select Photo",
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                          RadioListTile<_ImageMode>(
+                            title: const Text("Use Web Image"),
+                            value: _ImageMode.url,
+                            groupValue: _imageMode,
+                            onChanged: (value) {
+                              setState(() {
+                                _imageMode = value!;
+                                _image = null;
+                              });
+                            },
+                          ),
+                          if (_imageMode == _ImageMode.url)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: TextField(
+                                controller: _imageUrlController,
+                                decoration: const InputDecoration(
+                                    labelText: "Image URL"),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ]),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: LoadingButton(
+                        'Add Species',
+                        _addSpecies,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 45,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surfaceBright,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ),
         ],
@@ -189,14 +305,16 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
           ],
         );
       }),
-      TextButton(
-        onPressed: _addSynonymField,
-        child: Row(
-          children: [
-            Icon(LucideIcons.plus),
-            const SizedBox(width: 5),
-            Text("Add Synonym"),
-          ],
+      SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: TextButton(
+          onPressed: _addSynonymField,
+          child: Text(
+            "Add Synonym",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
         ),
       ),
     ];
@@ -205,12 +323,14 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          TextField(
+            controller: controller,
+          ),
+        ],
       ),
     );
   }
@@ -257,30 +377,30 @@ class _AddSpeciesPageState extends State<AddSpeciesPage> {
         );
         await widget.env.speciesSynonymsRepository.insert(synonym);
       }
+
+      if (_imageMode == _ImageMode.upload && _image != null) {
+        final String imagePath = await widget.env.imageRepository
+            .saveImageFile(_image!, _image!.path.split('.').last);
+        widget.env.imageRepository.insert(ImagesCompanion(
+          speciesId: drift.Value(speciesId),
+          isAvatar: drift.Value(true),
+          imagePath: drift.Value(imagePath),
+          createdAt: drift.Value(DateTime.now()),
+        ));
+      } else if (_imageMode == _ImageMode.url &&
+          _imageUrlController.text.isNotEmpty) {
+        widget.env.imageRepository.insert(ImagesCompanion(
+          speciesId: drift.Value(speciesId),
+          isAvatar: drift.Value(true),
+          imageUrl: drift.Value(_imageUrlController.text),
+          createdAt: drift.Value(DateTime.now()),
+        ));
+      }
     } catch (e) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Error adding species')),
-      // );
-      AlertInfo.show(
-        context: context,
-        text: 'Error adding species',
-        typeInfo: TypeInfo.error,
-        duration: 5,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        textColor: Theme.of(context).colorScheme.onSurface,
-      );
+      showSnackbar(context, FeedbackLevel.error, "Error adding species", null);
     }
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Species added successfully')),
-    // );
-    AlertInfo.show(
-      context: context,
-      text: 'Species added successfully',
-      typeInfo: TypeInfo.success,
-      duration: 5,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      textColor: Theme.of(context).colorScheme.onSurface,
-    );
+    showSnackbar(
+        context, FeedbackLevel.success, "Species added successfully", null);
   }
 }
 
@@ -362,6 +482,7 @@ class _RangeSliderState extends State<_RangeSlider> {
             },
             stepSize: widget.stepSize,
             shouldAlwaysShowTooltip: false,
+            activeColor: Theme.of(context).primaryColor,
           ),
       ],
     );
@@ -446,6 +567,7 @@ class _SliderState extends State<_Slider> {
             },
             stepSize: widget.stepSize,
             shouldAlwaysShowTooltip: false,
+            activeColor: Theme.of(context).primaryColor,
           ),
       ],
     );

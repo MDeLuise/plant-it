@@ -7,7 +7,9 @@
     <application
         android:label="Plant-it"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:resource="@drawable/ic_notification">
         <activity
             android:name=".MainActivity"
             android:exported="true"

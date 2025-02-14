@@ -5,11 +5,26 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/reminder/reminder_occurrence_service.dart';
+import 'package:workmanager/workmanager.dart';
 
 class ReminderNotificationService {
   final Environment env;
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  final List<String> notificationEmoji = [
+    "🌺",
+    "🍀",
+    "🌷",
+    "🌻",
+    "🌼",
+    "🪴",
+    "🌹",
+    "🌸",
+    "🌿",
+    "🌱",
+    "🌵",
+    "🪻"
+  ];
   final List<String> notificationTitles = [
     "Oops, You Did It Again!",
     "Plant SOS!",
@@ -21,20 +36,21 @@ class ReminderNotificationService {
     "You've Been 'Leafing' It Alone"
   ];
   final List<String> notificationBodies = [
-    "{plantName} needs its {eventType}. Don't keep it waiting!",
-    "{plantName} is calling for {eventType}. Time to save the day!",
-    "{plantName} needs {eventType}. It's waiting for you!",
-    "{plantName} is tired of waiting for {eventType}. Show it some TLC!",
-    "{plantName} is overdue for {eventType}. Give it a boost!",
-    "{plantName} is ready for {eventType}. Don't let it down!",
-    "{plantName} needs its {eventType}. You're the hero it deserves!",
-    "{plantName} misses its {eventType}. Time to make it happy again!"
+    "{emoji} {plantName} needs its {eventType}. Don't keep it waiting!",
+    "{emoji} {plantName} is calling for {eventType}. Time to save the day!",
+    "{emoji} {plantName} needs {eventType}. It's waiting for you!",
+    "{emoji} {plantName} is tired of waiting for {eventType}. Show it some TLC!",
+    "{emoji} {plantName} is overdue for {eventType}. Give it a boost!",
+    "{emoji} {plantName} is ready for {eventType}. Don't let it down!",
+    "{emoji} {plantName} needs its {eventType}. You're the hero it deserves!",
+    "{emoji} {plantName} misses its {eventType}. Time to make it happy again!"
   ];
-  Timer? ongoingTimer;
+  final String reminderUniqueName = "daily-reminder-task-id";
+  final Workmanager workmanager = Workmanager();
 
   ReminderNotificationService(this.env);
 
-  Future<void> showReminderNotification(Reminder reminderToNotify) async {
+  Future<void> _showReminderNotification(Reminder reminderToNotify) async {
     final String plantName = await env.plantRepository
         .get(reminderToNotify.plant)
         .then((p) => p.name);
@@ -42,10 +58,14 @@ class ReminderNotificationService {
         .get(reminderToNotify.type)
         .then((t) => t.name);
 
+    final int randomIndexEmoji = Random().nextInt(notificationEmoji.length);
     final int randomIndexTitle = Random().nextInt(notificationTitles.length);
     final int randomIndexBody = Random().nextInt(notificationBodies.length);
+    final emoji = notificationEmoji.elementAt(randomIndexEmoji);
     final title = notificationTitles.elementAt(randomIndexTitle);
-    final body = notificationBodies.elementAt(randomIndexBody)
+    final body = notificationBodies
+        .elementAt(randomIndexBody)
+        .replaceAll('{emoji}', emoji)
         .replaceAll('{plantName}', plantName)
         .replaceAll('{eventType}', eventTypeName);
 
@@ -56,6 +76,8 @@ class ReminderNotificationService {
       channelDescription: 'Notification channel for reminders',
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
+      icon: 'ic_notification',
+      color: Color.fromARGB(255, 58, 133, 60),
     );
 
     const NotificationDetails notificationDetails =
@@ -68,11 +90,7 @@ class ReminderNotificationService {
   }
 
   Future<void> scheduleReminderCheck() async {
-    if (ongoingTimer != null) {
-      ongoingTimer!.cancel();
-    }
-
-    final notificationsEnabled = await _getNotificationsEnabled();
+    final bool notificationsEnabled = await _getNotificationsEnabled();
     if (!notificationsEnabled) {
       return;
     }
@@ -82,28 +100,58 @@ class ReminderNotificationService {
     DateTime targetTime = DateTime(now.year, now.month, now.day,
         notificationTime.hour, notificationTime.minute);
 
-    if (targetTime.isBefore(now)) {
-      targetTime = targetTime
-          .add(const Duration(days: 1))
-          .subtract(const Duration(seconds: 10));
+    final bool isToFire = targetTime.isBefore(now);
+    if (isToFire) {
+      await checkReminders();
+      targetTime = targetTime.add(const Duration(days: 1));
     }
 
-    final durationUntilTarget = targetTime.difference(now);
-
-    ongoingTimer = Timer(durationUntilTarget, () async {
-      await _checkReminders();
-      scheduleReminderCheck();
-    });
+    final Duration durationUntilTarget = targetTime.difference(now);
+    await Workmanager().registerPeriodicTask(
+      reminderUniqueName,
+      reminderUniqueName,
+      frequency: const Duration(hours: 24),
+      initialDelay: durationUntilTarget,
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+    );
   }
 
-  Future<void> _checkReminders() async {
-    final reminderOccurrence = ReminderOccurrenceService(env);
-    final reminderIdsToNotify =
-        await reminderOccurrence.getRemindersToNotifyToday();
+  Future<void> checkReminders() async {
+    final ReminderOccurrenceService reminderOccurrenceService =
+        ReminderOccurrenceService(env);
+    final List<Reminder> reminderIdsToNotify =
+        await reminderOccurrenceService.getRemindersToNotifyToday();
 
     for (final Reminder reminder in reminderIdsToNotify) {
-      await showReminderNotification(reminder);
+      await _showReminderNotification(reminder);
     }
+  }
+
+  Future<void> sendTestNotification({String? message}) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      'reminder_channel',
+      'Reminders',
+      channelDescription: 'Notification channel for reminders',
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+      icon: 'ic_notification',
+      color: Color.fromARGB(255, 58, 133, 60),
+    );
+
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    const String testTitle = '🌵 Testing… 1, 2, Leaf';
+    final String testBody = message ??
+        "We're testing your notification system. Your plant said it's fine. For now.";
+
+    await _notificationsPlugin.show(
+      0,
+      testTitle,
+      testBody,
+      notificationDetails,
+    );
   }
 
   Future<bool> _getNotificationsEnabled() async {

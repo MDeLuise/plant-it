@@ -43,14 +43,25 @@ class _SearchFilterState extends State<SearchFilter> {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .7,
       width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
                 Row(
                   children: [
                     Text(
@@ -63,6 +74,9 @@ class _SearchFilterState extends State<SearchFilter> {
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                // Data Source
+                const Text("Data Source"),
                 MultiDropdown<DataSourceFilterType>(
                   items: widget.availabledataSources.map((d) {
                     return DropdownItem(label: d.name, value: d);
@@ -70,58 +84,32 @@ class _SearchFilterState extends State<SearchFilter> {
                   controller: dataSourceTypeController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Data Source',
-                    prefixIcon: const Icon(LucideIcons.text_search),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. Custom",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    header: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        'Select data source from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Theme.of(context).colorScheme.onPrimary,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (dataSourceTypeController.selectedItems.isEmpty) {
-                      return 'Please select adata source';
+                      return 'Please select a data source';
                     }
                     return null;
                   },

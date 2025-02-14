@@ -15,13 +15,18 @@ class ActivityFilter extends StatefulWidget {
   final List<int>? filteredPlantIds;
   final List<int>? filteredEventTypesIds;
   final ActivityFilterType? activityFilterType;
+  final Function(List<int>?, List<int>?, ActivityFilterType?) callback;
+  final ScrollController? scrollController;
 
-  final Function(List<int>? plantIds, List<int>? eventTypeIds,
-      ActivityFilterType? activityType) callback;
-
-  const ActivityFilter(this.env, this.callback, this.filteredPlantIds,
-      this.filteredEventTypesIds, this.activityFilterType,
-      {super.key});
+  const ActivityFilter(
+    this.env,
+    this.callback,
+    this.filteredPlantIds,
+    this.filteredEventTypesIds,
+    this.activityFilterType, {
+    this.scrollController,
+    super.key,
+  });
 
   @override
   State<ActivityFilter> createState() => _ActivityFilterState();
@@ -98,26 +103,37 @@ class _ActivityFilterState extends State<ActivityFilter> {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .7,
       width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        controller: widget.scrollController,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: [
-                    Text(
-                      'Filters',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontWeight: FontWeight.bold),
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ],
+                  ),
+                ),
+                Text(
+                  'Filters',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
+
+                // Type
+                const Text("Type"),
                 MultiDropdown<ActivityFilterType>(
                   items: [
                     DropdownItem(
@@ -132,54 +148,29 @@ class _ActivityFilterState extends State<ActivityFilter> {
                   controller: activityTypeController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Activity',
-                    prefixIcon: const Icon(LucideIcons.calendar),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. Reminders",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    header: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        'Select activity type from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (activityTypeController.selectedItems.isEmpty) {
                       return 'Please an activity type';
@@ -188,124 +179,76 @@ class _ActivityFilterState extends State<ActivityFilter> {
                   },
                 ),
                 const SizedBox(height: 20),
+
+                // Event
+                const Text("Events"),
                 MultiDropdown<EventType>(
                   items: events,
                   controller: eventController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Events',
-                    prefixIcon: const Icon(LucideIcons.glass_water),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                        )),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. watering",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    header: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        'Select events from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (eventController.selectedItems.isEmpty) {
-                      return 'Please select an event';
+                      return 'Please select an event type';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
+
+                // Plants
+                const Text("Plant"),
                 MultiDropdown<Plant>(
                   items: plants,
                   controller: plantController,
                   enabled: true,
                   searchEnabled: true,
-                  chipDecoration: ChipDecoration(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                    labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
                   fieldDecoration: FieldDecoration(
-                    hintText: 'Plants',
-                    prefixIcon: const Icon(LucideIcons.leaf),
-                    showClearIcon: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                        )),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    hintText: "i.e. Strelitzia nicolai",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                          color: Theme.of(context).dividerColor, width: 1),
                     ),
-                    labelStyle: const TextStyle(color: Colors.black),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
                   dropdownDecoration: DropdownDecoration(
-                    marginTop: 2,
                     maxHeight: 500,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    header: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        'Select plants from the list',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
                   ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon: Icon(Icons.check_box,
-                        color: Theme.of(context).colorScheme.surfaceDim),
-                    textColor: Colors.black,
-                    selectedBackgroundColor:
-                        Theme.of(context).colorScheme.primary,
-                    selectedTextColor: Colors.black,
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
                   ),
+                  chipDecoration: const ChipDecoration(
+                      labelStyle: TextStyle(
+                    color: Colors.black87,
+                  )),
                   validator: (value) {
                     if (plantController.selectedItems.isEmpty) {
                       return 'Please select a plant';

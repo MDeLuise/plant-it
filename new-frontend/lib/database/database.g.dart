@@ -346,272 +346,6 @@ class EventTypesCompanion extends UpdateCompanion<EventType> {
   }
 }
 
-class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ImagesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _base64Meta = const VerificationMeta('base64');
-  @override
-  late final GeneratedColumn<String> base64 = GeneratedColumn<String>(
-      'base64', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, true,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 250),
-      type: DriftSqlType.string,
-      requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  @override
-  List<GeneratedColumn> get $columns => [id, base64, description, createdAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'images';
-  @override
-  VerificationContext validateIntegrity(Insertable<Image> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('base64')) {
-      context.handle(_base64Meta,
-          base64.isAcceptableOrUnknown(data['base64']!, _base64Meta));
-    } else if (isInserting) {
-      context.missing(_base64Meta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Image(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      base64: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}base64'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description']),
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
-    );
-  }
-
-  @override
-  $ImagesTable createAlias(String alias) {
-    return $ImagesTable(attachedDatabase, alias);
-  }
-}
-
-class Image extends DataClass implements Insertable<Image> {
-  final int id;
-  final String base64;
-  final String? description;
-  final DateTime? createdAt;
-  const Image(
-      {required this.id,
-      required this.base64,
-      this.description,
-      this.createdAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['base64'] = Variable<String>(base64);
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
-    }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
-    }
-    return map;
-  }
-
-  ImagesCompanion toCompanion(bool nullToAbsent) {
-    return ImagesCompanion(
-      id: Value(id),
-      base64: Value(base64),
-      description: description == null && nullToAbsent
-          ? const Value.absent()
-          : Value(description),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
-    );
-  }
-
-  factory Image.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Image(
-      id: serializer.fromJson<int>(json['id']),
-      base64: serializer.fromJson<String>(json['base64']),
-      description: serializer.fromJson<String?>(json['description']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'base64': serializer.toJson<String>(base64),
-      'description': serializer.toJson<String?>(description),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
-    };
-  }
-
-  Image copyWith(
-          {int? id,
-          String? base64,
-          Value<String?> description = const Value.absent(),
-          Value<DateTime?> createdAt = const Value.absent()}) =>
-      Image(
-        id: id ?? this.id,
-        base64: base64 ?? this.base64,
-        description: description.present ? description.value : this.description,
-        createdAt: createdAt.present ? createdAt.value : this.createdAt,
-      );
-  Image copyWithCompanion(ImagesCompanion data) {
-    return Image(
-      id: data.id.present ? data.id.value : this.id,
-      base64: data.base64.present ? data.base64.value : this.base64,
-      description:
-          data.description.present ? data.description.value : this.description,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Image(')
-          ..write('id: $id, ')
-          ..write('base64: $base64, ')
-          ..write('description: $description, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, base64, description, createdAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Image &&
-          other.id == this.id &&
-          other.base64 == this.base64 &&
-          other.description == this.description &&
-          other.createdAt == this.createdAt);
-}
-
-class ImagesCompanion extends UpdateCompanion<Image> {
-  final Value<int> id;
-  final Value<String> base64;
-  final Value<String?> description;
-  final Value<DateTime?> createdAt;
-  const ImagesCompanion({
-    this.id = const Value.absent(),
-    this.base64 = const Value.absent(),
-    this.description = const Value.absent(),
-    this.createdAt = const Value.absent(),
-  });
-  ImagesCompanion.insert({
-    this.id = const Value.absent(),
-    required String base64,
-    this.description = const Value.absent(),
-    this.createdAt = const Value.absent(),
-  }) : base64 = Value(base64);
-  static Insertable<Image> custom({
-    Expression<int>? id,
-    Expression<String>? base64,
-    Expression<String>? description,
-    Expression<DateTime>? createdAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (base64 != null) 'base64': base64,
-      if (description != null) 'description': description,
-      if (createdAt != null) 'created_at': createdAt,
-    });
-  }
-
-  ImagesCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? base64,
-      Value<String?>? description,
-      Value<DateTime?>? createdAt}) {
-    return ImagesCompanion(
-      id: id ?? this.id,
-      base64: base64 ?? this.base64,
-      description: description ?? this.description,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (base64.present) {
-      map['base64'] = Variable<String>(base64.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ImagesCompanion(')
-          ..write('id: $id, ')
-          ..write('base64: $base64, ')
-          ..write('description: $description, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -653,7 +387,8 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
   @override
   late final GeneratedColumn<String> species = GeneratedColumn<String>(
       'species', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _authorMeta = const VerificationMeta('author');
@@ -663,24 +398,6 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
-  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
-  @override
-  late final GeneratedColumn<int> avatar = GeneratedColumn<int>(
-      'avatar', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES images (id) ON DELETE SET NULL'));
-  static const VerificationMeta _avatarUrlMeta =
-      const VerificationMeta('avatarUrl');
-  @override
-  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
-      'avatar_url', aliasedName, true,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
-      type: DriftSqlType.string,
-      requiredDuringInsert: false);
-  static const VerificationMeta _dataSourceMeta =
-      const VerificationMeta('dataSource');
   @override
   late final GeneratedColumnWithTypeConverter<SpeciesDataSource, String>
       dataSource = GeneratedColumn<String>('data_source', aliasedName, false,
@@ -698,6 +415,14 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
+  static const VerificationMeta _externalAvatarUrlMeta =
+      const VerificationMeta('externalAvatarUrl');
+  @override
+  late final GeneratedColumn<String> externalAvatarUrl =
+      GeneratedColumn<String>('external_avatar_url', aliasedName, true,
+          additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 0),
+          type: DriftSqlType.string,
+          requiredDuringInsert: false);
   static const VerificationMeta _yearMeta = const VerificationMeta('year');
   @override
   late final GeneratedColumn<int> year = GeneratedColumn<int>(
@@ -719,10 +444,9 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
         genus,
         species,
         author,
-        avatar,
-        avatarUrl,
         dataSource,
         externalId,
+        externalAvatarUrl,
         year,
         bibliography
       ];
@@ -765,20 +489,17 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
       context.handle(_authorMeta,
           author.isAcceptableOrUnknown(data['author']!, _authorMeta));
     }
-    if (data.containsKey('avatar')) {
-      context.handle(_avatarMeta,
-          avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
-    }
-    if (data.containsKey('avatar_url')) {
-      context.handle(_avatarUrlMeta,
-          avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta));
-    }
-    context.handle(_dataSourceMeta, const VerificationResult.success());
     if (data.containsKey('external_id')) {
       context.handle(
           _externalIdMeta,
           externalId.isAcceptableOrUnknown(
               data['external_id']!, _externalIdMeta));
+    }
+    if (data.containsKey('external_avatar_url')) {
+      context.handle(
+          _externalAvatarUrlMeta,
+          externalAvatarUrl.isAcceptableOrUnknown(
+              data['external_avatar_url']!, _externalAvatarUrlMeta));
     }
     if (data.containsKey('year')) {
       context.handle(
@@ -811,15 +532,13 @@ class $SpeciesTable extends Species with TableInfo<$SpeciesTable, Specy> {
           .read(DriftSqlType.string, data['${effectivePrefix}species'])!,
       author: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}author']),
-      avatar: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}avatar']),
-      avatarUrl: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}avatar_url']),
       dataSource: $SpeciesTable.$converterdataSource.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}data_source'])!),
       externalId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}external_id']),
+      externalAvatarUrl: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}external_avatar_url']),
       year: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}year']),
       bibliography: attachedDatabase.typeMapping
@@ -844,10 +563,9 @@ class Specy extends DataClass implements Insertable<Specy> {
   final String? genus;
   final String species;
   final String? author;
-  final int? avatar;
-  final String? avatarUrl;
   final SpeciesDataSource dataSource;
   final String? externalId;
+  final String? externalAvatarUrl;
   final int? year;
   final String? bibliography;
   const Specy(
@@ -857,10 +575,9 @@ class Specy extends DataClass implements Insertable<Specy> {
       this.genus,
       required this.species,
       this.author,
-      this.avatar,
-      this.avatarUrl,
       required this.dataSource,
       this.externalId,
+      this.externalAvatarUrl,
       this.year,
       this.bibliography});
   @override
@@ -878,18 +595,15 @@ class Specy extends DataClass implements Insertable<Specy> {
     if (!nullToAbsent || author != null) {
       map['author'] = Variable<String>(author);
     }
-    if (!nullToAbsent || avatar != null) {
-      map['avatar'] = Variable<int>(avatar);
-    }
-    if (!nullToAbsent || avatarUrl != null) {
-      map['avatar_url'] = Variable<String>(avatarUrl);
-    }
     {
       map['data_source'] = Variable<String>(
           $SpeciesTable.$converterdataSource.toSql(dataSource));
     }
     if (!nullToAbsent || externalId != null) {
       map['external_id'] = Variable<String>(externalId);
+    }
+    if (!nullToAbsent || externalAvatarUrl != null) {
+      map['external_avatar_url'] = Variable<String>(externalAvatarUrl);
     }
     if (!nullToAbsent || year != null) {
       map['year'] = Variable<int>(year);
@@ -911,15 +625,13 @@ class Specy extends DataClass implements Insertable<Specy> {
       species: Value(species),
       author:
           author == null && nullToAbsent ? const Value.absent() : Value(author),
-      avatar:
-          avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
-      avatarUrl: avatarUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(avatarUrl),
       dataSource: Value(dataSource),
       externalId: externalId == null && nullToAbsent
           ? const Value.absent()
           : Value(externalId),
+      externalAvatarUrl: externalAvatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(externalAvatarUrl),
       year: year == null && nullToAbsent ? const Value.absent() : Value(year),
       bibliography: bibliography == null && nullToAbsent
           ? const Value.absent()
@@ -937,11 +649,11 @@ class Specy extends DataClass implements Insertable<Specy> {
       genus: serializer.fromJson<String?>(json['genus']),
       species: serializer.fromJson<String>(json['species']),
       author: serializer.fromJson<String?>(json['author']),
-      avatar: serializer.fromJson<int?>(json['avatar']),
-      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
       dataSource: $SpeciesTable.$converterdataSource
           .fromJson(serializer.fromJson<String>(json['dataSource'])),
       externalId: serializer.fromJson<String?>(json['externalId']),
+      externalAvatarUrl:
+          serializer.fromJson<String?>(json['externalAvatarUrl']),
       year: serializer.fromJson<int?>(json['year']),
       bibliography: serializer.fromJson<String?>(json['bibliography']),
     );
@@ -956,11 +668,10 @@ class Specy extends DataClass implements Insertable<Specy> {
       'genus': serializer.toJson<String?>(genus),
       'species': serializer.toJson<String>(species),
       'author': serializer.toJson<String?>(author),
-      'avatar': serializer.toJson<int?>(avatar),
-      'avatarUrl': serializer.toJson<String?>(avatarUrl),
       'dataSource': serializer.toJson<String>(
           $SpeciesTable.$converterdataSource.toJson(dataSource)),
       'externalId': serializer.toJson<String?>(externalId),
+      'externalAvatarUrl': serializer.toJson<String?>(externalAvatarUrl),
       'year': serializer.toJson<int?>(year),
       'bibliography': serializer.toJson<String?>(bibliography),
     };
@@ -973,10 +684,9 @@ class Specy extends DataClass implements Insertable<Specy> {
           Value<String?> genus = const Value.absent(),
           String? species,
           Value<String?> author = const Value.absent(),
-          Value<int?> avatar = const Value.absent(),
-          Value<String?> avatarUrl = const Value.absent(),
           SpeciesDataSource? dataSource,
           Value<String?> externalId = const Value.absent(),
+          Value<String?> externalAvatarUrl = const Value.absent(),
           Value<int?> year = const Value.absent(),
           Value<String?> bibliography = const Value.absent()}) =>
       Specy(
@@ -986,10 +696,11 @@ class Specy extends DataClass implements Insertable<Specy> {
         genus: genus.present ? genus.value : this.genus,
         species: species ?? this.species,
         author: author.present ? author.value : this.author,
-        avatar: avatar.present ? avatar.value : this.avatar,
-        avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
         dataSource: dataSource ?? this.dataSource,
         externalId: externalId.present ? externalId.value : this.externalId,
+        externalAvatarUrl: externalAvatarUrl.present
+            ? externalAvatarUrl.value
+            : this.externalAvatarUrl,
         year: year.present ? year.value : this.year,
         bibliography:
             bibliography.present ? bibliography.value : this.bibliography,
@@ -1004,12 +715,13 @@ class Specy extends DataClass implements Insertable<Specy> {
       genus: data.genus.present ? data.genus.value : this.genus,
       species: data.species.present ? data.species.value : this.species,
       author: data.author.present ? data.author.value : this.author,
-      avatar: data.avatar.present ? data.avatar.value : this.avatar,
-      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
       dataSource:
           data.dataSource.present ? data.dataSource.value : this.dataSource,
       externalId:
           data.externalId.present ? data.externalId.value : this.externalId,
+      externalAvatarUrl: data.externalAvatarUrl.present
+          ? data.externalAvatarUrl.value
+          : this.externalAvatarUrl,
       year: data.year.present ? data.year.value : this.year,
       bibliography: data.bibliography.present
           ? data.bibliography.value
@@ -1026,10 +738,9 @@ class Specy extends DataClass implements Insertable<Specy> {
           ..write('genus: $genus, ')
           ..write('species: $species, ')
           ..write('author: $author, ')
-          ..write('avatar: $avatar, ')
-          ..write('avatarUrl: $avatarUrl, ')
           ..write('dataSource: $dataSource, ')
           ..write('externalId: $externalId, ')
+          ..write('externalAvatarUrl: $externalAvatarUrl, ')
           ..write('year: $year, ')
           ..write('bibliography: $bibliography')
           ..write(')'))
@@ -1038,7 +749,7 @@ class Specy extends DataClass implements Insertable<Specy> {
 
   @override
   int get hashCode => Object.hash(id, scientificName, family, genus, species,
-      author, avatar, avatarUrl, dataSource, externalId, year, bibliography);
+      author, dataSource, externalId, externalAvatarUrl, year, bibliography);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1049,10 +760,9 @@ class Specy extends DataClass implements Insertable<Specy> {
           other.genus == this.genus &&
           other.species == this.species &&
           other.author == this.author &&
-          other.avatar == this.avatar &&
-          other.avatarUrl == this.avatarUrl &&
           other.dataSource == this.dataSource &&
           other.externalId == this.externalId &&
+          other.externalAvatarUrl == this.externalAvatarUrl &&
           other.year == this.year &&
           other.bibliography == this.bibliography);
 }
@@ -1064,10 +774,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
   final Value<String?> genus;
   final Value<String> species;
   final Value<String?> author;
-  final Value<int?> avatar;
-  final Value<String?> avatarUrl;
   final Value<SpeciesDataSource> dataSource;
   final Value<String?> externalId;
+  final Value<String?> externalAvatarUrl;
   final Value<int?> year;
   final Value<String?> bibliography;
   const SpeciesCompanion({
@@ -1077,10 +786,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     this.genus = const Value.absent(),
     this.species = const Value.absent(),
     this.author = const Value.absent(),
-    this.avatar = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
     this.dataSource = const Value.absent(),
     this.externalId = const Value.absent(),
+    this.externalAvatarUrl = const Value.absent(),
     this.year = const Value.absent(),
     this.bibliography = const Value.absent(),
   });
@@ -1091,10 +799,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     this.genus = const Value.absent(),
     required String species,
     this.author = const Value.absent(),
-    this.avatar = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
     this.dataSource = const Value.absent(),
     this.externalId = const Value.absent(),
+    this.externalAvatarUrl = const Value.absent(),
     this.year = const Value.absent(),
     this.bibliography = const Value.absent(),
   })  : scientificName = Value(scientificName),
@@ -1106,10 +813,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     Expression<String>? genus,
     Expression<String>? species,
     Expression<String>? author,
-    Expression<int>? avatar,
-    Expression<String>? avatarUrl,
     Expression<String>? dataSource,
     Expression<String>? externalId,
+    Expression<String>? externalAvatarUrl,
     Expression<int>? year,
     Expression<String>? bibliography,
   }) {
@@ -1120,10 +826,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       if (genus != null) 'genus': genus,
       if (species != null) 'species': species,
       if (author != null) 'author': author,
-      if (avatar != null) 'avatar': avatar,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
       if (dataSource != null) 'data_source': dataSource,
       if (externalId != null) 'external_id': externalId,
+      if (externalAvatarUrl != null) 'external_avatar_url': externalAvatarUrl,
       if (year != null) 'year': year,
       if (bibliography != null) 'bibliography': bibliography,
     });
@@ -1136,10 +841,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       Value<String?>? genus,
       Value<String>? species,
       Value<String?>? author,
-      Value<int?>? avatar,
-      Value<String?>? avatarUrl,
       Value<SpeciesDataSource>? dataSource,
       Value<String?>? externalId,
+      Value<String?>? externalAvatarUrl,
       Value<int?>? year,
       Value<String?>? bibliography}) {
     return SpeciesCompanion(
@@ -1149,10 +853,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
       genus: genus ?? this.genus,
       species: species ?? this.species,
       author: author ?? this.author,
-      avatar: avatar ?? this.avatar,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
       dataSource: dataSource ?? this.dataSource,
       externalId: externalId ?? this.externalId,
+      externalAvatarUrl: externalAvatarUrl ?? this.externalAvatarUrl,
       year: year ?? this.year,
       bibliography: bibliography ?? this.bibliography,
     );
@@ -1179,18 +882,15 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
     if (author.present) {
       map['author'] = Variable<String>(author.value);
     }
-    if (avatar.present) {
-      map['avatar'] = Variable<int>(avatar.value);
-    }
-    if (avatarUrl.present) {
-      map['avatar_url'] = Variable<String>(avatarUrl.value);
-    }
     if (dataSource.present) {
       map['data_source'] = Variable<String>(
           $SpeciesTable.$converterdataSource.toSql(dataSource.value));
     }
     if (externalId.present) {
       map['external_id'] = Variable<String>(externalId.value);
+    }
+    if (externalAvatarUrl.present) {
+      map['external_avatar_url'] = Variable<String>(externalAvatarUrl.value);
     }
     if (year.present) {
       map['year'] = Variable<int>(year.value);
@@ -1210,10 +910,9 @@ class SpeciesCompanion extends UpdateCompanion<Specy> {
           ..write('genus: $genus, ')
           ..write('species: $species, ')
           ..write('author: $author, ')
-          ..write('avatar: $avatar, ')
-          ..write('avatarUrl: $avatarUrl, ')
           ..write('dataSource: $dataSource, ')
           ..write('externalId: $externalId, ')
+          ..write('externalAvatarUrl: $externalAvatarUrl, ')
           ..write('year: $year, ')
           ..write('bibliography: $bibliography')
           ..write(')'))
@@ -1271,16 +970,6 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'REFERENCES species (id) ON DELETE CASCADE'));
-  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
-  @override
-  late final GeneratedColumn<int> avatar = GeneratedColumn<int>(
-      'avatar', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES images (id) ON DELETE SET NULL'));
-  static const VerificationMeta _avatarModeMeta =
-      const VerificationMeta('avatarMode');
   @override
   late final GeneratedColumnWithTypeConverter<AvatarMode, String> avatarMode =
       GeneratedColumn<String>('avatar_mode', aliasedName, false,
@@ -1290,7 +979,7 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
           .withConverter<AvatarMode>($PlantsTable.$converteravatarMode);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, startDate, note, createdAt, species, avatar, avatarMode];
+      [id, name, startDate, note, createdAt, species, avatarMode];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1328,11 +1017,6 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
     } else if (isInserting) {
       context.missing(_speciesMeta);
     }
-    if (data.containsKey('avatar')) {
-      context.handle(_avatarMeta,
-          avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
-    }
-    context.handle(_avatarModeMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1354,8 +1038,6 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
       species: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}species'])!,
-      avatar: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}avatar']),
       avatarMode: $PlantsTable.$converteravatarMode.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}avatar_mode'])!),
@@ -1378,7 +1060,6 @@ class Plant extends DataClass implements Insertable<Plant> {
   final String? note;
   final DateTime? createdAt;
   final int species;
-  final int? avatar;
   final AvatarMode avatarMode;
   const Plant(
       {required this.id,
@@ -1387,7 +1068,6 @@ class Plant extends DataClass implements Insertable<Plant> {
       this.note,
       this.createdAt,
       required this.species,
-      this.avatar,
       required this.avatarMode});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1404,9 +1084,6 @@ class Plant extends DataClass implements Insertable<Plant> {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
     map['species'] = Variable<int>(species);
-    if (!nullToAbsent || avatar != null) {
-      map['avatar'] = Variable<int>(avatar);
-    }
     {
       map['avatar_mode'] =
           Variable<String>($PlantsTable.$converteravatarMode.toSql(avatarMode));
@@ -1426,8 +1103,6 @@ class Plant extends DataClass implements Insertable<Plant> {
           ? const Value.absent()
           : Value(createdAt),
       species: Value(species),
-      avatar:
-          avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
       avatarMode: Value(avatarMode),
     );
   }
@@ -1442,7 +1117,6 @@ class Plant extends DataClass implements Insertable<Plant> {
       note: serializer.fromJson<String?>(json['note']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       species: serializer.fromJson<int>(json['species']),
-      avatar: serializer.fromJson<int?>(json['avatar']),
       avatarMode: $PlantsTable.$converteravatarMode
           .fromJson(serializer.fromJson<String>(json['avatarMode'])),
     );
@@ -1457,7 +1131,6 @@ class Plant extends DataClass implements Insertable<Plant> {
       'note': serializer.toJson<String?>(note),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'species': serializer.toJson<int>(species),
-      'avatar': serializer.toJson<int?>(avatar),
       'avatarMode': serializer
           .toJson<String>($PlantsTable.$converteravatarMode.toJson(avatarMode)),
     };
@@ -1470,7 +1143,6 @@ class Plant extends DataClass implements Insertable<Plant> {
           Value<String?> note = const Value.absent(),
           Value<DateTime?> createdAt = const Value.absent(),
           int? species,
-          Value<int?> avatar = const Value.absent(),
           AvatarMode? avatarMode}) =>
       Plant(
         id: id ?? this.id,
@@ -1479,7 +1151,6 @@ class Plant extends DataClass implements Insertable<Plant> {
         note: note.present ? note.value : this.note,
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
         species: species ?? this.species,
-        avatar: avatar.present ? avatar.value : this.avatar,
         avatarMode: avatarMode ?? this.avatarMode,
       );
   Plant copyWithCompanion(PlantsCompanion data) {
@@ -1490,7 +1161,6 @@ class Plant extends DataClass implements Insertable<Plant> {
       note: data.note.present ? data.note.value : this.note,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       species: data.species.present ? data.species.value : this.species,
-      avatar: data.avatar.present ? data.avatar.value : this.avatar,
       avatarMode:
           data.avatarMode.present ? data.avatarMode.value : this.avatarMode,
     );
@@ -1505,15 +1175,14 @@ class Plant extends DataClass implements Insertable<Plant> {
           ..write('note: $note, ')
           ..write('createdAt: $createdAt, ')
           ..write('species: $species, ')
-          ..write('avatar: $avatar, ')
           ..write('avatarMode: $avatarMode')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, name, startDate, note, createdAt, species, avatar, avatarMode);
+  int get hashCode =>
+      Object.hash(id, name, startDate, note, createdAt, species, avatarMode);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1524,7 +1193,6 @@ class Plant extends DataClass implements Insertable<Plant> {
           other.note == this.note &&
           other.createdAt == this.createdAt &&
           other.species == this.species &&
-          other.avatar == this.avatar &&
           other.avatarMode == this.avatarMode);
 }
 
@@ -1535,7 +1203,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
   final Value<String?> note;
   final Value<DateTime?> createdAt;
   final Value<int> species;
-  final Value<int?> avatar;
   final Value<AvatarMode> avatarMode;
   const PlantsCompanion({
     this.id = const Value.absent(),
@@ -1544,7 +1211,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.species = const Value.absent(),
-    this.avatar = const Value.absent(),
     this.avatarMode = const Value.absent(),
   });
   PlantsCompanion.insert({
@@ -1554,7 +1220,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
     required int species,
-    this.avatar = const Value.absent(),
     this.avatarMode = const Value.absent(),
   })  : name = Value(name),
         species = Value(species);
@@ -1565,7 +1230,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     Expression<String>? note,
     Expression<DateTime>? createdAt,
     Expression<int>? species,
-    Expression<int>? avatar,
     Expression<String>? avatarMode,
   }) {
     return RawValuesInsertable({
@@ -1575,7 +1239,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       if (note != null) 'note': note,
       if (createdAt != null) 'created_at': createdAt,
       if (species != null) 'species': species,
-      if (avatar != null) 'avatar': avatar,
       if (avatarMode != null) 'avatar_mode': avatarMode,
     });
   }
@@ -1587,7 +1250,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       Value<String?>? note,
       Value<DateTime?>? createdAt,
       Value<int>? species,
-      Value<int?>? avatar,
       Value<AvatarMode>? avatarMode}) {
     return PlantsCompanion(
       id: id ?? this.id,
@@ -1596,7 +1258,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       note: note ?? this.note,
       createdAt: createdAt ?? this.createdAt,
       species: species ?? this.species,
-      avatar: avatar ?? this.avatar,
       avatarMode: avatarMode ?? this.avatarMode,
     );
   }
@@ -1622,9 +1283,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     if (species.present) {
       map['species'] = Variable<int>(species.value);
     }
-    if (avatar.present) {
-      map['avatar'] = Variable<int>(avatar.value);
-    }
     if (avatarMode.present) {
       map['avatar_mode'] = Variable<String>(
           $PlantsTable.$converteravatarMode.toSql(avatarMode.value));
@@ -1641,7 +1299,6 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
           ..write('note: $note, ')
           ..write('createdAt: $createdAt, ')
           ..write('species: $species, ')
-          ..write('avatar: $avatar, ')
           ..write('avatarMode: $avatarMode')
           ..write(')'))
         .toString();
@@ -2589,8 +2246,6 @@ class $RemindersTable extends Reminders
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _frequencyUnitMeta =
-      const VerificationMeta('frequencyUnit');
   @override
   late final GeneratedColumnWithTypeConverter<FrequencyUnit, String>
       frequencyUnit = GeneratedColumn<String>(
@@ -2604,8 +2259,6 @@ class $RemindersTable extends Reminders
   late final GeneratedColumn<int> frequencyQuantity = GeneratedColumn<int>(
       'frequency_quantity', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _repeatAfterUnitMeta =
-      const VerificationMeta('repeatAfterUnit');
   @override
   late final GeneratedColumnWithTypeConverter<FrequencyUnit, String>
       repeatAfterUnit = GeneratedColumn<String>(
@@ -2683,7 +2336,6 @@ class $RemindersTable extends Reminders
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
     }
-    context.handle(_frequencyUnitMeta, const VerificationResult.success());
     if (data.containsKey('frequency_quantity')) {
       context.handle(
           _frequencyQuantityMeta,
@@ -2692,7 +2344,6 @@ class $RemindersTable extends Reminders
     } else if (isInserting) {
       context.missing(_frequencyQuantityMeta);
     }
-    context.handle(_repeatAfterUnitMeta, const VerificationResult.success());
     if (data.containsKey('repeat_after_quantity')) {
       context.handle(
           _repeatAfterQuantityMeta,
@@ -3135,6 +2786,445 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   }
 }
 
+class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _imageUrlMeta =
+      const VerificationMeta('imageUrl');
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+      'image_url', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 256),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 250),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _plantIdMeta =
+      const VerificationMeta('plantId');
+  @override
+  late final GeneratedColumn<int> plantId = GeneratedColumn<int>(
+      'plant_id', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES plants (id)'));
+  static const VerificationMeta _speciesIdMeta =
+      const VerificationMeta('speciesId');
+  @override
+  late final GeneratedColumn<int> speciesId = GeneratedColumn<int>(
+      'species_id', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES species (id)'));
+  static const VerificationMeta _isAvatarMeta =
+      const VerificationMeta('isAvatar');
+  @override
+  late final GeneratedColumn<bool> isAvatar = GeneratedColumn<bool>(
+      'is_avatar', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_avatar" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        imagePath,
+        imageUrl,
+        description,
+        createdAt,
+        plantId,
+        speciesId,
+        isAvatar
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'images';
+  @override
+  VerificationContext validateIntegrity(Insertable<Image> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(_imageUrlMeta,
+          imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('plant_id')) {
+      context.handle(_plantIdMeta,
+          plantId.isAcceptableOrUnknown(data['plant_id']!, _plantIdMeta));
+    }
+    if (data.containsKey('species_id')) {
+      context.handle(_speciesIdMeta,
+          speciesId.isAcceptableOrUnknown(data['species_id']!, _speciesIdMeta));
+    }
+    if (data.containsKey('is_avatar')) {
+      context.handle(_isAvatarMeta,
+          isAvatar.isAcceptableOrUnknown(data['is_avatar']!, _isAvatarMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Image(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path']),
+      imageUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_url']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
+      plantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}plant_id']),
+      speciesId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}species_id']),
+      isAvatar: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_avatar'])!,
+    );
+  }
+
+  @override
+  $ImagesTable createAlias(String alias) {
+    return $ImagesTable(attachedDatabase, alias);
+  }
+}
+
+class Image extends DataClass implements Insertable<Image> {
+  final int id;
+  final String? imagePath;
+  final String? imageUrl;
+  final String? description;
+  final DateTime? createdAt;
+  final int? plantId;
+  final int? speciesId;
+  final bool isAvatar;
+  const Image(
+      {required this.id,
+      this.imagePath,
+      this.imageUrl,
+      this.description,
+      this.createdAt,
+      this.plantId,
+      this.speciesId,
+      required this.isAvatar});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || imagePath != null) {
+      map['image_path'] = Variable<String>(imagePath);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || plantId != null) {
+      map['plant_id'] = Variable<int>(plantId);
+    }
+    if (!nullToAbsent || speciesId != null) {
+      map['species_id'] = Variable<int>(speciesId);
+    }
+    map['is_avatar'] = Variable<bool>(isAvatar);
+    return map;
+  }
+
+  ImagesCompanion toCompanion(bool nullToAbsent) {
+    return ImagesCompanion(
+      id: Value(id),
+      imagePath: imagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imagePath),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      plantId: plantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plantId),
+      speciesId: speciesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(speciesId),
+      isAvatar: Value(isAvatar),
+    );
+  }
+
+  factory Image.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Image(
+      id: serializer.fromJson<int>(json['id']),
+      imagePath: serializer.fromJson<String?>(json['imagePath']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      description: serializer.fromJson<String?>(json['description']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      plantId: serializer.fromJson<int?>(json['plantId']),
+      speciesId: serializer.fromJson<int?>(json['speciesId']),
+      isAvatar: serializer.fromJson<bool>(json['isAvatar']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'imagePath': serializer.toJson<String?>(imagePath),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'description': serializer.toJson<String?>(description),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'plantId': serializer.toJson<int?>(plantId),
+      'speciesId': serializer.toJson<int?>(speciesId),
+      'isAvatar': serializer.toJson<bool>(isAvatar),
+    };
+  }
+
+  Image copyWith(
+          {int? id,
+          Value<String?> imagePath = const Value.absent(),
+          Value<String?> imageUrl = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          Value<DateTime?> createdAt = const Value.absent(),
+          Value<int?> plantId = const Value.absent(),
+          Value<int?> speciesId = const Value.absent(),
+          bool? isAvatar}) =>
+      Image(
+        id: id ?? this.id,
+        imagePath: imagePath.present ? imagePath.value : this.imagePath,
+        imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+        description: description.present ? description.value : this.description,
+        createdAt: createdAt.present ? createdAt.value : this.createdAt,
+        plantId: plantId.present ? plantId.value : this.plantId,
+        speciesId: speciesId.present ? speciesId.value : this.speciesId,
+        isAvatar: isAvatar ?? this.isAvatar,
+      );
+  Image copyWithCompanion(ImagesCompanion data) {
+    return Image(
+      id: data.id.present ? data.id.value : this.id,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      description:
+          data.description.present ? data.description.value : this.description,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      plantId: data.plantId.present ? data.plantId.value : this.plantId,
+      speciesId: data.speciesId.present ? data.speciesId.value : this.speciesId,
+      isAvatar: data.isAvatar.present ? data.isAvatar.value : this.isAvatar,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Image(')
+          ..write('id: $id, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('description: $description, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('plantId: $plantId, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('isAvatar: $isAvatar')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, imagePath, imageUrl, description,
+      createdAt, plantId, speciesId, isAvatar);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Image &&
+          other.id == this.id &&
+          other.imagePath == this.imagePath &&
+          other.imageUrl == this.imageUrl &&
+          other.description == this.description &&
+          other.createdAt == this.createdAt &&
+          other.plantId == this.plantId &&
+          other.speciesId == this.speciesId &&
+          other.isAvatar == this.isAvatar);
+}
+
+class ImagesCompanion extends UpdateCompanion<Image> {
+  final Value<int> id;
+  final Value<String?> imagePath;
+  final Value<String?> imageUrl;
+  final Value<String?> description;
+  final Value<DateTime?> createdAt;
+  final Value<int?> plantId;
+  final Value<int?> speciesId;
+  final Value<bool> isAvatar;
+  const ImagesCompanion({
+    this.id = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.description = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.plantId = const Value.absent(),
+    this.speciesId = const Value.absent(),
+    this.isAvatar = const Value.absent(),
+  });
+  ImagesCompanion.insert({
+    this.id = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.description = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.plantId = const Value.absent(),
+    this.speciesId = const Value.absent(),
+    this.isAvatar = const Value.absent(),
+  });
+  static Insertable<Image> custom({
+    Expression<int>? id,
+    Expression<String>? imagePath,
+    Expression<String>? imageUrl,
+    Expression<String>? description,
+    Expression<DateTime>? createdAt,
+    Expression<int>? plantId,
+    Expression<int>? speciesId,
+    Expression<bool>? isAvatar,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (imagePath != null) 'image_path': imagePath,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (description != null) 'description': description,
+      if (createdAt != null) 'created_at': createdAt,
+      if (plantId != null) 'plant_id': plantId,
+      if (speciesId != null) 'species_id': speciesId,
+      if (isAvatar != null) 'is_avatar': isAvatar,
+    });
+  }
+
+  ImagesCompanion copyWith(
+      {Value<int>? id,
+      Value<String?>? imagePath,
+      Value<String?>? imageUrl,
+      Value<String?>? description,
+      Value<DateTime?>? createdAt,
+      Value<int?>? plantId,
+      Value<int?>? speciesId,
+      Value<bool>? isAvatar}) {
+    return ImagesCompanion(
+      id: id ?? this.id,
+      imagePath: imagePath ?? this.imagePath,
+      imageUrl: imageUrl ?? this.imageUrl,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      plantId: plantId ?? this.plantId,
+      speciesId: speciesId ?? this.speciesId,
+      isAvatar: isAvatar ?? this.isAvatar,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (plantId.present) {
+      map['plant_id'] = Variable<int>(plantId.value);
+    }
+    if (speciesId.present) {
+      map['species_id'] = Variable<int>(speciesId.value);
+    }
+    if (isAvatar.present) {
+      map['is_avatar'] = Variable<bool>(isAvatar.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImagesCompanion(')
+          ..write('id: $id, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('description: $description, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('plantId: $plantId, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('isAvatar: $isAvatar')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $UserSettingsTable extends UserSettings
     with TableInfo<$UserSettingsTable, UserSetting> {
   @override
@@ -3331,7 +3421,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $EventTypesTable eventTypes = $EventTypesTable(this);
-  late final $ImagesTable images = $ImagesTable(this);
   late final $SpeciesTable species = $SpeciesTable(this);
   late final $PlantsTable plants = $PlantsTable(this);
   late final $SpeciesSynonymsTable speciesSynonyms =
@@ -3339,6 +3428,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SpeciesCareTable speciesCare = $SpeciesCareTable(this);
   late final $EventsTable events = $EventsTable(this);
   late final $RemindersTable reminders = $RemindersTable(this);
+  late final $ImagesTable images = $ImagesTable(this);
   late final $UserSettingsTable userSettings = $UserSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -3346,37 +3436,23 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         eventTypes,
-        images,
         species,
         plants,
         speciesSynonyms,
         speciesCare,
         events,
         reminders,
+        images,
         userSettings
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
           WritePropagation(
-            on: TableUpdateQuery.onTableName('images',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('species', kind: UpdateKind.update),
-            ],
-          ),
-          WritePropagation(
             on: TableUpdateQuery.onTableName('species',
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('plants', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('images',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('plants', kind: UpdateKind.update),
             ],
           ),
           WritePropagation(
@@ -3758,303 +3834,6 @@ typedef $$EventTypesTableProcessedTableManager = ProcessedTableManager<
     (EventType, $$EventTypesTableReferences),
     EventType,
     PrefetchHooks Function({bool eventsRefs, bool remindersRefs})>;
-typedef $$ImagesTableCreateCompanionBuilder = ImagesCompanion Function({
-  Value<int> id,
-  required String base64,
-  Value<String?> description,
-  Value<DateTime?> createdAt,
-});
-typedef $$ImagesTableUpdateCompanionBuilder = ImagesCompanion Function({
-  Value<int> id,
-  Value<String> base64,
-  Value<String?> description,
-  Value<DateTime?> createdAt,
-});
-
-final class $$ImagesTableReferences
-    extends BaseReferences<_$AppDatabase, $ImagesTable, Image> {
-  $$ImagesTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$SpeciesTable, List<Specy>> _speciesRefsTable(
-          _$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.species,
-          aliasName: $_aliasNameGenerator(db.images.id, db.species.avatar));
-
-  $$SpeciesTableProcessedTableManager get speciesRefs {
-    final manager = $$SpeciesTableTableManager($_db, $_db.species)
-        .filter((f) => f.avatar.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_speciesRefsTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-
-  static MultiTypedResultKey<$PlantsTable, List<Plant>> _plantsRefsTable(
-          _$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.plants,
-          aliasName: $_aliasNameGenerator(db.images.id, db.plants.avatar));
-
-  $$PlantsTableProcessedTableManager get plantsRefs {
-    final manager = $$PlantsTableTableManager($_db, $_db.plants)
-        .filter((f) => f.avatar.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_plantsRefsTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-}
-
-class $$ImagesTableFilterComposer
-    extends Composer<_$AppDatabase, $ImagesTable> {
-  $$ImagesTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get base64 => $composableBuilder(
-      column: $table.base64, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
-
-  Expression<bool> speciesRefs(
-      Expression<bool> Function($$SpeciesTableFilterComposer f) f) {
-    final $$SpeciesTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.species,
-        getReferencedColumn: (t) => t.avatar,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$SpeciesTableFilterComposer(
-              $db: $db,
-              $table: $db.species,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<bool> plantsRefs(
-      Expression<bool> Function($$PlantsTableFilterComposer f) f) {
-    final $$PlantsTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.plants,
-        getReferencedColumn: (t) => t.avatar,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PlantsTableFilterComposer(
-              $db: $db,
-              $table: $db.plants,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-}
-
-class $$ImagesTableOrderingComposer
-    extends Composer<_$AppDatabase, $ImagesTable> {
-  $$ImagesTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get base64 => $composableBuilder(
-      column: $table.base64, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
-}
-
-class $$ImagesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ImagesTable> {
-  $$ImagesTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get base64 =>
-      $composableBuilder(column: $table.base64, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  Expression<T> speciesRefs<T extends Object>(
-      Expression<T> Function($$SpeciesTableAnnotationComposer a) f) {
-    final $$SpeciesTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.species,
-        getReferencedColumn: (t) => t.avatar,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$SpeciesTableAnnotationComposer(
-              $db: $db,
-              $table: $db.species,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<T> plantsRefs<T extends Object>(
-      Expression<T> Function($$PlantsTableAnnotationComposer a) f) {
-    final $$PlantsTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.plants,
-        getReferencedColumn: (t) => t.avatar,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PlantsTableAnnotationComposer(
-              $db: $db,
-              $table: $db.plants,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-}
-
-class $$ImagesTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $ImagesTable,
-    Image,
-    $$ImagesTableFilterComposer,
-    $$ImagesTableOrderingComposer,
-    $$ImagesTableAnnotationComposer,
-    $$ImagesTableCreateCompanionBuilder,
-    $$ImagesTableUpdateCompanionBuilder,
-    (Image, $$ImagesTableReferences),
-    Image,
-    PrefetchHooks Function({bool speciesRefs, bool plantsRefs})> {
-  $$ImagesTableTableManager(_$AppDatabase db, $ImagesTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$ImagesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ImagesTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ImagesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> base64 = const Value.absent(),
-            Value<String?> description = const Value.absent(),
-            Value<DateTime?> createdAt = const Value.absent(),
-          }) =>
-              ImagesCompanion(
-            id: id,
-            base64: base64,
-            description: description,
-            createdAt: createdAt,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String base64,
-            Value<String?> description = const Value.absent(),
-            Value<DateTime?> createdAt = const Value.absent(),
-          }) =>
-              ImagesCompanion.insert(
-            id: id,
-            base64: base64,
-            description: description,
-            createdAt: createdAt,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) =>
-                  (e.readTable(table), $$ImagesTableReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: ({speciesRefs = false, plantsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (speciesRefs) db.species,
-                if (plantsRefs) db.plants
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (speciesRefs)
-                    await $_getPrefetchedData<Image, $ImagesTable, Specy>(
-                        currentTable: table,
-                        referencedTable:
-                            $$ImagesTableReferences._speciesRefsTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$ImagesTableReferences(db, table, p0).speciesRefs,
-                        referencedItemsForCurrentItem: (item,
-                                referencedItems) =>
-                            referencedItems.where((e) => e.avatar == item.id),
-                        typedResults: items),
-                  if (plantsRefs)
-                    await $_getPrefetchedData<Image, $ImagesTable, Plant>(
-                        currentTable: table,
-                        referencedTable:
-                            $$ImagesTableReferences._plantsRefsTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$ImagesTableReferences(db, table, p0).plantsRefs,
-                        referencedItemsForCurrentItem: (item,
-                                referencedItems) =>
-                            referencedItems.where((e) => e.avatar == item.id),
-                        typedResults: items)
-                ];
-              },
-            );
-          },
-        ));
-}
-
-typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $ImagesTable,
-    Image,
-    $$ImagesTableFilterComposer,
-    $$ImagesTableOrderingComposer,
-    $$ImagesTableAnnotationComposer,
-    $$ImagesTableCreateCompanionBuilder,
-    $$ImagesTableUpdateCompanionBuilder,
-    (Image, $$ImagesTableReferences),
-    Image,
-    PrefetchHooks Function({bool speciesRefs, bool plantsRefs})>;
 typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
   Value<int> id,
   required String scientificName,
@@ -4062,10 +3841,9 @@ typedef $$SpeciesTableCreateCompanionBuilder = SpeciesCompanion Function({
   Value<String?> genus,
   required String species,
   Value<String?> author,
-  Value<int?> avatar,
-  Value<String?> avatarUrl,
   Value<SpeciesDataSource> dataSource,
   Value<String?> externalId,
+  Value<String?> externalAvatarUrl,
   Value<int?> year,
   Value<String?> bibliography,
 });
@@ -4076,10 +3854,9 @@ typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
   Value<String?> genus,
   Value<String> species,
   Value<String?> author,
-  Value<int?> avatar,
-  Value<String?> avatarUrl,
   Value<SpeciesDataSource> dataSource,
   Value<String?> externalId,
+  Value<String?> externalAvatarUrl,
   Value<int?> year,
   Value<String?> bibliography,
 });
@@ -4087,20 +3864,6 @@ typedef $$SpeciesTableUpdateCompanionBuilder = SpeciesCompanion Function({
 final class $$SpeciesTableReferences
     extends BaseReferences<_$AppDatabase, $SpeciesTable, Specy> {
   $$SpeciesTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $ImagesTable _avatarTable(_$AppDatabase db) => db.images
-      .createAlias($_aliasNameGenerator(db.species.avatar, db.images.id));
-
-  $$ImagesTableProcessedTableManager? get avatar {
-    final $_column = $_itemColumn<int>('avatar');
-    if ($_column == null) return null;
-    final manager = $$ImagesTableTableManager($_db, $_db.images)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_avatarTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
 
   static MultiTypedResultKey<$PlantsTable, List<Plant>> _plantsRefsTable(
           _$AppDatabase db) =>
@@ -4147,6 +3910,20 @@ final class $$SpeciesTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$ImagesTable, List<Image>> _imagesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.images,
+          aliasName: $_aliasNameGenerator(db.species.id, db.images.speciesId));
+
+  $$ImagesTableProcessedTableManager get imagesRefs {
+    final manager = $$ImagesTableTableManager($_db, $_db.images)
+        .filter((f) => f.speciesId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_imagesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$SpeciesTableFilterComposer
@@ -4177,9 +3954,6 @@ class $$SpeciesTableFilterComposer
   ColumnFilters<String> get author => $composableBuilder(
       column: $table.author, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get avatarUrl => $composableBuilder(
-      column: $table.avatarUrl, builder: (column) => ColumnFilters(column));
-
   ColumnWithTypeConverterFilters<SpeciesDataSource, SpeciesDataSource, String>
       get dataSource => $composableBuilder(
           column: $table.dataSource,
@@ -4188,31 +3962,15 @@ class $$SpeciesTableFilterComposer
   ColumnFilters<String> get externalId => $composableBuilder(
       column: $table.externalId, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get externalAvatarUrl => $composableBuilder(
+      column: $table.externalAvatarUrl,
+      builder: (column) => ColumnFilters(column));
+
   ColumnFilters<int> get year => $composableBuilder(
       column: $table.year, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get bibliography => $composableBuilder(
       column: $table.bibliography, builder: (column) => ColumnFilters(column));
-
-  $$ImagesTableFilterComposer get avatar {
-    final $$ImagesTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableFilterComposer(
-              $db: $db,
-              $table: $db.images,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 
   Expression<bool> plantsRefs(
       Expression<bool> Function($$PlantsTableFilterComposer f) f) {
@@ -4276,6 +4034,27 @@ class $$SpeciesTableFilterComposer
             ));
     return f(composer);
   }
+
+  Expression<bool> imagesRefs(
+      Expression<bool> Function($$ImagesTableFilterComposer f) f) {
+    final $$ImagesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.speciesId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableFilterComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$SpeciesTableOrderingComposer
@@ -4306,14 +4085,15 @@ class $$SpeciesTableOrderingComposer
   ColumnOrderings<String> get author => $composableBuilder(
       column: $table.author, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get avatarUrl => $composableBuilder(
-      column: $table.avatarUrl, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get dataSource => $composableBuilder(
       column: $table.dataSource, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get externalId => $composableBuilder(
       column: $table.externalId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get externalAvatarUrl => $composableBuilder(
+      column: $table.externalAvatarUrl,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get year => $composableBuilder(
       column: $table.year, builder: (column) => ColumnOrderings(column));
@@ -4321,26 +4101,6 @@ class $$SpeciesTableOrderingComposer
   ColumnOrderings<String> get bibliography => $composableBuilder(
       column: $table.bibliography,
       builder: (column) => ColumnOrderings(column));
-
-  $$ImagesTableOrderingComposer get avatar {
-    final $$ImagesTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableOrderingComposer(
-              $db: $db,
-              $table: $db.images,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$SpeciesTableAnnotationComposer
@@ -4370,9 +4130,6 @@ class $$SpeciesTableAnnotationComposer
   GeneratedColumn<String> get author =>
       $composableBuilder(column: $table.author, builder: (column) => column);
 
-  GeneratedColumn<String> get avatarUrl =>
-      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<SpeciesDataSource, String> get dataSource =>
       $composableBuilder(
           column: $table.dataSource, builder: (column) => column);
@@ -4380,31 +4137,14 @@ class $$SpeciesTableAnnotationComposer
   GeneratedColumn<String> get externalId => $composableBuilder(
       column: $table.externalId, builder: (column) => column);
 
+  GeneratedColumn<String> get externalAvatarUrl => $composableBuilder(
+      column: $table.externalAvatarUrl, builder: (column) => column);
+
   GeneratedColumn<int> get year =>
       $composableBuilder(column: $table.year, builder: (column) => column);
 
   GeneratedColumn<String> get bibliography => $composableBuilder(
       column: $table.bibliography, builder: (column) => column);
-
-  $$ImagesTableAnnotationComposer get avatar {
-    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableAnnotationComposer(
-              $db: $db,
-              $table: $db.images,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 
   Expression<T> plantsRefs<T extends Object>(
       Expression<T> Function($$PlantsTableAnnotationComposer a) f) {
@@ -4468,6 +4208,27 @@ class $$SpeciesTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> imagesRefs<T extends Object>(
+      Expression<T> Function($$ImagesTableAnnotationComposer a) f) {
+    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.speciesId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$SpeciesTableTableManager extends RootTableManager<
@@ -4482,10 +4243,10 @@ class $$SpeciesTableTableManager extends RootTableManager<
     (Specy, $$SpeciesTableReferences),
     Specy,
     PrefetchHooks Function(
-        {bool avatar,
-        bool plantsRefs,
+        {bool plantsRefs,
         bool speciesSynonymsRefs,
-        bool speciesCareRefs})> {
+        bool speciesCareRefs,
+        bool imagesRefs})> {
   $$SpeciesTableTableManager(_$AppDatabase db, $SpeciesTable table)
       : super(TableManagerState(
           db: db,
@@ -4503,10 +4264,9 @@ class $$SpeciesTableTableManager extends RootTableManager<
             Value<String?> genus = const Value.absent(),
             Value<String> species = const Value.absent(),
             Value<String?> author = const Value.absent(),
-            Value<int?> avatar = const Value.absent(),
-            Value<String?> avatarUrl = const Value.absent(),
             Value<SpeciesDataSource> dataSource = const Value.absent(),
             Value<String?> externalId = const Value.absent(),
+            Value<String?> externalAvatarUrl = const Value.absent(),
             Value<int?> year = const Value.absent(),
             Value<String?> bibliography = const Value.absent(),
           }) =>
@@ -4517,10 +4277,9 @@ class $$SpeciesTableTableManager extends RootTableManager<
             genus: genus,
             species: species,
             author: author,
-            avatar: avatar,
-            avatarUrl: avatarUrl,
             dataSource: dataSource,
             externalId: externalId,
+            externalAvatarUrl: externalAvatarUrl,
             year: year,
             bibliography: bibliography,
           ),
@@ -4531,10 +4290,9 @@ class $$SpeciesTableTableManager extends RootTableManager<
             Value<String?> genus = const Value.absent(),
             required String species,
             Value<String?> author = const Value.absent(),
-            Value<int?> avatar = const Value.absent(),
-            Value<String?> avatarUrl = const Value.absent(),
             Value<SpeciesDataSource> dataSource = const Value.absent(),
             Value<String?> externalId = const Value.absent(),
+            Value<String?> externalAvatarUrl = const Value.absent(),
             Value<int?> year = const Value.absent(),
             Value<String?> bibliography = const Value.absent(),
           }) =>
@@ -4545,10 +4303,9 @@ class $$SpeciesTableTableManager extends RootTableManager<
             genus: genus,
             species: species,
             author: author,
-            avatar: avatar,
-            avatarUrl: avatarUrl,
             dataSource: dataSource,
             externalId: externalId,
+            externalAvatarUrl: externalAvatarUrl,
             year: year,
             bibliography: bibliography,
           ),
@@ -4557,42 +4314,19 @@ class $$SpeciesTableTableManager extends RootTableManager<
                   (e.readTable(table), $$SpeciesTableReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {avatar = false,
-              plantsRefs = false,
+              {plantsRefs = false,
               speciesSynonymsRefs = false,
-              speciesCareRefs = false}) {
+              speciesCareRefs = false,
+              imagesRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (plantsRefs) db.plants,
                 if (speciesSynonymsRefs) db.speciesSynonyms,
-                if (speciesCareRefs) db.speciesCare
+                if (speciesCareRefs) db.speciesCare,
+                if (imagesRefs) db.images
               ],
-              addJoins: <
-                  T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic>>(state) {
-                if (avatar) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.avatar,
-                    referencedTable: $$SpeciesTableReferences._avatarTable(db),
-                    referencedColumn:
-                        $$SpeciesTableReferences._avatarTable(db).id,
-                  ) as T;
-                }
-
-                return state;
-              },
+              addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (plantsRefs)
@@ -4631,6 +4365,17 @@ class $$SpeciesTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.species == item.id),
+                        typedResults: items),
+                  if (imagesRefs)
+                    await $_getPrefetchedData<Specy, $SpeciesTable, Image>(
+                        currentTable: table,
+                        referencedTable:
+                            $$SpeciesTableReferences._imagesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$SpeciesTableReferences(db, table, p0).imagesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.speciesId == item.id),
                         typedResults: items)
                 ];
               },
@@ -4651,10 +4396,10 @@ typedef $$SpeciesTableProcessedTableManager = ProcessedTableManager<
     (Specy, $$SpeciesTableReferences),
     Specy,
     PrefetchHooks Function(
-        {bool avatar,
-        bool plantsRefs,
+        {bool plantsRefs,
         bool speciesSynonymsRefs,
-        bool speciesCareRefs})>;
+        bool speciesCareRefs,
+        bool imagesRefs})>;
 typedef $$PlantsTableCreateCompanionBuilder = PlantsCompanion Function({
   Value<int> id,
   required String name,
@@ -4662,7 +4407,6 @@ typedef $$PlantsTableCreateCompanionBuilder = PlantsCompanion Function({
   Value<String?> note,
   Value<DateTime?> createdAt,
   required int species,
-  Value<int?> avatar,
   Value<AvatarMode> avatarMode,
 });
 typedef $$PlantsTableUpdateCompanionBuilder = PlantsCompanion Function({
@@ -4672,7 +4416,6 @@ typedef $$PlantsTableUpdateCompanionBuilder = PlantsCompanion Function({
   Value<String?> note,
   Value<DateTime?> createdAt,
   Value<int> species,
-  Value<int?> avatar,
   Value<AvatarMode> avatarMode,
 });
 
@@ -4689,20 +4432,6 @@ final class $$PlantsTableReferences
     final manager = $$SpeciesTableTableManager($_db, $_db.species)
         .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_speciesTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-
-  static $ImagesTable _avatarTable(_$AppDatabase db) => db.images
-      .createAlias($_aliasNameGenerator(db.plants.avatar, db.images.id));
-
-  $$ImagesTableProcessedTableManager? get avatar {
-    final $_column = $_itemColumn<int>('avatar');
-    if ($_column == null) return null;
-    final manager = $$ImagesTableTableManager($_db, $_db.images)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_avatarTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -4732,6 +4461,20 @@ final class $$PlantsTableReferences
         .filter((f) => f.plant.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_remindersRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$ImagesTable, List<Image>> _imagesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.images,
+          aliasName: $_aliasNameGenerator(db.plants.id, db.images.plantId));
+
+  $$ImagesTableProcessedTableManager get imagesRefs {
+    final manager = $$ImagesTableTableManager($_db, $_db.images)
+        .filter((f) => f.plantId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_imagesRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -4786,26 +4529,6 @@ class $$PlantsTableFilterComposer
     return composer;
   }
 
-  $$ImagesTableFilterComposer get avatar {
-    final $$ImagesTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableFilterComposer(
-              $db: $db,
-              $table: $db.images,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
   Expression<bool> eventsRefs(
       Expression<bool> Function($$EventsTableFilterComposer f) f) {
     final $$EventsTableFilterComposer composer = $composerBuilder(
@@ -4840,6 +4563,27 @@ class $$PlantsTableFilterComposer
             $$RemindersTableFilterComposer(
               $db: $db,
               $table: $db.reminders,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> imagesRefs(
+      Expression<bool> Function($$ImagesTableFilterComposer f) f) {
+    final $$ImagesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.plantId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableFilterComposer(
+              $db: $db,
+              $table: $db.images,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4888,26 +4632,6 @@ class $$PlantsTableOrderingComposer
             $$SpeciesTableOrderingComposer(
               $db: $db,
               $table: $db.species,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
-  $$ImagesTableOrderingComposer get avatar {
-    final $$ImagesTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableOrderingComposer(
-              $db: $db,
-              $table: $db.images,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4965,26 +4689,6 @@ class $$PlantsTableAnnotationComposer
     return composer;
   }
 
-  $$ImagesTableAnnotationComposer get avatar {
-    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.avatar,
-        referencedTable: $db.images,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ImagesTableAnnotationComposer(
-              $db: $db,
-              $table: $db.images,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
-
   Expression<T> eventsRefs<T extends Object>(
       Expression<T> Function($$EventsTableAnnotationComposer a) f) {
     final $$EventsTableAnnotationComposer composer = $composerBuilder(
@@ -5026,6 +4730,27 @@ class $$PlantsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> imagesRefs<T extends Object>(
+      Expression<T> Function($$ImagesTableAnnotationComposer a) f) {
+    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.plantId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$PlantsTableTableManager extends RootTableManager<
@@ -5040,7 +4765,7 @@ class $$PlantsTableTableManager extends RootTableManager<
     (Plant, $$PlantsTableReferences),
     Plant,
     PrefetchHooks Function(
-        {bool species, bool avatar, bool eventsRefs, bool remindersRefs})> {
+        {bool species, bool eventsRefs, bool remindersRefs, bool imagesRefs})> {
   $$PlantsTableTableManager(_$AppDatabase db, $PlantsTable table)
       : super(TableManagerState(
           db: db,
@@ -5058,7 +4783,6 @@ class $$PlantsTableTableManager extends RootTableManager<
             Value<String?> note = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
             Value<int> species = const Value.absent(),
-            Value<int?> avatar = const Value.absent(),
             Value<AvatarMode> avatarMode = const Value.absent(),
           }) =>
               PlantsCompanion(
@@ -5068,7 +4792,6 @@ class $$PlantsTableTableManager extends RootTableManager<
             note: note,
             createdAt: createdAt,
             species: species,
-            avatar: avatar,
             avatarMode: avatarMode,
           ),
           createCompanionCallback: ({
@@ -5078,7 +4801,6 @@ class $$PlantsTableTableManager extends RootTableManager<
             Value<String?> note = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
             required int species,
-            Value<int?> avatar = const Value.absent(),
             Value<AvatarMode> avatarMode = const Value.absent(),
           }) =>
               PlantsCompanion.insert(
@@ -5088,7 +4810,6 @@ class $$PlantsTableTableManager extends RootTableManager<
             note: note,
             createdAt: createdAt,
             species: species,
-            avatar: avatar,
             avatarMode: avatarMode,
           ),
           withReferenceMapper: (p0) => p0
@@ -5097,14 +4818,15 @@ class $$PlantsTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {species = false,
-              avatar = false,
               eventsRefs = false,
-              remindersRefs = false}) {
+              remindersRefs = false,
+              imagesRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (eventsRefs) db.events,
-                if (remindersRefs) db.reminders
+                if (remindersRefs) db.reminders,
+                if (imagesRefs) db.images
               ],
               addJoins: <
                   T extends TableManagerState<
@@ -5126,15 +4848,6 @@ class $$PlantsTableTableManager extends RootTableManager<
                     referencedTable: $$PlantsTableReferences._speciesTable(db),
                     referencedColumn:
                         $$PlantsTableReferences._speciesTable(db).id,
-                  ) as T;
-                }
-                if (avatar) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.avatar,
-                    referencedTable: $$PlantsTableReferences._avatarTable(db),
-                    referencedColumn:
-                        $$PlantsTableReferences._avatarTable(db).id,
                   ) as T;
                 }
 
@@ -5164,6 +4877,17 @@ class $$PlantsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.plant == item.id),
+                        typedResults: items),
+                  if (imagesRefs)
+                    await $_getPrefetchedData<Plant, $PlantsTable, Image>(
+                        currentTable: table,
+                        referencedTable:
+                            $$PlantsTableReferences._imagesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$PlantsTableReferences(db, table, p0).imagesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.plantId == item.id),
                         typedResults: items)
                 ];
               },
@@ -5184,7 +4908,7 @@ typedef $$PlantsTableProcessedTableManager = ProcessedTableManager<
     (Plant, $$PlantsTableReferences),
     Plant,
     PrefetchHooks Function(
-        {bool species, bool avatar, bool eventsRefs, bool remindersRefs})>;
+        {bool species, bool eventsRefs, bool remindersRefs, bool imagesRefs})>;
 typedef $$SpeciesSynonymsTableCreateCompanionBuilder = SpeciesSynonymsCompanion
     Function({
   Value<int> id,
@@ -6502,6 +6226,389 @@ typedef $$RemindersTableProcessedTableManager = ProcessedTableManager<
     (Reminder, $$RemindersTableReferences),
     Reminder,
     PrefetchHooks Function({bool type, bool plant})>;
+typedef $$ImagesTableCreateCompanionBuilder = ImagesCompanion Function({
+  Value<int> id,
+  Value<String?> imagePath,
+  Value<String?> imageUrl,
+  Value<String?> description,
+  Value<DateTime?> createdAt,
+  Value<int?> plantId,
+  Value<int?> speciesId,
+  Value<bool> isAvatar,
+});
+typedef $$ImagesTableUpdateCompanionBuilder = ImagesCompanion Function({
+  Value<int> id,
+  Value<String?> imagePath,
+  Value<String?> imageUrl,
+  Value<String?> description,
+  Value<DateTime?> createdAt,
+  Value<int?> plantId,
+  Value<int?> speciesId,
+  Value<bool> isAvatar,
+});
+
+final class $$ImagesTableReferences
+    extends BaseReferences<_$AppDatabase, $ImagesTable, Image> {
+  $$ImagesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlantsTable _plantIdTable(_$AppDatabase db) => db.plants
+      .createAlias($_aliasNameGenerator(db.images.plantId, db.plants.id));
+
+  $$PlantsTableProcessedTableManager? get plantId {
+    final $_column = $_itemColumn<int>('plant_id');
+    if ($_column == null) return null;
+    final manager = $$PlantsTableTableManager($_db, $_db.plants)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_plantIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $SpeciesTable _speciesIdTable(_$AppDatabase db) => db.species
+      .createAlias($_aliasNameGenerator(db.images.speciesId, db.species.id));
+
+  $$SpeciesTableProcessedTableManager? get speciesId {
+    final $_column = $_itemColumn<int>('species_id');
+    if ($_column == null) return null;
+    final manager = $$SpeciesTableTableManager($_db, $_db.species)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_speciesIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$ImagesTableFilterComposer
+    extends Composer<_$AppDatabase, $ImagesTable> {
+  $$ImagesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+      column: $table.imageUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isAvatar => $composableBuilder(
+      column: $table.isAvatar, builder: (column) => ColumnFilters(column));
+
+  $$PlantsTableFilterComposer get plantId {
+    final $$PlantsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.plantId,
+        referencedTable: $db.plants,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PlantsTableFilterComposer(
+              $db: $db,
+              $table: $db.plants,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$SpeciesTableFilterComposer get speciesId {
+    final $$SpeciesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.speciesId,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableFilterComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ImagesTable> {
+  $$ImagesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+      column: $table.imageUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isAvatar => $composableBuilder(
+      column: $table.isAvatar, builder: (column) => ColumnOrderings(column));
+
+  $$PlantsTableOrderingComposer get plantId {
+    final $$PlantsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.plantId,
+        referencedTable: $db.plants,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PlantsTableOrderingComposer(
+              $db: $db,
+              $table: $db.plants,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$SpeciesTableOrderingComposer get speciesId {
+    final $$SpeciesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.speciesId,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableOrderingComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ImagesTable> {
+  $$ImagesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isAvatar =>
+      $composableBuilder(column: $table.isAvatar, builder: (column) => column);
+
+  $$PlantsTableAnnotationComposer get plantId {
+    final $$PlantsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.plantId,
+        referencedTable: $db.plants,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PlantsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.plants,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$SpeciesTableAnnotationComposer get speciesId {
+    final $$SpeciesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.speciesId,
+        referencedTable: $db.species,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SpeciesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.species,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ImagesTable,
+    Image,
+    $$ImagesTableFilterComposer,
+    $$ImagesTableOrderingComposer,
+    $$ImagesTableAnnotationComposer,
+    $$ImagesTableCreateCompanionBuilder,
+    $$ImagesTableUpdateCompanionBuilder,
+    (Image, $$ImagesTableReferences),
+    Image,
+    PrefetchHooks Function({bool plantId, bool speciesId})> {
+  $$ImagesTableTableManager(_$AppDatabase db, $ImagesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImagesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImagesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImagesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String?> imagePath = const Value.absent(),
+            Value<String?> imageUrl = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<DateTime?> createdAt = const Value.absent(),
+            Value<int?> plantId = const Value.absent(),
+            Value<int?> speciesId = const Value.absent(),
+            Value<bool> isAvatar = const Value.absent(),
+          }) =>
+              ImagesCompanion(
+            id: id,
+            imagePath: imagePath,
+            imageUrl: imageUrl,
+            description: description,
+            createdAt: createdAt,
+            plantId: plantId,
+            speciesId: speciesId,
+            isAvatar: isAvatar,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String?> imagePath = const Value.absent(),
+            Value<String?> imageUrl = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<DateTime?> createdAt = const Value.absent(),
+            Value<int?> plantId = const Value.absent(),
+            Value<int?> speciesId = const Value.absent(),
+            Value<bool> isAvatar = const Value.absent(),
+          }) =>
+              ImagesCompanion.insert(
+            id: id,
+            imagePath: imagePath,
+            imageUrl: imageUrl,
+            description: description,
+            createdAt: createdAt,
+            plantId: plantId,
+            speciesId: speciesId,
+            isAvatar: isAvatar,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$ImagesTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({plantId = false, speciesId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (plantId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.plantId,
+                    referencedTable: $$ImagesTableReferences._plantIdTable(db),
+                    referencedColumn:
+                        $$ImagesTableReferences._plantIdTable(db).id,
+                  ) as T;
+                }
+                if (speciesId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.speciesId,
+                    referencedTable:
+                        $$ImagesTableReferences._speciesIdTable(db),
+                    referencedColumn:
+                        $$ImagesTableReferences._speciesIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ImagesTable,
+    Image,
+    $$ImagesTableFilterComposer,
+    $$ImagesTableOrderingComposer,
+    $$ImagesTableAnnotationComposer,
+    $$ImagesTableCreateCompanionBuilder,
+    $$ImagesTableUpdateCompanionBuilder,
+    (Image, $$ImagesTableReferences),
+    Image,
+    PrefetchHooks Function({bool plantId, bool speciesId})>;
 typedef $$UserSettingsTableCreateCompanionBuilder = UserSettingsCompanion
     Function({
   required String key,
@@ -6636,8 +6743,6 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$EventTypesTableTableManager get eventTypes =>
       $$EventTypesTableTableManager(_db, _db.eventTypes);
-  $$ImagesTableTableManager get images =>
-      $$ImagesTableTableManager(_db, _db.images);
   $$SpeciesTableTableManager get species =>
       $$SpeciesTableTableManager(_db, _db.species);
   $$PlantsTableTableManager get plants =>
@@ -6650,6 +6755,8 @@ class $AppDatabaseManager {
       $$EventsTableTableManager(_db, _db.events);
   $$RemindersTableTableManager get reminders =>
       $$RemindersTableTableManager(_db, _db.reminders);
+  $$ImagesTableTableManager get images =>
+      $$ImagesTableTableManager(_db, _db.images);
   $$UserSettingsTableTableManager get userSettings =>
       $$UserSettingsTableTableManager(_db, _db.userSettings);
 }

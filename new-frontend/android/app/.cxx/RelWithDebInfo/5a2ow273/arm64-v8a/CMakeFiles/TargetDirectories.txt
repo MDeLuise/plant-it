@@ -1,0 +1,2 @@
+/Users/massimiliano.deluise/dev/plant-it/new-frontend/android/app/.cxx/RelWithDebInfo/5a2ow273/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/massimiliano.deluise/dev/plant-it/new-frontend/android/app/.cxx/RelWithDebInfo/5a2ow273/arm64-v8a/CMakeFiles/rebuild_cache.dir

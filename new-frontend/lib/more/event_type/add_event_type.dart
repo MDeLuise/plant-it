@@ -1,6 +1,6 @@
-import 'package:alert_info/alert_info.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
+import 'package:plant_it/app_pages.dart';
 import 'package:plant_it/color_banner.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
@@ -49,112 +49,91 @@ class _AddEventTypePageState extends State<AddEventTypePage> {
 
       try {
         await widget.env.eventTypeRepository.insert(event);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Event added successfully')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Event added successfully',
-          typeInfo: TypeInfo.success,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(context, FeedbackLevel.success, "Event added successfully", null);
         Navigator.pop(context, true);
       } catch (e) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Error adding event')),
-        // );
-        AlertInfo.show(
-          context: context,
-          text: 'Error adding event',
-          typeInfo: TypeInfo.success,
-          duration: 5,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          textColor: Theme.of(context).colorScheme.onSurface,
-        );
+        showSnackbar(context, FeedbackLevel.error, "Error adding event", null);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Add Event Type')),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: _openIconSelector,
-                              child: CircleAvatar(
-                                radius: 24,
-                                child: Icon(
-                                  appIcons[_selectedIcon],
-                                  color:
-                                      Theme.of(context).colorScheme.surfaceDim,
-                                ),
-                                backgroundColor: hexToColor(_selectedColor),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _nameController,
-                                decoration:
-                                    const InputDecoration(labelText: 'Name'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter an event name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
+    return AppPage(
+      title: 'Add a new event type',
+      mainActionBtn: LoadingButton(
+        "Create",
+        _saveEvent,
+      ),
+      closeOnBack: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Icon
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: _openIconSelector,
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: hexToColor(_selectedColor),
+                        child: Icon(
+                          appIcons[_selectedIcon],
+                          color: Theme.of(context).colorScheme.surfaceDim,
                         ),
-                        const SizedBox(height: 30),
-                        ColorBanner(context, (c) {
-                          String toSet =
-                              colorToHex(Theme.of(context).colorScheme.primary);
-                          if (c != null) {
-                            toSet = colorToHex(c);
-                          }
-                          setState(() {
-                            _selectedColor = toSet;
-                          });
-                        }),
-                        const SizedBox(height: 30),
-                        TextFormField(
-                          controller: _descriptionController,
-                          decoration:
-                              const InputDecoration(labelText: 'Description'),
-                        ),
-                      ],
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+
+                // Name
+                const Text("Name"),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(hintText: 'i.e. watering'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an event name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+
+                // Color
+                const Text("Color"),
+                ColorBanner(context, (c) {
+                  String toSet =
+                      colorToHex(Theme.of(context).colorScheme.primary);
+                  if (c != null) {
+                    toSet = colorToHex(c);
+                  }
+                  setState(() {
+                    _selectedColor = toSet;
+                  });
+                }),
+                const SizedBox(height: 30),
+
+                // Description
+                const Text("Description"),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    hintText: 'i.e. Used to track water on plant',
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: LoadingButton(
-                  "Create Event Type",
-                  _saveEvent,
-                ),
-              ),
-            ],
-          );
-        },
+                const SizedBox(height: 30),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

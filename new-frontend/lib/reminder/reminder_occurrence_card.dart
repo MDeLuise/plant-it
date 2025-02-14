@@ -33,109 +33,96 @@ class _ReminderOccurrenceCardState extends State<ReminderOccurrenceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () => navigateTo(
-                context,
-                EditReminderPage(
-                    widget.env, widget.reminderOccurrence.reminder)),
-            child: Container(
-              decoration: BoxDecoration(
-                color: eventType.color != null
-                    ? adaptiveColor(context, hexToColor(eventType.color!))
-                    : adaptiveColor(
-                        context, Theme.of(context).colorScheme.primary),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  width: 2,
+    final Color eventColor = eventType.color != null
+        ? adaptiveColor(context, hexToColor(eventType.color!))
+        : adaptiveColor(context, Theme.of(context).colorScheme.primary);
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        GestureDetector(
+          onTap: () => navigateTo(context,
+              EditReminderPage(widget.env, widget.reminderOccurrence.reminder)),
+          child: Container(
+            decoration: BoxDecoration(
+              color: eventColor.withAlpha(150),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.shadow,
+                  blurRadius: 5,
+                  offset: const Offset(0, 0),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: adaptiveColor(context,
-                            Theme.of(context).colorScheme.onPrimaryContainer)
-                        .withOpacity(.2),
-                    blurRadius: 3,
-                    spreadRadius: 1,
-                    offset: const Offset(2, 2),
-                  ),
-                ],
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${eventType.name.substring(0, 1).toUpperCase()}${eventType.name.substring(1)} Reminder",
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Don't forget to ${eventType.name} your ${plant.name} every ${widget.reminderOccurrence.reminder.frequencyQuantity} ${widget.reminderOccurrence.reminder.frequencyUnit.name}.",
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .45,
-                        child: Container(
+              ],
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(10),
+                            color: eventColor,
+                            borderRadius: BorderRadius.circular(5),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  appIcons[eventType.icon],
-                                  size: 17,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  timeDiffStr(
-                                      widget.reminderOccurrence.nextOccurrence),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer,
-                                  ),
-                                ),
-                                const SizedBox(width: 2),
-                                const Text(" "),
-                                Expanded(
-                                  child: Text(
-                                    eventType.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimaryContainer,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 5),
+                            child: Text(timeDiffStr(
+                                widget.reminderOccurrence.nextOccurrence)),
                           ),
                         ),
-                      )
-                    ],
-                  )),
-            ),
+                        const SizedBox(height: 10),
+                        Text(
+                          plant.name,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Text("Frequency: ",
+                                style: TextStyle(fontWeight: FontWeight.w300)),
+                            Text(
+                              "every ${widget.reminderOccurrence.reminder.frequencyQuantity} ${widget.reminderOccurrence.reminder.frequencyUnit.name}",
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("Event type: ",
+                                style: TextStyle(fontWeight: FontWeight.w300)),
+                            Text(
+                              eventType.name,
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: eventColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: Icon(appIcons[eventType.icon!]),
+                      ),
+                    ),
+                  ],
+                )),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
