@@ -69,7 +69,7 @@ String _buildTimeString(int value, String unit, bool isFuture) {
 }
 
 Color adaptiveColor(BuildContext context, Color color) {
-  bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
   if (isDarkMode) {
     return darkenColor(color, .12);

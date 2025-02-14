@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -33,6 +32,9 @@ class _EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
+    final Color eventColor = eventType.color != null
+        ? adaptiveColor(context, hexToColor(eventType.color!))
+        : adaptiveColor(context, Theme.of(context).primaryColor);
     return Column(
       children: [
         GestureDetector(
@@ -40,51 +42,48 @@ class _EventCardState extends State<EventCard> {
               navigateTo(context, EditEventScreen(widget.env, widget.event)),
           child: Container(
             decoration: BoxDecoration(
-              color: eventType.color != null
-                  ? adaptiveColor(context, hexToColor(eventType.color!))
-                  : adaptiveColor(
-                      context, Theme.of(context).colorScheme.primary),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(15),
+              color: eventColor.withAlpha(150),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: adaptiveColor(context,
-                          Theme.of(context).colorScheme.onPrimaryContainer)
-                      .withOpacity(.2),
-                  blurRadius: 3,
-                  spreadRadius: 1,
-                  offset: const Offset(2, 2),
+                  color: Theme.of(context).colorScheme.shadow,
+                  blurRadius: 5,
+                  offset: const Offset(0, 0),
                 ),
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Icon(appIcons[eventType.icon!]),
-                      const SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(formatDate(widget.event.date)),
                           Text(
                             plant.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "${formatDate(widget.event.date)} (${timeDiffStr(widget.event.date)})",
+                            style: const TextStyle(fontWeight: FontWeight.w300),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  Text(
-                    timeDiffStr(widget.event.date),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: eventColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(appIcons[eventType.icon!]),
+                    ),
                   ),
                 ],
               ),

@@ -298,7 +298,6 @@ class _CollapsableState extends State<Collapsable> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -306,7 +305,7 @@ class _CollapsableState extends State<Collapsable> {
             title: Text(widget.title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).primaryColor,
                 )),
             trailing: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
             onTap: _toggleCollapse,

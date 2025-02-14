@@ -35,10 +35,6 @@ class _SearchPageState extends State<SearchPage> {
   ];
   String? _floraCodexApiKey;
 
-  bool _isFilterActive() {
-    return _filteredDataSource.length != _enabledDataSource.length;
-  }
-
   void _clearSearch() {
     _searchController.clear();
     _fetchSpecies('');
@@ -48,6 +44,7 @@ class _SearchPageState extends State<SearchPage> {
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (BuildContext context) {
         return SearchFilter(widget.env, ((dataSources) async {
           final SpeciesFetcherFacade newSpeciesFetcherFacade =
@@ -145,95 +142,116 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Search"),
-        actions: [
-          Stack(
+    return Column(
+      children: [
+        const SizedBox(height: 60),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
             children: [
-              IconButton(
-                onPressed: _showFilterDialog,
-                icon: const Icon(LucideIcons.filter),
-              ),
-              if (_isFilterActive())
-                Positioned(
-                  right: 8,
-                  top: 8,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
-                    width: 8,
-                    height: 8,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.shadow,
+                          blurRadius: 10,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: "i.e. Strelitzia nicolai",
+                        prefixIcon: const Icon(LucideIcons.search),
+                        suffixIcon: SizedBox(
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: _showFilterDialog,
+                                icon:
+                                    const Icon(LucideIcons.sliders_horizontal),
+                              ),
+                              ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: _searchController,
+                                builder: (context, value, child) {
+                                  return value.text.isNotEmpty
+                                      ? IconButton(
+                                          icon:
+                                              const Icon(LucideIcons.circle_x),
+                                          onPressed: _clearSearch,
+                                        )
+                                      : const SizedBox();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 10,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  onPressed: () => navigateTo(
+                      context,
+                      AddSpeciesPage(
+                        widget.env,
+                        name: _searchController.text,
+                      )),
+                  icon: const Icon(LucideIcons.plus),
+                ),
+              ),
             ],
           ),
-          IconButton(
-            onPressed: () => navigateTo(
-                context,
-                AddSpeciesPage(
-                  widget.env,
-                  name: _searchController.text,
-                )),
-            icon: const Icon(LucideIcons.plus),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: "Search new green friends",
-                  prefixIcon: const Icon(LucideIcons.search),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(LucideIcons.x),
-                          onPressed: _clearSearch,
-                        )
-                      : null,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : _fetched.isEmpty
-                      ? const Center(
-                          child: Text("No results found."),
-                        )
-                      : ListView.builder(
-                          itemCount: _fetched.length,
-                          itemBuilder: (context, index) {
-                            return SearchSpeciesCard(
-                              widget.env,
-                              _fetched[index],
-                              _speciesFetcherFacade,
-                              key: UniqueKey(),
-                            );
-                          },
-                        ),
-            ),
-          ],
         ),
-      ),
+        Expanded(
+          child: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : _fetched.isEmpty
+                  ? const Center(
+                      child: Text("No results found."),
+                    )
+                  : ListView.builder(
+                      itemCount: _fetched.length,
+                      itemBuilder: (context, index) {
+                        return SearchSpeciesCard(
+                          widget.env,
+                          _fetched[index],
+                          _speciesFetcherFacade,
+                          key: UniqueKey(),
+                        );
+                      },
+                    ),
+        ),
+      ],
     );
   }
 }

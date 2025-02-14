@@ -2,6 +2,7 @@ import 'package:alert_info/alert_info.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:plant_it/app_pages.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:flutter/material.dart';
@@ -122,210 +123,129 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
 
     // Once loading is complete, display the UI
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Event"),
+    return AppPage(
+      title: "Add new events",
+      mainActionBtn: LoadingButton(
+        'Save',
+        _saveEvent,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Form(
+            key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(height: 4),
-                      MultiDropdown<EventType>(
-                        items: events,
-                        controller: eventController,
-                        enabled: true,
-                        searchEnabled: true,
-                        chipDecoration: ChipDecoration(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          wrap: true,
-                          runSpacing: 2,
-                          spacing: 10,
-                          labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        fieldDecoration: FieldDecoration(
-                          hintText: 'Events',
-                          // hintStyle: TextStyle(
-                          //     color: Theme.of(context).colorScheme.primary),
-                          prefixIcon: const Icon(LucideIcons.glass_water),
-                          showClearIcon: false,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .grey, // Theme.of(context).colorScheme.primary),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          labelStyle: const TextStyle(color: Colors.black),
-                        ),
-                        dropdownDecoration: DropdownDecoration(
-                          marginTop: 2,
-                          maxHeight: 500,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          header: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(
-                              'Select events from the list',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        dropdownItemDecoration: DropdownItemDecoration(
-                          selectedIcon: Icon(Icons.check_box,
-                              color: Theme.of(context).colorScheme.surfaceDim),
-                          textColor: Theme.of(context).colorScheme.onPrimary,
-                          selectedBackgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          selectedTextColor:
-                              Theme.of(context).colorScheme.onSecondary,
-                        ),
-                        searchDecoration: const SearchFieldDecoration(
-                          searchIcon: Icon(LucideIcons.search),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select an event';
-                          }
-                          return null;
-                        },
-                        onSelectionChange: (selectedItems) {
-                          debugPrint("OnSelectionChange: $selectedItems");
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      MultiDropdown<Plant>(
-                        items: plants,
-                        controller: plantController,
-                        enabled: true,
-                        searchEnabled: true,
-                        chipDecoration: ChipDecoration(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          wrap: true,
-                          runSpacing: 2,
-                          spacing: 10,
-                          labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        fieldDecoration: FieldDecoration(
-                          hintText: 'Plants',
-                          prefixIcon: const Icon(LucideIcons.leaf),
-                          showClearIcon: false,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .grey, // Theme.of(context).colorScheme.primary),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          labelStyle: const TextStyle(color: Colors.black),
-                        ),
-                        dropdownDecoration: DropdownDecoration(
-                          marginTop: 2,
-                          maxHeight: 500,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          header: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(
-                              'Select plants from the list',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        dropdownItemDecoration: DropdownItemDecoration(
-                          selectedIcon: Icon(Icons.check_box,
-                              color: Theme.of(context).colorScheme.surfaceDim),
-                          textColor: Theme.of(context).colorScheme.onPrimary,
-                          selectedBackgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          selectedTextColor:
-                              Theme.of(context).colorScheme.onSecondary,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a plant';
-                          }
-                          return null;
-                        },
-                        onSelectionChange: (selectedItems) {
-                          debugPrint("OnSelectionChange: $selectedItems");
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      // Date picker
-                      TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          hintText: "Date",
-                          prefixIcon: const Icon(Icons.calendar_today),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        controller: TextEditingController(
-                          text: "${selectedDate.toLocal()}".split(' ')[0],
-                        ),
-                        onTap: () => _selectDate(context),
-                      ),
-                      const SizedBox(height: 20),
-                      // Note field
-                      TextFormField(
-                        controller: noteController,
-                        decoration: InputDecoration(
-                          hintText: "Note",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 40),
-                    ],
+                const SizedBox(height: 4),
+
+                // Event
+                Text("Events"),
+                MultiDropdown<EventType>(
+                  items: events,
+                  controller: eventController,
+                  enabled: true,
+                  searchEnabled: true,
+                  fieldDecoration: FieldDecoration(
+                    hintText: "i.e. watering, fertilizing",
+                    showClearIcon: false,
+                    suffixIcon: null,
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 1),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   ),
+                  dropdownDecoration: DropdownDecoration(
+                    maxHeight: 500,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
+                  ),
+                  searchDecoration: const SearchFieldDecoration(
+                    searchIcon: Icon(LucideIcons.search),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select an event';
+                    }
+                    return null;
+                  },
                 ),
-                LoadingButton(
-                  'Save Events',
-                  _saveEvent,
+                const SizedBox(height: 30),
+
+                // Plant
+                Text("Plants"),
+                MultiDropdown<Plant>(
+                  items: plants,
+                  controller: plantController,
+                  enabled: true,
+                  searchEnabled: true,
+                  fieldDecoration: FieldDecoration(
+                    hintText: "i.e. Monstera deliciosa",
+                    showClearIcon: false,
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 1),
+                    ),
+                    suffixIcon: null,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  ),
+                  dropdownDecoration: DropdownDecoration(
+                    maxHeight: 500,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    elevation: 2,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a plant';
+                    }
+                    return null;
+                  },
+                  onSelectionChange: (selectedItems) {
+                    debugPrint("OnSelectionChange: $selectedItems");
+                  },
                 ),
+                const SizedBox(height: 30),
+
+                // Date
+                Text("Date"),
+                TextFormField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 1),
+                    ),
+                  ),
+                  controller: TextEditingController(
+                    text: "${selectedDate.toLocal()}".split(' ')[0],
+                  ),
+                  onTap: () => _selectDate(context),
+                ),
+                const SizedBox(height: 30),
+
+                // Note
+                Text("Note"),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: noteController,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

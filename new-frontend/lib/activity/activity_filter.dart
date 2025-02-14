@@ -99,7 +99,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
       height: MediaQuery.of(context).size.height * .7,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,

@@ -19,17 +19,8 @@ class MorePage extends StatefulWidget {
 class _MorePageState extends State<MorePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("More"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(LucideIcons.circle_help),
-          ),
-        ],
-      ),
-      body: ListView(
+    return SafeArea(
+      child: ListView(
         children: [
           ListTile(
             title: const Text("Event Types"),

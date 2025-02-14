@@ -181,37 +181,206 @@ class _PlantPageState extends State<PlantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height * 0.6,
-            elevation: 0,
-            leading: IconButton(
-              // just to add shadow
-              icon: const Icon(
-                Icons.arrow_back,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    blurRadius: 20,
-                    offset: Offset(1, 1),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: MediaQuery.of(context).size.height * 0.6,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    decoration: BoxDecoration(
+                      image: _avatar,
+                      color: Theme.of(context).primaryColor.withAlpha(200),
+                    ),
                   ),
-                ],
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  image: _avatar,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(.7),
                 ),
               ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    color: Colors.transparent,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.plant.name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(color: Theme.of(context).primaryColor),
+                      ),
+                      GestureDetector(
+                        onTap: () => navigateTo(
+                            context,
+                            SpeciesPage(
+                                widget.env, _species!.toCompanion(true))),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _species?.scientificName ?? '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                            const SizedBox(width: 5),
+                            const Icon(LucideIcons.external_link, size: 10),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Info
+                      Text(
+                        'Information',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                          children: [
+                            TextSpan(
+                                text:
+                                    "${widget.plant.name} is a plant of the species "),
+                            TextSpan(
+                              text: _species?.species,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: ", genus "),
+                            TextSpan(
+                              text: _species?.genus,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: " and family "),
+                            TextSpan(
+                              text: _species?.family,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: "."),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Care
+                      Text(
+                        'Care',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          speciesCareInfoWidgets, 4, _isSpeciesCareLoading),
+                      const SizedBox(height: 16),
+
+                      // Reminder
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            'Reminders',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                          GestureDetector(
+                            onTap: () => navigateTo(context,
+                                ReminderListPage(widget.env, widget.plant)),
+                            child: Text("Edit"),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          plantReminderInfoWidgets, 6, _isPlantReminderLoading),
+                      const SizedBox(height: 16),
+
+                      // Events
+                      Text(
+                        'Events',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          plantEventInfoWidgets, 6, _isPlantEventLoading),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 45,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            actions: [
-              IconButton(
+          ),
+          Positioned(
+            top: 45,
+            right: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
                 onPressed: () {
                   showMenu(
                     context: context,
@@ -257,141 +426,8 @@ class _PlantPageState extends State<PlantPage> {
                 },
                 icon: const Icon(
                   LucideIcons.ellipsis_vertical,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black,
-                      blurRadius: 20,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+                  size: 18,
                 ),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.plant.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
-                  GestureDetector(
-                    onTap: () => navigateTo(context,
-                        SpeciesPage(widget.env, _species!.toCompanion(true))),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          _species?.scientificName ?? '',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontStyle: FontStyle.italic),
-                        ),
-                        const SizedBox(width: 5),
-                        const Icon(LucideIcons.external_link, size: 10),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Info
-                  Text(
-                    'Information',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyMedium!,
-                      children: [
-                        TextSpan(
-                            text:
-                                "${widget.plant.name} is a plant of the species "),
-                        TextSpan(
-                          text: _species?.species,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: ", genus "),
-                        TextSpan(
-                          text: _species?.genus,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: " and family "),
-                        TextSpan(
-                          text: _species?.family,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: "."),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Care
-                  Text(
-                    'Care',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      speciesCareInfoWidgets, 4, _isSpeciesCareLoading),
-                  const SizedBox(height: 16),
-
-                  // Reminder
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        'Reminders',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                                color: Theme.of(context).colorScheme.secondary),
-                      ),
-                      GestureDetector(
-                        onTap: () => navigateTo(context,
-                            ReminderListPage(widget.env, widget.plant)),
-                        child: Text("Edit"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      plantReminderInfoWidgets, 6, _isPlantReminderLoading),
-                  const SizedBox(height: 16),
-
-                  // Events
-                  Text(
-                    'Events',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(
-                      plantEventInfoWidgets, 6, _isPlantEventLoading),
-                  const SizedBox(height: 16),
-                ],
               ),
             ),
           ),
@@ -488,7 +524,7 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
         height: 230,
         slideIndicator: CircularSlideIndicator(
             slideIndicatorOptions: SlideIndicatorOptions(
-          currentIndicatorColor: Theme.of(context).colorScheme.primary,
+          currentIndicatorColor: Theme.of(context).primaryColor,
           indicatorBackgroundColor: Colors.grey.withOpacity(.5),
         )),
       ),

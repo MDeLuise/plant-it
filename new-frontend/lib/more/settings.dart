@@ -1,4 +1,5 @@
 import 'package:alert_info/alert_info.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/cache/cache.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/environment.dart';
@@ -31,18 +32,24 @@ class _SettingsState extends State<Settings> {
             leading: const Icon(Icons.notifications),
             onTap: () => navigateTo(context, NotificationSettings(widget.env)),
           ),
-          ListTile(
-            title: const Text("Database"),
-            subtitle: const Text("Import and Export options"),
-            leading: const Icon(Icons.storage),
-            onTap: () => navigateTo(context, const DatabaseSettings()),
-          ),
+          // ListTile(
+          //   title: const Text("Database"),
+          //   subtitle: const Text("Import and Export options"),
+          //   leading: const Icon(Icons.storage),
+          //   onTap: () => navigateTo(context, const DatabaseSettings()),
+          // ),
           // ListTile(
           //   title: const Text("Cache"),
           //   subtitle: const Text("Manage cache"),
           //   leading: const Icon(Icons.cached),
           //   onTap: () => navigateTo(context, CacheSettings(widget.env.cache)),
           // ),
+          ListTile(
+            title: const Text("Theme"),
+            subtitle: const Text("Theme options"),
+            leading: const Icon(LucideIcons.palette),
+            onTap: () => navigateTo(context, ThemeSettings(env: widget.env)),
+          ),
           ListTile(
             title: const Text("About Plant-it"),
             subtitle: const Text("Details about the app"),
@@ -164,91 +171,102 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 }
 
-class DatabaseSettings extends StatelessWidget {
-  const DatabaseSettings({super.key});
+// class DatabaseSettings extends StatelessWidget {
+//   const DatabaseSettings({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Database Settings"),
+//       ),
+//       body: ListView(
+//         children: [
+//           ListTile(
+//             title: const Text("Import Data"),
+//             leading: const Icon(Icons.file_upload),
+//             onTap: () async {
+//               // ScaffoldMessenger.of(context).showSnackBar(
+//               //   const SnackBar(content: Text("Import completed!")),
+//               // );
+//               AlertInfo.show(
+//                 context: context,
+//                 text: 'Import completed',
+//                 typeInfo: TypeInfo.info,
+//                 duration: 5,
+//                 backgroundColor: Theme.of(context).colorScheme.surface,
+//                 textColor: Theme.of(context).colorScheme.onSurface,
+//               );
+//             },
+//           ),
+//           ListTile(
+//             title: const Text("Export Data"),
+//             leading: const Icon(Icons.file_download),
+//             onTap: () async {
+//               // ScaffoldMessenger.of(context).showSnackBar(
+//               //   const SnackBar(content: Text("Export completed!")),
+//               // );
+//               AlertInfo.show(
+//                 context: context,
+//                 text: 'Export completed',
+//                 typeInfo: TypeInfo.info,
+//                 duration: 5,
+//                 backgroundColor: Theme.of(context).colorScheme.surface,
+//                 textColor: Theme.of(context).colorScheme.onSurface,
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// class CacheSettings extends StatelessWidget {
+//   final Cache cache;
+
+//   const CacheSettings(this.cache, {super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Cache Settings"),
+//       ),
+//       body: ListView(
+//         children: [
+//           ListTile(
+//             title: const Text("Clean Cache"),
+//             leading: const Icon(Icons.cleaning_services),
+//             onTap: () {
+//               cache.removeAll();
+//               // ScaffoldMessenger.of(context).showSnackBar(
+//               //   const SnackBar(content: Text("Cache cleaned!")),
+//               // );
+//               AlertInfo.show(
+//                 context: context,
+//                 text: 'Cache cleaned',
+//                 typeInfo: TypeInfo.success,
+//                 duration: 5,
+//                 backgroundColor: Theme.of(context).colorScheme.surface,
+//                 textColor: Theme.of(context).colorScheme.onSurface,
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class ThemeSettings extends StatelessWidget {
+  final Environment env;
+
+  const ThemeSettings({super.key, required this.env});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Database Settings"),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text("Import Data"),
-            leading: const Icon(Icons.file_upload),
-            onTap: () async {
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(content: Text("Import completed!")),
-              // );
-              AlertInfo.show(
-                context: context,
-                text: 'Import completed',
-                typeInfo: TypeInfo.info,
-                duration: 5,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                textColor: Theme.of(context).colorScheme.onSurface,
-              );
-            },
-          ),
-          ListTile(
-            title: const Text("Export Data"),
-            leading: const Icon(Icons.file_download),
-            onTap: () async {
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(content: Text("Export completed!")),
-              // );
-              AlertInfo.show(
-                context: context,
-                text: 'Export completed',
-                typeInfo: TypeInfo.info,
-                duration: 5,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                textColor: Theme.of(context).colorScheme.onSurface,
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CacheSettings extends StatelessWidget {
-  final Cache cache;
-
-  const CacheSettings(this.cache, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cache Settings"),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text("Clean Cache"),
-            leading: const Icon(Icons.cleaning_services),
-            onTap: () {
-              cache.removeAll();
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(content: Text("Cache cleaned!")),
-              // );
-              AlertInfo.show(
-                context: context,
-                text: 'Cache cleaned',
-                typeInfo: TypeInfo.success,
-                duration: 5,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                textColor: Theme.of(context).colorScheme.onSurface,
-              );
-            },
-          ),
-        ],
-      ),
-    );
+    return const SizedBox();
   }
 }
 

@@ -218,42 +218,232 @@ class _SpeciesPageState extends State<SpeciesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: MediaQuery.of(context).size.height * 0.6,
-            elevation: 0,
-            leading: IconButton(
-              // just to add shadow
-              icon: const Icon(
-                Icons.arrow_back,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    blurRadius: 20,
-                    offset: Offset(1, 1),
-                  ),
-                ],
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: _avatar ??
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey,
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: MediaQuery.of(context).size.height * 0.6,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: _avatar ??
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
                     ),
+                    color: Colors.transparent,
                   ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 8),
+                          child: Text(
+                            widget.species.dataSource.value.name,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Colors.white,
+                                    ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        widget.species.scientificName.value,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: TextButton(
+                          onPressed: () => navigateTo(context,
+                              AddPlantPage(widget.env, widget.species)),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.transparent),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                "Add to collection",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Info
+                      Text(
+                        'Information',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                          children: [
+                            TextSpan(
+                                text:
+                                    "${widget.species.scientificName.value} is a species "),
+                            const TextSpan(text: "of genus "),
+                            TextSpan(
+                              text: widget.species.genus.value,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: " and family "),
+                            TextSpan(
+                              text: widget.species.family.value,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const TextSpan(text: "."),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Care
+                      Text(
+                        'Care',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      const SizedBox(height: 8),
+                      _DynamicGridWidget(
+                          _speciesCareInfoWidgets, 4, _careLoading),
+                      const SizedBox(height: 16),
+
+                      if (_speciesSynonyms.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Synonyms',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                            ),
+                            const SizedBox(height: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('The species is also known as:'),
+                                ..._buildSynonymsList(),
+                                if (_speciesSynonyms.length > 5)
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showAllSynonyms = !_showAllSynonyms;
+                                      });
+                                    },
+                                    child: Text(
+                                      _showAllSynonyms
+                                          ? 'Show Less'
+                                          : 'Show More',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 45,
+            left: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            actions: [
-              IconButton(
+          ),
+          Positioned(
+            top: 45,
+            right: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 0),
+                    ),
+                  ]),
+              child: IconButton(
                 onPressed: () {
                   showMenu(
                     context: context,
@@ -275,8 +465,6 @@ class _SpeciesPageState extends State<SpeciesPage> {
                       ),
                       PopupMenuItem(
                         value: 'remove',
-                        enabled: widget.species.dataSource.value ==
-                            SpeciesDataSource.custom,
                         child: ListTile(
                           leading: const Icon(LucideIcons.trash),
                           title: Text('Remove'),
@@ -295,178 +483,8 @@ class _SpeciesPageState extends State<SpeciesPage> {
                 },
                 icon: const Icon(
                   LucideIcons.ellipsis_vertical,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black,
-                      blurRadius: 20,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+                  size: 18,
                 ),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 8),
-                      child: Text(
-                        widget.species.dataSource.value.name,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Theme.of(context).colorScheme.surfaceDim,
-                            ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    textBaseline: TextBaseline.ideographic,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.species.scientificName.value,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                  color: Theme.of(context).colorScheme.primary),
-                        ),
-                      ),
-                      TextButton(
-                          onPressed: () => navigateTo(context,
-                              AddPlantPage(widget.env, widget.species)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 20),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Add",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ),
-                                  Icon(LucideIcons.plus,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary),
-                                ],
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Info
-                  Text(
-                    'Information',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyMedium!,
-                      children: [
-                        TextSpan(
-                            text:
-                                "${widget.species.scientificName.value} is a species "),
-                        const TextSpan(text: "of genus "),
-                        TextSpan(
-                          text: widget.species.genus.value,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: " and family "),
-                        TextSpan(
-                          text: widget.species.family.value,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
-                        const TextSpan(text: "."),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Care
-                  Text(
-                    'Care',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: 8),
-                  _DynamicGridWidget(_speciesCareInfoWidgets, 4, _careLoading),
-                  const SizedBox(height: 16),
-
-                  if (_speciesSynonyms.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Synonyms',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                        ),
-                        const SizedBox(height: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('The species is also known as:'),
-                            ..._buildSynonymsList(),
-                            if (_speciesSynonyms.length > 5)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _showAllSynonyms = !_showAllSynonyms;
-                                  });
-                                },
-                                child: Text(
-                                  _showAllSynonyms ? 'Show Less' : 'Show More',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  const SizedBox(height: 16),
-                ],
               ),
             ),
           ),
@@ -563,7 +581,7 @@ class _DynamicGridWidgetState extends State<_DynamicGridWidget> {
         height: 230,
         slideIndicator: CircularSlideIndicator(
             slideIndicatorOptions: SlideIndicatorOptions(
-          currentIndicatorColor: Theme.of(context).colorScheme.primary,
+          currentIndicatorColor: Theme.of(context).primaryColor,
           indicatorBackgroundColor: Colors.grey.withOpacity(.5),
         )),
       ),

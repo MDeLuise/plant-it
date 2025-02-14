@@ -24,6 +24,7 @@ import 'package:plant_it/search/search_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:plant_it/theme.dart';
 import 'package:plant_it/trefle_import/background_download.dart';
 import 'package:plant_it/trefle_import/background_import.dart';
 import 'package:workmanager/workmanager.dart';
@@ -110,12 +111,6 @@ Future<void> _initializeNotifications() {
 class MyApp extends StatelessWidget {
   final Environment env;
 
-  static final _defaultLightColorScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.green);
-
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.green, brightness: Brightness.dark);
-
   const MyApp(this.env, {super.key});
 
   @override
@@ -123,14 +118,8 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: MyHomePage(env),
-        theme: ThemeData(
-          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-          useMaterial3: true,
-        ),
+        theme: getLightTheme(context),
+        darkTheme: getDarkTheme(context),
         themeMode: ThemeMode.system,
       );
     });
@@ -174,6 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBody: true,
       floatingActionButton: _currentPageIndex < 3
           ? FloatingActionButton(
               onPressed: _showAddEventScreen,
