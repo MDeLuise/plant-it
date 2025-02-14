@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/alert_box.dart';
+import 'package:plant_it/app_pages.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/icons.dart';
 import 'package:plant_it/more/event_type/add_event_type.dart';
 import 'package:plant_it/more/event_type/edit_event_type.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class EventTypeListPage extends StatefulWidget {
   final Environment env;
@@ -65,95 +65,81 @@ class _EventTypesListPageState extends State<EventTypeListPage> {
   }
 
   Future<dynamic> _confirmAndDelete(BuildContext context, int eventId) {
-    return QuickAlert.show(
+    return showDialog(
       context: context,
-      type: QuickAlertType.warning,
-      text: 'This will also delete all events of this type.',
-      confirmBtnText: 'Delete',
-      cancelBtnText: 'Cancel',
-      title: "Delete event type?",
-      confirmBtnColor: Colors.red,
-      showCancelBtn: true,
-      cancelBtnTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
+      builder: (context) => AlertBox(
+        icon: LucideIcons.circle_alert,
+        btnIcon: LucideIcons.trash,
+        color: Colors.red,
+        title: "Delete event type?",
+        message: "This will also delete all events of this type.",
+        onConfirm: () {
+          widget.env.eventTypeRepository.delete(eventId);
+          _fetchEvents();
+        },
+        isCancelVisible: true,
+        okText: "Remove",
       ),
-      textColor: Theme.of(context).colorScheme.onSurface,
-      titleColor: Theme.of(context).colorScheme.onSurface,
-      barrierColor: Theme.of(context).colorScheme.surface.withAlpha(200),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      onConfirmBtnTap: () {
-        widget.env.eventTypeRepository.delete(eventId);
-        _fetchEvents();
-        Navigator.of(context).pop(true);
-      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Types'),
-        actions: [
-          IconButton(
-            icon: const Icon(LucideIcons.plus),
-            onPressed: _navigateToAddEvent,
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _events.length,
-        itemBuilder: (context, index) {
-          final event = _events[index];
-          final eventIcon = event.icon;
-
+    return ListPage(
+      addEntityCallback: _navigateToAddEvent,
+      title: "Event Types",
+      child: Column(
+        children: _events.map((e) {
           return GestureDetector(
-            onTap: () => _navigateToEditEvent(context, event),
+            onTap: () => _navigateToEditEvent(context, e),
             child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              contentPadding: const EdgeInsets.symmetric(vertical: 8),
               leading: CircleAvatar(
                 radius: 24,
-                backgroundColor: event.color != null
-                    ? hexToColor(event.color!)
-                    : Theme.of(context).colorScheme.primary,
+                backgroundColor: e.color != null
+                    ? hexToColor(e.color!)
+                    : Theme.of(context).primaryColor,
                 child: Icon(
-                  appIcons[eventIcon],
+                  appIcons[e.icon],
                   color: Theme.of(context).colorScheme.surfaceDim,
                 ),
               ),
               title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          event.name,
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                        if (event.description != null &&
-                            event.description!.isNotEmpty)
-                          Text(
-                            event.description!,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14.0,
+                  Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(e.name),
+                          if (e.description != null &&
+                              e.description!.isNotEmpty)
+                            Text(
+                              e.description!,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.0,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () => _confirmAndDelete(context, e.id),
+                    child: Icon(
+                      LucideIcons.trash_2,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
               ),
-              trailing: GestureDetector(
-                onTap: () => _confirmAndDelete(context, event.id),
-                child: const Icon(LucideIcons.trash_2),
-              ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:plant_it/app_pages.dart';
 import 'package:plant_it/common.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
@@ -23,20 +24,20 @@ class DataSources extends StatefulWidget {
 class _DataSourcesState extends State<DataSources> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Data Sources"),
-      ),
-      body: ListView(
+    return AppPage(
+      title: "Data Sources",
+      child: Column(
         children: [
           ListTile(
             title: const Text("Trefle"),
-            subtitle: const Text("Configure the Trefle settings"),
+            subtitle: const Text("Configure the Trefle settings",
+                style: TextStyle(color: Colors.grey)),
             onTap: () => navigateTo(context, TrefleSettings(widget.env)),
           ),
           ListTile(
             title: const Text("Flora Codex"),
-            subtitle: const Text("Configure the Flora Codex settings"),
+            subtitle: const Text("Configure the Flora Codex settings",
+                style: TextStyle(color: Colors.grey)),
             onTap: () => navigateTo(context, FloraCodexSettings(widget.env)),
           ),
         ],
@@ -98,7 +99,7 @@ class _FloraCodexSettingsState extends State<FloraCodexSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flora Codex Settings'),
+        title: const Text('Flora Codex Settings'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,7 +107,7 @@ class _FloraCodexSettingsState extends State<FloraCodexSettings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SwitchListTile(
-              title: Text("Enable Data Source"),
+              title: const Text("Enable Data Source"),
               value: enableDataSource,
               onChanged: (e) {
                 setState(() {

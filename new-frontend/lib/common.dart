@@ -22,10 +22,11 @@ String colorToHex(Color color) {
 }
 
 Color hexToColor(String hexString) {
-  final buffer = StringBuffer();
-  if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-  buffer.write(hexString.replaceFirst('#', ''));
-  return Color(int.parse(buffer.toString(), radix: 16));
+  hexString = hexString.replaceAll('#', '');
+  if (hexString.length == 6) {
+    hexString = 'FF$hexString';
+  }
+  return Color(int.parse('0x$hexString'));
 }
 
 String formatDate(DateTime date) {
@@ -69,7 +70,7 @@ String _buildTimeString(int value, String unit, bool isFuture) {
 }
 
 Color adaptiveColor(BuildContext context, Color color) {
-  bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
   if (isDarkMode) {
     return darkenColor(color, .12);

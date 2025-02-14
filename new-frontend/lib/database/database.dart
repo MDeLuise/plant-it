@@ -226,8 +226,8 @@ class AppDatabase extends _$AppDatabase {
     await into(species).insertOnConflictUpdate(SpeciesCompanion.insert(
       id: const Value(1),
       scientificName: "Sedum palmeri",
-      genus: Value("sedum"),
-      family: Value("Crassulaceae"),
+      genus: const Value("sedum"),
+      family: const Value("Crassulaceae"),
       species: "Sedum palmeri",
       dataSource: const Value(SpeciesDataSource.custom),
     ));
