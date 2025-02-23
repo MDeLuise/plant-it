@@ -19,15 +19,15 @@
   "usernameSize": "Seu nome de usuário precisa ter entre 3 e 20 caracteres",
   "passwordSize": "Sua senha precisa ter entre 6 e 20 caracteres",
   "enterValidEmail": "Por favor, insira um endereço de e-mail válido",
-  "alreadyRegistered": "Já possui cadastrado?",
+  "alreadyRegistered": "Já possui cadastro?",
   "signup": "Cadastro",
   "generalError": "Erro ao realizar a operação",
   "error": "Erro",
   "details": "Detalhes",
   "insertBackendURL": "Olá Amigo! Vamos fazer a mágica acontecer, comece inserindo a URL do servidor",
   "loginTagline": "Explore, aprenda e cultive!",
-  "singupTagline": "Vamos crescer juntos!",
-  "sentOTPCode": "Por favor, insira o código enviado ao e-mail: ",
+  "singupTagline": "Vamos plantar juntos!",
+  "sentOTPCode": "Por favor, insira o código enviado ao seu e-mail: ",
   "verify": "Verificar",
   "resendCode": "Re-enviar código",
   "otpCode": "Código OTP",
@@ -35,7 +35,6 @@
   "welcomeBack": "Bem-vindo de volta",
   "hello": "Olá, {userName}",
   "@hello": {
-    "description": "Boas vindas ao usuário",
     "placeholders": {
       "userName": {
         "type": "String",
@@ -48,8 +47,7 @@
   "yesterday": "ontem",
   "nDaysAgo": "{count} {count, plural, =1{dia} other{dias}} atrás",
   "@nDaysAgo": {
-    "description": "Descreva quantos dias atrás aconteceu um evento",
-    "placeholders": {
+     "placeholders": {
       "count": {
         "type": "num",
         "format": "compact"
@@ -58,7 +56,6 @@
   },
   "nDaysInFuture": "{count} {count, plural, =1{dia} other{dias}} no futuro (quê?)",
   "@nDaysInFuture": {
-    "description": "Descreva em quantos dias acontecerá um evento",
     "placeholders": {
       "count": {
         "type": "num",
@@ -68,7 +65,6 @@
   },
   "nMonthsAgo": "{count} {count, plural, =1{mês} other{meses}} atrás",
   "@nMonthsAgo": {
-    "description": "Descreva quantos meses atrás aconteceu um evento",
     "placeholders": {
       "count": {
         "type": "num",
@@ -78,8 +74,7 @@
   },
   "nYearsAgo": "{count} {count, plural, =1{ano} other{anos}} atrás",
   "@nYearsAgo": {
-    "description": "descreva quantos anos atrás aconteceu um evento",
-    "placeholders": {
+      "placeholders": {
       "count": {
         "type": "num",
         "format": "compact"
@@ -90,18 +85,18 @@
   "plants": "Plantas",
   "or": "ou",
   "filter": "Filtro",
-  "seeding": "semeando",
-  "watering": "regando",
-  "fertilizing": "fertilizando",
-  "biostimulating": "bioestimulando",
-  "misting": "nebulizando",
-  "transplanting": "transplantando",
-  "water_changing": "mudando de água",
-  "observation": "observando",
-  "treatment": "tratamento",
-  "propagating": "propagação",
-  "pruning": "pruning",
-  "repotting": "reenvasando",
+  "seeding": "Semeadura",
+  "watering": "Rega",
+  "fertilizing": "Fertilização",
+  "biostimulating": "Bioestimulação",
+  "misting": "Nebulização",
+  "transplanting": "Transplante",
+  "water_changing": "Troca de água",
+  "observation": "Observando",
+  "treatment": "Tratamento",
+  "propagating": "Propagação",
+  "pruning": "Poda",
+  "repotting": "Reenvasamento",
   "recents": "Recentes",
   "addNewEvent": "Adicionar novo evento",
   "selectDate": "Selecionar data",
@@ -109,7 +104,6 @@
   "selectPlants": "Selecionar plantas",
   "nEventsCreated": "Criado {count} novo {count, plural, =1{evento} other{eventos}}",
   "@nEventsCreated": {
-    "description": "Quantos novos eventos foram criados",
     "placeholders": {
       "count": {
         "type": "num",
@@ -153,7 +147,6 @@
   "newBorn": "Recém nascido",
   "nDays": "{count} {count, plural, =1{dia} other{dias}}",
   "@nDays": {
-    "description": "Quantos dias a entidade possui",
     "placeholders": {
       "count": {
         "type": "num",
@@ -163,7 +156,6 @@
   },
   "nMonths": "{count} {count, plural, =1{mês} other{mêses}}",
   "@nMonths": {
-    "description": "Quantos meses a entidade possui",
     "placeholders": {
       "count": {
         "type": "num",
@@ -173,7 +165,6 @@
   },
   "nYears": "{count} {count, plural, =1{ano} other{anos}}",
   "@nYears": {
-    "description": "Quantos anos a entidade possui",
     "placeholders": {
       "count": {
         "type": "num",
@@ -183,7 +174,6 @@
   },
   "nMonthsAndDays": "{months} {months, plural, =1{mês} other{meses}}, {days} {days, plural, =1{dia} other{dias}}",
   "@nMonthsAndDays": {
-    "description": "Quantos meses e dias a entidade possui",
     "placeholders": {
       "months": {
         "type": "num",
@@ -197,7 +187,6 @@
   },
   "nYearsAndDays": "{years} {years, plural, =1{ano} other{anos}}, {days} {days, plural, =1{dia} other{dias}}",
   "@nYearsAndDays": {
-    "description": "Quantos anos e dias a entidade possui",
     "placeholders": {
       "years": {
         "type": "num",
@@ -211,7 +200,6 @@
   },
   "nYearsAndMonths": "{years} {years, plural, =1{ano} other{anos}}, {months} {months, plural, =1{mês} other{meses}}",
   "@nYearsAndMonths": {
-    "description": "Quantos meses e meses a entidade possui",
     "placeholders": {
       "years": {
         "type": "num",
@@ -225,7 +213,6 @@
   },
   "nYearsAndMonthsAndDays": "{years} {years, plural, =1{ano} other{anos}}, {months} {months, plural, =1{mês} other{meses}}, {days} {days, plural, =1{dia} other{dias}}",
   "@nYearsAndMonthsAndDays": {
-    "description": "Quantos anos, meses e dias a entidade possui",
     "placeholders": {
       "years": {
         "type": "num",
@@ -244,7 +231,6 @@
   "name": "Nome",
   "nOutOf": "{value} de {max}",
   "@nOutOf": {
-    "description": "Valor dentro de uma escala",
     "placeholders": {
       "value": {
         "type": "num",
@@ -258,7 +244,6 @@
   },
   "temp": "{value} °C",
   "@temp": {
-    "description": "Temperatura",
     "placeholders": {
       "value": {
         "type": "num",
@@ -268,8 +253,8 @@
   },
   "numberOfPhotos": "Numero de fotos",
   "numberOfEvents": "Numero de eventos",
-  "searchInYourPlants": "Buscar em suas plantas",
-  "searchNewGreenFriends": "Buscar em seus novos amigos verdes",
+  "searchInYourPlants": "Buscar nas suas plantas",
+  "searchNewGreenFriends": "Buscar novos amigos verdes",
   "custom": "Customizado",
   "addPlant": "Adicionar Planta",
   "yes": "Sim",
@@ -284,7 +269,7 @@
   "location": "Localização",
   "currency": "Moeda",
   "plantUpdatedSuccessfully": "Planta atualizada com sucesso",
-  "plantCreatedSuccessfully": "Plant criada com sucesso",
+  "plantCreatedSuccessfully": "Planta criada com sucesso",
   "insertPrice": "Insira o preço",
   "noBirthday": "Sem aniversário",
   "appVersion": "Versão do aplicativo",
@@ -324,7 +309,6 @@
   "gallery": "Galeria",
   "photosOf": "Fotos de {name}",
   "@photosOf": {
-    "description": "Foto para planta",
     "placeholders": {
       "name": {
         "type": "String"
@@ -333,7 +317,6 @@
   },
   "nPhoto": "Enviar {count} {count, plural, =1{nova foto} other{novas fotos}}",
   "@nPhoto": {
-    "description": "Quantas fotos foram enviadas",
     "placeholders": {
       "count": {
         "type": "num",
@@ -380,5 +363,67 @@
   "ntfyServerToken": "Token do servidor Ntfy",
   "enterValidTopic": "Por favor, insira um tópico válido",
   "ntfySettings": "Configurações do Ntfy",
-  "ntfySettingsUpdated": "Configurações do Ntfy atualizadas com sucesso"
+  "ntfySettingsUpdated": "Configurações do Ntfy atualizadas com sucesso",
+  "modifySpecies": "Modificar espécies",
+  "removeSpecies": "Excluir espécies",
+  "speciesDeletedSuccessfully": "Espécies excluídas com sucesso",
+  "success": "Sucesso",
+  "warning": "Aviso",
+  "ops": "Ops!",
+  "changeLanguage": "Alterar idioma",
+  "gotifyServerUrl": "URL do servidor Gotify",
+  "gotifyServerToken": "Token do servidor Gotify",
+  "gotifySettings": "Configurações do Gotify",
+  "gotifySettingsUpdated": "Configurações do Gotify atualizadas corretamente",
+  "activity": "Atividade",
+  "fromDate": "de",
+  "frequencyEvery": "a cada {amount} {unit}",
+  "@frequencyEvery": {
+    "placeholders": {
+      "amount": {
+        "type": "num",
+        "example": "2"
+      },
+      "unit": {
+        "type": "String",
+        "example": "dias"
+      }
+    }
+  },
+  "day": "{count, plural, =1{dia} other{dias}}",
+  "@day": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "week": "{count, plural, =1{semana} other{semanas}}",
+  "@week": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "month": "{count, plural, =1{mês} other{meses}}",
+  "@month": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "year": "{count, plural, =1{ano} other{anos}}",
+  "@year": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  }
 }
