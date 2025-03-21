@@ -244,6 +244,22 @@ class _MorePageState extends State<MorePage> {
             ],
           ),
           SettingsSection(
+            title: AppLocalizations.of(context).app,
+            children: [
+              SettingsInternalLink(
+                title: AppLocalizations.of(context).changeUI,
+                onClick: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeUiModePage(
+                      env: widget.env,
+                    ),
+                  ),
+                ), //
+              ),
+            ],
+          ),
+          SettingsSection(
             title: AppLocalizations.of(context).supportTheProject,
             children: [
               SettingsExternalLink(
