@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.3</version>
         <relativePath/>
     </parent>
     <groupId>com.github.mdeluise</groupId>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.3</version>
         </dependency>
         <!--
             https://github.com/kstyrc/embedded-redis/issues/135#issuecomment-1825620600
