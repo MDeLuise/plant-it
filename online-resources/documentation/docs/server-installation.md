@@ -134,29 +134,29 @@ SMTP_PORT=
 SMTP_EMAIL=
 SMTP_PASSWORD=
 SMTP_AUTH=
-SMTP_START_TTL=
+SMTP_START_TLS=
 ```
 
 ### Integration with FloraCodex
 To enhance your application with plant search capabilities, you can integrate with the FloraCodex service. FloraCodex provides a comprehensive API for searching and retrieving plant information. Follow the steps below to configure and use the FloraCodex service in your project:
 
 1. **Create an Account on FloraCodex:**
-   
+
     - Visit the [FloraCodex website](https://floracodex.com/) and sign up for an account.
     - Follow the registration process to verify your account.
 
 2. **Retrieve the API Key:**
-   
+
     - Once your account is set up, log in to your FloraCodex account.
     - Navigate to the API section to generate or retrieve your API key. This key is necessary for authenticating your requests to the FloraCodex API.
 
 3. **Configure the API Key:**
-   
+
     - Open the `server.env` file in your project.
     - Add the following line to the file, replacing `YOUR_FLORACODEX_API_KEY` with the actual API key you obtained from FloraCodex: `FLORACODEX_KEY=YOUR_FLORACODEX_API_KEY`
 
 4. **Save and Restart Your Server:**
-   
+
     - Save the changes made to the `server.env` file.
     - Restart your server to apply the new configuration.
 
@@ -193,13 +193,13 @@ services:
 If you prefer to install and run the server without using Docker, ensure that you have Java Runtime Environment (JRE) 21 installed on your system. Follow these steps to set up the server:
 
 1. **Download the Server JAR File**:
-   
+
     - Obtain the `server.jar` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
 
 2. **Set Environment Variables**:
-   
+
     - You can configure the necessary environment variables in two ways:
-     
+
         - **Option 1**: Manually export them in your terminal based on your setup. For example:
           ```bash
           export MYSQL_HOST=localhost && \
@@ -207,11 +207,11 @@ If you prefer to install and run the server without using Docker, ensure that yo
           ...
           ```
         Adjust these variables according to your specific setup.
-     
+
         - **Option 2**: Provide a `server.properties` file that contains all the required properties. You can download a template for this file from the [project's repository](https://github.com/MDeLuise/plant-it/blob/main/backend/src/main/resources/application.properties) and adjust it to suit your configuration.
-   
+
 3. **Run the Server**:
-   
+
     - If you chose **Option 1** (manually setting environment variables), run the server using the following command:
       ```bash
       java -jar server.jar
@@ -225,18 +225,18 @@ If you prefer to install and run the server without using Docker, ensure that yo
 For the frontend, if you're using Android, you can use the provided APK available on [GitHub releases](https://github.com/MDeLuise/plant-it/releases/latest) or [F-Droid](https://f-droid.org/packages/com.github.mdeluise.plantit/). However, for iOS, a standalone app is not available. If you choose not to use Docker for the frontend, follow these steps:
 
 1. **Download the Frontend Files**:
-   
+
     - Download the `client.tar.gz` file from the [latest release of the project on GitHub](https://github.com/MDeLuise/plant-it/releases/latest).
 
 2. **Uncompress the Files**:
-   
+
     - Extract the contents of the `client.tar.gz` file:
       ```bash
       tar -xzf client.tar.gz
       ```
 
 3. **Serve the Files**:
-   
+
     - You can serve the frontend files locally using a simple HTTP server. For example, using Python:
       ```bash
       python3 -m http.server 3000
@@ -351,7 +351,7 @@ services:
       - "traefik.http.routers.app.service=server"
       - "traefik.http.routers.app.entrypoints=http"
       - "traefik.http.services.server.loadbalancer.server.port=3000"
-      
+
       - "traefik.http.routers.api.rule=Host(`plant-it-api.docker.localhost`)"
       - "traefik.http.routers.api.service=server-api"
       - "traefik.http.routers.api.entrypoints=http"
@@ -398,7 +398,7 @@ SMTP_PORT=587
 SMTP_EMAIL=your-email@gmail.com
 SMTP_PASSWORD=your-application-password
 SMTP_AUTH=true
-SMTP_START_TTL=true
+SMTP_START_TLS=true
 CONTACT_MAIL=your-email@gmail.com
 ```
 
@@ -423,7 +423,7 @@ You can get the API Key following the step in the relative section.
 To retrieve an API Key using the REST API, follow these steps:
 
 1. **Authenticate and Retrieve JWT Token:**
-   
+
     - Send a `POST` request to the authentication endpoint to log in.
     - Replace `<server-url>` with the actual server URL.
     - Example using `curl`:
@@ -442,7 +442,7 @@ To retrieve an API Key using the REST API, follow these steps:
     - Upon successful authentication, the response will contain a JWT token. This token is required for the next step.
 
 2. **Generate API Key:**
-   
+
     - With the JWT token, make an authenticated `POST` request to the API Key endpoint. You may optionally pass a name parameter for the API key.
     - Example using `curl`:
 
@@ -455,7 +455,7 @@ To retrieve an API Key using the REST API, follow these steps:
     ```
 
 3. **Receive API Key:**
-   
+
     - The response from the API Key request will contain your newly generated API Key.
 
 Make sure to store the API Key securely, as it will be used for authenticating your requests to the system.
@@ -523,7 +523,7 @@ First, download the contents of the `deployment/helm` [directory from the projec
    This command confirms that the values in `helm/values.yml` will be used as the base configuration, and any values specified in `helm/my-values.yml` will override the defaults.
 
 #### Using TrueCharts
-The Plant-it service is also available on TrueCharts, which simplifies the deployment process. You can find the chart for Plant-it [here](https://truecharts.org/charts/incubator/plant-it/). 
+The Plant-it service is also available on TrueCharts, which simplifies the deployment process. You can find the chart for Plant-it [here](https://truecharts.org/charts/incubator/plant-it/).
 
 Please note that I am not the creator of these charts. For any issues or detailed instructions on how to deploy using TrueCharts, please refer to the official [TrueCharts documentation](https://truecharts.org/guides/).
 
