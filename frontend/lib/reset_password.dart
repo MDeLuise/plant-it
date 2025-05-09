@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_loading_buttons/material_loading_buttons.dart';
 import 'package:plant_it/app_exception.dart';
+import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/toast/toast_manager.dart';
 
@@ -98,26 +99,30 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 decoration: TextDecoration.none,
                               )),
                         ),
-                        TextFormField(
-                          autofocus: true,
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).username,
-                            border: const OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null ||
-                                value.length < 3 ||
-                                value.length > 20) {
-                              return AppLocalizations.of(context).usernameSize;
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (value) {
-                            if (_formKey.currentState!.validate()) {
-                              _resetPassword();
-                            }
-                          },
+                        SizedBox(
+                          width: maxWidth,
+                          child: 
+                            TextFormField(
+                              autofocus: true,
+                              controller: _usernameController,
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context).username,
+                                border: const OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null ||
+                                    value.length < 3 ||
+                                    value.length > 20) {
+                                  return AppLocalizations.of(context).usernameSize;
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (value) {
+                                if (_formKey.currentState!.validate()) {
+                                  _resetPassword();
+                                }
+                              },
+                            ),
                         ),
                         const SizedBox(height: 20),
                         ElevatedLoadingButton(
