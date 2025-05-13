@@ -18,7 +18,7 @@ jobs:
 
       - name: Setup Maven Action
         if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: s4u/setup-maven-action@v1.2.1
+        uses: s4u/setup-maven-action@v1.18.0
         with:
           java-version: 21
 
