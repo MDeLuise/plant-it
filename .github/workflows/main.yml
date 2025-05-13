@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.2.1
+        uses: s4u/setup-maven-action@v1.18.0
         with:
           java-version: 21
 
