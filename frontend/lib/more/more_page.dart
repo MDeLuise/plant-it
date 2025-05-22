@@ -9,6 +9,7 @@ import 'package:plant_it/more/change_language_page.dart';
 import 'package:plant_it/more/change_notifications.dart';
 import 'package:plant_it/more/change_password_page.dart';
 import 'package:plant_it/more/change_server_page.dart';
+import 'package:plant_it/more/change_ui_page.dart';
 import 'package:plant_it/more/edit_profile.dart';
 import 'package:plant_it/more/gotify_settings.dart';
 import 'package:plant_it/more/ntfy_settings.dart';
@@ -240,6 +241,22 @@ class _MorePageState extends State<MorePage> {
                     ),
                   ),
                 ),
+            ],
+          ),
+          SettingsSection(
+            title: AppLocalizations.of(context).app,
+            children: [
+              SettingsInternalLink(
+                title: AppLocalizations.of(context).changeUI,
+                onClick: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeUiModePage(
+                      env: widget.env,
+                    ),
+                  ),
+                ), //
+              ),
             ],
           ),
           SettingsSection(

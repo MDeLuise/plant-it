@@ -101,18 +101,23 @@ class _ChangeServerPageState extends State<ChangeServerPage> {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      TextFormField(
-                        autofocus: true,
-                        controller: _newServerController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || !isValidUrl(value)) {
-                            return AppLocalizations.of(context).enterValidURL;
-                          }
-                          return null;
-                        },
+                      
+                      SizedBox(
+                        width: maxWidth,
+                        child: 
+                          TextFormField(
+                            autofocus: true,
+                            controller: _newServerController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || !isValidUrl(value)) {
+                                return AppLocalizations.of(context).enterValidURL;
+                              }
+                              return null;
+                            },
+                          ),
                       ),
                     ],
                   ),
