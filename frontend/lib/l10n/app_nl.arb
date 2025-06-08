@@ -388,4 +388,59 @@
   "warning": "Waarschuwing",
   "ops": "Oeps!",
   "changeLanguage": "Taal wijzigen"
+  "gotifyServerUrl": "Gotify server URL",
+  "gotifyServerToken": "Gotify server token",
+  "gotifySettings": "Gotify instellingen",
+  "gotifySettingsUpdated": "Gotify instellingen succesvol bijgewerkt",
+  "activity": "Activiteit",
+  "fromDate": "vanaf",
+  "frequencyEvery": "elke {amount} {unit}",
+  "@frequencyEvery": {
+    "placeholders": {
+      "amount": {
+        "type": "num",
+        "example": "2"
+      },
+      "unit": {
+        "type": "String",
+        "example": "dagen"
+      }
+    }
+  },
+  "day": "{count, plural, =1{dag} other{dagen}}",
+  "@day": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "week": "{count, plural, =1{week} other{weken}}",
+  "@week": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "month": "{count, plural, =1{maand} other{maanden}}",
+  "@month": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  },
+  "year": "{count, plural, =1{jaar} other{jaren}}",
+  "@year": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "example": "1"
+      }
+    }
+  }
 }
