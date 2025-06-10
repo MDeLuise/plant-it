@@ -26,7 +26,7 @@ python-dateutil==2.9.0.post0
 PyYAML==6.0.1
 pyyaml_env_tag==0.1
 regex==2024.4.16
-requests==2.32.2
+requests==2.32.4
 six==1.16.0
 urllib3==2.2.2
 verspec==0.1.0
