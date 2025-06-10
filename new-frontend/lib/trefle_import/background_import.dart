@@ -4,54 +4,131 @@ import 'package:drift/drift.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/notification/background_import_notification_service.dart';
+import 'package:workmanager/workmanager.dart';
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:drift/drift.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:plant_it/database/database.dart';
+import 'package:plant_it/environment.dart';
+import 'package:plant_it/notification/background_import_notification_service.dart';
+import 'package:workmanager/workmanager.dart';
 
 Future<void> importSpecies(
     Environment env, Map<String, dynamic>? inputData) async {
   const int batchSize = 2500;
-  int imported = 0;
-  int totalRows = 0;
+  const int iterationPerWork = 10;
 
-  final notificationService = BackgroundImportNotificationService();
+  // print(
+  //     "start progress: ${inputData?['progress'] ?? '0'}, file: ${inputData?['filePath']}");
+
+  final BackgroundImportNotificationService notificationService =
+      BackgroundImportNotificationService();
+
+  File? tempFile;
 
   try {
-    final File file = File(inputData!['filePath']);
+    final originalFilePath = inputData?['filePath'];
+    final progress = int.tryParse(inputData?['progress'] ?? '0') ?? 0;
 
-    final Stream<String> fileStream =
-        file.openRead().transform(utf8.decoder).transform(const LineSplitter());
+    if (originalFilePath == null) {
+      throw ArgumentError('Missing filePath in inputData');
+    }
 
-    List<List<String>> rows = [];
+    final Directory? tempDir = await getExternalStorageDirectory();
+    final String tempFileName = path.basename(originalFilePath);
+    final String tempFilePath = path.join(tempDir!.path, tempFileName);
+    final originalFile = File(originalFilePath);
 
-    await notificationService.showInitialNotification();
+    tempFile = File(tempFilePath);
+    if (progress == 0) {
+      final bool originalExists = await originalFile.exists();
+      final bool tempExists = await tempFile.exists();
 
-    await for (var _ in fileStream) {
+      if (!originalExists && !tempExists) {
+        throw FileSystemException(
+            "Import file not found in original or temp path", originalFilePath);
+      }
+
+      if (!tempExists && originalExists) {
+        await originalFile.copy(tempFilePath);
+      }
+
+      // Show initial notification
+      await notificationService.showInitialNotification();
+    }
+
+    // Count total lines
+    int totalRows = 0;
+    await for (var _ in tempFile
+        .openRead()
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())) {
       totalRows++;
     }
 
-    final Stream<String> resetFileStream =
-        file.openRead().transform(utf8.decoder).transform(const LineSplitter());
+    // Prepare to import
+    final Stream<String> lineStream = tempFile
+        .openRead()
+        .transform(utf8.decoder)
+        .transform(const LineSplitter());
 
-    await for (var line in resetFileStream) {
+    final List<List<String>> rows = [];
+    int lineCount = 0;
+    int iteration = 0;
+    int imported = 0;
+
+    await for (var line in lineStream) {
+      if (lineCount < progress) {
+        lineCount++;
+        continue;
+      }
+
       final List<String> row = line.split('\t');
       rows.add(row);
+      lineCount++;
 
       if (rows.length >= batchSize) {
         await _processBatch(env, rows);
-        imported += batchSize;
-
-        await notificationService.showProgressNotification(imported, totalRows);
-
+        imported += rows.length;
+        await notificationService.showProgressNotification(
+            lineCount, totalRows);
         rows.clear();
+        iteration++;
+      }
+
+      if (iteration >= iterationPerWork) {
+        //print("call next Workmanager()");
+        // Schedule next chunk
+        await Workmanager().registerOneOffTask(
+          "import_species_${DateTime.now().millisecondsSinceEpoch}",
+          "import_species_task",
+          inputData: {
+            'filePath': tempFilePath,
+            'progress': lineCount.toString(),
+          },
+          initialDelay: const Duration(seconds: 1),
+        );
+        return;
       }
     }
 
     if (rows.isNotEmpty) {
       await _processBatch(env, rows);
+      imported += rows.length;
+      await notificationService.showProgressNotification(lineCount, totalRows);
     }
 
     await notificationService.showCompletionNotification(imported);
+    await tempFile.delete();
   } catch (e, st) {
-    //print("---$e\n$st---");
-    await notificationService.showErrorNotification(e);
+    await notificationService.showErrorNotification("${e.toString()}\n$st");
+    if (tempFile != null && await tempFile.exists()) {
+      await tempFile.delete();
+    }
   }
 }
 
@@ -144,6 +221,7 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
     ));
 
     if (imageUrl.isNotEmpty) {
+      //print("Found images for $scientificName");
       imagesToInsert.add(ImagesCompanion(
         speciesId: Value(int.parse(id)),
         isAvatar: Value(true),
@@ -172,7 +250,9 @@ Future<void> _processBatch(Environment env, List<List<String>> rows) async {
       phMin: _stringToInt(phMinimum),
       phMax: _stringToInt(phMaximum),
       light: _stringToInt(light),
-      humidity: _stringToInt("${atmosphericHumidity}0"),
+      humidity: _stringToInt(atmosphericHumidity).present
+          ? Value(_stringToInt(atmosphericHumidity).value * 10)
+          : Value.absent(),
       species: Value(int.parse(id)),
     ));
   }

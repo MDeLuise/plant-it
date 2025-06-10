@@ -256,9 +256,9 @@ class _TrefleSettingsState extends State<TrefleSettings> {
 
     await Permission.notification.request();
     await Workmanager().registerOneOffTask(
-      "import_species",
+      "import_species_${DateTime.now().millisecond}",
       "import_species_task",
-      inputData: {"filePath": result.files.single.path},
+      inputData: {"filePath": result.files.single.path, "progress": '0'},
     );
     showSnackbar(
         context, FeedbackLevel.info, "Import started in the background", null);
