@@ -31,8 +31,8 @@ Future<void> importSpecies(
   File? tempFile;
 
   try {
-    final originalFilePath = inputData?['filePath'];
-    final progress = int.tryParse(inputData?['progress'] ?? '0') ?? 0;
+    final String? originalFilePath = inputData?['filePath'];
+    final int progress = int.tryParse(inputData?['progress'] ?? '0') ?? 0;
 
     if (originalFilePath == null) {
       throw ArgumentError('Missing filePath in inputData');
@@ -79,7 +79,6 @@ Future<void> importSpecies(
     final List<List<String>> rows = [];
     int lineCount = 0;
     int iteration = 0;
-    int imported = 0;
 
     await for (var line in lineStream) {
       if (lineCount < progress) {
@@ -93,7 +92,6 @@ Future<void> importSpecies(
 
       if (rows.length >= batchSize) {
         await _processBatch(env, rows);
-        imported += rows.length;
         await notificationService.showProgressNotification(
             lineCount, totalRows);
         rows.clear();
@@ -118,11 +116,10 @@ Future<void> importSpecies(
 
     if (rows.isNotEmpty) {
       await _processBatch(env, rows);
-      imported += rows.length;
       await notificationService.showProgressNotification(lineCount, totalRows);
     }
 
-    await notificationService.showCompletionNotification(imported);
+    await notificationService.showCompletionNotification(lineCount);
     await tempFile.delete();
   } catch (e, st) {
     await notificationService.showErrorNotification("${e.toString()}\n$st");

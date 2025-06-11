@@ -108,7 +108,7 @@ class ReminderNotificationService {
 
     final Duration durationUntilTarget = targetTime.difference(now);
     await Workmanager().registerPeriodicTask(
-      reminderUniqueName,
+      "reminderUniqueName_${DateTime.now()}",
       reminderUniqueName,
       frequency: const Duration(hours: 24),
       initialDelay: durationUntilTarget,
