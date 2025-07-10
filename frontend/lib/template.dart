@@ -44,56 +44,89 @@ class _TemplatePageState extends State<TemplatePage> {
   @override
   Widget build(BuildContext context) {
     _bottombarPages = [
-      HomePage(
-        env: _env,
-      ),
-      EventsPage(
-        env: _env,
-      ),
-      SeachPage(
-        env: _env,
-      ),
-      MorePage(
-        env: _env,
-      ),
+      HomePage(env: _env),
+      EventsPage(env: _env),
+      SeachPage(env: _env),
+      MorePage(env: _env),
     ];
-    return _buildTemplate();
+
+    final screenSize = MediaQuery.of(context).size;
+    final isWideScreen = screenSize.width > 600;
+
+    return _buildTemplate(isWideScreen);
   }
 
-  Widget _buildTemplate() {
+  Widget _buildTemplate(bool isWideScreen) {
     return Scaffold(
-        key: navigatorKey,
-        extendBody: true,
-        body: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: SafeArea(
-            bottom: false,
-            child: _bottombarPages[_currentIndex],
-          ),
+      key: navigatorKey,
+      extendBody: true,
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          bottom: false,
+          child: isWideScreen
+              ? Row(
+                  children: [
+                    NavigationRail(
+                      selectedIndex: _currentIndex,
+                      onDestinationSelected: (index) {
+                        setState(() => _currentIndex = index);
+                      },
+                      labelType: NavigationRailLabelType.all,
+                      leading: FloatingActionButton(
+                        onPressed: () =>
+                            goToPageSlidingUp(context, AddNewEventPage(env: _env)),
+                        child: const Icon(Icons.add),
+                      ),
+                      destinations: _bottombarIconList
+                          .map((icon) => NavigationRailDestination(
+                                icon: Icon(icon, color: _iconNotActiveColor),
+                                selectedIcon: Icon(icon, color: _iconActiveColor),
+                                label: const SizedBox.shrink(),
+                              ))
+                          .toList(),
+                      backgroundColor: const Color.fromRGBO(24, 44, 37, 1),
+                      selectedIconTheme: IconThemeData(color: _iconActiveColor),
+                      unselectedIconTheme: IconThemeData(color: _iconNotActiveColor),
+                    ),
+                    Expanded(
+                      child: _bottombarPages[_currentIndex],
+                    ),
+                  ],
+                )
+              : _bottombarPages[_currentIndex],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () =>
-              goToPageSlidingUp(context, AddNewEventPage(env: _env)),
-          child: const Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-          itemCount: _bottombarIconList.length,
-          tabBuilder: (int index, bool isActive) {
-            return Icon(
-              _bottombarIconList[index],
-              size: 24,
-              color: isActive ? _iconActiveColor : _iconNotActiveColor,
-            );
-          },
-          activeIndex: _currentIndex,
-          backgroundColor: const Color.fromRGBO(24, 44, 37, 1),
-          gapLocation: GapLocation.center,
-          notchSmoothness: NotchSmoothness.softEdge,
-          leftCornerRadius: 20,
-          rightCornerRadius: 20,
-          splashColor: const Color.fromRGBO(24, 44, 37, 1),
-          onTap: (index) => setState(() => _currentIndex = index),
-        ));
+      ),
+      floatingActionButton: isWideScreen
+          ? null
+          : FloatingActionButton(
+              onPressed: () =>
+                  goToPageSlidingUp(context, AddNewEventPage(env: _env)),
+              child: const Icon(Icons.add),
+            ),
+      floatingActionButtonLocation: isWideScreen
+          ? null
+          : FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: isWideScreen
+          ? null
+          : AnimatedBottomNavigationBar.builder(
+              itemCount: _bottombarIconList.length,
+              tabBuilder: (int index, bool isActive) {
+                return Icon(
+                  _bottombarIconList[index],
+                  size: 24,
+                  color: isActive ? _iconActiveColor : _iconNotActiveColor,
+                );
+              },
+              activeIndex: _currentIndex,
+              backgroundColor: const Color.fromRGBO(24, 44, 37, 1),
+              gapLocation: GapLocation.center,
+              notchSmoothness: NotchSmoothness.softEdge,
+              leftCornerRadius: 20,
+              rightCornerRadius: 20,
+              splashColor: const Color.fromRGBO(24, 44, 37, 1),
+              onTap: (index) => setState(() => _currentIndex = index),
+            ),
+    );
   }
 }
