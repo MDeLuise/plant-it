@@ -39,7 +39,7 @@ class _BottomBarState extends State<Bottombar> {
               _buildIcon(LucideIcons.house, 0, "Home"),
               _buildIcon(LucideIcons.calendar, 1, "Calendar"),
               _buildIcon(LucideIcons.search, 2, "Search"),
-              _buildIcon(LucideIcons.circle_user, 3, "More"),
+              _buildIcon(LucideIcons.menu, 3, "More"),
             ],
           ),
         ),
