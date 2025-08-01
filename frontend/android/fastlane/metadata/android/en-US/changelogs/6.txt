@@ -1,3 +1,0 @@
-In this release:
-* Add Russian language
-* Add optional redis username and password

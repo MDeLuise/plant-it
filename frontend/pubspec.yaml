@@ -1,141 +1,85 @@
 name: plant_it
 description: "Open source gardening companion app 🪴"
+publish_to: 'none'
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
-version: 0.10.0+9
+version: 1.0.0-beta3+10
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ^3.5.3
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  intl: any
-  http: ^1.3.0
-  shared_preferences: ^2.3.5
-  flutter_svg: ^2.0.17
-  animated_bottom_navigation_bar: ^1.3.3
-  infinite_scroll_pagination: ^4.1.0
-  dropdown_button2: ^2.3.9
-  material_loading_buttons: ^1.2.1
-  cached_network_image: ^3.4.0
-  cached_network_image_platform_interface: ^4.1.1
-  easy_splash_screen: ^1.0.4
-  smooth_page_indicator: ^1.2.0+3
-  skeletonizer: ^1.4.2
-  flutter_advanced_avatar: ^1.5.2
-  provider: ^6.1.2
-  url_launcher: ^6.3.0
-  package_info_plus: ^8.1.3
-  talker: ^4.6.4
-  talker_flutter: ^4.5.4
-  toastification: ^2.3.0
-  image_picker: ^1.1.2
-  http_parser: ^4.0.2
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  calendar_view: ^1.4.0
-  avatar_stack: ^1.2.0
-  auto_size_text: ^3.0.0
+  sqflite: ^2.4.2
+  path: ^1.9.1
+  dynamic_color: ^1.7.0
+  intl: ^0.20.2
+  flutter_cache_manager: ^3.4.1
+  flutter_lucide: ^1.6.2
+  package_info_plus: ^8.3.0
+  path_provider: ^2.1.5
+  file_picker: ^10.1.2
+  json_serializable: ^6.9.5
+  drift: ^2.26.1
+  drift_flutter: ^0.2.4
+  multi_dropdown: ^3.0.1
+  easy_loading_button: ^0.3.2
+  flutter_colorpicker: ^1.1.0
+  gradient_borders: ^1.0.1
+  quickalert: ^1.1.0
+  flutter_carousel_widget: ^3.1.0
+  flutter_local_notifications: ^19.1.0
+  table_calendar: ^3.2.0
+  http: ^1.3.0
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  permission_handler: ^12.0.0+1
+  csv: ^6.0.0
+  #workmanager: ^0.5.2
+  # https://github.com/fluttercommunity/flutter_workmanager/issues/588
+  workmanager:
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      path: workmanager
+      ref: main
+  wheel_picker: ^0.2.1
+  palette_generator: ^0.3.3+6
+  currency_textfield: ^4.14.1
+  syncfusion_flutter_sliders: ^29.1.40
+  toastification: ^3.0.2
+  uuid: ^4.5.1
+  url_launcher: ^6.3.1
+  image_picker: ^1.1.2
+  command_it: ^8.0.0
+  result_dart: ^2.1.1
+  logging: ^1.3.0
+  flutter_localization: ^0.3.3
+  provider: ^6.1.5
+  go_router: ^16.0.0
+  google_fonts: ^6.3.0
+  # https://pub.dev/packages/flutter_popup
+  # https://pub.dev/packages/dotted_border
+  # https://pub.dev/packages/chip_list
+  # https://pub.dev/packages/advanced_chips_input
+  # https://pub.dev/packages/introduction_screen
+  # https://pub.dev/packages/system_theme
+  # https://pub.dev/packages/sliver_tools
+  # https://pub.dev/packages/quick_actions
+  # https://pub.dev/packages/image_picker
+  # https://pub.dev/packages/notification_listener_service
+  # https://pub.dev/packages/home_widget
+  # https://pub.dev/packages/expandable_page_view
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.14.3
-  test: ^1.24.9
-  mockito: ^5.4.4
-  build_runner: ^2.4.9
   flutter_lints: ^5.0.0
+  drift_dev: ^2.26.1
+  build_runner: ^2.4.15
 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/images/logo.png"
-  icon_adaptive_foreground: "assets/images/logo.png"
-  icon_adaptive_background: "#000000"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  web:
-    generate: true
-    image_path: "assets/images/logo.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
-  windows:
-    generate: true
-    image_path: "assets/images/logo.png"
-    icon_size: 48 # min:48, max:256, default: 48
-  macos:
-    generate: true
-    image_path: "assets/images/logo.png"
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^3.0.0
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
 flutter:
-
-  generate: true
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+    - assets/images/generic-plant.jpg

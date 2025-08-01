@@ -1,8 +1,0 @@
-In this release:
-* Introduced Gotify notifications to enhance alerts
-* Ensured consistent UTF-8 encoding throughout the app to correctly display special characters
-* Added error messages for passwords that are too short
-* Updated the email regex to support a wider range of top-level domains (TLDs)
-* Added shadows to 'Back' buttons for improved visual clarity
-* Update the German translation
-* Update the Russina translation

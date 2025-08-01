@@ -27,41 +27,27 @@ IFS=',' read -r -a versions_array <<< "$versions"; # Split versions by comma
 echo "Compiling and preparing images: ${versions_array[@]}"
 
 
-#######################
-#       Backend       #
-#######################
-echo "Build backend...";
-cd backend;
-mvn package;
-if [ $? -ne 0 ]; then
-    echo "Error while compiling backend, exiting.";
-    exit 1;
-fi
-
-#######################
-#      Frontend       #
-#######################
-echo "Build frontend...";
+echo "Build...";
 cd ../frontend;
 flutter pub get;
 
-echo "Run frontend test...";
+echo "Run test...";
 flutter test;
 if [ $? -ne 0 ]; then
-    echo "Error while testing frontend, exiting.";
+    echo "Error while testing, exiting.";
     exit 2;
 fi
 
-echo "Run frontend analysis...";
+echo "Run analysis...";
 flutter analyze;
 if [ $? -ne 0 ]; then
-    echo "Error while analysing frontend, exiting.";
+    echo "Error while analysing, exiting.";
     exit 3;
 fi
 
 flutter build web --release;
 if [ $? -ne 0 ]; then
-    echo "Error while building frontend, exiting.";
+    echo "Error while building image, exiting.";
     exit 4;
 fi
 

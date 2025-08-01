@@ -1,3 +1,0 @@
-In this release:
-* add French language
-* add Danish language

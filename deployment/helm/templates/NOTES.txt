@@ -1,1 +1,0 @@
-In order to access the app run: minikube service server-service

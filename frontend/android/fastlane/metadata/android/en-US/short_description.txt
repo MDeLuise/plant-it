@@ -1,1 +1,0 @@
-This is a client app for the self-hostable Plant-it Server
