@@ -108,77 +108,86 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                     ),
-                    EditableSimpleInfoEntry(
-                      title: AppLocalizations.of(context).username,
-                      value: _username,
-                      onChanged: (u) => _username = u,
-                      onlyNumber: false,
-                    ),
-                    EditableSimpleInfoEntry(
-                      title: AppLocalizations.of(context).email,
-                      value: _email,
-                      onChanged: (e) => _email = e,
-                      onlyNumber: false,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              AppLocalizations.of(context).currentPassword,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                    
+                    SizedBox(
+                      width: maxWidth,
+                      child:
+                        Column(
+                          children: [ 
+                            EditableSimpleInfoEntry(
+                              title: AppLocalizations.of(context).username,
+                              value: _username,
+                              onChanged: (u) => _username = u,
+                              onlyNumber: false,
                             ),
-                          ),
-                          AutofillGroup(
-                            child: TextFormField(
-                              autofillHints: [AutofillHints.password],
-                              obscureText: !_showPassword,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showPassword = !_showPassword;
-                                    });
-                                  },
-                                ),
+                            EditableSimpleInfoEntry(
+                              title: AppLocalizations.of(context).email,
+                              value: _email,
+                              onChanged: (e) => _email = e,
+                              onlyNumber: false,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4),
+                                    child: Text(
+                                      AppLocalizations.of(context).currentPassword,
+                                      style:
+                                          const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  AutofillGroup(
+                                    child: TextFormField(
+                                      autofillHints: [AutofillHints.password],
+                                      obscureText: !_showPassword,
+                                      decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(_showPassword
+                                              ? Icons.visibility
+                                              : Icons.visibility_off),
+                                          onPressed: () {
+                                            setState(() {
+                                              _showPassword = !_showPassword;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      onChanged: (p) => _currentPassword = p,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onChanged: (p) => _currentPassword = p,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedLoadingButton(
-                      isLoading: _isLoading,
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          try {
-                            if (_formKey.currentState!.validate()) {
-                              _updateUser();
-                            }
-                          } finally {
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }
-                        }
-                      },
-                      child: Text(AppLocalizations.of(context).updateProfile),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                            const SizedBox(height: 20),
+                            ElevatedLoadingButton(
+                              isLoading: _isLoading,
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  try {
+                                    if (_formKey.currentState!.validate()) {
+                                      _updateUser();
+                                    }
+                                  } finally {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  }
+                                }
+                              },
+                              child: Text(AppLocalizations.of(context).updateProfile),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                    )
+                  ]
                 ),
               ),
             ),

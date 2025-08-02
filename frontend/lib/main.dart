@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:plant_it/app_exception.dart';
 import 'package:plant_it/app_http_client.dart';
-import 'package:plant_it/commons.dart';
 import 'package:plant_it/environment.dart';
 import 'package:plant_it/change_notifiers.dart';
 import 'package:plant_it/notify_conf_notifier.dart';
@@ -80,7 +79,6 @@ void main() async {
           color: const Color(0xFF061913),
           child: Center(
             child: SizedBox(
-              width: maxWidth,
               child: MyApp(
                 env: env,
                 isLoggedIn: isLoggedIn,
