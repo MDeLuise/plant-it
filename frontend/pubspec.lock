@@ -733,6 +733,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  material_shapes:
+    dependency: "direct main"
+    description:
+      name: material_shapes
+      sha256: "20f20eb56ef4cd9c957f91f7cf4986aad910a65ed1f9a3bc33b13a19cc3fd885"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   meta:
     dependency: transitive
     description:
@@ -1492,5 +1500,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
+  dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.27.0"

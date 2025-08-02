@@ -5,6 +5,7 @@ import 'package:plant_it/data/repository/image_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_occurrence_repository.dart';
 import 'package:plant_it/database/database.dart' as db;
+import 'package:plant_it/domain/models/reminder_occurrence.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -29,12 +30,14 @@ class HomeViewModel extends ChangeNotifier {
   List<db.Plant> _plants = [];
   final Map<int, db.Plant> _plantMap = {};
   final Map<int, String?> _imagesBase64 = {};
+  List<ReminderOccurrence> _reminderOccurences = [];
 
   late final Command<void, void> load;
 
   List<db.Plant> get plants => _plants;
   Map<int, db.Plant> get plantMap => _plantMap;
   Map<int, String?> get imagesBase64 => _imagesBase64;
+  List<ReminderOccurrence> get reminderOccurrences => _reminderOccurences;
 
   Future<Result<void>> _load() async {
     final loadPlants = await _loadPlants();
@@ -44,6 +47,10 @@ class HomeViewModel extends ChangeNotifier {
     final loadAvatarBase64 = await _loadAvatarBase64();
     if (loadAvatarBase64.isError()) {
       return loadAvatarBase64.exceptionOrNull()!.toFailure();
+    }
+    final loadReminderOccurrences = await _loadReminderOccurrences();
+    if (loadReminderOccurrences.isError()) {
+      return loadReminderOccurrences.exceptionOrNull()!.toFailure();
     }
     notifyListeners();
     return Success("ok");
@@ -72,6 +79,16 @@ class HomeViewModel extends ChangeNotifier {
       }
     }
     _log.fine('Loaded base64 plants avatar');
+    return Success("ok");
+  }
+
+  Future<Result<void>> _loadReminderOccurrences() async {
+    Result<List<ReminderOccurrence>> nextOccurrences =
+        await _reminderOccurrenceRepository.getNextOccurrences(5);
+    if (nextOccurrences.isError()) {
+      return nextOccurrences.exceptionOrNull()!.toFailure();
+    }
+    _reminderOccurences = nextOccurrences.getOrThrow();
     return Success("ok");
   }
 }

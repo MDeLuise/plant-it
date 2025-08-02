@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:plant_it/data/repository/event_type_repository.dart';
+import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
@@ -10,11 +12,18 @@ import 'package:result_dart/result_dart.dart';
 class ReminderOccurrenceService {
   final ReminderRepository _reminderRepository;
   final EventRepository _eventRepository;
+  final EventTypeRepository _eventTypeRepository;
+  final PlantRepository _plantRepository;
 
-  ReminderOccurrenceService(
-      {required ReminderRepository reminderRepository, required EventRepository eventRepository})
-      : _reminderRepository = reminderRepository,
-        _eventRepository = eventRepository;
+  ReminderOccurrenceService({
+    required ReminderRepository reminderRepository,
+    required EventRepository eventRepository,
+    required EventTypeRepository eventTypeRepository,
+    required PlantRepository plantRepository,
+  })  : _reminderRepository = reminderRepository,
+        _eventRepository = eventRepository,
+        _eventTypeRepository = eventTypeRepository,
+        _plantRepository = plantRepository;
 
   Future<Result<List<Reminder>>> getRemindersToNotifyToday() async {
     Result<List<Reminder>> reminders = await _reminderRepository.getAll();
@@ -147,7 +156,7 @@ class ReminderOccurrenceService {
       if (reminder.endDate != null && dateIterator.isAfter(reminder.endDate!)) {
         return result.toSuccess();
       }
-      result.add(ReminderOccurrence(reminder, dateIterator));
+      result.add(await _createOccurrence(reminder, dateIterator));
       dateIterator = _calculateNextNotification(
           dateIterator, reminder.frequencyUnit, reminder.frequencyQuantity);
     }
@@ -192,12 +201,24 @@ class ReminderOccurrenceService {
       } while (occurrence.isBefore(startOfMonth));
 
       while (occurrence.isBefore(endOfMonth)) {
-        result.add(ReminderOccurrence(reminder, occurrence));
+        result.add(await _createOccurrence(reminder, occurrence));
         occurrence = _calculateNextNotification(
             occurrence, reminder.frequencyUnit, reminder.frequencyQuantity);
       }
     }
 
     return result.toSuccess();
+  }
+
+  Future<ReminderOccurrence> _createOccurrence(
+      Reminder reminder, DateTime occurrence) async {
+    Result<EventType> eventType = await _eventTypeRepository.get(reminder.type);
+    Result<Plant> plant = await _plantRepository.get(reminder.plant);
+    return ReminderOccurrence(
+      reminder: reminder,
+      nextOccurrence: occurrence,
+      eventType: eventType.getOrThrow(),
+      plant: plant.getOrThrow(),
+    );
   }
 }

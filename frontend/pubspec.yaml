@@ -58,6 +58,7 @@ dependencies:
   provider: ^6.1.5
   go_router: ^16.0.0
   google_fonts: ^6.3.0
+  material_shapes: ^0.0.2
   # https://pub.dev/packages/flutter_popup
   # https://pub.dev/packages/dotted_border
   # https://pub.dev/packages/chip_list

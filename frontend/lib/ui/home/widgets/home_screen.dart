@@ -5,6 +5,7 @@ import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/carousel.dart';
+import 'package:plant_it/ui/home/widgets/reminder_occurrence_list.dart';
 
 class HomeScreen extends StatefulWidget {
   final HomeViewModel viewModel;
@@ -44,18 +45,39 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            return SizedBox(
-              child: ListView(
-                shrinkWrap: true,
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                     child: SearchBar(
                       hintText: "Search your plants",
                       leading: Icon(Icons.search),
                     ),
                   ),
                   Carousel(viewModel: widget.viewModel),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Next actions",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(height: 10),
+                        ReminderOccurrenceList(viewModel: widget.viewModel),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             );

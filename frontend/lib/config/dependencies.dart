@@ -54,7 +54,11 @@ List<SingleChildWidget> get providersLocal {
     ),
     Provider(
       create: (context) => ReminderOccurrenceService(
-          reminderRepository: context.read(), eventRepository: context.read()),
+        reminderRepository: context.read(),
+        eventRepository: context.read(),
+        eventTypeRepository: context.read(),
+        plantRepository: context.read(),
+      ),
     ),
     Provider(
       create: (context) =>

@@ -24,20 +24,19 @@ class _CarouselState extends State<Carousel> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.sizeOf(context).height;
     final Iterable<int> plantIds = widget.viewModel.plantMap.keys;
-    List<int> plantIdsList = plantIds.toList();
+    final List<int> plantIdsList = plantIds.toList();
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .5,
+      height: MediaQuery.of(context).size.height * .3,
       child: ListView(
         children: <Widget>[
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: height / 2),
+            constraints: BoxConstraints(maxHeight: 280), // MediaQuery.sizeOf(context).height / 2
             child: CarouselView.weighted(
               controller: controller,
               itemSnapping: true,
-              flexWeights: const <int>[1, 7, 1],
+              flexWeights: const <int>[6, 3, 1], // [1, 7, 1], [7, 2, 2], [6, 4, 1]
               onTap: (index) => context.go(Routes.plantWithId(plantIdsList[index])),
               children: plantIds.map((int plantId) {
                 return HeroLayoutCard(
@@ -69,7 +68,7 @@ class HeroLayoutCard extends StatelessWidget {
       children: <Widget>[
         SizedBox(
           width: width * 7 / 8,
-          height: 500,
+          height: 300,
           child: Image(
             fit: BoxFit.cover,
             image: viewModel.imagesBase64[plantId] == null
@@ -86,23 +85,23 @@ class HeroLayoutCard extends StatelessWidget {
             children: <Widget>[
               Text(
                 viewModel.plantMap[plantId]!.name,
-                overflow: TextOverflow.clip,
+                overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 style: Theme.of(context)
                     .textTheme
-                    .headlineLarge
+                    .headlineMedium
                     ?.copyWith(color: Colors.white),
               ),
-              const SizedBox(height: 10),
-              Text(
-                viewModel.plantMap[plantId]!.species.toString(),
-                overflow: TextOverflow.clip,
-                softWrap: false,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: Colors.white),
-              ),
+              // const SizedBox(height: 10),
+              // Text(
+              //   viewModel.plantMap[plantId]!.species.toString(),
+              //   overflow: TextOverflow.clip,
+              //   softWrap: false,
+              //   style: Theme.of(context)
+              //       .textTheme
+              //       .bodyMedium
+              //       ?.copyWith(color: Colors.white),
+              // ),
             ],
           ),
         ),
