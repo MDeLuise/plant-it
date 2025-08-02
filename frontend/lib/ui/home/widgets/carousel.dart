@@ -89,7 +89,7 @@ class HeroLayoutCard extends StatelessWidget {
                 softWrap: false,
                 style: Theme.of(context)
                     .textTheme
-                    .headlineMedium
+                    .headlineSmall
                     ?.copyWith(color: Colors.white),
               ),
               // const SizedBox(height: 10),

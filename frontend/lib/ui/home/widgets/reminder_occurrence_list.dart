@@ -45,14 +45,14 @@ class _ReminderOccurrenceCard extends StatelessWidget {
         reminderOccurrence.plant.name,
         style: Theme.of(context)
             .textTheme
-            .headlineSmall!
+            .bodyLarge!
             .copyWith(fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
         "${timeDiffStr(reminderOccurrence.nextOccurrence)} • every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
         style: Theme.of(context)
             .textTheme
-            .bodyMedium!
+            .bodyLarge!
             .copyWith(color: AppColors.grey4),
       ),
       leading: _EventTypeAvatar(eventType: reminderOccurrence.eventType),
