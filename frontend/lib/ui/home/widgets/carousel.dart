@@ -32,7 +32,7 @@ class _CarouselState extends State<Carousel> {
       child: ListView(
         children: <Widget>[
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 280), // MediaQuery.sizeOf(context).height / 2
+            constraints: BoxConstraints(maxHeight: 250), // MediaQuery.sizeOf(context).height / 2
             child: CarouselView.weighted(
               controller: controller,
               itemSnapping: true,
@@ -68,7 +68,7 @@ class HeroLayoutCard extends StatelessWidget {
       children: <Widget>[
         SizedBox(
           width: width * 7 / 8,
-          height: 300,
+          height: 250,
           child: Image(
             fit: BoxFit.cover,
             image: viewModel.imagesBase64[plantId] == null

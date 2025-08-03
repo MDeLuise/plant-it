@@ -5,20 +5,16 @@ class InfoWidget extends StatelessWidget {
   final String title;
   final String value;
 
-  const InfoWidget(
-      {super.key,
-      required this.icon,
-      required this.title,
-      required this.value});
+  const InfoWidget({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 225, 225, 225),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(8),
+    return Card.filled(
       child: Row(
         children: [
           const SizedBox(width: 10),
@@ -37,13 +33,12 @@ class InfoWidget extends StatelessWidget {
                   title,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         overflow: TextOverflow.ellipsis,
-                        color: Colors.black87,
                       ),
                 ),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis),
                 ),

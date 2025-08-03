@@ -74,22 +74,22 @@ class _PlantScreenState extends State<PlantScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: ValueListenableBuilder<CommandResult<void, void>>(
-      valueListenable: widget.viewModel.load.results,
-      builder: (context, command, child) {
-        if (command.isExecuting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+      body: ValueListenableBuilder<CommandResult<void, void>>(
+        valueListenable: widget.viewModel.load.results,
+        builder: (context, command, child) {
+          if (command.isExecuting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (command.hasError) {
-          return Center(
-            child: Text(
-              "Error loading plant: ${command.error}",
-              //style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          );
-        }
-          
+          if (command.hasError) {
+            return Center(
+              child: Text(
+                "Error loading plant: ${command.error}",
+                //style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            );
+          }
+
           return Stack(
             children: [
               CustomScrollView(
@@ -120,7 +120,8 @@ class _PlantScreenState extends State<PlantScreen> {
                                 .textTheme
                                 .headlineSmall!
                                 .copyWith(
-                                    color: Theme.of(context).primaryColor),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                           ),
                           GestureDetector(
                             // onTap: () => navigateTo(
@@ -140,7 +141,8 @@ class _PlantScreenState extends State<PlantScreen> {
                                 const SizedBox(width: 5),
                                 Icon(LucideIcons.external_link,
                                     size: 10,
-                                    color: Theme.of(context).primaryColor),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ],
                             ),
                           ),
@@ -154,7 +156,7 @@ class _PlantScreenState extends State<PlantScreen> {
                           const SizedBox(height: 8),
                           RichText(
                             text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyMedium!,
+                              style: Theme.of(context).textTheme.bodyLarge!,
                               children: [
                                 TextSpan(
                                     text:
@@ -162,19 +164,25 @@ class _PlantScreenState extends State<PlantScreen> {
                                 TextSpan(
                                   text: widget.viewModel.species.species,
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                 ),
                                 const TextSpan(text: ", genus "),
                                 TextSpan(
                                   text: widget.viewModel.species.genus,
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                 ),
                                 const TextSpan(text: " and family "),
                                 TextSpan(
                                   text: widget.viewModel.species.family,
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                 ),
                                 const TextSpan(text: "."),
                               ],
@@ -245,17 +253,7 @@ class _PlantScreenState extends State<PlantScreen> {
               Positioned(
                 top: 45,
                 left: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Theme.of(context).colorScheme.surfaceBright,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).colorScheme.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 0),
-                        ),
-                      ]),
+                child: Card(
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back,
@@ -271,23 +269,12 @@ class _PlantScreenState extends State<PlantScreen> {
               Positioned(
                 top: 45,
                 right: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Theme.of(context).colorScheme.surfaceBright,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).colorScheme.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 0),
-                        ),
-                      ]),
+                child: Card(
                   child: IconButton(
                     onPressed: () {
                       showMenu(
                         context: context,
                         position: const RelativeRect.fromLTRB(1000, 80, 0, 0),
-                        color: Theme.of(context).colorScheme.surfaceBright,
                         items: [
                           PopupMenuItem(
                             value: 'edit',

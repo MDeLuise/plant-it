@@ -1,7 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/core/ui/app_main_view.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/carousel.dart';
@@ -23,11 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go(Routes.plantWithId(1)),
-        child: const Icon(Icons.add),
-      ),
+    return AppMainView(
+      selectedIndex: 0,
       body: SafeArea(
         top: true,
         bottom: true,

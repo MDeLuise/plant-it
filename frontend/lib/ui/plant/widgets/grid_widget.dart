@@ -84,6 +84,9 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_pages == 0) {
+      return SizedBox();
+    }
     if (_pages == 1) {
       return _buildSinglePage(widget.getInfoChildren());
     }
