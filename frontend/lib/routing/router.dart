@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
+import 'package:plant_it/ui/event/widgets/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/home_screen.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -43,5 +45,17 @@ GoRouter router() => GoRouter(
                 },
               ),
             ]),
+        GoRoute(
+          path: Routes.event,
+          builder: (context, state) {
+            EventFormViewModel viewModel = EventFormViewModel(
+              eventRepository: context.read(),
+              plantRepository: context.read(),
+              eventTypeRepository: context.read(),
+            );
+            viewModel.load.execute();
+            return EventScreen(viewModel: viewModel);
+          },
+        ),
       ],
     );

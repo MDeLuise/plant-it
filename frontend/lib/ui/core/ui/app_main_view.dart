@@ -18,7 +18,7 @@ class AppMainView extends StatelessWidget {
       floatingActionButton: selectedIndex == 2
           ? null
           : FloatingActionButton(
-              onPressed: () => context.go(Routes.plantWithId(1)),
+              onPressed: () => context.push(Routes.event),
               child: const Icon(Icons.add),
             ),
       body: SafeArea(child: body),
