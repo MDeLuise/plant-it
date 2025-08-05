@@ -52,6 +52,7 @@ GoRouter router() => GoRouter(
               eventRepository: context.read(),
               plantRepository: context.read(),
               eventTypeRepository: context.read(),
+              speciesRepository: context.read(),
             );
             viewModel.load.execute();
             return EventScreen(viewModel: viewModel);
