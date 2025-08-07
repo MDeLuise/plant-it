@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Carousel(viewModel: widget.viewModel),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
+                        vertical: 0, horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall!
-                              .copyWith(fontWeight: FontWeight.w700),
+                              .copyWith(fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         SizedBox(height: 10),
                         ReminderOccurrenceList(viewModel: widget.viewModel),

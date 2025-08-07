@@ -1,5 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
+import 'package:plant_it/ui/calendar/widgets/calendar_screen.dart';
+import 'package:plant_it/ui/calendar/widgets/filter/activity_filter.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
@@ -40,7 +43,6 @@ GoRouter router() => GoRouter(
                     plantId: id,
                   );
                   viewModel.load.execute();
-
                   return PlantScreen(viewModel: viewModel);
                 },
               ),
@@ -56,6 +58,32 @@ GoRouter router() => GoRouter(
             );
             viewModel.load.execute();
             return EventScreen(viewModel: viewModel);
+          },
+        ),
+        GoRoute(
+          path: Routes.calendar,
+          builder: (context, state) {
+            CalendarViewModel viewModel;
+            if (state.extra != null) {
+              viewModel = state.extra as CalendarViewModel;
+            } else {
+              viewModel = CalendarViewModel(
+                eventRepository: context.read(),
+                plantRepository: context.read(),
+                eventTypeRepository: context.read(),
+                speciesRepository: context.read(),
+                reminderOccurrenceService: context.read(),
+              );
+              viewModel.load.execute();
+            }
+            return CalendarScreen(viewModel: viewModel);
+          },
+        ),
+        GoRoute(
+          path: Routes.activityFilter,
+          builder: (context, state) {
+            CalendarViewModel viewModel = state.extra as CalendarViewModel;
+            return ActivityFilter(viewModel: viewModel);
           },
         ),
       ],

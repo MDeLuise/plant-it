@@ -10,7 +10,7 @@ class AppStepper<T> extends StatefulWidget {
   final String actionText;
   final List<StepperStep> steps;
   final Command<void, void> actionCommand;
-  final String successText;
+  final String? successText;
 
   const AppStepper({
     super.key,
@@ -19,7 +19,7 @@ class AppStepper<T> extends StatefulWidget {
     required this.actionText,
     required this.steps,
     required this.actionCommand,
-    required this.successText,
+    this.successText,
   });
 
   @override
@@ -33,7 +33,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<CommandResult<void, void>>(
         valueListenable: widget.mainCommand.results,
-        builder: (context, command, _) {
+        builder: (ct, command, _) {
           if (command.isExecuting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -85,7 +85,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
                     Expanded(
                       child: ValueListenableBuilder<bool>(
                           valueListenable: widget.steps[step].isValidNotifier,
-                          builder: (context, isValid, _) {
+                          builder: (ct, isValid, _) {
                             if (step + 1 != widget.steps.length) {
                               return TextButton(
                                 onPressed: isValid
@@ -129,20 +129,23 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
-                                                content: Text(widget
-                                                    .actionCommand.errors
-                                                    .toString())),
+                                              content: Text(widget
+                                                  .actionCommand.errors
+                                                  .toString()),
+                                            ),
                                           );
                                         }
                                       } else {
                                         if (context.mounted) {
-                                          context.pop();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content:
-                                                    Text(widget.successText)),
-                                          );
+                                          context.pop(widget.viewModel);
+                                          if (widget.successText != null) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      widget.successText!)),
+                                            );
+                                          }
                                         }
                                       }
                                     }
