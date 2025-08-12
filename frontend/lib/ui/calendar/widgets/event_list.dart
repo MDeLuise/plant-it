@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
@@ -7,8 +9,9 @@ import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/utils/common.dart';
 import 'package:plant_it/utils/icons.dart';
+import 'package:result_dart/result_dart.dart';
 
-class EventList extends StatelessWidget {
+class EventList extends StatefulWidget {
   final CalendarViewModel viewModel;
   final DateTime day;
 
@@ -19,17 +22,73 @@ class EventList extends StatelessWidget {
   });
 
   @override
+  State<EventList> createState() => _EventListState();
+}
+
+class _EventListState extends State<EventList> {
+  List<Event> _eventForDay = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _eventForDay = widget.viewModel.eventsForMonth[widget.day.day] ?? [];
+  }
+
+  void removeEvent(Event event) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Are you sure you want to delete this event?'),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Result<void> deleteResult =
+                  await widget.viewModel.deleteEvent(event);
+              if (deleteResult.isError()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(deleteResult.exceptionOrNull().toString()),
+                  ),
+                );
+                return;
+              }
+              _eventForDay.removeWhere((e) => e.id == event.id);
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Event deleted"),
+                ),
+              );
+              context.pop();
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<Event>? eventForDay = viewModel.eventsForMonth[day.day];
     return Column(
       children: List.generate(
-        eventForDay != null ? eventForDay.length * 2 - 1 : 0,
+        max(_eventForDay.length * 2 - 1, 0),
         (index) {
           if (index.isEven) {
-            final Event e = eventForDay![index ~/ 2];
-            return _EventCard(event: e, viewModel: viewModel);
+            final Event e = _eventForDay[index ~/ 2];
+            return _EventCard(
+              event: e,
+              viewModel: widget.viewModel,
+              removeEvent: removeEvent,
+            );
           } else {
-            return const Divider(height: 16, thickness: 1, color: AppColors.grey1);
+            return const Divider(
+                height: 16, thickness: 1, color: AppColors.grey1);
           }
         },
       ),
@@ -39,9 +98,14 @@ class EventList extends StatelessWidget {
 
 class _EventCard extends StatelessWidget {
   final Event event;
-    final CalendarViewModel viewModel;
+  final CalendarViewModel viewModel;
+  final Function(Event event) removeEvent;
 
-  const _EventCard({required this.event, required this.viewModel,});
+  const _EventCard({
+    required this.event,
+    required this.viewModel,
+    required this.removeEvent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +128,26 @@ class _EventCard extends StatelessWidget {
               .copyWith(color: AppColors.grey4),
         ),
         leading: _EventTypeAvatar(eventType: viewModel.eventTypes[event.type]!),
-        trailing: Icon(Icons.more_vert, size: 25),
+        trailing: PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert, size: 25),
+          onSelected: (value) {
+            if (value == 'edit') {
+              context.push(Routes.eventWithId(event.id));
+            } else if (value == 'delete') {
+              removeEvent(event);
+            }
+          },
+          itemBuilder: (BuildContext context) => [
+            const PopupMenuItem(
+              value: 'edit',
+              child: Text('Edit'),
+            ),
+            const PopupMenuItem(
+              value: 'delete',
+              child: Text('Delete'),
+            ),
+          ],
+        ),
       ),
     );
   }

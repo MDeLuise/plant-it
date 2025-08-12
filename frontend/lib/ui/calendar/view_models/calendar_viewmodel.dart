@@ -75,7 +75,8 @@ class CalendarViewModel extends ChangeNotifier {
   Map<int, Specy> get species => _species;
   List<int> get filteredPlantIds => _filteredPlantIds;
   List<int> get filteredEventTypeIds => _filteredEventTypeIds;
-  bool get filterActive => _filteredEventTypeIds.isNotEmpty || _filteredPlantIds.isNotEmpty;
+  bool get filterActive =>
+      _filteredEventTypeIds.isNotEmpty || _filteredPlantIds.isNotEmpty;
 
   Future<Result<void>> _load() async {
     final loadEventTypes = await _loadEventTypes();
@@ -158,10 +159,12 @@ class CalendarViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _loadEventsForMonth(DateTime month) async {
-    List<int>? filterForPlantToUse = _filteredPlantIds.isEmpty ? null : _filteredPlantIds;
-    List<int>? filterForEventTypeToUse = _filteredEventTypeIds.isEmpty ? null : _filteredEventTypeIds;
-    Result<List<Event>> events =
-        await _eventRepository.getByMonth(month, filterForPlantToUse, filterForEventTypeToUse);
+    List<int>? filterForPlantToUse =
+        _filteredPlantIds.isEmpty ? null : _filteredPlantIds;
+    List<int>? filterForEventTypeToUse =
+        _filteredEventTypeIds.isEmpty ? null : _filteredEventTypeIds;
+    Result<List<Event>> events = await _eventRepository.getByMonth(
+        month, filterForPlantToUse, filterForEventTypeToUse);
     if (events.isError()) {
       _log.warning('Failed to load events', events.exceptionOrNull());
       return events.exceptionOrNull()!.toFailure();
@@ -179,10 +182,13 @@ class CalendarViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _loadReminderOccurrencesForMonth(DateTime month) async {
-    List<int>? filterForPlantToUse = _filteredPlantIds.isEmpty ? null : _filteredPlantIds;
-    List<int>? filterForEventTypeToUse = _filteredEventTypeIds.isEmpty ? null : _filteredEventTypeIds;
+    List<int>? filterForPlantToUse =
+        _filteredPlantIds.isEmpty ? null : _filteredPlantIds;
+    List<int>? filterForEventTypeToUse =
+        _filteredEventTypeIds.isEmpty ? null : _filteredEventTypeIds;
     Result<List<ReminderOccurrence>> reminderOccurrences =
-        await _reminderOccurrenceService.getForMonth(month, filterForPlantToUse, filterForEventTypeToUse);
+        await _reminderOccurrenceService.getForMonth(
+            month, filterForPlantToUse, filterForEventTypeToUse);
     if (reminderOccurrences.isError()) {
       _log.warning('Failed to load reminder occurrence',
           reminderOccurrences.exceptionOrNull());
@@ -227,5 +233,14 @@ class CalendarViewModel extends ChangeNotifier {
     _filteredPlantIds.clear();
     _filteredPlantIds.addAll(updated.filteredPlantIds);
     //notifyListeners();
+  }
+
+  Future<Result<void>> deleteEvent(Event event) async {
+    Result<void> result = await _eventRepository.delete(event.id);
+    if (result.isSuccess()) {
+      _eventsForMonth[event.date.day]!.removeWhere((e) => e.id == event.id);
+      notifyListeners();
+    }
+    return Future.value(result);
   }
 }

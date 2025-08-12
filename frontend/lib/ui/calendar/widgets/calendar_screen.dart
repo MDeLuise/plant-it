@@ -156,6 +156,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       child: EventList(
                                         viewModel: widget.viewModel,
                                         day: _selectedDay,
+                                        key: UniqueKey(),
                                       ),
                                     ),
                                   ),
