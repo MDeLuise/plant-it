@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/utils/common.dart';
@@ -43,24 +45,27 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.all(0),
-      title: Text(
-        viewModel.plants[event.plant]!.name,
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge!
-            .copyWith(fontWeight: FontWeight.w500),
+    return GestureDetector(
+      onTap: () => context.push(Routes.eventWithId(event.id)),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(0),
+        title: Text(
+          viewModel.plants[event.plant]!.name,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.w500),
+        ),
+        subtitle: Text(
+          timeDiffStr(event.date),
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: AppColors.grey4),
+        ),
+        leading: _EventTypeAvatar(eventType: viewModel.eventTypes[event.type]!),
+        trailing: Icon(Icons.more_vert, size: 25),
       ),
-      subtitle: Text(
-        timeDiffStr(event.date),
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge!
-            .copyWith(color: AppColors.grey4),
-      ),
-      leading: _EventTypeAvatar(eventType: viewModel.eventTypes[event.type]!),
-      trailing: Icon(Icons.more_vert, size: 25),
     );
   }
 }

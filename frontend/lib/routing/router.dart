@@ -3,8 +3,10 @@ import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_screen.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/activity_filter.dart';
+import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
-import 'package:plant_it/ui/event/widgets/event_screen.dart';
+import 'package:plant_it/ui/event/widgets/edit/edit_event_screen.dart';
+import 'package:plant_it/ui/event/widgets/view/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/home_screen.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -84,6 +86,20 @@ GoRouter router() => GoRouter(
           builder: (context, state) {
             CalendarViewModel viewModel = state.extra as CalendarViewModel;
             return ActivityFilter(viewModel: viewModel);
+          },
+        ),
+        GoRoute(
+          path: '${Routes.event}/:id',
+          builder: (context, state) {
+            int id = int.parse(state.pathParameters['id']!);
+            EditEventFormViewModel viewModel = EditEventFormViewModel(
+              eventRepository: context.read(),
+              plantRepository: context.read(),
+              eventTypeRepository: context.read(),
+              speciesRepository: context.read(),
+            );
+            viewModel.load.execute(id);
+            return EditEventScreen(viewModel: viewModel, eventId: id);
           },
         ),
       ],

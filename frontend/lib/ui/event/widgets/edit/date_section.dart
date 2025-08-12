@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:plant_it/ui/core/ui/summary/summary_section.dart';
+import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
+
+class DateSection extends SummarySection<EditEventFormViewModel> {
+  final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
+  final ValueNotifier<DateTime?> _selectedDate = ValueNotifier<DateTime?>(null);
+
+  DateSection({
+    super.key,
+    required super.viewModel,
+  });
+
+  @override
+  bool get isActionSection => true;
+
+  @override
+  State<DateSection> createState() => _DateSectionState();
+
+  @override
+  ValueNotifier<bool> get isValidNotifier => _valid;
+
+  @override
+  String get title => "Date";
+
+  @override
+  String get value => viewModel.date.toLocal().toString();
+
+  @override
+  void confirm() {
+    if (_selectedDate.value == null) {
+      return;
+    }
+    viewModel.setDate(_selectedDate.value!);
+  }
+
+  @override
+  Future<void> action(BuildContext context, EditEventFormViewModel viewmodel) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: viewmodel.date,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      _selectedDate.value = picked;
+    }
+  }
+}
+
+class _DateSectionState extends State<DateSection> {
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError();
+  }
+}
