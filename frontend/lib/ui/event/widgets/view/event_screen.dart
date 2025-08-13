@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/view/date_step.dart';
-import 'package:plant_it/ui/event/widgets/view/event_plant_step.dart';
+import 'package:plant_it/ui/event/widgets/view/plant_step.dart';
 import 'package:plant_it/ui/event/widgets/view/event_type_step.dart';
 import 'package:plant_it/ui/event/widgets/view/note_step.dart';
 
@@ -36,7 +36,7 @@ class _EventScreenState extends State<EventScreen> {
           stepsInFocus: 2,
           steps: [
             EventTypeStep(viewModel: widget.viewModel),
-            EventPlantStep(viewModel: widget.viewModel),
+            PlantStep(viewModel: widget.viewModel),
             DateStep(viewModel: widget.viewModel),
             NoteStep(viewModel: widget.viewModel),
           ]),

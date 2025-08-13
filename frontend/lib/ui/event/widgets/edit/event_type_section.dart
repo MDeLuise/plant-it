@@ -6,9 +6,9 @@ import 'package:plant_it/utils/icons.dart';
 
 class EventTypeSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<EventType?> _selectedEventType =
-      ValueNotifier<EventType?>(null);
-  final ValueNotifier<EventType?> _ongoingSelection = ValueNotifier(null);
+  late final ValueNotifier<EventType?> _selectedEventType =
+      ValueNotifier<EventType?>(viewModel.eventType);
+  late final ValueNotifier<EventType?> _ongoingSelection = ValueNotifier(viewModel.eventType);
 
   EventTypeSection({
     super.key,
@@ -29,7 +29,8 @@ class EventTypeSection extends StepSection<EditEventFormViewModel> {
 
   @override
   void confirm() {
-    viewModel.setEventType(_selectedEventType.value!);
+    viewModel.setEventType(_ongoingSelection.value!);
+    _selectedEventType.value = _ongoingSelection.value;
   }
 
   @override
@@ -39,12 +40,6 @@ class EventTypeSection extends StepSection<EditEventFormViewModel> {
 }
 
 class _EventTypeSectionState extends State<EventTypeSection> {
-  @override
-  void initState() {
-    super.initState();
-    widget._selectedEventType.value = widget.viewModel.eventType;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,7 +52,7 @@ class _EventTypeSectionState extends State<EventTypeSection> {
         ),
         SizedBox(height: 10),
         AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: widget._ongoingSelection,
             builder: (context, _) {
               return SingleChildScrollView(
                 child: SizedBox(
@@ -74,10 +69,10 @@ class _EventTypeSectionState extends State<EventTypeSection> {
                       EventType eventType =
                           widget.viewModel.eventTypes.values.elementAt(index);
                       bool isSelected =
-                          widget._selectedEventType.value!.id == eventType.id;
+                          widget._ongoingSelection.value!.id == eventType.id;
                       return GestureDetector(
                         onTap: () => setState(
-                            () => widget._selectedEventType.value = eventType),
+                            () => widget._ongoingSelection.value = eventType),
                         child: Card.outlined(
                             shape: isSelected
                                 ? RoundedRectangleBorder(

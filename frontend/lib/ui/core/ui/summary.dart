@@ -64,13 +64,20 @@ class _Stepper<T> extends State<Summary<T>> {
               onPressed: widget.mainCommand.execute,
             );
           }
-          return Padding(
-            padding: const EdgeInsets.all(10),
-            child: _focusOn != -1
-                ? Column(
-                    children: [
-                      widget.sections[_focusOn],
-                      Row(
+          return _focusOn != -1
+              ? Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: widget.sections[_focusOn],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                      child: Row(
                         children: [
                           Expanded(
                             child: TextButton(
@@ -128,19 +135,25 @@ class _Stepper<T> extends State<Summary<T>> {
                                 );
                               }),
                         ],
-                      )
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.mainText != null)
-                        Text(
+                      ),
+                    )
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.mainText != null)
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
                           widget.mainText!,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                      SizedBox(height: 10),
-                      Expanded(
+                      ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
                         child: ListView.builder(
                             itemCount: widget.sections.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -178,82 +191,82 @@ class _Stepper<T> extends State<Summary<T>> {
                               );
                             }),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: TextButton(
-                                  onPressed: () => context.pop(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () => context.pop(),
+                                style: ButtonStyle(
+                                  side: WidgetStatePropertyAll(BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                                  padding: WidgetStatePropertyAll(
+                                      EdgeInsetsGeometry.symmetric(
+                                          vertical: 15, horizontal: 40)),
+                                ),
+                                child: Text("Cancel"),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: TextButton(
+                                  onPressed: () async {
+                                    await widget.actionCommand
+                                        .executeWithFuture();
+                                    if (widget.actionCommand.results.value
+                                        .hasError) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(widget
+                                                .actionCommand.errors
+                                                .toString()),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        context.pop(widget.viewModel);
+                                        if (widget.successText != null) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    widget.successText!)),
+                                          );
+                                        }
+                                      }
+                                    }
+                                  },
                                   style: ButtonStyle(
-                                    side: WidgetStatePropertyAll(BorderSide(
-                                        color: Theme.of(context)
+                                    backgroundColor: WidgetStatePropertyAll(
+                                        Theme.of(context)
                                             .colorScheme
-                                            .primary)),
+                                            .primary),
                                     padding: WidgetStatePropertyAll(
                                         EdgeInsetsGeometry.symmetric(
                                             vertical: 15, horizontal: 40)),
                                   ),
-                                  child: Text("Cancel"),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: TextButton(
-                                    onPressed: () async {
-                                      await widget.actionCommand
-                                          .executeWithFuture();
-                                      if (widget.actionCommand.results.value
-                                          .hasError) {
-                                        if (context.mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(widget
-                                                  .actionCommand.errors
-                                                  .toString()),
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        if (context.mounted) {
-                                          context.pop(widget.viewModel);
-                                          if (widget.successText != null) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                  content: Text(
-                                                      widget.successText!)),
-                                            );
-                                          }
-                                        }
-                                      }
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                      padding: WidgetStatePropertyAll(
-                                          EdgeInsetsGeometry.symmetric(
-                                              vertical: 15, horizontal: 40)),
+                                  child: Text(
+                                    widget.actionText,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
                                     ),
-                                    child: Text(
-                                      widget.actionText,
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
-                                    )),
-                              ),
-                            ]),
-                      ),
-                    ],
-                  ),
-          );
+                                  )),
+                            ),
+                          ]),
+                    ),
+                  ],
+                );
         },
       ),
     );

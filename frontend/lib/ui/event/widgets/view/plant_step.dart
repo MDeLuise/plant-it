@@ -3,20 +3,20 @@ import 'package:plant_it/database/database.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
-class EventPlantStep extends StepSection<EventFormViewModel> {
+class PlantStep extends StepSection<EventFormViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<Plant>> _selectedPlants =
       ValueNotifier(List.unmodifiable([]));
   final ValueNotifier<List<Plant>> _ongoingSelection =
       ValueNotifier(List.unmodifiable([]));
 
-  EventPlantStep({
+  PlantStep({
     super.key,
     required super.viewModel,
   });
 
   @override
-  State<EventPlantStep> createState() => _EventPlantStepState();
+  State<PlantStep> createState() => _PlantStepState();
 
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
@@ -66,7 +66,7 @@ class EventPlantStep extends StepSection<EventFormViewModel> {
   }
 }
 
-class _EventPlantStepState extends State<EventPlantStep> {
+class _PlantStepState extends State<PlantStep> {
   void togglePlant(Plant eventType) {
     bool isSelected =
         widget._ongoingSelection.value.any((et) => et.id == eventType.id);

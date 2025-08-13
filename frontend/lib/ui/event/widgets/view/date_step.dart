@@ -45,7 +45,7 @@ class DateStep extends StepSection<EventFormViewModel> {
       BuildContext context, EventFormViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: viewModel.date,
+      initialDate: _ongoingSelection.value,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );

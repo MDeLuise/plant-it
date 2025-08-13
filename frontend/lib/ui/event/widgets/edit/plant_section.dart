@@ -5,8 +5,8 @@ import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
 class PlantSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<Plant?> _selectedPlant = ValueNotifier<Plant?>(null);
-  final ValueNotifier<Plant?> _ongoingSelection = ValueNotifier<Plant?>(null);
+  late final ValueNotifier<Plant?> _selectedPlant = ValueNotifier<Plant?>(viewModel.plant);
+  late final ValueNotifier<Plant?> _ongoingSelection = ValueNotifier<Plant?>(viewModel.plant);
 
   PlantSection({
     super.key,
@@ -38,12 +38,6 @@ class PlantSection extends StepSection<EditEventFormViewModel> {
 
 class _PlantSectionState extends State<PlantSection> {
   @override
-  void initState() {
-    super.initState();
-    widget._selectedPlant.value = widget.viewModel.plant;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -55,7 +49,7 @@ class _PlantSectionState extends State<PlantSection> {
         ),
         SizedBox(height: 10),
         AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: widget._ongoingSelection,
             builder: (context, _) {
               return SingleChildScrollView(
                 child: SizedBox(

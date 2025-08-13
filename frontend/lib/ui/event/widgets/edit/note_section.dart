@@ -4,8 +4,8 @@ import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
 class NoteSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<String?> _selectedNote = ValueNotifier<String?>(null);
-  final ValueNotifier<String?> _ongoingSelection = ValueNotifier<String?>(null);
+  late final ValueNotifier<String?> _selectedNote = ValueNotifier<String?>(viewModel.note);
+  late final ValueNotifier<String?> _ongoingSelection = ValueNotifier<String?>(viewModel.note);
 
   NoteSection({
     super.key,
@@ -26,7 +26,7 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
 
   @override
   String get value {
-    final String? note = viewModel.note;
+    final String? note = _ongoingSelection.value;
     if (note == null) {
       return "";
     }
@@ -41,7 +41,8 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
     if (_selectedNote.value == null) {
       return;
     }
-    viewModel.setNote(_selectedNote.value!);
+    viewModel.setNote(_ongoingSelection.value!);
+    _selectedNote.value = _ongoingSelection.value;
   }
 
   @override
@@ -53,7 +54,7 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
   Future<void> action(
       BuildContext context, EditEventFormViewModel viewModel) async {
     final TextEditingController controller =
-        TextEditingController(text: viewModel.note ?? "");
+        TextEditingController(text: _ongoingSelection.value ?? "");
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) {

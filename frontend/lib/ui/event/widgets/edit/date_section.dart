@@ -4,8 +4,10 @@ import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
 class DateSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<DateTime?> _selectedDate = ValueNotifier<DateTime?>(null);
-  final ValueNotifier<DateTime?> _ongoingSelection = ValueNotifier<DateTime?>(null);
+  late final ValueNotifier<DateTime?> _selectedDate =
+      ValueNotifier<DateTime?>(viewModel.date);
+  late final ValueNotifier<DateTime?> _ongoingSelection =
+      ValueNotifier<DateTime?>(viewModel.date);
 
   DateSection({
     super.key,
@@ -25,7 +27,7 @@ class DateSection extends StepSection<EditEventFormViewModel> {
   String get title => "Date";
 
   @override
-  String get value => viewModel.date.toLocal().toString();
+  String get value => _ongoingSelection.value.toString();
 
   @override
   void confirm() {
@@ -33,6 +35,7 @@ class DateSection extends StepSection<EditEventFormViewModel> {
       return;
     }
     viewModel.setDate(_ongoingSelection.value!);
+    _selectedDate.value = _ongoingSelection.value;
   }
 
   @override
@@ -41,10 +44,11 @@ class DateSection extends StepSection<EditEventFormViewModel> {
   }
 
   @override
-  Future<void> action(BuildContext context, EditEventFormViewModel viewModel) async {
+  Future<void> action(
+      BuildContext context, EditEventFormViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: viewModel.date,
+      initialDate: _ongoingSelection.value,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
