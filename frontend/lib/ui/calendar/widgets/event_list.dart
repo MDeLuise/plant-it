@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
@@ -140,11 +141,25 @@ class _EventCard extends StatelessWidget {
           itemBuilder: (BuildContext context) => [
             const PopupMenuItem(
               value: 'edit',
-              child: Text('Edit'),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(LucideIcons.pencil),
+                  SizedBox(width: 10),
+                  Text('Edit'),
+                ],
+              ),
             ),
             const PopupMenuItem(
               value: 'delete',
-              child: Text('Delete'),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(LucideIcons.trash),
+                  SizedBox(width: 10),
+                  Text('Delete'),
+                ],
+              ),
             ),
           ],
         ),
