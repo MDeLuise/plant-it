@@ -30,14 +30,16 @@ class _ActivityFilterState extends State<ActivityFilter> {
         title: const Text('Filter activities'),
       ),
       body: AppStepper(
-          viewModel: widget.viewModel,
-          mainCommand: widget.viewModel.load,
-          actionText: "Filter",
-          actionCommand: widget.viewModel.filter,
-          steps: [
-            PlantStep(viewModel: widget.viewModel),
-            EventTypeStep(viewModel: widget.viewModel),
-            ]),
+        viewModel: widget.viewModel,
+        mainCommand: widget.viewModel.load,
+        actionText: "Filter",
+        actionCommand: widget.viewModel.filter,
+        stepsInFocus: 0,
+        steps: [
+          PlantStep(viewModel: widget.viewModel),
+          EventTypeStep(viewModel: widget.viewModel),
+        ],
+      ),
     );
   }
 }

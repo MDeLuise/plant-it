@@ -63,8 +63,8 @@ class CalendarViewModel extends ChangeNotifier {
   final Map<int, EventType> _eventTypes = {};
   final Map<int, Plant> _plants = {};
   final Map<int, Specy> _species = {};
-  final List<int> _filteredPlantIds = [];
-  final List<int> _filteredEventTypeIds = [];
+  List<int> _filteredPlantIds = [];
+  List<int> _filteredEventTypeIds = [];
   DateTime _lastLoadedMonth = DateTime.now();
 
   Map<int, List<Event>> get eventsForMonth => _eventsForMonth;
@@ -74,7 +74,9 @@ class CalendarViewModel extends ChangeNotifier {
   Map<int, Plant> get plants => _plants;
   Map<int, Specy> get species => _species;
   List<int> get filteredPlantIds => _filteredPlantIds;
+  List<Plant> get filteredPlants => _filteredPlantIds.map((id) => _plants[id]!).toList();
   List<int> get filteredEventTypeIds => _filteredEventTypeIds;
+  List<EventType> get filteredEventTypes => _filteredEventTypeIds.map((id) => _eventTypes[id]!).toList();
   bool get filterActive =>
       _filteredEventTypeIds.isNotEmpty || _filteredPlantIds.isNotEmpty;
 
@@ -207,25 +209,15 @@ class CalendarViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  void addFilteredPlant(int plantId) {
-    _filteredPlantIds.add(plantId);
+  void setFilteredPlants(List<Plant> plants) {
+    _filteredPlantIds = plants.map((p) => p.id).toList();
     notifyListeners();
   }
 
-  void removeFilteredPlant(int plantId) {
-    _filteredPlantIds.remove(plantId);
+  void setFilteredEventType(List<EventType> eventType) {
+    _filteredEventTypeIds = eventType.map((et) => et.id).toList();
     notifyListeners();
-  }
-
-  void addFilteredEventType(int eventTypeId) {
-    _filteredEventTypeIds.add(eventTypeId);
-    notifyListeners();
-  }
-
-  void removeFilteredEventType(int eventTypeId) {
-    _filteredEventTypeIds.remove(eventTypeId);
-    notifyListeners();
-  }
+  } 
 
   void updateFilter(CalendarViewModel updated) {
     _filteredEventTypeIds.clear();

@@ -5,9 +5,16 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CalendarViewModel> {
-  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
+  late final ValueNotifier<List<EventType>> _selectedEventTypes =
+      ValueNotifier(List.unmodifiable(viewModel.filteredEventTypes));
+  late final ValueNotifier<List<EventType>> _ongoingSelection =
+      ValueNotifier(List.unmodifiable(viewModel.filteredEventTypes));
 
-  EventTypeStep({super.key, required super.viewModel});
+  EventTypeStep({
+    super.key,
+    required super.viewModel,
+  });
 
   @override
   State<EventTypeStep> createState() => _EventTypeStepState();
@@ -16,23 +23,61 @@ class EventTypeStep extends StepSection<CalendarViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  void confirm() {
-    throw UnimplementedError();
+  String get title => "Event Types";
+
+  @override
+  String get value {
+    List<EventType> eventTypes = _ongoingSelection.value;
+    if (eventTypes.length < 3) {
+      return _returnTruncatedEventTypeName(eventTypes);
+    }
+    return "${eventTypes.length} event types";
+  }
+
+  String _returnTruncatedEventTypeName(List<EventType> eventTypes) {
+    String result = eventTypes.map((p) => p.name).join(", ");
+    if (result.length > 50) {
+      result = "${result.substring(0, 50)}...";
+    }
+    return result;
   }
 
   @override
-  String get title => throw UnimplementedError();
+  void confirm() {
+    viewModel.setFilteredEventType(_ongoingSelection.value);
+    _selectedEventTypes.value = _ongoingSelection.value;
+  }
 
   @override
-  String get value => throw UnimplementedError();
-  
-  @override
   void cancel() {
-    // TODO: implement cancel
+    _ongoingSelection.value = _selectedEventTypes.value;
+  }
+
+  void addSelectedEventType(EventType eventType) {
+    List<EventType> current = _ongoingSelection.value;
+    _ongoingSelection.value = [...current, eventType];
+    _isValidNotifier.value = true;
+  }
+
+  void removeSelectedEventType(EventType eventType) {
+    List<EventType> newValue = _ongoingSelection.value.toList();
+    newValue.removeWhere((et) => et.id == eventType.id);
+    _ongoingSelection.value = newValue;
+    _isValidNotifier.value = _ongoingSelection.value.isNotEmpty;
   }
 }
 
 class _EventTypeStepState extends State<EventTypeStep> {
+  void toggleEventType(EventType eventType) {
+    bool isSelected =
+        widget._ongoingSelection.value.any((et) => et.id == eventType.id);
+    if (isSelected) {
+      widget.removeSelectedEventType(eventType);
+    } else {
+      widget.addSelectedEventType(eventType);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,16 +85,16 @@ class _EventTypeStepState extends State<EventTypeStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Which events you want to use as filter?",
+          "Which events you want to add?",
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(height: 10),
         AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: widget._ongoingSelection,
             builder: (context, _) {
               return SingleChildScrollView(
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .6,
+                  height: MediaQuery.of(context).size.height * .7,
                   child: GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
@@ -61,24 +106,16 @@ class _EventTypeStepState extends State<EventTypeStep> {
                         (index) {
                       EventType eventType =
                           widget.viewModel.eventTypes.values.elementAt(index);
-                      bool isEventTypeSelected = widget
-                          .viewModel.filteredEventTypeIds
-                          .contains(eventType.id);
+                      bool isSelected = widget._ongoingSelection.value
+                          .any((et) => et.id == eventType.id);
                       return GestureDetector(
-                        onTap: () {
-                          if (isEventTypeSelected) {
-                            widget.viewModel
-                                .removeFilteredEventType(eventType.id);
-                          } else {
-                            widget.viewModel.addFilteredEventType(eventType.id);
-                          }
-                        },
+                        onTap: () => toggleEventType(eventType),
                         child: Card.outlined(
-                            shape: isEventTypeSelected
+                            shape: isSelected
                                 ? RoundedRectangleBorder(
                                     borderRadius: BorderRadiusGeometry.all(
                                         Radius.circular(15)),
-                                    side: isEventTypeSelected
+                                    side: isSelected
                                         ? BorderSide(
                                             color: Theme.of(context)
                                                 .colorScheme

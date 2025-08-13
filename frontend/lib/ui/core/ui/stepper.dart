@@ -41,6 +41,14 @@ class _Stepper<T> extends State<AppStepper<T>> {
   bool isOnSummary = false;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.stepsInFocus == 0) {
+      setState(() => isOnSummary = true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<CommandResult<void, void>>(
         valueListenable: widget.mainCommand.results,
