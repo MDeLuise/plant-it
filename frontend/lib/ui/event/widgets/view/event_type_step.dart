@@ -1,25 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper_step.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
-class EventTypeStep extends StepperStep {
+class EventTypeStep extends StepSection<EventFormViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
-  final EventFormViewModel viewModel;
+  final ValueNotifier<List<EventType>> _selectedEventTypes =
+      ValueNotifier(List.unmodifiable([]));
+  final ValueNotifier<List<EventType>> _ongoingSelection =
+      ValueNotifier(List.unmodifiable([]));
 
-  EventTypeStep({super.key, required this.viewModel});
+  EventTypeStep({
+    super.key,
+    required super.viewModel,
+  });
 
   @override
   State<EventTypeStep> createState() => _EventTypeStepState();
-  
+
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  String get title => "Event Types";
+
+  @override
+  String get value {
+    List<EventType> eventTypes = _ongoingSelection.value;
+    if (eventTypes.length < 3) {
+      return _returnTruncatedEventTypeName(eventTypes);
+    }
+    return "${eventTypes.length} event types";
+  }
+
+  String _returnTruncatedEventTypeName(List<EventType> eventTypes) {
+    String result = eventTypes.map((p) => p.name).join(", ");
+    if (result.length > 50) {
+      result = "${result.substring(0, 50)}...";
+    }
+    return result;
+  }
+
+  @override
+  void confirm() {
+    viewModel.setEventTypeList(_ongoingSelection.value);
+    _selectedEventTypes.value = _ongoingSelection.value;
+  }
+
+  @override
+  void cancel() {
+    _ongoingSelection.value = _selectedEventTypes.value;
+  }
+
+  void addSelectedEventType(EventType eventType) {
+    List<EventType> current = _ongoingSelection.value;
+    _ongoingSelection.value = [...current, eventType];
+    _isValidNotifier.value = true;
+  }
+
+  void removeSelectedEventType(EventType eventType) {
+    List<EventType> newValue = _ongoingSelection.value.toList();
+    newValue.removeWhere((et) => et.id == eventType.id);
+    _ongoingSelection.value = newValue;
+    _isValidNotifier.value = _ongoingSelection.value.isNotEmpty;
+  }
 }
 
 class _EventTypeStepState extends State<EventTypeStep> {
-  void changeValidValueIfNeeded() {
-    widget._isValidNotifier.value = widget.viewModel.selectedEventTypes.isNotEmpty;
+  void toggleEventType(EventType eventType) {
+    bool isSelected =
+        widget._ongoingSelection.value.any((et) => et.id == eventType.id);
+    if (isSelected) {
+      widget.removeSelectedEventType(eventType);
+    } else {
+      widget.addSelectedEventType(eventType);
+    }
   }
 
   @override
@@ -34,7 +90,7 @@ class _EventTypeStepState extends State<EventTypeStep> {
         ),
         SizedBox(height: 10),
         AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: widget._ongoingSelection,
             builder: (context, _) {
               return SingleChildScrollView(
                 child: SizedBox(
@@ -49,28 +105,24 @@ class _EventTypeStepState extends State<EventTypeStep> {
                     children: List.generate(widget.viewModel.eventTypes.length,
                         (index) {
                       EventType eventType = widget.viewModel.eventTypes[index];
+                      bool isSelected = widget._ongoingSelection.value
+                          .any((et) => et.id == eventType.id);
                       return GestureDetector(
-                        onTap: () {
-                          if (widget.viewModel.isEventTypeSelected(eventType)) {
-                            widget.viewModel.removeEventType(eventType);
-                            changeValidValueIfNeeded();
-                          } else {
-                            widget.viewModel.addEventType(eventType);
-                            changeValidValueIfNeeded();
-                          }
-                        },
+                        onTap: () => toggleEventType(eventType),
                         child: Card.outlined(
-                            shape:
-                                widget.viewModel.isEventTypeSelected(eventType)
-                                    ? RoundedRectangleBorder(
-                                        borderRadius: BorderRadiusGeometry.all(
-                                            Radius.circular(15)),
-                                        side: widget.viewModel
-                                                .isEventTypeSelected(eventType)
-                                            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)
-                                            : BorderSide.none,
-                                      )
-                                    : null,
+                            shape: isSelected
+                                ? RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.all(
+                                        Radius.circular(15)),
+                                    side: isSelected
+                                        ? BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            width: 2)
+                                        : BorderSide.none,
+                                  )
+                                : null,
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: Column(

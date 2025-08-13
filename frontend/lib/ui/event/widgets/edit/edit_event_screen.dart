@@ -1,6 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_it/ui/core/ui/summary/summary.dart';
+import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/edit/date_section.dart';
 import 'package:plant_it/ui/event/widgets/edit/event_type_section.dart';

@@ -115,16 +115,6 @@ class EventFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPlant(Plant plant) {
-    _selectedPlants.add(plant);
-    notifyListeners();
-  }
-
-  void removePlant(Plant plant) {
-    _selectedPlants.remove(plant);
-    notifyListeners();
-  }
-
   bool isPlantSelected(Plant plant) {
     return _selectedPlants.contains(plant);
   }
@@ -135,16 +125,6 @@ class EventFormViewModel extends ChangeNotifier {
 
   void setEventTypeList(List<EventType> eventTypes) {
     _selectedEventTypes = eventTypes;
-    notifyListeners();
-  }
-
-  void addEventType(EventType eventType) {
-    _selectedEventTypes.add(eventType);
-    notifyListeners();
-  }
-
-  void removeEventType(EventType eventType) {
-    _selectedEventTypes.remove(eventType);
     notifyListeners();
   }
 

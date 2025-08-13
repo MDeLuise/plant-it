@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/event_type_step.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/plant_step.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper.dart';
+import 'package:plant_it/ui/core/ui/stepper.dart';
 
 class ActivityFilter extends StatefulWidget {
   final CalendarViewModel viewModel;

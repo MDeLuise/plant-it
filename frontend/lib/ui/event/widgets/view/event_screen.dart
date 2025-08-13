@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper.dart';
+import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
-import 'package:plant_it/ui/event/widgets/view/date_and_note_step.dart';
+import 'package:plant_it/ui/event/widgets/view/date_step.dart';
 import 'package:plant_it/ui/event/widgets/view/event_plant_step.dart';
 import 'package:plant_it/ui/event/widgets/view/event_type_step.dart';
+import 'package:plant_it/ui/event/widgets/view/note_step.dart';
 
 class EventScreen extends StatefulWidget {
   final EventFormViewModel viewModel;
@@ -25,16 +26,19 @@ class _EventScreenState extends State<EventScreen> {
         ),
         title: const Text('Create Event'),
       ),
-      body: AppStepper(
+      body: AppStepper<EventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
           actionText: "Create",
           actionCommand: widget.viewModel.insert,
           successText: "Events created",
+          summary: true,
+          stepsInFocus: 2,
           steps: [
             EventTypeStep(viewModel: widget.viewModel),
             EventPlantStep(viewModel: widget.viewModel),
-            DateAndNoteStep(viewModel: widget.viewModel),
+            DateStep(viewModel: widget.viewModel),
+            NoteStep(viewModel: widget.viewModel),
           ]),
     );
   }

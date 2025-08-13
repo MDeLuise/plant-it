@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
-import 'package:plant_it/ui/core/ui/summary/summary_section.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 
 class Summary<T> extends StatefulWidget {
   final T viewModel;
   final Command<void, void> mainCommand;
   final String actionText;
-  final List<SummarySection<T>> sections;
+  final List<StepSection<T>> sections;
   final Command<void, void> actionCommand;
   final String? successText;
-  final String mainText;
+  final String? mainText;
+  final bool isPrimary;
 
   const Summary({
     super.key,
@@ -21,9 +22,10 @@ class Summary<T> extends StatefulWidget {
     required this.actionText,
     required this.sections,
     required this.actionCommand,
-    required this.mainText,
+    this.mainText,
     this.successText,
-  });
+    bool? isPrimary,
+  }) : isPrimary = isPrimary ?? true;
 
   @override
   State<Summary> createState() => _Stepper();
@@ -35,16 +37,19 @@ class _Stepper<T> extends State<Summary<T>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            if (_focusOn == -1) {
-              context.pop();
-            }
-            setState(() => _focusOn = -1);
-          },
-        ),
-      ),
+      appBar: widget.isPrimary
+          ? AppBar(
+              leading: BackButton(
+                onPressed: () {
+                  if (_focusOn == -1) {
+                    context.pop();
+                  }
+                  widget.sections[_focusOn].cancel();
+                  setState(() => _focusOn = -1);
+                },
+              ),
+            )
+          : null,
       body: ValueListenableBuilder<CommandResult<void, void>>(
         valueListenable: widget.mainCommand.results,
         builder: (ct, command, _) {
@@ -70,6 +75,7 @@ class _Stepper<T> extends State<Summary<T>> {
                           Expanded(
                             child: TextButton(
                               onPressed: () {
+                                widget.sections[_focusOn].cancel();
                                 setState(() {
                                   _focusOn = -1;
                                 });
@@ -128,10 +134,11 @@ class _Stepper<T> extends State<Summary<T>> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.mainText,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
+                      if (widget.mainText != null)
+                        Text(
+                          widget.mainText!,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
                       SizedBox(height: 10),
                       Expanded(
                         child: ListView.builder(
@@ -161,7 +168,7 @@ class _Stepper<T> extends State<Summary<T>> {
                                           children: [
                                             Text(widget.sections[index].value),
                                             SizedBox(width: 10),
-                                            Icon(LucideIcons.arrow_right),
+                                            Icon(LucideIcons.chevron_right),
                                           ],
                                         ),
                                       ],

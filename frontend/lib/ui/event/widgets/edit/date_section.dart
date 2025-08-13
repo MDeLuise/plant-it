@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/ui/core/ui/summary/summary_section.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
-class DateSection extends SummarySection<EditEventFormViewModel> {
+class DateSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
   final ValueNotifier<DateTime?> _selectedDate = ValueNotifier<DateTime?>(null);
+  final ValueNotifier<DateTime?> _ongoingSelection = ValueNotifier<DateTime?>(null);
 
   DateSection({
     super.key,
@@ -28,23 +29,28 @@ class DateSection extends SummarySection<EditEventFormViewModel> {
 
   @override
   void confirm() {
-    if (_selectedDate.value == null) {
+    if (_ongoingSelection.value == null) {
       return;
     }
-    viewModel.setDate(_selectedDate.value!);
+    viewModel.setDate(_ongoingSelection.value!);
   }
 
   @override
-  Future<void> action(BuildContext context, EditEventFormViewModel viewmodel) async {
+  void cancel() {
+    _ongoingSelection.value = _selectedDate.value;
+  }
+
+  @override
+  Future<void> action(BuildContext context, EditEventFormViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: viewmodel.date,
+      initialDate: viewModel.date,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
 
     if (picked != null) {
-      _selectedDate.value = picked;
+      _ongoingSelection.value = picked;
     }
   }
 }

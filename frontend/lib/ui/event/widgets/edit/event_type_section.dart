@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/ui/core/ui/summary/summary_section.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
-class EventTypeSection extends SummarySection<EditEventFormViewModel> {
+class EventTypeSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<EventType?> _selectedEventType = ValueNotifier<EventType?>(null);
+  final ValueNotifier<EventType?> _selectedEventType =
+      ValueNotifier<EventType?>(null);
+  final ValueNotifier<EventType?> _ongoingSelection = ValueNotifier(null);
 
   EventTypeSection({
     super.key,
@@ -23,16 +25,20 @@ class EventTypeSection extends SummarySection<EditEventFormViewModel> {
   String get title => "Event Type";
 
   @override
-  String get value => viewModel.eventType.name;
-  
+  String get value => _ongoingSelection.value!.name;
+
   @override
   void confirm() {
     viewModel.setEventType(_selectedEventType.value!);
   }
+
+  @override
+  void cancel() {
+    _ongoingSelection.value = _selectedEventType.value;
+  }
 }
 
 class _EventTypeSectionState extends State<EventTypeSection> {
-
   @override
   void initState() {
     super.initState();
@@ -70,7 +76,8 @@ class _EventTypeSectionState extends State<EventTypeSection> {
                       bool isSelected =
                           widget._selectedEventType.value!.id == eventType.id;
                       return GestureDetector(
-                        onTap: () => setState(() => widget._selectedEventType.value = eventType),
+                        onTap: () => setState(
+                            () => widget._selectedEventType.value = eventType),
                         child: Card.outlined(
                             shape: isSelected
                                 ? RoundedRectangleBorder(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/ui/core/ui/summary/summary_section.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
-class PlantSection extends SummarySection<EditEventFormViewModel> {
+class PlantSection extends StepSection<EditEventFormViewModel> {
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
   final ValueNotifier<Plant?> _selectedPlant = ValueNotifier<Plant?>(null);
+  final ValueNotifier<Plant?> _ongoingSelection = ValueNotifier<Plant?>(null);
 
   PlantSection({
     super.key,
@@ -22,11 +23,16 @@ class PlantSection extends SummarySection<EditEventFormViewModel> {
   String get title => "Plant";
 
   @override
-  String get value => viewModel.plant.name;
+  String get value => _ongoingSelection.value!.name;
 
   @override
   void confirm() {
-    viewModel.setPlant(_selectedPlant.value!);
+    viewModel.setPlant(_ongoingSelection.value!);
+  }
+
+  @override
+  void cancel() {
+    _ongoingSelection.value = _selectedPlant.value;
   }
 }
 
@@ -66,10 +72,10 @@ class _PlantSectionState extends State<PlantSection> {
                       Plant plant =
                           widget.viewModel.plants.values.elementAt(index);
                       bool isSelected =
-                          widget._selectedPlant.value!.id == plant.id;
+                          widget._ongoingSelection.value!.id == plant.id;
                       return GestureDetector(
                         onTap: () =>
-                            setState(() => widget._selectedPlant.value = plant),
+                            setState(() => widget._ongoingSelection.value = plant),
                         child: Card.outlined(
                             shape: isSelected
                                 ? RoundedRectangleBorder(

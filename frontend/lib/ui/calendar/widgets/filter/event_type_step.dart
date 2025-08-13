@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper_step.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/utils/icons.dart';
 
-class EventTypeStep extends StepperStep {
+class EventTypeStep extends StepSection<CalendarViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final CalendarViewModel viewModel;
 
-  EventTypeStep({super.key, required this.viewModel});
+  EventTypeStep({super.key, required super.viewModel});
 
   @override
   State<EventTypeStep> createState() => _EventTypeStepState();
 
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  void confirm() {
+    throw UnimplementedError();
+  }
+
+  @override
+  String get title => throw UnimplementedError();
+
+  @override
+  String get value => throw UnimplementedError();
+  
+  @override
+  void cancel() {
+    // TODO: implement cancel
+  }
 }
 
 class _EventTypeStepState extends State<EventTypeStep> {

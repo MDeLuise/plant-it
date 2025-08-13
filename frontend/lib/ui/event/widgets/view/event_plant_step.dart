@@ -1,25 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper_step.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
-class EventPlantStep extends StepperStep {
+class EventPlantStep extends StepSection<EventFormViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
-  final EventFormViewModel viewModel;
+  final ValueNotifier<List<Plant>> _selectedPlants =
+      ValueNotifier(List.unmodifiable([]));
+  final ValueNotifier<List<Plant>> _ongoingSelection =
+      ValueNotifier(List.unmodifiable([]));
 
-  EventPlantStep({super.key, required this.viewModel,});
+  EventPlantStep({
+    super.key,
+    required super.viewModel,
+  });
 
   @override
   State<EventPlantStep> createState() => _EventPlantStepState();
-  
+
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  String get title => "Plants";
+
+  @override
+  String get value {
+    List<Plant> plants = _ongoingSelection.value;
+    if (plants.length < 3) {
+      return _returnTruncatedPlantName(plants);
+    }
+    return "${plants.length} plants";
+  }
+
+  String _returnTruncatedPlantName(List<Plant> plants) {
+    String result = plants.map((p) => p.name).join(", ");
+    if (result.length > 50) {
+      result = "${result.substring(0, 50)}...";
+    }
+    return result;
+  }
+
+  @override
+  void confirm() {
+    viewModel.setPlantList(_ongoingSelection.value);
+    _selectedPlants.value = _ongoingSelection.value;
+  }
+
+  @override
+  void cancel() {
+    _ongoingSelection.value = _selectedPlants.value;
+  }
+
+  void addSelectedPlant(Plant eventType) {
+    List<Plant> current = _ongoingSelection.value;
+    _ongoingSelection.value = [...current, eventType];
+    _isValidNotifier.value = true;
+  }
+
+  void removeSelectedPlant(Plant eventType) {
+    List<Plant> newValue = _ongoingSelection.value.toList();
+    newValue.removeWhere((et) => et.id == eventType.id);
+    _ongoingSelection.value = newValue;
+    _isValidNotifier.value = _ongoingSelection.value.isNotEmpty;
+  }
 }
 
 class _EventPlantStepState extends State<EventPlantStep> {
-  
-  void changeValidValueIfNeeded() {
-    widget._isValidNotifier.value = widget.viewModel.selectedPlants.isNotEmpty;
+  void togglePlant(Plant eventType) {
+    bool isSelected =
+        widget._ongoingSelection.value.any((et) => et.id == eventType.id);
+    if (isSelected) {
+      widget.removeSelectedPlant(eventType);
+    } else {
+      widget.addSelectedPlant(eventType);
+    }
   }
 
   @override
@@ -34,7 +89,7 @@ class _EventPlantStepState extends State<EventPlantStep> {
         ),
         const SizedBox(height: 10),
         AnimatedBuilder(
-            animation: widget.viewModel,
+            animation: widget._ongoingSelection,
             builder: (context, _) {
               return SingleChildScrollView(
                 child: SizedBox(
@@ -49,29 +104,22 @@ class _EventPlantStepState extends State<EventPlantStep> {
                     children:
                         List.generate(widget.viewModel.plants.length, (index) {
                       Plant plant = widget.viewModel.plants[index];
+                      bool isSelected = widget._ongoingSelection.value
+                          .any((p) => p.id == plant.id);
                       return GestureDetector(
-                        onTap: () {
-                          if (widget.viewModel.isPlantSelected(plant)) {
-                            widget.viewModel.removePlant(plant);
-                            changeValidValueIfNeeded();
-                          } else {
-                            widget.viewModel.addPlant(plant);
-                            changeValidValueIfNeeded();
-                          }
-                        },
+                        onTap: () => togglePlant(plant),
                         child: Card.outlined(
-                            shape: widget.viewModel.isPlantSelected(plant)
+                            shape: isSelected
                                 ? RoundedRectangleBorder(
                                     borderRadius: BorderRadiusGeometry.all(
                                         Radius.circular(15)),
-                                    side:
-                                        widget.viewModel.isPlantSelected(plant)
-                                            ? BorderSide(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                width: 2)
-                                            : BorderSide.none,
+                                    side: isSelected
+                                        ? BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            width: 2)
+                                        : BorderSide.none,
                                   )
                                 : null,
                             child: Padding(

@@ -1,47 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
+import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
-class NoteSection extends StepSection<EditEventFormViewModel> {
-  final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  final ValueNotifier<String?> _selectedNote = ValueNotifier<String?>(null);
-  final ValueNotifier<String?> _ongoingSelection = ValueNotifier<String?>(null);
+class NoteStep extends StepSection<EventFormViewModel> {
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
+  final ValueNotifier<String?> _selectedNote = ValueNotifier(null);
+  final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
 
-  NoteSection({
+  NoteStep({
     super.key,
     required super.viewModel,
   });
 
   @override
-  bool get isActionSection => true;
+  State<NoteStep> createState() => _NoteStepState();
 
   @override
-  State<NoteSection> createState() => _NoteSectionState();
+  ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  ValueNotifier<bool> get isValidNotifier => _valid;
+  void confirm() {
+    viewModel.setNote(_ongoingSelection.value!);
+    _selectedNote.value = _ongoingSelection.value;
+  }
 
   @override
   String get title => "Note";
 
   @override
   String get value {
-    final String? note = viewModel.note;
-    if (note == null) {
-      return "";
-    }
+    String note = _ongoingSelection.value ?? "";
     if (note.length > 20) {
-      return "${note.substring(0, 20).replaceAll('\n', " ")}...";
+      note = "${note.substring(0, 20)}...";
     }
-    return note.replaceAll('\n', " ");
-  }
-
-  @override
-  void confirm() {
-    if (_selectedNote.value == null) {
-      return;
-    }
-    viewModel.setNote(_selectedNote.value!);
+    return note.replaceAll("\n", " ");
   }
 
   @override
@@ -50,10 +42,13 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
   }
 
   @override
+  bool get isActionSection => true;
+
+  @override
   Future<void> action(
-      BuildContext context, EditEventFormViewModel viewModel) async {
+      BuildContext context, EventFormViewModel viewModel) async {
     final TextEditingController controller =
-        TextEditingController(text: viewModel.note ?? "");
+        TextEditingController(text: _ongoingSelection.value ?? "");
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -92,7 +87,7 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
   }
 }
 
-class _NoteSectionState extends State<NoteSection> {
+class _NoteStepState extends State<NoteStep> {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

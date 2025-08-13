@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
-import 'package:plant_it/ui/core/ui/stepper/stepper_step.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
 
-class PlantStep extends StepperStep {
+class PlantStep extends StepSection<CalendarViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final CalendarViewModel viewModel;
 
-  PlantStep({super.key, required this.viewModel,});
+  PlantStep({
+    super.key,
+    required super.viewModel,
+  });
 
   @override
   State<PlantStep> createState() => _PlantStepState();
-  
+
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  void confirm() {
+    throw UnimplementedError();
+  }
+
+  @override
+  String get title => throw UnimplementedError();
+
+  @override
+  String get value => throw UnimplementedError();
+  
+  @override
+  void cancel() {
+    // TODO: implement cancel
+  }
 }
 
 class _PlantStepState extends State<PlantStep> {
-  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,10 +59,12 @@ class _PlantStepState extends State<PlantStep> {
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     childAspectRatio: 3.7 / 2,
-                    children:
-                        List.generate(widget.viewModel.plants.keys.length, (index) {
-                      Plant plant = widget.viewModel.plants.values.elementAt(index);
-                      bool isPlantSelected = widget.viewModel.filteredPlantIds.contains(plant.id);
+                    children: List.generate(widget.viewModel.plants.keys.length,
+                        (index) {
+                      Plant plant =
+                          widget.viewModel.plants.values.elementAt(index);
+                      bool isPlantSelected =
+                          widget.viewModel.filteredPlantIds.contains(plant.id);
                       return GestureDetector(
                         onTap: () {
                           if (isPlantSelected) {
@@ -59,14 +78,13 @@ class _PlantStepState extends State<PlantStep> {
                                 ? RoundedRectangleBorder(
                                     borderRadius: BorderRadiusGeometry.all(
                                         Radius.circular(15)),
-                                    side:
-                                        isPlantSelected
-                                            ? BorderSide(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                width: 2)
-                                            : BorderSide.none,
+                                    side: isPlantSelected
+                                        ? BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            width: 2)
+                                        : BorderSide.none,
                                   )
                                 : null,
                             child: Padding(
@@ -78,8 +96,7 @@ class _PlantStepState extends State<PlantStep> {
                                   Text(plant.name),
                                   const SizedBox(height: 8),
                                   Text(
-                                    widget.viewModel
-                                        .species[plant.species]!
+                                    widget.viewModel.species[plant.species]!
                                         .scientificName,
                                     style:
                                         TextStyle(fontStyle: FontStyle.italic),
