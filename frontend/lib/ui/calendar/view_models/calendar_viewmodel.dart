@@ -23,8 +23,10 @@ class CalendarViewModel extends ChangeNotifier {
         _speciesRepository = speciesRepository,
         _reminderOccurrenceService = reminderOccurrenceService {
     load = Command.createAsyncNoParam(() async {
-      Result<void> result = await _load();
-      if (result.isError()) throw result.exceptionOrNull()!;
+      Result<void> loadResult = await _load();
+      if (loadResult.isError()) throw loadResult.exceptionOrNull()!;
+      await filter.executeWithFuture();
+      if (filter.results.value.hasError) throw filter.results.value.error!.toFailure();
       return;
     }, initialValue: Failure(Exception("not started")));
     loadForMonth = Command.createAsyncNoResult((DateTime month) async {
@@ -74,9 +76,11 @@ class CalendarViewModel extends ChangeNotifier {
   Map<int, Plant> get plants => _plants;
   Map<int, Specy> get species => _species;
   List<int> get filteredPlantIds => _filteredPlantIds;
-  List<Plant> get filteredPlants => _filteredPlantIds.map((id) => _plants[id]!).toList();
+  List<Plant> get filteredPlants =>
+      _filteredPlantIds.map((id) => _plants[id]!).toList();
   List<int> get filteredEventTypeIds => _filteredEventTypeIds;
-  List<EventType> get filteredEventTypes => _filteredEventTypeIds.map((id) => _eventTypes[id]!).toList();
+  List<EventType> get filteredEventTypes =>
+      _filteredEventTypeIds.map((id) => _eventTypes[id]!).toList();
   bool get filterActive =>
       _filteredEventTypeIds.isNotEmpty || _filteredPlantIds.isNotEmpty;
 
@@ -93,15 +97,15 @@ class CalendarViewModel extends ChangeNotifier {
     if (loadSpecies.isError()) {
       return loadSpecies.exceptionOrNull()!.toFailure();
     }
-    final loadEventsForMonth = await _loadEventsForMonth(_lastLoadedMonth);
-    if (loadEventsForMonth.isError()) {
-      return loadEventsForMonth.exceptionOrNull()!.toFailure();
-    }
-    final loadOccurrencesForMonth =
-        await _loadReminderOccurrencesForMonth(_lastLoadedMonth);
-    if (loadOccurrencesForMonth.isError()) {
-      return loadOccurrencesForMonth.exceptionOrNull()!.toFailure();
-    }
+    // final loadEventsForMonth = await _loadEventsForMonth(_lastLoadedMonth);
+    // if (loadEventsForMonth.isError()) {
+    //   return loadEventsForMonth.exceptionOrNull()!.toFailure();
+    // }
+    // final loadOccurrencesForMonth =
+    //     await _loadReminderOccurrencesForMonth(_lastLoadedMonth);
+    // if (loadOccurrencesForMonth.isError()) {
+    //   return loadOccurrencesForMonth.exceptionOrNull()!.toFailure();
+    // }
     notifyListeners();
     return Success("ok");
   }
@@ -217,7 +221,7 @@ class CalendarViewModel extends ChangeNotifier {
   void setFilteredEventType(List<EventType> eventType) {
     _filteredEventTypeIds = eventType.map((et) => et.id).toList();
     notifyListeners();
-  } 
+  }
 
   void updateFilter(CalendarViewModel updated) {
     _filteredEventTypeIds.clear();

@@ -4,7 +4,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
-class EventTypeStep extends StepSection<EventFormViewModel> {
+class EventTypeStep extends StepSection<CreateEventFormViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable([]));

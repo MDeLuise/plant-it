@@ -9,8 +9,8 @@ import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:result_dart/result_dart.dart';
 
-class EventFormViewModel extends ChangeNotifier {
-  EventFormViewModel({
+class CreateEventFormViewModel extends ChangeNotifier {
+  CreateEventFormViewModel({
     required EventRepository eventRepository,
     required PlantRepository plantRepository,
     required EventTypeRepository eventTypeRepository,

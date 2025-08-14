@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
-class DateStep extends StepSection<EventFormViewModel> {
+class DateStep extends StepSection<CreateEventFormViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime?> _selectedDate =
       ValueNotifier<DateTime?>(viewModel.date);
@@ -42,7 +42,7 @@ class DateStep extends StepSection<EventFormViewModel> {
 
   @override
   Future<void> action(
-      BuildContext context, EventFormViewModel viewModel) async {
+      BuildContext context, CreateEventFormViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _ongoingSelection.value,

@@ -29,7 +29,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       top: true,
       bottom: true,
       child: ValueListenableBuilder<CommandResult<void, void>>(
-          valueListenable: widget.viewModel.load.results,
+          valueListenable: widget.viewModel.filter.results,
           builder: (context, command, _) {
             if (command.isExecuting) {
               return const Center(child: CircularProgressIndicator());

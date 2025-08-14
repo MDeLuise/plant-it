@@ -5,7 +5,7 @@ import 'package:plant_it/ui/calendar/widgets/filter/activity_filter.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/edit/edit_event_screen.dart';
-import 'package:plant_it/ui/event/widgets/view/event_screen.dart';
+import 'package:plant_it/ui/event/widgets/create/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -19,18 +19,20 @@ GoRouter router() => GoRouter(
         GoRoute(
             path: Routes.home,
             builder: (context, state) {
-            int selectedView = 0;
+              int selectedView = 0;
 
               HomeViewModel homeViewModel = HomeViewModel(
                 plantRepository: context.read(),
                 reminderOccurrenceRepository: context.read(),
                 imageRepository: context.read(),
               );
+              homeViewModel.load.execute();
 
               CalendarViewModel calendarViewModel;
               if (state.extra != null) {
                 calendarViewModel = state.extra as CalendarViewModel;
                 selectedView = 1;
+                calendarViewModel.filter.execute();
               } else {
                 calendarViewModel = CalendarViewModel(
                   eventRepository: context.read(),
@@ -41,9 +43,6 @@ GoRouter router() => GoRouter(
                 );
                 calendarViewModel.load.execute();
               }
-
-              homeViewModel.load.execute();
-              calendarViewModel.load.execute();
 
               return AppMainView(
                 homeViewModel: homeViewModel,
@@ -75,14 +74,14 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: Routes.event,
           builder: (context, state) {
-            EventFormViewModel viewModel = EventFormViewModel(
+            CreateEventFormViewModel viewModel = CreateEventFormViewModel(
               eventRepository: context.read(),
               plantRepository: context.read(),
               eventTypeRepository: context.read(),
               speciesRepository: context.read(),
             );
             viewModel.load.execute();
-            return EventScreen(viewModel: viewModel);
+            return CreateEventScreen(viewModel: viewModel);
           },
         ),
         GoRoute(

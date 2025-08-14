@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
-import 'package:plant_it/ui/event/widgets/view/date_step.dart';
-import 'package:plant_it/ui/event/widgets/view/plant_step.dart';
-import 'package:plant_it/ui/event/widgets/view/event_type_step.dart';
-import 'package:plant_it/ui/event/widgets/view/note_step.dart';
+import 'package:plant_it/ui/event/widgets/create/date_step.dart';
+import 'package:plant_it/ui/event/widgets/create/plant_step.dart';
+import 'package:plant_it/ui/event/widgets/create/event_type_step.dart';
+import 'package:plant_it/ui/event/widgets/create/note_step.dart';
 
-class EventScreen extends StatefulWidget {
-  final EventFormViewModel viewModel;
+class CreateEventScreen extends StatefulWidget {
+  final CreateEventFormViewModel viewModel;
 
-  const EventScreen({super.key, required this.viewModel});
+  const CreateEventScreen({
+    super.key,
+    required this.viewModel,
+  });
 
   @override
-  State<EventScreen> createState() => _EventScreenState();
+  State<CreateEventScreen> createState() => _CreateEventScreenState();
 }
 
-class _EventScreenState extends State<EventScreen> {
+class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +29,7 @@ class _EventScreenState extends State<EventScreen> {
         ),
         title: const Text('Create Event'),
       ),
-      body: AppStepper<EventFormViewModel>(
+      body: AppStepper<CreateEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
           actionText: "Create",
