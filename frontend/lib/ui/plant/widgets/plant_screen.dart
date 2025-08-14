@@ -23,52 +23,52 @@ class _PlantScreenState extends State<PlantScreen> {
   final ImagePicker _picker = ImagePicker();
 
   void _deletePlant() async {
-    return QuickAlert.show(
-      context: context,
-      type: QuickAlertType.warning,
-      confirmBtnText: 'Delete',
-      cancelBtnText: 'Cancel',
-      title: "Delete plant?",
-      text:
-          "Are you sure you want to delete the plant and all the linked data?",
-      confirmBtnColor: Colors.red,
-      textColor: Theme.of(context).colorScheme.onSurface,
-      titleColor: Theme.of(context).colorScheme.onSurface,
-      showCancelBtn: true,
-      cancelBtnTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
-      barrierColor: Colors.grey.withAlpha(200),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      onConfirmBtnTap: () {
-        try {
-          widget.viewModel.deletePlant();
-        } catch (e) {
-          showSnackbar(
-              context, FeedbackLevel.error, "Error deleting plant", null);
-          return;
-        }
-        showSnackbar(
-            context, FeedbackLevel.success, "Plant deleted successfully", null);
-        Navigator.of(context).pop();
-        Navigator.of(context).pop(true);
-      },
-    );
+    // return QuickAlert.show(
+    //   context: context,
+    //   type: QuickAlertType.warning,
+    //   confirmBtnText: 'Delete',
+    //   cancelBtnText: 'Cancel',
+    //   title: "Delete plant?",
+    //   text:
+    //       "Are you sure you want to delete the plant and all the linked data?",
+    //   confirmBtnColor: Colors.red,
+    //   textColor: Theme.of(context).colorScheme.onSurface,
+    //   titleColor: Theme.of(context).colorScheme.onSurface,
+    //   showCancelBtn: true,
+    //   cancelBtnTextStyle: TextStyle(
+    //     color: Theme.of(context).colorScheme.onSurface,
+    //   ),
+    //   barrierColor: Colors.grey.withAlpha(200),
+    //   backgroundColor: Theme.of(context).colorScheme.surface,
+    //   onConfirmBtnTap: () {
+    //     try {
+    //       widget.viewModel.deletePlant();
+    //     } catch (e) {
+    //       showSnackbar(
+    //           context, FeedbackLevel.error, "Error deleting plant", null);
+    //       return;
+    //     }
+    //     showSnackbar(
+    //         context, FeedbackLevel.success, "Plant deleted successfully", null);
+    //     Navigator.of(context).pop();
+    //     Navigator.of(context).pop(true);
+    //   },
+    // );
   }
 
   Future<void> _uploadNewPhoto() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
+    // final XFile? pickedFile =
+    //     await _picker.pickImage(source: ImageSource.gallery);
+    // if (pickedFile == null) return;
 
-    try {
-      widget.viewModel.uploadNewPhoto(pickedFile);
+    // try {
+    //   widget.viewModel.uploadNewPhoto(pickedFile);
 
-      showSnackbar(context, FeedbackLevel.success, "Photo uploaded", null);
-    } catch (e) {
-      showSnackbar(
-          context, FeedbackLevel.error, "Failed to upload image", e.toString());
-    }
+    //   showSnackbar(context, FeedbackLevel.success, "Photo uploaded", null);
+    // } catch (e) {
+    //   showSnackbar(
+    //       context, FeedbackLevel.error, "Failed to upload image", e.toString());
+    // }
   }
 
   @override

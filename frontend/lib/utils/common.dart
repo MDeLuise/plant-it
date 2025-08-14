@@ -2,22 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:toastification/toastification.dart';
 
-Future navigateTo(BuildContext context, Widget page) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => page),
-  );
-}
-
-Future replaceTo(BuildContext context, Widget page) {
-  return Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => page,
-    ),
-  );
-}
-
 String colorToHex(Color color) {
   return "#${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}";
 }
@@ -68,44 +52,4 @@ String _buildTimeString(int value, String unit, bool isFuture) {
   } else {
     return '$value $timeUnit ago';
   }
-}
-
-Color adaptiveColor(BuildContext context, Color color) {
-  final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-  if (isDarkMode) {
-    return darkenColor(color, .12);
-  }
-  return color;
-}
-
-Color darkenColor(Color color, double factor) {
-  final hsl = HSLColor.fromColor(color);
-  return hsl.withLightness((hsl.lightness - factor).clamp(0.0, 1.0)).toColor();
-}
-
-enum FeedbackLevel {
-  error,
-  success,
-  info;
-}
-
-void showSnackbar(
-    BuildContext context, FeedbackLevel level, String msg, String? details) {
-  toastification.show(
-    context: context,
-    type: level == FeedbackLevel.info
-        ? ToastificationType.info
-        : level == FeedbackLevel.success
-            ? ToastificationType.success
-            : ToastificationType.error,
-    style: ToastificationStyle.flatColored,
-    title: Text(msg),
-    description: details != null ? Text(details) : null,
-    alignment: Alignment.topCenter,
-    autoCloseDuration: const Duration(seconds: 4),
-    boxShadow: highModeShadow,
-    pauseOnHover: false,
-    closeOnClick: true,
-  );
 }

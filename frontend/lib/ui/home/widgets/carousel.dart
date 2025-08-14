@@ -14,7 +14,7 @@ class Carousel extends StatefulWidget {
 }
 
 class _CarouselState extends State<Carousel> {
-  final CarouselController controller = CarouselController(initialItem: 1);
+  final CarouselController controller = CarouselController();
 
   @override
   void dispose() {
@@ -32,12 +32,18 @@ class _CarouselState extends State<Carousel> {
       child: ListView(
         children: <Widget>[
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 250), // MediaQuery.sizeOf(context).height / 2
+            constraints: BoxConstraints(
+                maxHeight: 250), // MediaQuery.sizeOf(context).height / 2
             child: CarouselView.weighted(
               controller: controller,
               itemSnapping: true,
-              flexWeights: const <int>[6, 3, 1], // [1, 7, 1], [7, 2, 2], [6, 4, 1]
-              onTap: (index) => context.go(Routes.plantWithId(plantIdsList[index])),
+              flexWeights: const <int>[
+                6,
+                3,
+                1
+              ], // [1, 7, 1], [7, 2, 2], [6, 4, 1]
+              onTap: (index) =>
+                  context.go(Routes.plantWithId(plantIdsList[index])),
               children: plantIds.map((int plantId) {
                 return HeroLayoutCard(
                     plantId: plantId, viewModel: widget.viewModel);

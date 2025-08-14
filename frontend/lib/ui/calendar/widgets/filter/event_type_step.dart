@@ -5,7 +5,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CalendarViewModel> {
-  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable(viewModel.filteredEventTypes));
   late final ValueNotifier<List<EventType>> _ongoingSelection =

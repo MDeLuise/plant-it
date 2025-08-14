@@ -6,6 +6,5 @@ abstract final class Routes {
   static const String eventRelative = 'event';
   static const String event = '/$eventRelative';
   static String eventWithId(int id) => '$event/$id';
-  static const String calendar = '/calendar';
   static const String activityFilter = '/activityFilter';
 }
