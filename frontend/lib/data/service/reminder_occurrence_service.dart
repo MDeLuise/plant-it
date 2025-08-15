@@ -65,6 +65,42 @@ class ReminderOccurrenceService {
     return result.toSuccess();
   }
 
+  Future<Result<List<Reminder>>> getRemindersToNotify() async {
+    Result<List<Reminder>> reminders = await _reminderRepository.getAll();
+    if (reminders.isError()) {
+      return reminders.exceptionOrNull()!.toFailure();
+    }
+    DateTime now = DateTime.now();
+    DateTime startOfDay = DateTime(now.year, now.month, now.day);
+    DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    List<Reminder> result = [];
+
+    for (Reminder reminder in reminders.getOrThrow()) {
+      if (!reminder.enabled) continue;
+      if (reminder.endDate != null && reminder.endDate!.isBefore(startOfDay)) {
+        continue;
+      }
+      if (reminder.startDate.isAfter(endOfDay)) {
+        continue;
+      }
+
+      bool isDue = await _isReminderDue(reminder, now);
+      if (!isDue) {
+        continue;
+      }
+
+      DateTime occurrence = reminder.lastNotified ?? reminder.startDate;
+      while (occurrence.isBefore(endOfDay)) {
+        result.removeWhere((r) => r.id == reminder.id);
+        result.add(reminder);
+        occurrence = _calculateNextNotification(
+            occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
+      }
+    }
+
+    return result.toSuccess();
+  }
+
   Future<bool> _isReminderDue(Reminder reminder, DateTime now) async {
     Result<Event>? lastEvent = await _eventRepository
         .getLastFiltered([reminder.plant], [reminder.type]);
@@ -220,5 +256,9 @@ class ReminderOccurrenceService {
       eventType: eventType.getOrThrow(),
       plant: plant.getOrThrow(),
     );
+  }
+
+  Future<Result<void>> updateLastNotified(Reminder reminder) {
+    return _reminderRepository.updateLastNotified(reminder);
   }
 }

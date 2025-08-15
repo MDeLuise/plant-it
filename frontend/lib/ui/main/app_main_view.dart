@@ -5,16 +5,20 @@ import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/home_screen.dart';
+import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:plant_it/ui/settings/widgets/settings_screen.dart';
 
 class AppMainView extends StatefulWidget {
   final HomeViewModel homeViewModel;
   final CalendarViewModel calendarViewModel;
+  final SettingsViewModel settingsViewModel;
   final int selectedView;
 
   const AppMainView({
     super.key,
     required this.homeViewModel,
     required this.calendarViewModel,
+    required this.settingsViewModel,
     int? selectedView,
   }) : selectedView = selectedView ?? 0;
 
@@ -33,6 +37,7 @@ class _AppMainViewState extends State<AppMainView> {
     _screens = [
       HomeScreen(viewModel: widget.homeViewModel),
       CalendarScreen(viewModel: widget.calendarViewModel),
+      SettingsScreen(viewModel: widget.settingsViewModel),
     ];
   }
 

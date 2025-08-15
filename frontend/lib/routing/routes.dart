@@ -7,4 +7,5 @@ abstract final class Routes {
   static const String event = '/$eventRelative';
   static String eventWithId(int id) => '$event/$id';
   static const String activityFilter = '/activityFilter';
+  static String settingsNotifications = '/settings-notifications';
 }

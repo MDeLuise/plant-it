@@ -149,12 +149,22 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
+    driftRuntimeOptions.dontWarnAboutMultipleDatabases =
+        true; // this only because of main#callbackDispatcher
     return driftDatabase(
       name: 'plant_it_db',
       native: const DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),
     );
+  }
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(onCreate: (m) async {
+      await m.createAll();
+      await initDummyData();
+    });
   }
 
   Future<void> initDummyData() async {

@@ -10,7 +10,7 @@ class ReminderOccurrenceRepository {
       : _service = service;
 
   Future<Result<List<Reminder>>> getRemindersToNotifyToday() {
-    return _service.getRemindersToNotifyToday();
+    return _service.getRemindersToNotify();
   }
 
   Future<Result<List<ReminderOccurrence>>> getNextOccurrences(int num) {

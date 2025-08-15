@@ -5,7 +5,9 @@ import 'package:result_dart/result_dart.dart';
 class UserSettingRepository {
   final AppDatabase db;
 
-  UserSettingRepository({required this.db});
+  UserSettingRepository({
+    required this.db,
+  });
 
   Future<Result<String>> getOrDefault(String key, String defaultValue) async {
     UserSetting? result = await (db.select(db.userSettings)
@@ -32,5 +34,23 @@ class UserSettingRepository {
           ..where((t) => t.key.equals(key)))
         .get();
     return stored.isNotEmpty.toSuccess();
+  }
+
+  Future<Result<List<UserSetting>>> getAll() async {
+    try {
+      List<UserSetting> userSettings = await db.select(db.userSettings).get();
+      return Success(userSettings);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
+  Result<void> remove(String key) {
+    try {
+      db.delete(db.userSettings).where((s) => s.key.equals(key));
+      return Success("ok");
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
   }
 }

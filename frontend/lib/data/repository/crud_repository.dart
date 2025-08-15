@@ -5,7 +5,9 @@ import 'package:result_dart/result_dart.dart';
 abstract class CRUDRepository<T extends DataClass> {
   final AppDatabase db;
 
-  CRUDRepository({required this.db});
+  CRUDRepository({
+    required this.db,
+  });
 
   TableInfo<Table, T> get table;
 

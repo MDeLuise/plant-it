@@ -13,7 +13,7 @@ class HomeViewModel extends ChangeNotifier {
     required PlantRepository plantRepository,
     required ReminderOccurrenceRepository reminderOccurrenceRepository,
     required ImageRepository imageRepository,
-  })  : _plantRepository = plantRepository,
+  }) : _plantRepository = plantRepository,
         _reminderOccurrenceRepository = reminderOccurrenceRepository,
         _imageRepository = imageRepository {
     load = Command.createAsyncNoParam(() async {
