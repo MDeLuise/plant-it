@@ -1,11 +1,12 @@
 abstract final class Routes {
   static const String home = '/';
-  static const String plantRelative = 'plant';
-  static const String plant = '/$plantRelative';
-  static String plantWithId(int id) => '$plant/$id';
-  static const String eventRelative = 'event';
-  static const String event = '/$eventRelative';
-  static String eventWithId(int id) => '$event/$id';
+  static String plantsRelative = 'plants';
+  static String plantWithId(int id) => '/$plantsRelative/$id';
+  static const String event = '/event';
+  static String eventWithId(int id) => '/$event/$id';
   static const String activityFilter = '/activityFilter';
   static String settingsNotifications = '/settings-notifications';
+  static String eventTypes = '/eventTypes';
+  static String eventType = '/eventType';
+  static String eventTypeWithId(int id) => '/$eventTypes/$id';
 }

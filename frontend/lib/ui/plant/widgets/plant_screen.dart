@@ -5,10 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/plant/widgets/plant_avatar.dart';
-import 'package:plant_it/utils/common.dart';
 import 'package:plant_it/ui/plant/widgets/plant_gallery/plant_gallery.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class PlantScreen extends StatefulWidget {
   final PlantViewModel viewModel;

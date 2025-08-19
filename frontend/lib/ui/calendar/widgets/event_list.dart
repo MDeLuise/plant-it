@@ -130,6 +130,7 @@ class _EventCard extends StatelessWidget {
         ),
         leading: _EventTypeAvatar(eventType: viewModel.eventTypes[event.type]!),
         trailing: PopupMenuButton<String>(
+          padding: EdgeInsetsGeometry.all(0),
           icon: const Icon(Icons.more_vert, size: 25),
           onSelected: (value) {
             if (value == 'edit') {

@@ -39,10 +39,14 @@ class SettingsScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: Column(
                   children: [
-                    ListTile(
-                      title: Text("Event Types"),
-                      subtitle: Text("Manage the event types"),
-                      leading: Icon(LucideIcons.glass_water),
+                    GestureDetector(
+                      onTap: () =>
+                          context.push(Routes.eventTypes, extra: viewModel),
+                      child: ListTile(
+                        title: Text("Event Types"),
+                        subtitle: Text("Manage the event types"),
+                        leading: Icon(LucideIcons.glass_water),
+                      ),
                     ),
                     ListTile(
                       title: Text("Reminders"),

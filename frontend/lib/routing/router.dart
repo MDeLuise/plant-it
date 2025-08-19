@@ -10,7 +10,11 @@ import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
+import 'package:plant_it/ui/settings/view_models/add_event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:plant_it/ui/settings/widgets/event_type/create/add_event_type_screen.dart';
+import 'package:plant_it/ui/settings/widgets/event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +54,7 @@ GoRouter router() => GoRouter(
                 userSettingRepository: context.read(),
                 schedulingService: context.read(),
                 notificationService: context.read(),
+                reminderRepository: context.read(),
               );
               settingsViewModel.load.execute();
 
@@ -62,7 +67,7 @@ GoRouter router() => GoRouter(
             },
             routes: [
               GoRoute(
-                path: '${Routes.plant}/:id',
+                path: '${Routes.plantsRelative}/:id',
                 builder: (context, state) {
                   int id = int.parse(state.pathParameters['id']!);
                   PlantViewModel viewModel = PlantViewModel(
@@ -86,6 +91,25 @@ GoRouter router() => GoRouter(
                   SettingsViewModel viewModel =
                       state.extra as SettingsViewModel;
                   return NotificationsScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.eventTypes,
+                builder: (context, state) {
+                  EventTypeViewModel viewModel = EventTypeViewModel(
+                    eventTypeRepository: context.read(),
+                  );
+                  viewModel.load.execute();
+                  return EventTypeScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.eventType,
+                builder: (context, state) {
+                  AddEventTypeViewModel viewModel = AddEventTypeViewModel(
+                    eventTypeRepository: context.read(),
+                  );
+                  return AddEventTypeScreen(viewModel: viewModel);
                 },
               ),
             ]),

@@ -26,7 +26,7 @@ class CreateEventFormViewModel extends ChangeNotifier {
       return;
     }, initialValue: Failure(Exception("not started")));
     insert = Command.createAsyncNoParam(() async {
-      Result<void> result = await saveEvent();
+      Result<void> result = await _saveEvent();
       if (result.isError()) throw result.exceptionOrNull()!;
       return "ok";
     }, initialValue: "not started");
@@ -45,7 +45,7 @@ class CreateEventFormViewModel extends ChangeNotifier {
   List<EventType> _eventTypes = [];
   List<Plant> _selectedPlants = [];
   List<EventType> _selectedEventTypes = [];
-  Map<int, Specy> _species = {};
+  final Map<int, Specy> _species = {};
   String? _note;
   DateTime? _date;
   bool _isSubmitting = false;
@@ -142,7 +142,7 @@ class CreateEventFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Result<void>> saveEvent() async {
+  Future<Result<void>> _saveEvent() async {
     if (_selectedPlants.isEmpty ||
         _selectedEventTypes.isEmpty ||
         _date == null) {
@@ -153,9 +153,9 @@ class CreateEventFormViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      for (final plant in _selectedPlants) {
-        for (final type in _selectedEventTypes) {
-          final companion = EventsCompanion.insert(
+      for (Plant plant in _selectedPlants) {
+        for (EventType type in _selectedEventTypes) {
+          EventsCompanion companion = EventsCompanion.insert(
             type: type.id,
             plant: plant.id,
             date: _date!,

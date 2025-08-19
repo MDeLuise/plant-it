@@ -1,6 +1,8 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:plant_it/data/repository/event_type_repository.dart';
+import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
@@ -11,9 +13,11 @@ import 'package:result_dart/result_dart.dart';
 class SettingsViewModel extends ChangeNotifier {
   SettingsViewModel({
     required UserSettingRepository userSettingRepository,
+    required ReminderRepository reminderRepository,
     required SchedulingService schedulingService,
     required NotificationService notificationService,
   })  : _userSettingRepository = userSettingRepository,
+        _reminderRepository = reminderRepository,
         _schedulingService = schedulingService,
         _notificationService = notificationService {
     load = Command.createAsyncNoParam(() async {
@@ -41,9 +45,15 @@ class SettingsViewModel extends ChangeNotifier {
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     }, initialValue: Failure(Exception("not started")));
+    loadReminders = Command.createAsyncNoParam(() async {
+      Result<void> result = await _loadReminders();
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    }, initialValue: Failure(Exception("not started")));
   }
 
   final UserSettingRepository _userSettingRepository;
+  final ReminderRepository _reminderRepository;
   final SchedulingService _schedulingService;
   final NotificationService _notificationService;
   final _log = Logger('SettingsViewModel');
@@ -53,6 +63,7 @@ class SettingsViewModel extends ChangeNotifier {
   late final Command<Map<String, String>, void> save;
   late final Command<Map<String, int>, void> saveNotificationTime;
   late final Command<void, void> removeAllNotificationTime;
+  late final Command<void, void> loadReminders;
 
   final List<String> _dayKeys = [
     UserSettingsKeys.notificationTimeMonday.key,
@@ -63,6 +74,9 @@ class SettingsViewModel extends ChangeNotifier {
     UserSettingsKeys.notificationTimeSaturday.key,
     UserSettingsKeys.notificationTimeSunday.key,
   ];
+  List<Reminder> _reminders = [];
+
+  List<Reminder> get reminders => _reminders;
 
   Future<Result<void>> _load() async {
     final loadUserSettings = await _userSettingRepository.getAll();
@@ -73,6 +87,17 @@ class SettingsViewModel extends ChangeNotifier {
       _userSettings.putIfAbsent(us.key, () => us.value);
     }
     _log.fine('Loaded user settings');
+    notifyListeners();
+    return Success("ok");
+  }
+
+  Future<Result<void>> _loadReminders() async {
+    final reminders = await _reminderRepository.getAll();
+    if (reminders.isError()) {
+      return reminders.exceptionOrNull()!.toFailure();
+    }
+    _reminders = reminders.getOrThrow();
+    _log.fine('Loaded reminders');
     notifyListeners();
     return Success("ok");
   }
