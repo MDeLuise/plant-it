@@ -12,8 +12,8 @@ class EventTypes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(max: 30).unique()();
   TextColumn get description => text().withLength(max: 50).nullable()();
-  TextColumn get icon => text().nullable()();
-  TextColumn get color => text().nullable()();
+  TextColumn get icon => text()();
+  TextColumn get color => text()();
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 
@@ -171,15 +171,15 @@ class AppDatabase extends _$AppDatabase {
     await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
       id: const Value(1),
       name: 'watering',
-      icon: const Value('glass_water'),
-      color: const Value('#2196f3'),
+      icon: 'glass_water',
+      color: '#2196f3',
     ));
 
     await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
       id: const Value(2),
       name: 'seeding',
-      icon: const Value('bean'),
-      color: const Value('#c04200'),
+      icon: 'bean',
+      color: '#c04200',
     ));
 
     await createAndSaveImages();

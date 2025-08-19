@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/settings/view_models/add_event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/edit_event_type_viewmodel.dart';
 
-class EventTypeNameStep extends StepSection<AddEventTypeViewModel> {
-  final ValueNotifier<String?> name = ValueNotifier(null);
-  final ValueNotifier<bool> valid = ValueNotifier(false);
+class EventTypeNameStep extends StepSection<EditEventTypeViewModel> {
+  late final ValueNotifier<String> name = ValueNotifier(viewModel.name);
+  final ValueNotifier<bool> valid = ValueNotifier(true);
 
-  EventTypeNameStep({
-    super.key,
-    required super.viewModel,
-  });
+  EventTypeNameStep({super.key, required super.viewModel,});
 
   @override
   void cancel() {}
 
   @override
   void confirm() {
-    viewModel.setName(name.value!);
+    viewModel.setName(name.value);
   }
 
   @override
@@ -29,11 +26,17 @@ class EventTypeNameStep extends StepSection<AddEventTypeViewModel> {
   String get title => "Name";
 
   @override
-  String get value => name.value ?? "";
+  String get value => name.value;
 }
 
 class _EventTypeNameStepState extends State<EventTypeNameStep> {
   final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.name.value;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -91,48 +91,50 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: widget.viewModel.eventTypes.map((et) {
-                    return ListTile(
-                      title: Text(et.name),
-                      subtitle: Text(et.description ?? "No description"),
-                      trailing: PopupMenuButton<String>(
-                        padding: EdgeInsetsGeometry.all(0),
-                        icon: const Icon(Icons.more_vert, size: 25),
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            context.push(Routes.eventTypeWithId(et.id));
-                          } else if (value == 'delete') {
-                            removeEventType(et);
-                          }
-                        },
-                        itemBuilder: (BuildContext context) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(LucideIcons.pencil),
-                                SizedBox(width: 10),
-                                Text('Edit'),
-                              ],
+                    return GestureDetector(
+                      onTap: () => context.push(Routes.eventTypeWithId(et.id)),
+                      child: ListTile(
+                        title: Text(et.name),
+                        subtitle: Text(et.description ?? "No description"),
+                        trailing: PopupMenuButton<String>(
+                          padding: EdgeInsetsGeometry.all(0),
+                          icon: const Icon(Icons.more_vert, size: 25),
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              context.push(Routes.eventTypeWithId(et.id));
+                            } else if (value == 'delete') {
+                              removeEventType(et);
+                            }
+                          },
+                          itemBuilder: (BuildContext context) => [
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(LucideIcons.pencil),
+                                  SizedBox(width: 10),
+                                  Text('Edit'),
+                                ],
+                              ),
                             ),
-                          ),
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(LucideIcons.trash),
-                                SizedBox(width: 10),
-                                Text('Delete'),
-                              ],
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(LucideIcons.trash),
+                                  SizedBox(width: 10),
+                                  Text('Delete'),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      leading: CircleAvatar(
-                        backgroundColor:
-                            et.color != null ? hexToColor(et.color!) : null,
-                        child: Icon(appIcons[et.icon]),
+                          ],
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: hexToColor(et.color),
+                          child: Icon(appIcons[et.icon]),
+                        ),
                       ),
                     );
                   }).toList(),

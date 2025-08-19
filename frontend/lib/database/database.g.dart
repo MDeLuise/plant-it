@@ -37,13 +37,13 @@ class $EventTypesTable extends EventTypes
   static const VerificationMeta _iconMeta = const VerificationMeta('icon');
   @override
   late final GeneratedColumn<String> icon = GeneratedColumn<String>(
-      'icon', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      'icon', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
   late final GeneratedColumn<String> color = GeneratedColumn<String>(
-      'color', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      'color', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -81,10 +81,14 @@ class $EventTypesTable extends EventTypes
     if (data.containsKey('icon')) {
       context.handle(
           _iconMeta, icon.isAcceptableOrUnknown(data['icon']!, _iconMeta));
+    } else if (isInserting) {
+      context.missing(_iconMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
           _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+    } else if (isInserting) {
+      context.missing(_colorMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -106,9 +110,9 @@ class $EventTypesTable extends EventTypes
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       icon: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}icon']),
+          .read(DriftSqlType.string, data['${effectivePrefix}icon'])!,
       color: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}color']),
+          .read(DriftSqlType.string, data['${effectivePrefix}color'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
     );
@@ -124,15 +128,15 @@ class EventType extends DataClass implements Insertable<EventType> {
   final int id;
   final String name;
   final String? description;
-  final String? icon;
-  final String? color;
+  final String icon;
+  final String color;
   final DateTime? createdAt;
   const EventType(
       {required this.id,
       required this.name,
       this.description,
-      this.icon,
-      this.color,
+      required this.icon,
+      required this.color,
       this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -142,12 +146,8 @@ class EventType extends DataClass implements Insertable<EventType> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    if (!nullToAbsent || icon != null) {
-      map['icon'] = Variable<String>(icon);
-    }
-    if (!nullToAbsent || color != null) {
-      map['color'] = Variable<String>(color);
-    }
+    map['icon'] = Variable<String>(icon);
+    map['color'] = Variable<String>(color);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
@@ -161,9 +161,8 @@ class EventType extends DataClass implements Insertable<EventType> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
-      color:
-          color == null && nullToAbsent ? const Value.absent() : Value(color),
+      icon: Value(icon),
+      color: Value(color),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -177,8 +176,8 @@ class EventType extends DataClass implements Insertable<EventType> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
-      icon: serializer.fromJson<String?>(json['icon']),
-      color: serializer.fromJson<String?>(json['color']),
+      icon: serializer.fromJson<String>(json['icon']),
+      color: serializer.fromJson<String>(json['color']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
   }
@@ -189,8 +188,8 @@ class EventType extends DataClass implements Insertable<EventType> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
-      'icon': serializer.toJson<String?>(icon),
-      'color': serializer.toJson<String?>(color),
+      'icon': serializer.toJson<String>(icon),
+      'color': serializer.toJson<String>(color),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
   }
@@ -199,15 +198,15 @@ class EventType extends DataClass implements Insertable<EventType> {
           {int? id,
           String? name,
           Value<String?> description = const Value.absent(),
-          Value<String?> icon = const Value.absent(),
-          Value<String?> color = const Value.absent(),
+          String? icon,
+          String? color,
           Value<DateTime?> createdAt = const Value.absent()}) =>
       EventType(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description.present ? description.value : this.description,
-        icon: icon.present ? icon.value : this.icon,
-        color: color.present ? color.value : this.color,
+        icon: icon ?? this.icon,
+        color: color ?? this.color,
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
       );
   EventType copyWithCompanion(EventTypesCompanion data) {
@@ -254,8 +253,8 @@ class EventTypesCompanion extends UpdateCompanion<EventType> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
-  final Value<String?> icon;
-  final Value<String?> color;
+  final Value<String> icon;
+  final Value<String> color;
   final Value<DateTime?> createdAt;
   const EventTypesCompanion({
     this.id = const Value.absent(),
@@ -269,10 +268,12 @@ class EventTypesCompanion extends UpdateCompanion<EventType> {
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
-    this.icon = const Value.absent(),
-    this.color = const Value.absent(),
+    required String icon,
+    required String color,
     this.createdAt = const Value.absent(),
-  }) : name = Value(name);
+  })  : name = Value(name),
+        icon = Value(icon),
+        color = Value(color);
   static Insertable<EventType> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -295,8 +296,8 @@ class EventTypesCompanion extends UpdateCompanion<EventType> {
       {Value<int>? id,
       Value<String>? name,
       Value<String?>? description,
-      Value<String?>? icon,
-      Value<String?>? color,
+      Value<String>? icon,
+      Value<String>? color,
       Value<DateTime?>? createdAt}) {
     return EventTypesCompanion(
       id: id ?? this.id,
@@ -3505,16 +3506,16 @@ typedef $$EventTypesTableCreateCompanionBuilder = EventTypesCompanion Function({
   Value<int> id,
   required String name,
   Value<String?> description,
-  Value<String?> icon,
-  Value<String?> color,
+  required String icon,
+  required String color,
   Value<DateTime?> createdAt,
 });
 typedef $$EventTypesTableUpdateCompanionBuilder = EventTypesCompanion Function({
   Value<int> id,
   Value<String> name,
   Value<String?> description,
-  Value<String?> icon,
-  Value<String?> color,
+  Value<String> icon,
+  Value<String> color,
   Value<DateTime?> createdAt,
 });
 
@@ -3745,8 +3746,8 @@ class $$EventTypesTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String?> description = const Value.absent(),
-            Value<String?> icon = const Value.absent(),
-            Value<String?> color = const Value.absent(),
+            Value<String> icon = const Value.absent(),
+            Value<String> color = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
           }) =>
               EventTypesCompanion(
@@ -3761,8 +3762,8 @@ class $$EventTypesTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             required String name,
             Value<String?> description = const Value.absent(),
-            Value<String?> icon = const Value.absent(),
-            Value<String?> color = const Value.absent(),
+            required String icon,
+            required String color,
             Value<DateTime?> createdAt = const Value.absent(),
           }) =>
               EventTypesCompanion.insert(
