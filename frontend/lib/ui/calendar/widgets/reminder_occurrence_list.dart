@@ -19,16 +19,21 @@ class ReminderOccurrenceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ReminderOccurrence>? reminderOccurrencesForDay = viewModel.reminderOccurrencesForMonth[day.day];
+    List<ReminderOccurrence>? reminderOccurrencesForDay =
+        viewModel.reminderOccurrencesForMonth[day.day];
     return Column(
       children: List.generate(
-        reminderOccurrencesForDay != null ? reminderOccurrencesForDay.length * 2 - 1 : 0,
+        reminderOccurrencesForDay != null
+            ? reminderOccurrencesForDay.length * 2 - 1
+            : 0,
         (index) {
           if (index.isEven) {
-            final ReminderOccurrence ro = reminderOccurrencesForDay![index ~/ 2];
+            final ReminderOccurrence ro =
+                reminderOccurrencesForDay![index ~/ 2];
             return _ReminderOccurrenceCard(reminderOccurrence: ro);
           } else {
-            return const Divider(height: 16, thickness: 1, color: AppColors.grey1);
+            return const Divider(
+                height: 16, thickness: 1, color: AppColors.grey1);
           }
         },
       ),
@@ -79,8 +84,8 @@ class _EventTypeAvatar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          MaterialShapes.fourLeafClover(
-              size: size, color: hexToColor(eventType.color!)),
+          MaterialShapes.square(
+              size: size, color: hexToColor(eventType.color)),
           Icon(appIcons[eventType.icon], size: 25, color: AppColors.black2),
         ],
       ),

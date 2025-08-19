@@ -183,8 +183,7 @@ class _EventTypeAvatar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          MaterialShapes.fourLeafClover(
-              size: size, color: hexToColor(eventType.color!)),
+          MaterialShapes.arch(size: size, color: hexToColor(eventType.color)),
           Icon(appIcons[eventType.icon], size: 25, color: AppColors.black2),
         ],
       ),

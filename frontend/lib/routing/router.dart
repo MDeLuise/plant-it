@@ -18,6 +18,7 @@ import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/add_event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/edit_event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/event_type_screen.dart';
+import 'package:plant_it/ui/settings/widgets/info_screen.dart';
 import 'package:plant_it/ui/settings/widgets/notifications_screen.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/reminder_screen.dart';
 import 'package:provider/provider.dart';
@@ -95,6 +96,12 @@ GoRouter router() => GoRouter(
                   SettingsViewModel viewModel =
                       state.extra as SettingsViewModel;
                   return NotificationsScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.settingsInfo,
+                builder: (context, state) {
+                  return InfoScreen();
                 },
               ),
               GoRoute(

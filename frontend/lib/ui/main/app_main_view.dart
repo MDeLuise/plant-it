@@ -70,7 +70,7 @@ class _AppMainViewState extends State<AppMainView> {
           NavigationDestination(
               icon: Icon(Icons.calendar_month), label: 'Calendar'),
           NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
         ],
       ),
     );

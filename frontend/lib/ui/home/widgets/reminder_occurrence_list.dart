@@ -21,10 +21,12 @@ class ReminderOccurrenceList extends StatelessWidget {
         viewModel.reminderOccurrences.length * 2 - 1,
         (index) {
           if (index.isEven) {
-            final ReminderOccurrence ro = viewModel.reminderOccurrences[index ~/ 2];
+            final ReminderOccurrence ro =
+                viewModel.reminderOccurrences[index ~/ 2];
             return _ReminderOccurrenceCard(reminderOccurrence: ro);
           } else {
-            return const Divider(height: 16, thickness: 1, color: AppColors.grey1);
+            return const Divider(
+                height: 16, thickness: 1, color: AppColors.grey1);
           }
         },
       ),
@@ -75,8 +77,7 @@ class _EventTypeAvatar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          MaterialShapes.fourLeafClover(
-              size: size, color: hexToColor(eventType.color!)),
+          MaterialShapes.square(size: size, color: hexToColor(eventType.color)),
           Icon(appIcons[eventType.icon], size: 25, color: AppColors.black2),
         ],
       ),

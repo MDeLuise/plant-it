@@ -2,8 +2,10 @@ import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
 import 'package:plant_it/utils/common.dart';
@@ -131,9 +133,18 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                             ),
                           ],
                         ),
-                        leading: CircleAvatar(
-                          backgroundColor: hexToColor(et.color),
-                          child: Icon(appIcons[et.icon]),
+                        // leading: CircleAvatar(
+                        //   backgroundColor: hexToColor(et.color),
+                        //   child: Icon(appIcons[et.icon]),
+                        // ),
+                        leading: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            MaterialShapes.arch(
+                                size: 45, color: hexToColor(et.color)),
+                            Icon(appIcons[et.icon],
+                                size: 25, color: AppColors.black2),
+                          ],
                         ),
                       ),
                     );

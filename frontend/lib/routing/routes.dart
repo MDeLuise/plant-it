@@ -9,6 +9,7 @@ abstract final class Routes {
   static const String activityFilter = '/activityFilter';
 
   static String settingsNotifications = '/settings-notifications';
+  static String settingsInfo = '/settings-info';
 
   static String eventTypesRelative = 'eventTypes';
   static String eventTypes = '/$eventTypesRelative';

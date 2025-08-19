@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:plant_it/ui/settings/widgets/support_banner.dart';
 
 class SettingsScreen extends StatelessWidget {
   final SettingsViewModel viewModel;
@@ -39,6 +40,7 @@ class SettingsScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: Column(
                   children: [
+                    SupportBanner(),
                     GestureDetector(
                       onTap: () => context.push(Routes.eventTypes),
                       child: ListTile(
@@ -70,15 +72,18 @@ class SettingsScreen extends StatelessWidget {
                         leading: Icon(LucideIcons.bell),
                       ),
                     ),
-                    ListTile(
-                      title: Text("Theme"),
-                      subtitle: Text("Theme options"),
-                      leading: Icon(LucideIcons.palette),
-                    ),
-                    ListTile(
-                      title: Text("About Plant-it"),
-                      subtitle: Text("Details about the app"),
-                      leading: Icon(LucideIcons.info),
+                    // ListTile(
+                    //   title: Text("Theme"),
+                    //   subtitle: Text("Theme options"),
+                    //   leading: Icon(LucideIcons.palette),
+                    // ),
+                    GestureDetector(
+                      onTap: () => context.push(Routes.settingsInfo),
+                      child: ListTile(
+                        title: Text("About Plant-it"),
+                        subtitle: Text("Details about the app"),
+                        leading: Icon(LucideIcons.info),
+                      ),
                     ),
                   ],
                 ),
