@@ -1,7 +1,7 @@
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
-const appIcons = {
+const Map<String, IconData> appIcons = {
   "a_arrow_down": LucideIcons.a_arrow_down,
   "a_arrow_up": LucideIcons.a_arrow_up,
   "a_large_small": LucideIcons.a_large_small,
@@ -1555,91 +1555,3 @@ const appIcons = {
   "zoom_in": LucideIcons.zoom_in,
   "zoom_out": LucideIcons.zoom_out
 };
-
-class IconSelector extends StatefulWidget {
-  final Function(String) onIconSelected;
-
-  const IconSelector({required this.onIconSelected, super.key});
-
-  @override
-  State<IconSelector> createState() => _IconSelectorState();
-}
-
-class _IconSelectorState extends State<IconSelector> {
-  String _searchText = "";
-  List<MapEntry<String, IconData>> _filteredIcons = appIcons.entries.toList();
-
-  void _filterIcons(String text) {
-    setState(() {
-      _searchText = text.toLowerCase();
-      _filteredIcons = appIcons.entries
-          .where((entry) => entry.key.toLowerCase().contains(_searchText))
-          .toList();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Choose an Icon"),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: const InputDecoration(
-              hintText: "Search icons...",
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-            onChanged: _filterIcons,
-          ),
-        ],
-      ),
-      content: SizedBox(
-        width: double.maxFinite,
-        height: 400, // Adjust height as needed
-        child: GridView.builder(
-          itemCount: _filteredIcons.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-          ),
-          itemBuilder: (context, index) {
-            final entry = _filteredIcons[index];
-            return GestureDetector(
-              onTap: () {
-                widget.onIconSelected(entry.key);
-                Navigator.of(context).pop();
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    child: Icon(entry.value),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    entry.key,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 10),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Cancel"),
-        ),
-      ],
-    );
-  }
-}

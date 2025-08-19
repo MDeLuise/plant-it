@@ -5,30 +5,29 @@ import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
-import 'package:plant_it/ui/settings/view_models/event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/reminder/reminder_viewmodel.dart';
 import 'package:plant_it/utils/common.dart';
 import 'package:plant_it/utils/icons.dart';
 
-class EventTypeScreen extends StatefulWidget {
-  final EventTypeViewModel viewModel;
+class ReminderScreen extends StatefulWidget {
+  final ReminderViewModel viewModel;
 
-  const EventTypeScreen({
+  const ReminderScreen({
     super.key,
     required this.viewModel,
   });
 
   @override
-  State<EventTypeScreen> createState() => _EventTypeScreenState();
+  State<ReminderScreen> createState() => _ReminderScreenState();
 }
 
-class _EventTypeScreenState extends State<EventTypeScreen> {
-  void removeEventType(EventType eventType) {
+class _ReminderScreenState extends State<ReminderScreen> {
+  void remove(Reminder reminder) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confirm Delete'),
-        content: const Text(
-            'Are you sure you want to delete the event type and all linked events?'),
+        content: const Text('Are you sure you want to delete the reminder?'),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
@@ -36,7 +35,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
           ),
           TextButton(
             onPressed: () async {
-              await widget.viewModel.delete.executeWithFuture(eventType.id);
+              await widget.viewModel.delete.executeWithFuture(reminder.id);
               if (widget.viewModel.delete.results.value.hasError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -49,7 +48,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Event type deleted"),
+                  content: Text("Reminder deleted"),
                 ),
               );
               context.pop();
@@ -65,8 +64,12 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Types'),
+        title: const Text('Reminders'),
         actions: [
+          IconButton(
+            onPressed: () => context.push(Routes.eventType),
+            icon: Icon(LucideIcons.filter),
+          ),
           IconButton(
             onPressed: () => context.push(Routes.eventType),
             icon: Icon(LucideIcons.plus),
@@ -90,12 +93,17 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               }
               return SingleChildScrollView(
                 child: Column(
-                  children: widget.viewModel.eventTypes.map((et) {
+                  children: widget.viewModel.reminders.map((et) {
+                    Plant plant = widget.viewModel.plants[et.plant]!;
+                    EventType eventType = widget.viewModel.eventTypes[et.type]!;
                     return GestureDetector(
                       onTap: () => context.push(Routes.eventTypeWithId(et.id)),
                       child: ListTile(
-                        title: Text(et.name),
-                        subtitle: Text(et.description ?? "No description"),
+                        title: Text(plant.name),
+                        subtitle: Text(
+                          "Every ${et.frequencyQuantity} ${et.frequencyUnit.name} from ${et.startDate} ${et.endDate == null ? "" : "to ${et.endDate}"}",
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         trailing: PopupMenuButton<String>(
                           padding: EdgeInsetsGeometry.all(0),
                           icon: const Icon(Icons.more_vert, size: 25),
@@ -103,7 +111,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                             if (value == 'edit') {
                               context.push(Routes.eventTypeWithId(et.id));
                             } else if (value == 'delete') {
-                              removeEventType(et);
+                              remove(et);
                             }
                           },
                           itemBuilder: (BuildContext context) => [
@@ -132,8 +140,8 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                           ],
                         ),
                         leading: CircleAvatar(
-                          backgroundColor: hexToColor(et.color),
-                          child: Icon(appIcons[et.icon]),
+                          backgroundColor: hexToColor(eventType.color),
+                          child: Icon(appIcons[eventType.icon]),
                         ),
                       ),
                     );

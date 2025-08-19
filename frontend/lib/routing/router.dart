@@ -10,14 +10,16 @@ import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
-import 'package:plant_it/ui/settings/view_models/add_event_type_viewmodel.dart';
-import 'package:plant_it/ui/settings/view_models/edit_event_type_viewmodel.dart';
-import 'package:plant_it/ui/settings/view_models/event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/reminder/reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/add_event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/edit_event_type_screen.dart';
-import 'package:plant_it/ui/settings/widgets/event_type_screen.dart';
+import 'package:plant_it/ui/settings/widgets/event_type/event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/notifications_screen.dart';
+import 'package:plant_it/ui/settings/widgets/reminder/reminder_screen.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router() => GoRouter(
@@ -123,6 +125,18 @@ GoRouter router() => GoRouter(
                   );
                   viewModel.load.execute(id);
                   return EditEventTypeScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.reminders,
+                builder: (context, state) {
+                  ReminderViewModel viewModel = ReminderViewModel(
+                    eventTypeRepository: context.read(),
+                    reminderRepository: context.read(),
+                    plantRepository: context.read(),
+                  );
+                  viewModel.load.execute();
+                  return ReminderScreen(viewModel: viewModel);
                 },
               ),
             ]),

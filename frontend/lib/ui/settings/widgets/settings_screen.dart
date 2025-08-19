@@ -40,18 +40,20 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () =>
-                          context.push(Routes.eventTypes, extra: viewModel),
+                      onTap: () => context.push(Routes.eventTypes),
                       child: ListTile(
                         title: Text("Event Types"),
                         subtitle: Text("Manage the event types"),
                         leading: Icon(LucideIcons.glass_water),
                       ),
                     ),
-                    ListTile(
-                      title: Text("Reminders"),
-                      subtitle: Text("Manage the reminders"),
-                      leading: Icon(LucideIcons.clock),
+                    GestureDetector(
+                      onTap: () => context.push(Routes.reminders),
+                      child: ListTile(
+                        title: Text("Reminders"),
+                        subtitle: Text("Manage the reminders"),
+                        leading: Icon(LucideIcons.clock),
+                      ),
                     ),
                     ListTile(
                       title: Text("Data Sources"),
