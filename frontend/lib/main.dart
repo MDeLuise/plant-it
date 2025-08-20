@@ -14,7 +14,7 @@ void callbackDispatcher() {
     try {
       NotificationService notificationService = NotificationService.noParam();
       await notificationService.sendDueReminderNotifications();
-      
+
       return Future.value(true);
     } catch (error) {
       print('There is an error in the task $task: $error');

@@ -66,10 +66,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
       appBar: AppBar(
         title: const Text('Reminders'),
         actions: [
-          IconButton(
-            onPressed: () => context.push(Routes.eventTypes),
-            icon: Icon(LucideIcons.filter),
-          ),
+          // TODO
+          // IconButton(
+          //   onPressed: () => context.push(Routes.eventTypes),
+          //   icon: Icon(LucideIcons.filter),
+          // ),
           IconButton(
             onPressed: () => context.push(Routes.reminder),
             icon: Icon(LucideIcons.plus),
