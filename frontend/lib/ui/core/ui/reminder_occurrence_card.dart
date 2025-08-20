@@ -1,3 +1,4 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
@@ -11,8 +12,13 @@ import 'package:plant_it/utils/icons.dart';
 
 class ReminderOccurrenceCard extends StatelessWidget {
   final ReminderOccurrence reminderOccurrence;
+  final Command<ReminderOccurrence, void> createEvent;
 
-  const ReminderOccurrenceCard({super.key, required this.reminderOccurrence});
+  const ReminderOccurrenceCard({
+    super.key,
+    required this.reminderOccurrence,
+    required this.createEvent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +34,47 @@ class ReminderOccurrenceCard extends StatelessWidget {
               .bodyLarge!
               .copyWith(fontWeight: FontWeight.w500),
         ),
-        subtitle: Text(
-          "${timeDiffStr(reminderOccurrence.nextOccurrence)} • every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(color: AppColors.grey4),
+        subtitle: Row(
+          children: [
+            Text(
+              timeDiffStr(reminderOccurrence.nextOccurrence),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            Text(" • "),
+            Text(
+              "every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: AppColors.grey4,
+                  ),
+            ),
+          ],
         ),
         leading: _EventTypeAvatar(eventType: reminderOccurrence.eventType),
         trailing: PopupMenuButton<String>(
           padding: EdgeInsetsGeometry.all(0),
           icon: const Icon(Icons.more_vert, size: 25),
-          onSelected: (value) {
+          onSelected: (value) async {
             if (value == 'reminder') {
               context
                   .push(Routes.reminderWithId(reminderOccurrence.reminder.id));
             } else if (value == 'done') {
-              // TODO
+              await createEvent.executeWithFuture(reminderOccurrence);
+              if (createEvent.results.value.hasError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(createEvent.results.value.error.toString()),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Event created"),
+                  ),
+                );
+              }
             }
           },
           itemBuilder: (BuildContext context) => [

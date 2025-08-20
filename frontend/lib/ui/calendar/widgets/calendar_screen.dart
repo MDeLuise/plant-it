@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_header.dart';
-import 'package:plant_it/ui/calendar/widgets/event_list.dart';
-import 'package:plant_it/ui/calendar/widgets/reminder_occurrence_list.dart';
+import 'package:plant_it/ui/calendar/widgets/event_and_reminder_occurrences_list.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -126,42 +125,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     headerVisible: false,
                   ),
-                  DefaultTabController(
-                      length: 2,
-                      child: Column(
-                        children: [
-                          TabBar(tabs: [
-                            Tab(text: "Actions"),
-                            Tab(text: "Events"),
-                          ]),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .4,
-                            child: TabBarView(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SingleChildScrollView(
-                                    child: ReminderOccurrenceList(
-                                      viewModel: widget.viewModel,
-                                      day: _selectedDay,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SingleChildScrollView(
-                                    child: EventList(
-                                      viewModel: widget.viewModel,
-                                      day: _selectedDay,
-                                      key: UniqueKey(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ))
+                  SizedBox(height: 10),
+                  ActivityList(
+                    key: UniqueKey(),
+                    viewModel: widget.viewModel,
+                    day: _focusedDay,
+                  ),
                 ],
               ),
             );

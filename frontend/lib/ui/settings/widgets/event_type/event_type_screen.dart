@@ -133,14 +133,10 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                             ),
                           ],
                         ),
-                        // leading: CircleAvatar(
-                        //   backgroundColor: hexToColor(et.color),
-                        //   child: Icon(appIcons[et.icon]),
-                        // ),
                         leading: Stack(
                           alignment: Alignment.center,
                           children: [
-                            MaterialShapes.arch(
+                            MaterialShapes.circle(
                                 size: 45, color: hexToColor(et.color)),
                             Icon(appIcons[et.icon],
                                 size: 25, color: AppColors.black2),

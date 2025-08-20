@@ -20,7 +20,10 @@ class ReminderOccurrenceList extends StatelessWidget {
           if (index.isEven) {
             final ReminderOccurrence ro =
                 viewModel.reminderOccurrences[index ~/ 2];
-            return ReminderOccurrenceCard(reminderOccurrence: ro);
+            return ReminderOccurrenceCard(
+              reminderOccurrence: ro,
+              createEvent: viewModel.createEventFromReminder,
+            );
           } else {
             return const Divider(
                 height: 16, thickness: 1, color: AppColors.grey1);

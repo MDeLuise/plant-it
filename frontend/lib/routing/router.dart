@@ -40,6 +40,7 @@ GoRouter router() => GoRouter(
                 plantRepository: context.read(),
                 reminderOccurrenceRepository: context.read(),
                 imageRepository: context.read(),
+                eventRepository: context.read(),
               );
               homeViewModel.load.execute();
 

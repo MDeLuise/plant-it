@@ -1,4 +1,5 @@
 import 'package:command_it/command_it.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
@@ -26,7 +27,8 @@ class CalendarViewModel extends ChangeNotifier {
       Result<void> loadResult = await _load();
       if (loadResult.isError()) throw loadResult.exceptionOrNull()!;
       await filter.executeWithFuture();
-      if (filter.results.value.hasError) throw filter.results.value.error!.toFailure();
+      if (filter.results.value.hasError)
+        throw filter.results.value.error!.toFailure();
       return;
     }, initialValue: Failure(Exception("not started")));
     loadForMonth = Command.createAsyncNoResult((DateTime month) async {
@@ -46,6 +48,12 @@ class CalendarViewModel extends ChangeNotifier {
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     });
+    createEventFromReminder =
+        Command.createAsyncNoResult((ReminderOccurrence ro) async {
+      Result<void> result = await _createEventFromReminder(ro);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    });
   }
 
   final EventRepository _eventRepository;
@@ -59,6 +67,7 @@ class CalendarViewModel extends ChangeNotifier {
   late final Command<DateTime, void> loadForMonth;
   late final Command<void, void> filter;
   late final Command<void, void> clearFilter;
+  late final Command<ReminderOccurrence, void> createEventFromReminder;
 
   final Map<int, List<Event>> _eventsForMonth = {};
   final Map<int, List<ReminderOccurrence>> _reminderOccurrencesForMonth = {};
@@ -97,15 +106,6 @@ class CalendarViewModel extends ChangeNotifier {
     if (loadSpecies.isError()) {
       return loadSpecies.exceptionOrNull()!.toFailure();
     }
-    // final loadEventsForMonth = await _loadEventsForMonth(_lastLoadedMonth);
-    // if (loadEventsForMonth.isError()) {
-    //   return loadEventsForMonth.exceptionOrNull()!.toFailure();
-    // }
-    // final loadOccurrencesForMonth =
-    //     await _loadReminderOccurrencesForMonth(_lastLoadedMonth);
-    // if (loadOccurrencesForMonth.isError()) {
-    //   return loadOccurrencesForMonth.exceptionOrNull()!.toFailure();
-    // }
     notifyListeners();
     return Success("ok");
   }
@@ -210,6 +210,21 @@ class CalendarViewModel extends ChangeNotifier {
       }
     }
     _log.fine('Loaded reminder occurrences for month');
+    return Success("ok");
+  }
+
+  Future<Result<void>> _createEventFromReminder(
+      ReminderOccurrence reminderOccurrence) async {
+    Result<void> event = await _eventRepository.insert(EventsCompanion(
+      type: Value(reminderOccurrence.reminder.type),
+      plant: Value(reminderOccurrence.plant.id),
+      date: Value(DateTime.now()),
+    ));
+    if (event.isError()) {
+      return event;
+    }
+    _log.fine('Event created from reminder occurrence');
+    notifyListeners();
     return Success("ok");
   }
 

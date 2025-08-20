@@ -1,6 +1,8 @@
 import 'package:command_it/command_it.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/image_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_occurrence_repository.dart';
@@ -13,19 +15,28 @@ class HomeViewModel extends ChangeNotifier {
     required PlantRepository plantRepository,
     required ReminderOccurrenceRepository reminderOccurrenceRepository,
     required ImageRepository imageRepository,
-  }) : _plantRepository = plantRepository,
+    required EventRepository eventRepository,
+  })  : _plantRepository = plantRepository,
         _reminderOccurrenceRepository = reminderOccurrenceRepository,
-        _imageRepository = imageRepository {
+        _imageRepository = imageRepository,
+        _eventRepository = eventRepository {
     load = Command.createAsyncNoParam(() async {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     }, initialValue: Failure(Exception("not started")));
+    createEventFromReminder =
+        Command.createAsyncNoResult((ReminderOccurrence ro) async {
+      Result<void> result = await _createEventFromReminder(ro);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    });
   }
 
   final PlantRepository _plantRepository;
   final ReminderOccurrenceRepository _reminderOccurrenceRepository;
   final ImageRepository _imageRepository;
+  final EventRepository _eventRepository;
   final _log = Logger('HomeViewModel');
   List<db.Plant> _plants = [];
   final Map<int, db.Plant> _plantMap = {};
@@ -33,6 +44,7 @@ class HomeViewModel extends ChangeNotifier {
   List<ReminderOccurrence> _reminderOccurences = [];
 
   late final Command<void, void> load;
+  late final Command<ReminderOccurrence, void> createEventFromReminder;
 
   List<db.Plant> get plants => _plants;
   Map<int, db.Plant> get plantMap => _plantMap;
@@ -89,6 +101,21 @@ class HomeViewModel extends ChangeNotifier {
       return nextOccurrences.exceptionOrNull()!.toFailure();
     }
     _reminderOccurences = nextOccurrences.getOrThrow();
+    return Success("ok");
+  }
+
+  Future<Result<void>> _createEventFromReminder(
+      ReminderOccurrence reminderOccurrence) async {
+    Result<void> event = await _eventRepository.insert(db.EventsCompanion(
+      type: Value(reminderOccurrence.reminder.type),
+      plant: Value(reminderOccurrence.plant.id),
+      date: Value(DateTime.now()),
+    ));
+    if (event.isError()) {
+      return event;
+    }
+    _log.fine('Event created from reminder occurrence');
+    notifyListeners();
     return Success("ok");
   }
 }

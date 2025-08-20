@@ -14,7 +14,8 @@ class EventCard extends StatelessWidget {
   final Plant plant;
   final Function(Event event) removeEvent;
 
-  const EventCard({super.key, 
+  const EventCard({
+    super.key,
     required this.event,
     required this.removeEvent,
     required this.eventType,
@@ -96,7 +97,7 @@ class _EventTypeAvatar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          MaterialShapes.arch(size: size, color: hexToColor(eventType.color)),
+          MaterialShapes.circle(size: size, color: hexToColor(eventType.color)),
           Icon(appIcons[eventType.icon], size: 25, color: AppColors.black2),
         ],
       ),
