@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_occurrence_repository.dart';
 import 'package:plant_it/database/database.dart' as db;
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -16,10 +19,12 @@ class HomeViewModel extends ChangeNotifier {
     required ReminderOccurrenceRepository reminderOccurrenceRepository,
     required ImageRepository imageRepository,
     required EventRepository eventRepository,
+    required StreamController<StreamCode> streamController,
   })  : _plantRepository = plantRepository,
         _reminderOccurrenceRepository = reminderOccurrenceRepository,
         _imageRepository = imageRepository,
-        _eventRepository = eventRepository {
+        _eventRepository = eventRepository,
+        _streamController = streamController {
     load = Command.createAsyncNoParam(() async {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
@@ -37,6 +42,7 @@ class HomeViewModel extends ChangeNotifier {
   final ReminderOccurrenceRepository _reminderOccurrenceRepository;
   final ImageRepository _imageRepository;
   final EventRepository _eventRepository;
+  final StreamController<StreamCode> _streamController;
   final _log = Logger('HomeViewModel');
   List<db.Plant> _plants = [];
   final Map<int, db.Plant> _plantMap = {};
@@ -114,6 +120,7 @@ class HomeViewModel extends ChangeNotifier {
     if (event.isError()) {
       return event;
     }
+    _streamController.add(StreamCode.insertEvent);
     _log.fine('Event created from reminder occurrence');
     notifyListeners();
     return Success("ok");

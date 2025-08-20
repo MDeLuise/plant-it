@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/routing/routes.dart';
@@ -7,11 +9,13 @@ import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/home_screen.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/settings_screen.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class AppMainView extends StatefulWidget {
   final HomeViewModel homeViewModel;
   final CalendarViewModel calendarViewModel;
   final SettingsViewModel settingsViewModel;
+  final StreamController<StreamCode> streamController;
   final int selectedView;
 
   const AppMainView({
@@ -20,6 +24,7 @@ class AppMainView extends StatefulWidget {
     required this.calendarViewModel,
     required this.settingsViewModel,
     int? selectedView,
+    required this.streamController,
   }) : selectedView = selectedView ?? 0;
 
   @override
@@ -35,8 +40,14 @@ class _AppMainViewState extends State<AppMainView> {
     super.initState();
     _selectedIndex = widget.selectedView;
     _screens = [
-      HomeScreen(viewModel: widget.homeViewModel),
-      CalendarScreen(viewModel: widget.calendarViewModel),
+      HomeScreen(
+        viewModel: widget.homeViewModel,
+        streamController: widget.streamController,
+      ),
+      CalendarScreen(
+        viewModel: widget.calendarViewModel,
+        streamController: widget.streamController,
+      ),
       SettingsScreen(viewModel: widget.settingsViewModel),
       SettingsScreen(viewModel: widget.settingsViewModel),
     ];

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -9,20 +11,23 @@ import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/data/service/reminder_occurrence_service.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class CalendarViewModel extends ChangeNotifier {
-  CalendarViewModel({
-    required EventRepository eventRepository,
-    required PlantRepository plantRepository,
-    required EventTypeRepository eventTypeRepository,
-    required SpeciesRepository speciesRepository,
-    required ReminderOccurrenceService reminderOccurrenceService,
-  })  : _eventRepository = eventRepository,
+  CalendarViewModel(
+      {required EventRepository eventRepository,
+      required PlantRepository plantRepository,
+      required EventTypeRepository eventTypeRepository,
+      required SpeciesRepository speciesRepository,
+      required ReminderOccurrenceService reminderOccurrenceService,
+      required StreamController<StreamCode> streamController})
+      : _eventRepository = eventRepository,
         _plantRepository = plantRepository,
         _eventTypeRepository = eventTypeRepository,
         _speciesRepository = speciesRepository,
-        _reminderOccurrenceService = reminderOccurrenceService {
+        _reminderOccurrenceService = reminderOccurrenceService,
+        _streamController = streamController {
     load = Command.createAsyncNoParam(() async {
       Result<void> loadResult = await _load();
       if (loadResult.isError()) throw loadResult.exceptionOrNull()!;
@@ -61,6 +66,7 @@ class CalendarViewModel extends ChangeNotifier {
   final EventTypeRepository _eventTypeRepository;
   final SpeciesRepository _speciesRepository;
   final ReminderOccurrenceService _reminderOccurrenceService;
+  final StreamController<StreamCode> _streamController;
   final _log = Logger('CalendarViewModel');
 
   late final Command<void, void> load;
@@ -223,6 +229,7 @@ class CalendarViewModel extends ChangeNotifier {
     if (event.isError()) {
       return event;
     }
+    _streamController.add(StreamCode.insertEvent);
     _log.fine('Event created from reminder occurrence');
     notifyListeners();
     return Success("ok");
@@ -250,6 +257,7 @@ class CalendarViewModel extends ChangeNotifier {
     Result<void> result = await _eventRepository.delete(event.id);
     if (result.isSuccess()) {
       _eventsForMonth[event.date.day]!.removeWhere((e) => e.id == event.id);
+      _streamController.add(StreamCode.deleteEvent);
       notifyListeners();
     }
     return Future.value(result);

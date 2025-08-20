@@ -59,7 +59,10 @@ class _ActivityListState extends State<ActivityList> {
                 );
                 return;
               }
-              _activityForDay.removeWhere((e) => e.id == event.id);
+              _activityForDay
+                  .removeWhere((a) => a is Event && (a).id == event.id);
+              widget.viewModel.filter
+                  .execute(); // to update eventual reminder occurrences
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

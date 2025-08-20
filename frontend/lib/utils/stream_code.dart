@@ -1,0 +1,4 @@
+enum StreamCode {
+  insertEvent,
+  deleteEvent;
+}

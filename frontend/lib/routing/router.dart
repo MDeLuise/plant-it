@@ -41,6 +41,7 @@ GoRouter router() => GoRouter(
                 reminderOccurrenceRepository: context.read(),
                 imageRepository: context.read(),
                 eventRepository: context.read(),
+                streamController: context.read(),
               );
               homeViewModel.load.execute();
 
@@ -56,6 +57,7 @@ GoRouter router() => GoRouter(
                   eventTypeRepository: context.read(),
                   speciesRepository: context.read(),
                   reminderOccurrenceService: context.read(),
+                  streamController: context.read(),
                 );
                 calendarViewModel.load.execute();
               }
@@ -73,6 +75,7 @@ GoRouter router() => GoRouter(
                 calendarViewModel: calendarViewModel,
                 settingsViewModel: settingsViewModel,
                 selectedView: selectedView,
+                streamController: context.read(),
               );
             },
             routes: [
@@ -187,6 +190,7 @@ GoRouter router() => GoRouter(
               plantRepository: context.read(),
               eventTypeRepository: context.read(),
               speciesRepository: context.read(),
+              streamController: context.read(),
             );
             viewModel.load.execute();
             return CreateEventScreen(viewModel: viewModel);

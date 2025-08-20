@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
@@ -13,6 +15,7 @@ import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
 import 'package:plant_it/data/service/reminder_occurrence_service.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:workmanager/workmanager.dart';
@@ -31,6 +34,7 @@ List<SingleChildWidget> get providersLocal {
     Provider.value(value: AppDatabase()),
     Provider.value(value: Workmanager()),
     Provider.value(value: FlutterLocalNotificationsPlugin()),
+    Provider.value(value: StreamController<StreamCode>.broadcast()),
     Provider(
       create: (context) => EventRepository(db: context.read()),
     ),

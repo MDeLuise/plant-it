@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -6,14 +8,17 @@ import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_header.dart';
 import 'package:plant_it/ui/calendar/widgets/event_and_reminder_occurrences_list.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   final CalendarViewModel viewModel;
+  final StreamController<StreamCode> streamController;
 
   const CalendarScreen({
     super.key,
     required this.viewModel,
+    required this.streamController,
   });
 
   @override
@@ -24,6 +29,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.streamController.stream.listen((c) {
+      if (c == StreamCode.insertEvent) {
+        widget.viewModel.load.execute();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
