@@ -11,7 +11,10 @@ import 'package:table_calendar/table_calendar.dart';
 class CalendarScreen extends StatefulWidget {
   final CalendarViewModel viewModel;
 
-  const CalendarScreen({super.key, required this.viewModel});
+  const CalendarScreen({
+    super.key,
+    required this.viewModel,
+  });
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -36,9 +39,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title:
-                    "Error", // AppLocalization.of(context).errorWhileLoadingHome,
-                label: "Try again", //AppLocalization.of(context).tryAgain,
+                title: "Error",
+                label: "Try again",
                 onPressed: widget.viewModel.load.execute,
               );
             }
@@ -98,14 +100,43 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       });
                     },
                     eventLoader: (day) {
-                      List<dynamic> eventsAndReminderOccurrences = [];
-                      eventsAndReminderOccurrences.addAll(
-                          widget.viewModel.eventsForMonth[day.day] ?? []);
-                      eventsAndReminderOccurrences.addAll(widget
-                              .viewModel.reminderOccurrencesForMonth[day.day] ??
-                          []);
-                      return eventsAndReminderOccurrences.isEmpty ? [] : [1];
+                      bool dayHasEvents =
+                          (widget.viewModel.eventsForMonth[day.day] ?? [])
+                              .isNotEmpty;
+                      bool dayHasReminderOccurrences = (widget.viewModel
+                                  .reminderOccurrencesForMonth[day.day] ??
+                              [])
+                          .isNotEmpty;
+                      if (dayHasEvents && dayHasReminderOccurrences) {
+                        return [1, 2];
+                      } else if (dayHasEvents) {
+                        return [1];
+                      } else if (dayHasReminderOccurrences) {
+                        return [2];
+                      }
+                      return [];
                     },
+                    calendarBuilders: CalendarBuilders(
+                      markerBuilder: (context, day, events) {
+                        List<Widget> markers = [];
+                        if (events.contains(1)) {
+                          markers.add(CircleAvatar(
+                              radius: 5,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary));
+                        }
+                        if (events.contains(2)) {
+                          markers.add(CircleAvatar(
+                              radius: 5,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.tertiary));
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: markers,
+                        );
+                      },
+                    ),
                     availableCalendarFormats: const {
                       CalendarFormat.month: 'Month'
                     },
