@@ -38,6 +38,7 @@ class _AppMainViewState extends State<AppMainView> {
       HomeScreen(viewModel: widget.homeViewModel),
       CalendarScreen(viewModel: widget.calendarViewModel),
       SettingsScreen(viewModel: widget.settingsViewModel),
+      SettingsScreen(viewModel: widget.settingsViewModel),
     ];
   }
 

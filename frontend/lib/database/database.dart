@@ -100,7 +100,7 @@ class Reminders extends Table {
   TextColumn get repeatAfterUnit => textEnum<FrequencyUnit>()();
   IntColumn get repeatAfterQuantity => integer()();
   DateTimeColumn get lastNotified => dateTime().nullable()();
-  BoolColumn get enabled => boolean()();
+  BoolColumn get enabled => boolean().withDefault(const Constant(true))();
 }
 
 class Images extends Table {
@@ -217,7 +217,6 @@ class AppDatabase extends _$AppDatabase {
       frequencyQuantity: 1,
       repeatAfterUnit: FrequencyUnit.days,
       repeatAfterQuantity: 1,
-      enabled: true,
     ));
 
     await into(reminders).insertOnConflictUpdate(RemindersCompanion.insert(
@@ -229,7 +228,6 @@ class AppDatabase extends _$AppDatabase {
       frequencyQuantity: 2,
       repeatAfterUnit: FrequencyUnit.days,
       repeatAfterQuantity: 2,
-      enabled: true,
     ));
 
     await into(species).insertOnConflictUpdate(SpeciesCompanion.insert(

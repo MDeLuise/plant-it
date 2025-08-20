@@ -13,6 +13,7 @@ import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/add_event_type_screen.dart';
@@ -20,6 +21,7 @@ import 'package:plant_it/ui/settings/widgets/event_type/edit/edit_event_type_scr
 import 'package:plant_it/ui/settings/widgets/event_type/event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/info_screen.dart';
 import 'package:plant_it/ui/settings/widgets/notifications_screen.dart';
+import 'package:plant_it/ui/settings/widgets/reminder/create/add_reminder_screen.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/reminder_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +74,7 @@ GoRouter router() => GoRouter(
             },
             routes: [
               GoRoute(
-                path: '${Routes.plantsRelative}/:id',
+                path: '${Routes.plant}/:id',
                 builder: (context, state) {
                   int id = int.parse(state.pathParameters['id']!);
                   PlantViewModel viewModel = PlantViewModel(
@@ -124,7 +126,7 @@ GoRouter router() => GoRouter(
                 },
               ),
               GoRoute(
-                path: '${Routes.eventTypesRelative}/:id',
+                path: '${Routes.eventType}/:id',
                 builder: (context, state) {
                   int id = int.parse(state.pathParameters['id']!);
                   EditEventTypeViewModel viewModel = EditEventTypeViewModel(
@@ -144,6 +146,19 @@ GoRouter router() => GoRouter(
                   );
                   viewModel.load.execute();
                   return ReminderScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.reminder,
+                builder: (context, state) {
+                  AddReminderViewModel viewModel = AddReminderViewModel(
+                    reminderRepository: context.read(),
+                    eventTypeRepository: context.read(),
+                    plantRepository: context.read(),
+                    speciesRepository: context.read(),
+                  );
+                  viewModel.load.execute();
+                  return AddReminderScreen(viewModel: viewModel);
                 },
               ),
             ]),

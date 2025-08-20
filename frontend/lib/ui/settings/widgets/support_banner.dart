@@ -37,7 +37,7 @@ class _SupportBannerState extends State<SupportBanner>
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                DonationPage(),
+                _DonationPage(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               const begin = 0.0;
@@ -110,12 +110,12 @@ class _SupportBannerState extends State<SupportBanner>
   }
 }
 
-class DonationPage extends StatefulWidget {
+class _DonationPage extends StatefulWidget {
   @override
-  _DonationPageState createState() => _DonationPageState();
+  State<_DonationPage> createState() => _DonationPageState();
 }
 
-class _DonationPageState extends State<DonationPage>
+class _DonationPageState extends State<_DonationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;

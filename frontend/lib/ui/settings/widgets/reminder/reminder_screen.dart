@@ -67,11 +67,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
         title: const Text('Reminders'),
         actions: [
           IconButton(
-            onPressed: () => context.push(Routes.eventType),
+            onPressed: () => context.push(Routes.eventTypes),
             icon: Icon(LucideIcons.filter),
           ),
           IconButton(
-            onPressed: () => context.push(Routes.eventType),
+            onPressed: () => context.push(Routes.reminder),
             icon: Icon(LucideIcons.plus),
           ),
         ],
@@ -97,7 +97,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     Plant plant = widget.viewModel.plants[et.plant]!;
                     EventType eventType = widget.viewModel.eventTypes[et.type]!;
                     return GestureDetector(
-                      onTap: () => context.push(Routes.eventTypeWithId(et.id)),
+                      onTap: () => context.push(Routes.reminderWithId(et.id)),
                       child: ListTile(
                         title: Text(plant.name),
                         subtitle: Text(
@@ -109,7 +109,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           icon: const Icon(Icons.more_vert, size: 25),
                           onSelected: (value) {
                             if (value == 'edit') {
-                              context.push(Routes.eventTypeWithId(et.id));
+                              context.push(Routes.reminderWithId(et.id));
                             } else if (value == 'delete') {
                               remove(et);
                             }

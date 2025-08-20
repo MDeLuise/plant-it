@@ -57,10 +57,13 @@ class SettingsScreen extends StatelessWidget {
                         leading: Icon(LucideIcons.clock),
                       ),
                     ),
-                    ListTile(
-                      title: Text("Data Sources"),
-                      subtitle: Text("Manage the data sources"),
-                      leading: Icon(LucideIcons.text_search),
+                    GestureDetector(
+                      onTap: () {},
+                      child: ListTile(
+                        title: Text("Data Sources"),
+                        subtitle: Text("Manage the data sources"),
+                        leading: Icon(LucideIcons.text_search),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () => context.push(Routes.settingsNotifications,

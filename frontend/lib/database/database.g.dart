@@ -2285,9 +2285,10 @@ class $RemindersTable extends Reminders
   late final GeneratedColumn<bool> enabled = GeneratedColumn<bool>(
       'enabled', aliasedName, false,
       type: DriftSqlType.bool,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("enabled" IN (0, 1))'));
+          GeneratedColumn.constraintIsAlways('CHECK ("enabled" IN (0, 1))'),
+      defaultValue: const Constant(true));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2362,8 +2363,6 @@ class $RemindersTable extends Reminders
     if (data.containsKey('enabled')) {
       context.handle(_enabledMeta,
           enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta));
-    } else if (isInserting) {
-      context.missing(_enabledMeta);
     }
     return context;
   }
@@ -2661,15 +2660,14 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     required FrequencyUnit repeatAfterUnit,
     required int repeatAfterQuantity,
     this.lastNotified = const Value.absent(),
-    required bool enabled,
+    this.enabled = const Value.absent(),
   })  : type = Value(type),
         plant = Value(plant),
         startDate = Value(startDate),
         frequencyUnit = Value(frequencyUnit),
         frequencyQuantity = Value(frequencyQuantity),
         repeatAfterUnit = Value(repeatAfterUnit),
-        repeatAfterQuantity = Value(repeatAfterQuantity),
-        enabled = Value(enabled);
+        repeatAfterQuantity = Value(repeatAfterQuantity);
   static Insertable<Reminder> custom({
     Expression<int>? id,
     Expression<int>? type,
@@ -5796,7 +5794,7 @@ typedef $$RemindersTableCreateCompanionBuilder = RemindersCompanion Function({
   required FrequencyUnit repeatAfterUnit,
   required int repeatAfterQuantity,
   Value<DateTime?> lastNotified,
-  required bool enabled,
+  Value<bool> enabled,
 });
 typedef $$RemindersTableUpdateCompanionBuilder = RemindersCompanion Function({
   Value<int> id,
@@ -6148,7 +6146,7 @@ class $$RemindersTableTableManager extends RootTableManager<
             required FrequencyUnit repeatAfterUnit,
             required int repeatAfterQuantity,
             Value<DateTime?> lastNotified = const Value.absent(),
-            required bool enabled,
+            Value<bool> enabled = const Value.absent(),
           }) =>
               RemindersCompanion.insert(
             id: id,
