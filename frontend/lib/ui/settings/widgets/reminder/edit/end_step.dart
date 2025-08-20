@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
-class StartStep extends StepSection<AddReminderViewModel> {
+class EndStep extends StepSection<EditReminderViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  late final ValueNotifier<DateTime> _selectedDate =
-      ValueNotifier<DateTime>(DateTime.now());
-  late final ValueNotifier<DateTime> _ongoingSelection =
-      ValueNotifier<DateTime>(DateTime.now());
+  late final ValueNotifier<DateTime?> _selectedDate =
+      ValueNotifier<DateTime?>(viewModel.endDate);
+  late final ValueNotifier<DateTime?> _ongoingSelection =
+      ValueNotifier<DateTime?>(viewModel.endDate);
 
-  StartStep({
+  EndStep({
     super.key,
     required super.viewModel,
   });
 
   @override
-  State<StartStep> createState() => _StartStepState();
+  State<EndStep> createState() => _EndStepState();
 
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
   void confirm() {
-    viewModel.setStart(_ongoingSelection.value);
+    viewModel.setEnd(_ongoingSelection.value!);
     _selectedDate.value = _ongoingSelection.value;
   }
 
   @override
-  String get title => "Start";
+  String get title => "End";
 
   @override
-  String get value => _ongoingSelection.value.toString();
+  String get value => _ongoingSelection.value?.toString() ?? "";
 
   @override
   void cancel() {
@@ -42,7 +42,7 @@ class StartStep extends StepSection<AddReminderViewModel> {
 
   @override
   Future<void> action(
-      BuildContext context, AddReminderViewModel viewModel) async {
+      BuildContext context, EditReminderViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _ongoingSelection.value,
@@ -56,7 +56,7 @@ class StartStep extends StepSection<AddReminderViewModel> {
   }
 }
 
-class _StartStepState extends State<StartStep> {
+class _EndStepState extends State<EndStep> {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

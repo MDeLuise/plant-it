@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
+import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
-class StartStep extends StepSection<AddReminderViewModel> {
+class StartStep extends StepSection<EditReminderViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime> _selectedDate =
-      ValueNotifier<DateTime>(DateTime.now());
+      ValueNotifier<DateTime>(viewModel.startDate);
   late final ValueNotifier<DateTime> _ongoingSelection =
-      ValueNotifier<DateTime>(DateTime.now());
+      ValueNotifier<DateTime>(viewModel.startDate);
 
   StartStep({
     super.key,
@@ -42,7 +42,7 @@ class StartStep extends StepSection<AddReminderViewModel> {
 
   @override
   Future<void> action(
-      BuildContext context, AddReminderViewModel viewModel) async {
+      BuildContext context, EditReminderViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _ongoingSelection.value,

@@ -3,14 +3,23 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
+import 'package:plant_it/data/repository/plant_repository.dart';
+import 'package:plant_it/data/repository/reminder_repository.dart';
+import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:result_dart/result_dart.dart';
 
 class EditReminderViewModel extends ChangeNotifier {
   EditReminderViewModel({
+    required ReminderRepository reminderRepository,
     required EventTypeRepository eventTypeRepository,
-  }) : _eventTypeRepository = eventTypeRepository {
-    load = Command.createAsyncNoResult((int id) async {
+    required PlantRepository plantRepository,
+    required SpeciesRepository speciesRepository,
+  })  : _reminderRepository = reminderRepository,
+        _eventTypeRepository = eventTypeRepository,
+        _plantRepository = plantRepository,
+        _speciesRepository = speciesRepository {
+    load = Command.createAsyncNoResult<int>((int id) async {
       Result<void> result = await _load(id);
       if (result.isError()) throw result.exceptionOrNull()!;
     });
@@ -20,22 +29,70 @@ class EditReminderViewModel extends ChangeNotifier {
     }, initialValue: Failure(Exception("not started")));
   }
 
+  final ReminderRepository _reminderRepository;
   final EventTypeRepository _eventTypeRepository;
+  final PlantRepository _plantRepository;
+  final SpeciesRepository _speciesRepository;
   final _log = Logger('EditReminderViewModel');
-  RemindersCompanion _remindersCompanion = RemindersCompanion();
 
   late final Command<int, void> load;
   late final Command<void, void> update;
 
-  // String get type => _remindersCompanion.type.value;
-  // String? get plant => _remindersCompanion.description.value;
-  // String get start => _remindersCompanion.color.value;
-  // String get end => _remindersCompanion.icon.value;
-  // String get frequencyUnit => _remindersCompanion.icon.value;
-  // String get frequencyQuantity => _remindersCompanion.icon.value;
-  // String get repeatAfterUnit => _remindersCompanion.icon.value;
-  // String get repeatAfterQuantity => _remindersCompanion.icon.value;
-  // String get enabled => _remindersCompanion.icon.value;
+  RemindersCompanion _remindersCompanion = RemindersCompanion();
+  final Map<int, EventType> _eventTypes = {};
+  final Map<int, Plant> _plants = {};
+  final Map<int, Specy> _species = {};
+
+  Map<int, EventType> get eventTypes => _eventTypes;
+  Map<int, Plant> get plants => _plants;
+  Map<int, Specy> get species => _species;
+  int get id => _remindersCompanion.id.value;
+  int get type => _remindersCompanion.type.value;
+  int get plant => _remindersCompanion.plant.value;
+  DateTime get startDate => _remindersCompanion.startDate.value;
+  DateTime? get endDate => _remindersCompanion.endDate.value;
+  FrequencyUnit get frequencyUnit => _remindersCompanion.frequencyUnit.value;
+  int get frequencyQuantity => _remindersCompanion.frequencyQuantity.value;
+  FrequencyUnit get repeatAfterUnit =>
+      _remindersCompanion.repeatAfterUnit.value;
+  int get repeatAfterQuantity => _remindersCompanion.repeatAfterQuantity.value;
+  DateTime? get lastNotified => _remindersCompanion.lastNotified.value;
+  bool get enabled => _remindersCompanion.enabled.value;
+
+  Future<Result<void>> _load(int id) async {
+    Result<Reminder> reminder = await _reminderRepository.get(id);
+    if (reminder.isError()) return reminder;
+    _remindersCompanion = reminder.getOrThrow().toCompanion(true);
+    _log.fine("Reminder loaded");
+
+    Result<List<EventType>> eventTypes = await _eventTypeRepository.getAll();
+    if (eventTypes.isError()) return eventTypes;
+    for (EventType et in eventTypes.getOrThrow()) {
+      _eventTypes.putIfAbsent(et.id, () => et);
+    }
+    _log.fine("Event types loaded");
+
+    Result<List<Plant>> plants = await _plantRepository.getAll();
+    if (plants.isError()) return plants;
+    for (Plant p in plants.getOrThrow()) {
+      _plants.putIfAbsent(p.id, () => p);
+    }
+    _log.fine("Plants loaded");
+
+    Result<List<Specy>> species = await _speciesRepository.getAll();
+    if (species.isError()) return species;
+    for (Specy s in species.getOrThrow()) {
+      _species.putIfAbsent(s.id, () => s);
+    }
+    _log.fine("Species loaded");
+
+    notifyListeners();
+    return Success("ok");
+  }
+
+  Future<Result<void>> _update() async {
+    return _reminderRepository.update(_remindersCompanion);
+  }
 
   void setType(EventType eventType) {
     _remindersCompanion =
@@ -76,18 +133,5 @@ class EditReminderViewModel extends ChangeNotifier {
 
   void setEnabled(bool enabled) {
     _remindersCompanion = _remindersCompanion.copyWith(enabled: Value(enabled));
-  }
-
-  Future<Result<void>> _load(int id) async {
-    // Result<EventType> eventType = await _eventTypeRepository.get(id);
-    // if (eventType.isError()) return eventType;
-    // _remindersCompanion = eventType.getOrThrow().toCompanion(true);
-    // _log.fine("Event type loaded");
-    return Success("ok");
-  }
-
-  Future<Result<void>> _update() async {
-    //return _eventTypeRepository.update(_eventTypesCompanion);
-    return Success("ok");
   }
 }
