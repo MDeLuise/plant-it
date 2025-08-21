@@ -7,6 +7,8 @@ import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/home_screen.dart';
+import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
+import 'package:plant_it/ui/search/widgets/search_page.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/settings_screen.dart';
 import 'package:plant_it/utils/stream_code.dart';
@@ -14,6 +16,7 @@ import 'package:plant_it/utils/stream_code.dart';
 class AppMainView extends StatefulWidget {
   final HomeViewModel homeViewModel;
   final CalendarViewModel calendarViewModel;
+  final SearchViewModel searchViewModel;
   final SettingsViewModel settingsViewModel;
   final StreamController<StreamCode> streamController;
   final int selectedView;
@@ -22,6 +25,7 @@ class AppMainView extends StatefulWidget {
     super.key,
     required this.homeViewModel,
     required this.calendarViewModel,
+    required this.searchViewModel,
     required this.settingsViewModel,
     int? selectedView,
     required this.streamController,
@@ -48,7 +52,7 @@ class _AppMainViewState extends State<AppMainView> {
         viewModel: widget.calendarViewModel,
         streamController: widget.streamController,
       ),
-      SettingsScreen(viewModel: widget.settingsViewModel),
+      SearchPage(viewModel: widget.searchViewModel),
       SettingsScreen(viewModel: widget.settingsViewModel),
     ];
   }

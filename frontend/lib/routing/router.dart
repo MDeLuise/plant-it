@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/activity_filter.dart';
@@ -10,6 +11,7 @@ import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
+import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
@@ -62,6 +64,17 @@ GoRouter router() => GoRouter(
                 calendarViewModel.load.execute();
               }
 
+              SearchViewModel searchViewModel = SearchViewModel(
+                speciesSearcherFacade: context.read(),
+                imageRepository: context.read(),
+              );
+              searchViewModel.search.execute(Query(
+                term: "",
+                sources: [SpeciesDataSource.custom],
+                offset: 0,
+                limit: 10,
+              ));
+
               SettingsViewModel settingsViewModel = SettingsViewModel(
                 userSettingRepository: context.read(),
                 schedulingService: context.read(),
@@ -73,6 +86,7 @@ GoRouter router() => GoRouter(
               return AppMainView(
                 homeViewModel: homeViewModel,
                 calendarViewModel: calendarViewModel,
+                searchViewModel: searchViewModel,
                 settingsViewModel: settingsViewModel,
                 selectedView: selectedView,
                 streamController: context.read(),

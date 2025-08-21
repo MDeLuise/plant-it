@@ -14,6 +14,9 @@ import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
 import 'package:plant_it/data/service/reminder_occurrence_service.dart';
+import 'package:plant_it/data/service/search/local_searcher.dart';
+import 'package:plant_it/data/service/search/species_searcher_facade.dart';
+import 'package:plant_it/data/service/search/trefle_searcher.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/utils/stream_code.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +88,26 @@ List<SingleChildWidget> get providersLocal {
       create: (context) => SchedulingService(
         userSettingRepository: context.read(),
         workmanager: context.read(),
+      ),
+    ),
+    Provider(
+      create: (context) => LocalSearcher(
+        speciesRepository: context.read(),
+        speciesCareRepository: context.read(),
+        speciesSynonymsRepository: context.read(),
+      ),
+    ),
+    Provider(
+      create: (context) => TrefleSearcher(
+        speciesRepository: context.read(),
+        speciesCareRepository: context.read(),
+        speciesSynonymsRepository: context.read(),
+      ),
+    ),
+    Provider(
+      create: (context) => SpeciesSearcherFacade(
+        localSearcher: context.read(),
+        trefleSearcher: context.read(),
       ),
     ),
     ..._sharedProviders,

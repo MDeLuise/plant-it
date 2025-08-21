@@ -1,0 +1,104 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:command_it/command_it.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
+import 'package:plant_it/data/repository/image_repository.dart';
+import 'package:plant_it/data/service/search/species_searcher_facade.dart';
+import 'package:plant_it/database/database.dart';
+import 'package:plant_it/domain/models/species_searcher_result.dart';
+import 'package:result_dart/result_dart.dart';
+
+class Query {
+  final String term;
+  final List<SpeciesDataSource> sources;
+  final int offset;
+  final int limit;
+
+  Query({
+    required this.term,
+    required this.sources,
+    required this.offset,
+    required this.limit,
+  });
+}
+
+class SearchViewModel extends ChangeNotifier {
+  final SpeciesSearcherFacade _speciesSearcherFacade;
+  final ImageRepository _imageRepository;
+
+  SearchViewModel({
+    required SpeciesSearcherFacade speciesSearcherFacade,
+    required ImageRepository imageRepository,
+  })  : _speciesSearcherFacade = speciesSearcherFacade,
+        _imageRepository = imageRepository {
+    search = Command.createAsyncNoResult(
+      (Query q) async {
+        Result<void> result = await _query(q);
+        if (result.isError()) throw result.exceptionOrNull()!;
+        return;
+      },
+    );
+  }
+
+  final _log = Logger('SearchViewModel');
+  List<SpeciesSearcherResult> _result = [];
+
+  late final Command<Query, void> search;
+
+  List<SpeciesSearcherResult> get result => _result;
+
+  Future<Result<void>> _query(Query query) async {
+    Result<List<SpeciesSearcherResult>> species =
+        await _speciesSearcherFacade.search(
+      query.term,
+      query.sources,
+      query.offset,
+      query.limit,
+    );
+    if (species.isError()) {
+      return species;
+    }
+    _log.fine("Loaded queried species");
+    _result = species.getOrThrow();
+    notifyListeners();
+    return Success("ok");
+  }
+
+  Future<Result<String>> getImageBase64(
+      SpeciesSearcherResult speciesSearcherResult) async {
+    SpeciesCompanion species = speciesSearcherResult.speciesCompanion;
+    Result<String>? base64 = await _imageRepository
+        .getSpecifiedAvatarForSpeciesBase64(species.id.value);
+    if (base64 != null) {
+      return base64;
+    }
+    if (species.externalAvatarUrl.present) {
+      String? fetchedBase64 =
+          await _fetchImageAsBase64(species.externalAvatarUrl.value!);
+      if (fetchedBase64.isNotEmpty) {
+        return Success(fetchedBase64);
+      }
+    }
+    return Success("");
+  }
+
+  Future<String> _fetchImageAsBase64(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        Uint8List bytes = response.bodyBytes;
+        return base64Encode(bytes);
+      } else {
+        _log.severe(
+            "Failed to load image from URL: $url, Status code: ${response.statusCode}");
+        return "";
+      }
+    } catch (e) {
+      _log.severe("Error fetching image from URL: $url, Error: $e");
+      return "";
+    }
+  }
+}
