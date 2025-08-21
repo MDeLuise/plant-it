@@ -7,10 +7,10 @@ import 'package:result_dart/result_dart.dart';
 import 'package:workmanager/workmanager.dart';
 
 class SchedulingService {
+  static const String taskName = "notification_task";
   final UserSettingRepository _userSettingRepository;
   final Workmanager _workmanager;
   final _log = Logger('SchedulingService');
-  final String taskName = "notification_task";
 
   SchedulingService({
     required UserSettingRepository userSettingRepository,

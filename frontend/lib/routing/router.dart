@@ -19,6 +19,7 @@ import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:plant_it/ui/settings/widgets/data_sources_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/add_event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/edit_event_type_screen.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/event_type_screen.dart';
@@ -124,6 +125,18 @@ GoRouter router() => GoRouter(
                 path: Routes.settingsInfo,
                 builder: (context, state) {
                   return InfoScreen();
+                },
+              ),
+              GoRoute(
+                path: Routes.settingsDataSources,
+                builder: (context, state) {
+                  return DataSourcesScreen();
+                },
+              ),
+              GoRoute(
+                path: Routes.settingsTrefle,
+                builder: (context, state) {
+                  return TrefleScreen(workmanager: context.read());
                 },
               ),
               GoRoute(

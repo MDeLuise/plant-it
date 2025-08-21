@@ -12,6 +12,8 @@ abstract final class Routes {
 
   static String settingsNotifications = '/settings-notifications';
   static String settingsInfo = '/settings-info';
+  static String settingsDataSources = '/settings-dataSources';
+  static String settingsTrefle = '/settings-dataSources/trefle';
 
   static final String _eventTypeRelative = 'eventType';
   static final String _eventTypesRelative = 'eventTypes';

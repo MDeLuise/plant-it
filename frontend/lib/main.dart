@@ -1,7 +1,10 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:plant_it/data/service/notification_service.dart';
+import 'package:plant_it/data/service/scheduling_service.dart';
+import 'package:plant_it/data/service/trefle_import_service.dart';
 import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -12,9 +15,23 @@ import 'routing/router.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-      NotificationService notificationService = NotificationService.noParam();
-      await notificationService.sendDueReminderNotifications();
+      if (task == SchedulingService.taskName) {
+        NotificationService notificationService = NotificationService.noParam();
+        await notificationService.sendDueReminderNotifications();
+      } else if (task == TrefleImportService.importTaskName) {
+        await FlutterDownloader.initialize(
+          debug: false,
+          ignoreSsl: false,
+        );
 
+        TrefleImportService trefleImportService = TrefleImportService();
+        int offset = inputData?["offset"] ?? 0;
+        int limit = inputData?["limit"] ?? 500;
+        trefleImportService.import(offset, limit);
+      } else if (task == TrefleImportService.cleanupTaskName) {
+        TrefleImportService trefleImportService = TrefleImportService();
+        trefleImportService.cleanup();
+      }
       return Future.value(true);
     } catch (error) {
       print('There is an error in the task $task: $error');
@@ -24,13 +41,15 @@ void callbackDispatcher() {
 }
 
 /// Default main method
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Workmanager().initialize(
+
+  await Workmanager().initialize(
     callbackDispatcher,
     //isInDebugMode: true,
   );
-  NotificationService.noParam().initialize();
+
+  await NotificationService.noParam().initialize();
 
   // Launch development config by default
   development.main();
