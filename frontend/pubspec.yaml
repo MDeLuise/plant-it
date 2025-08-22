@@ -15,7 +15,6 @@ dependencies:
   path: ^1.9.1
   dynamic_color: ^1.7.0
   intl: ^0.20.2
-  flutter_cache_manager: ^3.4.1
   flutter_lucide: ^1.6.2
   package_info_plus: ^8.3.1
   path_provider: ^2.1.5
@@ -61,6 +60,7 @@ dependencies:
   material_shapes: ^0.0.2
   fast_csv: ^0.2.11
   background_downloader: ^9.2.3
+  shared_preferences: ^2.5.3
   # https://pub.dev/packages/flutter_popup
   # https://pub.dev/packages/dotted_border
   # https://pub.dev/packages/chip_list

@@ -1,23 +1,39 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:logging/logging.dart';
+import 'package:plant_it/data/service/search/flora_codex_searcher.dart';
 import 'package:plant_it/data/service/search/local_searcher.dart';
-import 'package:plant_it/data/service/search/trefle_searcher.dart';
+import 'package:plant_it/data/service/search/search_result_cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
 import 'package:result_dart/result_dart.dart';
 
 class SpeciesSearcherFacade {
   final LocalSearcher _localSearcher;
-  final TrefleSearcher _trefleSearcher;
+  final FloraCodexSearcher _floraCodexSearcher;
+  final Logger _log = Logger("SpeciesSearcherFacade");
+  final SearchResultCache _cache;
 
   SpeciesSearcherFacade({
     required LocalSearcher localSearcher,
-    required TrefleSearcher trefleSearcher,
+    required FloraCodexSearcher trefleSearcher,
+    required SearchResultCache cache,
   })  : _localSearcher = localSearcher,
-        _trefleSearcher = trefleSearcher;
+        _floraCodexSearcher = trefleSearcher,
+        _cache = cache;
 
   Future<Result<List<SpeciesSearcherResult>>> search(String term,
       List<SpeciesDataSource> sources, int offset, int limit) async {
+    String cacheTerm = term.isEmpty ? "*" : term;
+    List<SpeciesSearcherResult>? cacheResult =
+        await _cacheHit(cacheTerm, sources, offset, limit);
+    if (cacheResult != null) {
+      _log.fine("Cache hit");
+      return Success(cacheResult);
+    }
+    _log.fine("Cache miss");
+
     List<SpeciesSearcherResult> result = [];
 
     if (sources.contains(SpeciesDataSource.custom)) {
@@ -29,15 +45,47 @@ class SpeciesSearcherFacade {
       result.addAll(localResult.getOrThrow());
     }
 
-    if (sources.contains(SpeciesDataSource.trefle)) {
+    if (sources.contains(SpeciesDataSource.floraCodex)) {
       Result<List<SpeciesSearcherResult>> trefleResult =
-          await _trefleSearcher.search(term, offset, limit);
+          await _floraCodexSearcher.search(term, offset, limit);
       if (trefleResult.isError()) {
         return Failure(Exception(trefleResult.exceptionOrNull()));
       }
       result.addAll(trefleResult.getOrThrow());
     }
 
+    _saveCache(cacheTerm, result.sublist(0, min(result.length, limit)));
     return Success(result.sublist(0, min(result.length, limit)));
+  }
+
+  Future<List<SpeciesSearcherResult>?> _cacheHit(String term,
+      List<SpeciesDataSource> sources, int offset, int limit) async {
+    String? result = _cache.get(term);
+    if (result == null) {
+      return null;
+    }
+    //_log.fine("cache reading:\n$result");
+    List<dynamic> jsonList = jsonDecode(result);
+    return jsonList
+        .map((json) => SpeciesSearcherResult.fromJson(json))
+        .toList()
+        .cast<SpeciesSearcherResult>();
+  }
+
+  Future<void> _saveCache(String term, List<SpeciesSearcherResult> result) {
+    String value = jsonEncode(result
+        .map((r) => SpeciesSearcherResult(
+              speciesDataSource: r.speciesDataSource,
+              speciesCompanion: r.speciesCompanion,
+              speciesCareCompanion: r.speciesCareCompanion,
+              speciesSynonymsCompanion: r.speciesSynonymsCompanion,
+            ).toJson())
+        .toList());
+    //_log.fine("cache saving:\n$value");
+    return _cache.put(term, value);
+  }
+
+  Future<bool> clearCache() async {
+    return _cache.clear();
   }
 }

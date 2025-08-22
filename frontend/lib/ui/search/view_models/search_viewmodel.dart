@@ -34,13 +34,12 @@ class SearchViewModel extends ChangeNotifier {
     required ImageRepository imageRepository,
   })  : _speciesSearcherFacade = speciesSearcherFacade,
         _imageRepository = imageRepository {
-    search = Command.createAsyncNoResult(
+    search = Command.createAsync(
       (Query q) async {
         Result<void> result = await _query(q);
         if (result.isError()) throw result.exceptionOrNull()!;
         return;
-      },
-    );
+      }, initialValue: Failure(Exception("not started")));
   }
 
   final _log = Logger('SearchViewModel');
@@ -75,7 +74,7 @@ class SearchViewModel extends ChangeNotifier {
     if (base64 != null) {
       return base64;
     }
-    if (species.externalAvatarUrl.present) {
+    if (species.externalAvatarUrl.present && species.externalAvatarUrl.value != null) {
       String? fetchedBase64 =
           await _fetchImageAsBase64(species.externalAvatarUrl.value!);
       if (fetchedBase64.isNotEmpty) {
