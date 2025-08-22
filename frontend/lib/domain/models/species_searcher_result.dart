@@ -1,6 +1,55 @@
 import 'package:drift/drift.dart';
 import 'package:plant_it/database/database.dart';
 
+class SpeciesSearcherPartialResult {
+  final SpeciesCompanion speciesCompanion;
+
+  SpeciesSearcherPartialResult({
+    required this.speciesCompanion,
+  });
+
+  Map<String, dynamic> toJson() {
+    // Map<String, Expression<Object>> speciesCompanionColumns = speciesCompanion.toColumns(true);
+    // speciesCompanionColumns.keys.map((k) {
+    //       return "'$k': '${speciesCompanionColumns[k]!.toString()}'";
+    //     }).join(",\n");
+    return {
+      'speciesCompanion': {
+        'id': speciesCompanion.id.value,
+        'scientificName': speciesCompanion.scientificName.value,
+        'family': speciesCompanion.family.value,
+        'genus': speciesCompanion.genus.value,
+        'species': speciesCompanion.species.value,
+        'author': speciesCompanion.author.value,
+        'dataSource': speciesCompanion.dataSource.value.toString(),
+        'externalId': speciesCompanion.externalId.value,
+        'externalAvatarUrl': speciesCompanion.externalAvatarUrl.value,
+        'year': speciesCompanion.year.value,
+        'bibliography': speciesCompanion.bibliography.value,
+      },
+    };
+  }
+
+  factory SpeciesSearcherPartialResult.fromJson(Map<String, dynamic> json) {
+    return SpeciesSearcherPartialResult(
+      speciesCompanion: SpeciesCompanion(
+        id: Value(json['speciesCompanion']['id']),
+        scientificName: Value(json['speciesCompanion']['scientificName']),
+        family: Value(json['speciesCompanion']['family']),
+        genus: Value(json['speciesCompanion']['genus']),
+        species: Value(json['speciesCompanion']['species']),
+        author: Value(json['speciesCompanion']['author']),
+        dataSource: Value(SpeciesDataSource.values.firstWhere(
+            (e) => e.toString() == json['speciesCompanion']['dataSource'])),
+        externalId: Value(json['speciesCompanion']['externalId']),
+        externalAvatarUrl: Value(json['speciesCompanion']['externalAvatarUrl']),
+        year: Value(json['speciesCompanion']['year']),
+        bibliography: Value(json['speciesCompanion']['bibliography']),
+      ),
+    );
+  }
+}
+
 class SpeciesSearcherResult {
   final SpeciesCompanion speciesCompanion;
   final SpeciesCareCompanion speciesCareCompanion;

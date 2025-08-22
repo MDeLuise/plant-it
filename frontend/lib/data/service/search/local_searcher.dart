@@ -22,9 +22,8 @@ class LocalSearcher extends SpeciesSearcher {
         _speciesSynonymsRepository = speciesSynonymsRepository;
 
   @override
-  Future<Result<List<SpeciesSearcherResult>>> search(
+  Future<Result<List<SpeciesSearcherPartialResult>>> search(
       String term, int offset, int limit) async {
-    List<SpeciesSearcherResult> result = [];
     Result<List<Specy>> species =
         await _speciesRepository.getAllByScientificNameOrSynonymsAndDataSource(
             term, SpeciesDataSource.custom, offset, limit);
@@ -33,27 +32,43 @@ class LocalSearcher extends SpeciesSearcher {
     }
     _log.fine("Loaded asked species");
 
-    for (Specy s in species.getOrThrow()) {
-      Result<SpeciesCareData> care = await _speciesCareRepository.get(s.id);
-      if (care.isError()) {
-        return Failure(Exception(care.exceptionOrNull()));
-      }
-      _log.fine("Loaded asked species care");
-
-      Result<List<SpeciesSynonym>> synonyms =
-          await _speciesSynonymsRepository.getBySpecies(s.id);
-      if (synonyms.isError()) {
-        return Failure(Exception(synonyms.exceptionOrNull()));
-      }
-      _log.fine("Loaded asked species synonyms");
-
-      result.add(SpeciesSearcherResult(
+    return Success(species.getOrThrow().map((s) {
+      return SpeciesSearcherPartialResult(
         speciesCompanion: s.toCompanion(true),
-        speciesCareCompanion: care.getOrThrow().toCompanion(true),
-        speciesSynonymsCompanion:
-            synonyms.getOrThrow().map((r) => r.toCompanion(true)).toList(),
-      ));
+      );
+    }).toList());
+  }
+
+  @override
+  Future<Result<SpeciesSearcherResult>> getDetails(int id) async {
+    Result<Specy> species = await _speciesRepository.get(id);
+    if (species.isError()) {
+      return Failure(Exception(species.exceptionOrNull()));
     }
-    return Success(result);
+    _log.fine("Loaded asked species");
+
+    Result<SpeciesCareData> care =
+        await _speciesCareRepository.get(species.getOrThrow().id);
+    if (care.isError()) {
+      return Failure(Exception(care.exceptionOrNull()));
+    }
+    _log.fine("Loaded asked species care");
+
+    Result<List<SpeciesSynonym>> synonyms =
+        await _speciesSynonymsRepository.getBySpecies(species.getOrThrow().id);
+    if (synonyms.isError()) {
+      return Failure(Exception(synonyms.exceptionOrNull()));
+    }
+    _log.fine("Loaded asked species synonyms");
+
+    return Success(
+      SpeciesSearcherResult(
+        speciesCompanion: species.getOrThrow().toCompanion(true),
+        speciesCareCompanion: care.getOrThrow().toCompanion(true),
+        speciesSynonymsCompanion: synonyms.getOrThrow().map((s) {
+          return s.toCompanion(true);
+        }).toList(),
+      ),
+    );
   }
 }

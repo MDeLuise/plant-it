@@ -24,7 +24,7 @@ class FloraCodexSearcher extends SpeciesSearcher {
   }
 
   @override
-  Future<Result<List<SpeciesSearcherResult>>> search(
+  Future<Result<List<SpeciesSearcherPartialResult>>> search(
       String term, int offset, int limit) async {
     if (!_initialized) {
       Result<void> init = await _initialize();
@@ -52,9 +52,9 @@ class FloraCodexSearcher extends SpeciesSearcher {
       return _FloraCodexSpeciesDTO.fromJson(item);
     }).toList();
 
-    List<SpeciesSearcherResult> result = [];
+    List<SpeciesSearcherPartialResult> result = [];
     for (_FloraCodexSpeciesDTO dto in floraCodexSpeciesDTOs) {
-      Result<SpeciesSearcherResult> species =
+      Result<SpeciesSearcherPartialResult> species =
           await _getSpeciesSearcherResult(dto);
       if (species.isError()) {
         return Failure(Exception(species.exceptionOrNull()));
@@ -65,18 +65,10 @@ class FloraCodexSearcher extends SpeciesSearcher {
     return Success(result);
   }
 
-  Future<Result<SpeciesSearcherResult>> _getSpeciesSearcherResult(
+  Future<Result<SpeciesSearcherPartialResult>> _getSpeciesSearcherResult(
       _FloraCodexSpeciesDTO dto) async {
-    Result<SpeciesCareCompanion> care = await _getCare(dto);
-    if (care.isError()) {
-      return Failure(Exception(care.exceptionOrNull()));
-    }
-    Result<List<String>> synonyms = await _getSynonyms(dto);
-    if (synonyms.isError()) {
-      return Failure(Exception(synonyms.exceptionOrNull()));
-    }
     return Success(
-      SpeciesSearcherResult(
+      SpeciesSearcherPartialResult(
         speciesCompanion: SpeciesCompanion(
           id: Value(-1),
           scientificName: Value(dto.scientificName),
@@ -88,17 +80,33 @@ class FloraCodexSearcher extends SpeciesSearcher {
           dataSource: const Value(SpeciesDataSource.floraCodex),
           externalId: Value(dto.id),
         ),
-        speciesCareCompanion: care.getOrThrow(),
-        speciesSynonymsCompanion: [], // TODO
       ),
     );
   }
 
-  // TODO
-  Future<Result<SpeciesCareCompanion>> _getCare(
-      _FloraCodexSpeciesDTO speciesCompanion) async {
+  @override
+  Future<Result<SpeciesSearcherResult>> getDetails(int id) async {
+    // TODO get by id
+
+    Result<SpeciesCareCompanion> care = await _getCare(id);
+    if (care.isError()) {
+      return Failure(Exception(care.exceptionOrNull()));
+    }
+    Result<List<SpeciesSynonymsCompanion>> synonyms = await _getSynonyms(id);
+    if (synonyms.isError()) {
+      return Failure(Exception(synonyms.exceptionOrNull()));
+    }
+
+    return Success(SpeciesSearcherResult(
+      speciesCompanion: null, // TODO get by id
+      speciesCareCompanion: care.getOrThrow(),
+      speciesSynonymsCompanion: synonyms.getOrThrow(),
+    ));
+  }
+
+  Future<Result<SpeciesCareCompanion>> _getCare(int id) async {
     // final String url =
-    //     "$baseUrl$version/plants/${speciesCompanion.id}?key=$_apiKey";
+    //     "$baseUrl$version/plants/$id?key=$_apiKey";
     // final http.Response response = await http.get(Uri.parse(url));
     // if (response.statusCode != 200) {
     //   return Failure(
@@ -109,17 +117,16 @@ class FloraCodexSearcher extends SpeciesSearcher {
         const Success(SpeciesCareCompanion(species: Value(-1))));
   }
 
-  Future<Result<List<String>>> _getSynonyms(
-      _FloraCodexSpeciesDTO speciesCompanion) async {
+  Future<Result<List<SpeciesSynonymsCompanion>>> _getSynonyms(int id) async {
     // final String url =
-    //     "$baseUrl$version/plants/${speciesCompanion.id}?key=$_apiKey";
+    //     "$baseUrl$version/plants/$id?key=$_apiKey";
     // final http.Response response = await http.get(Uri.parse(url));
 
     // if (response.statusCode != 200) {
     //   Failure(Exception("Error while loading species care from Flora Codex"));
     // }
     // final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    final List<String> synonyms = [];
+    //final List<String> synonyms = [];
     // final dynamic commonNames = jsonResponse['main_species']?['common_names'];
 
     // if (commonNames != null && commonNames is List) {
@@ -133,7 +140,7 @@ class FloraCodexSearcher extends SpeciesSearcher {
     //     }
     //   }
     // }
-    return Success(synonyms);
+    return Success([]);
   }
 
   Future<Result<void>> _initialize() async {

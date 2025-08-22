@@ -22,10 +22,10 @@ class SpeciesSearcherFacade {
         _floraCodexSearcher = trefleSearcher,
         _cache = cache;
 
-  Future<Result<List<SpeciesSearcherResult>>> search(
+  Future<Result<List<SpeciesSearcherPartialResult>>> search(
       String term, int offset, int limit) async {
     String cacheTerm = term.isEmpty ? "*" : term;
-    List<SpeciesSearcherResult>? cacheResult =
+    List<SpeciesSearcherPartialResult>? cacheResult =
         await _cacheHit(cacheTerm, offset, limit);
     if (cacheResult != null) {
       _log.fine("Cache hit");
@@ -33,16 +33,16 @@ class SpeciesSearcherFacade {
     }
     _log.fine("Cache miss");
 
-    List<SpeciesSearcherResult> result = [];
+    List<SpeciesSearcherPartialResult> result = [];
 
-    Result<List<SpeciesSearcherResult>> localResult =
+    Result<List<SpeciesSearcherPartialResult>> localResult =
         await _localSearcher.search(term, offset, limit);
     if (localResult.isError()) {
       return Failure(Exception(localResult.exceptionOrNull()));
     }
     result.addAll(localResult.getOrThrow());
 
-    Result<List<SpeciesSearcherResult>> trefleResult =
+    Result<List<SpeciesSearcherPartialResult>> trefleResult =
         await _floraCodexSearcher.search(term, offset, limit);
     if (trefleResult.isError()) {
       return Failure(Exception(trefleResult.exceptionOrNull()));
@@ -53,7 +53,9 @@ class SpeciesSearcherFacade {
     return Success(result.sublist(0, min(result.length, limit)));
   }
 
-  Future<List<SpeciesSearcherResult>?> _cacheHit(
+  // TODO get details (with cache)
+
+  Future<List<SpeciesSearcherPartialResult>?> _cacheHit(
       String term, int offset, int limit) async {
     String? result = _cache.get(term);
     if (result == null) {
@@ -62,17 +64,15 @@ class SpeciesSearcherFacade {
     //_log.fine("cache reading:\n$result");
     List<dynamic> jsonList = jsonDecode(result);
     return jsonList
-        .map((json) => SpeciesSearcherResult.fromJson(json))
+        .map((json) => SpeciesSearcherPartialResult.fromJson(json))
         .toList()
-        .cast<SpeciesSearcherResult>();
+        .cast<SpeciesSearcherPartialResult>();
   }
 
-  Future<void> _saveCache(String term, List<SpeciesSearcherResult> result) {
+  Future<void> _saveCache(String term, List<SpeciesSearcherPartialResult> result) {
     String value = jsonEncode(result
-        .map((r) => SpeciesSearcherResult(
+        .map((r) => SpeciesSearcherPartialResult(
               speciesCompanion: r.speciesCompanion,
-              speciesCareCompanion: r.speciesCareCompanion,
-              speciesSynonymsCompanion: r.speciesSynonymsCompanion,
             ).toJson())
         .toList());
     //_log.fine("cache saving:\n$value");
