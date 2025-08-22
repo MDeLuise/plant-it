@@ -17,7 +17,6 @@ import 'package:plant_it/data/service/reminder_occurrence_service.dart';
 import 'package:plant_it/data/service/search/flora_codex_searcher.dart';
 import 'package:plant_it/data/service/search/local_searcher.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/ui/settings/widgets/data_sources_screen.dart';
 import 'package:plant_it/utils/stream_code.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -98,7 +97,9 @@ List<SingleChildWidget> get providersLocal {
       ),
     ),
     Provider(
-      create: (context) => FloraCodexSearcher(),
+      create: (context) => FloraCodexSearcher(
+        userSettingRepository: context.read(),
+      ),
     ),
     ..._sharedProviders,
   ];

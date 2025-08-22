@@ -48,7 +48,6 @@ class LocalSearcher extends SpeciesSearcher {
       _log.fine("Loaded asked species synonyms");
 
       result.add(SpeciesSearcherResult(
-        speciesDataSource: SpeciesDataSource.custom,
         speciesCompanion: s.toCompanion(true),
         speciesCareCompanion: care.getOrThrow().toCompanion(true),
         speciesSynonymsCompanion:

@@ -13,13 +13,11 @@ import 'package:result_dart/result_dart.dart';
 
 class Query {
   final String term;
-  final List<SpeciesDataSource> sources;
   final int offset;
   final int limit;
 
   Query({
     required this.term,
-    required this.sources,
     required this.offset,
     required this.limit,
   });
@@ -53,7 +51,6 @@ class SearchViewModel extends ChangeNotifier {
     Result<List<SpeciesSearcherResult>> species =
         await _speciesSearcherFacade.search(
       query.term,
-      query.sources,
       query.offset,
       query.limit,
     );

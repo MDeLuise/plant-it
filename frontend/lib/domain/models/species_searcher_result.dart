@@ -2,13 +2,11 @@ import 'package:drift/drift.dart';
 import 'package:plant_it/database/database.dart';
 
 class SpeciesSearcherResult {
-  final SpeciesDataSource speciesDataSource;
   final SpeciesCompanion speciesCompanion;
   final SpeciesCareCompanion speciesCareCompanion;
   final List<SpeciesSynonymsCompanion> speciesSynonymsCompanion;
 
   SpeciesSearcherResult({
-    required this.speciesDataSource,
     required this.speciesCompanion,
     required this.speciesCareCompanion,
     required this.speciesSynonymsCompanion,
@@ -20,7 +18,6 @@ class SpeciesSearcherResult {
     //       return "'$k': '${speciesCompanionColumns[k]!.toString()}'";
     //     }).join(",\n");
     return {
-      'speciesDataSource': speciesDataSource.toString(),
       'speciesCompanion': {
         'id': speciesCompanion.id.value,
         'scientificName': speciesCompanion.scientificName.value,
@@ -55,8 +52,6 @@ class SpeciesSearcherResult {
 
   factory SpeciesSearcherResult.fromJson(Map<String, dynamic> json) {
     return SpeciesSearcherResult(
-      speciesDataSource: SpeciesDataSource.values
-          .firstWhere((e) => e.toString() == json['speciesDataSource']),
       speciesCompanion: SpeciesCompanion(
         id: Value(json['speciesCompanion']['id']),
         scientificName: Value(json['speciesCompanion']['scientificName']),

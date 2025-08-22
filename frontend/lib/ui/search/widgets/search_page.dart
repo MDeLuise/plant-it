@@ -1,7 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
@@ -30,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
         widget.viewModel.search.execute(
           Query(
             term: "",
-            sources: [SpeciesDataSource.custom, SpeciesDataSource.trefle],
             offset: 0,
             limit: 10,
           ),
@@ -44,7 +42,6 @@ class _SearchPageState extends State<SearchPage> {
       widget.viewModel.search.execute(
         Query(
           term: value,
-          sources: [SpeciesDataSource.custom, SpeciesDataSource.trefle],
           offset: 0,
           limit: 10,
         ),

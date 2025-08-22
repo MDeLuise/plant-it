@@ -29,6 +29,7 @@ class SpeciesCard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(12),
           child: Card.filled(
+            clipBehavior: Clip.hardEdge,
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
@@ -58,24 +59,35 @@ class SpeciesCard extends StatelessWidget {
                         label: Text(
                           source == db.SpeciesDataSource.custom
                               ? "custom"
-                              : (source == db.SpeciesDataSource.trefle
-                                  ? "trefle"
-                                  : "flora codex"),
+                              : "flora codex",
                         ),
                       ),
-                      Text(
-                        speciesSearcherResult
-                            .speciesCompanion.scientificName.value,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: Text(
+                          speciesSearcherResult
+                              .speciesCompanion.scientificName.value,
+                          overflow: TextOverflow.visible,
+                          maxLines: 2,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Text(
-                        speciesSearcherResult.speciesCompanion.species.value,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w300),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: Text(
+                          speciesSearcherResult.speciesCompanion.species.value,
+                          overflow: TextOverflow.visible,
+                          maxLines: 2,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w300),
+                        ),
                       )
                     ],
                   ),

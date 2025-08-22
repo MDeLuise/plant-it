@@ -100,13 +100,6 @@ class SpeciesRepository extends CRUDRepository<Specy> {
     return species.toSuccess();
   }
 
-  Future<Result<bool>> existsTrefle() async {
-    bool exists = await db.managers.species
-        .filter((s) => s.dataSource.equals(SpeciesDataSource.trefle))
-        .exists();
-    return exists.toSuccess();
-  }
-
   void deleteAllByDataSources(SpeciesDataSource dataSource) async{
     await (db.delete(db.species)..where((s) => s.dataSource.equals(dataSource.name))).go();
   }

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
+import 'package:plant_it/data/service/search/cache/search_result_cache.dart';
+import 'package:plant_it/data/service/search/cache/search_result_cache_pref.dart';
 import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'main_development.dart' as development;
@@ -16,6 +19,10 @@ void callbackDispatcher() {
       if (task == SchedulingService.taskName) {
         NotificationService notificationService = NotificationService.noParam();
         await notificationService.sendDueReminderNotifications();
+      }
+      if (task == SearchResultCache.taskName) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        SearchResultCachePref(pref: pref).clear();
       }
       return Future.value(true);
     } catch (error) {
@@ -35,6 +42,14 @@ void main() async {
   );
 
   await NotificationService.noParam().initialize();
+
+  Duration cacheRetention = Duration(days: 7);
+  Workmanager().registerPeriodicTask(
+    "${SearchResultCache.taskName}_${DateTime.timestamp()}",
+    SearchResultCache.taskName,
+    initialDelay: cacheRetention,
+    frequency: cacheRetention,
+  );
 
   // Launch development config by default
   development.main();

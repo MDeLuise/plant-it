@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/database/database.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/activity_filter.dart';
@@ -71,7 +70,6 @@ GoRouter router() => GoRouter(
               );
               searchViewModel.search.execute(Query(
                 term: "",
-                sources: [SpeciesDataSource.custom],
                 offset: 0,
                 limit: 10,
               ));

@@ -1,9 +1,5 @@
 abstract class SearchResultCache {
-  final int _retentionDays;
-
-  SearchResultCache({
-    required int retentionDays,
-  }) : _retentionDays = retentionDays;
+  static const String taskName = "clear_cache_task";
 
   Future<void> put(String key, String value);
 
