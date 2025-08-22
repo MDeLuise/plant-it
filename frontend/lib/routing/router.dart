@@ -130,13 +130,20 @@ GoRouter router() => GoRouter(
               GoRoute(
                 path: Routes.settingsDataSources,
                 builder: (context, state) {
-                  return DataSourcesScreen();
+                  SettingsViewModel viewModel =
+                      state.extra as SettingsViewModel;
+                  return DataSourcesScreen(viewModel: viewModel);
                 },
               ),
               GoRoute(
-                path: Routes.settingsTrefle,
+                path: Routes.settingsFloraCodex,
                 builder: (context, state) {
-                  return TrefleScreen(workmanager: context.read());
+                  SettingsViewModel viewModel =
+                      state.extra as SettingsViewModel;
+                  return FloraCodexScreen(
+                    workmanager: context.read(),
+                    viewModel: viewModel,
+                  );
                 },
               ),
               GoRoute(

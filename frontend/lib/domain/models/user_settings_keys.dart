@@ -6,7 +6,10 @@ enum UserSettingsKeys {
   notificationTimeThursday('notification_time_thursday'),
   notificationTimeFriday('notification_time_friday'),
   notificationTimeSaturday('notification_time_saturday'),
-  notificationTimeSunday('notification_time_sunday');
+  notificationTimeSunday('notification_time_sunday'),
+
+  useFloraCodex('use_flora_codex'),
+  floraCodexKey('flora_codex_key');
 
   final String key;
 

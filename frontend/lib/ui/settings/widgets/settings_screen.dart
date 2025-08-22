@@ -58,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => context.push(Routes.settingsDataSources),
+                      onTap: () => context.push(Routes.settingsDataSources, extra: viewModel),
                       child: ListTile(
                         title: Text("Data Sources"),
                         subtitle: Text("Manage the data sources"),

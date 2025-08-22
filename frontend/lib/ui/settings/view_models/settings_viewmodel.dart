@@ -1,7 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';

@@ -1,12 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/data/service/trefle_import_service.dart';
+import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DataSourcesScreen extends StatelessWidget {
-  const DataSourcesScreen({super.key});
+  final SettingsViewModel viewModel;
+  const DataSourcesScreen({super.key, required this.viewModel,});
 
   @override
   Widget build(BuildContext context) {
@@ -16,131 +19,107 @@ class DataSourcesScreen extends StatelessWidget {
           child: Column(
         children: [
           GestureDetector(
-            onTap: () => context.push(Routes.settingsTrefle),
+            onTap: () => context.push(Routes.settingsFloraCodex, extra: viewModel),
             child: ListTile(
-              title: Text("Trefle"),
-              subtitle: Text("Import data from a Trefle bump"),
+              title: Text("Flora Codex"),
+              subtitle: Text("Configure the Flora Codex settings"),
             ),
           ),
-          // GestureDetector(
-          //   onTap: () => {},
-          //   child: ListTile(
-          //     title: Text("Flora Codex"),
-          //     subtitle: Text("Configure the Flora Codex settings"),
-          //   ),
-          // ),
         ],
       )),
     );
   }
 }
 
-class TrefleScreen extends StatelessWidget {
+class FloraCodexScreen extends StatelessWidget {
+  final SettingsViewModel viewModel;
   final Workmanager workmanager;
 
-  const TrefleScreen({
+  const FloraCodexScreen({
     super.key,
     required this.workmanager,
+    required this.viewModel,
   });
+
+  Future<String?> _showApiKeyDialog(BuildContext context, String? initialValue) async {
+    TextEditingController controller =
+        TextEditingController(text: initialValue);
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Insert the Flora Codex API Key"),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: "Enter API Key"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                String apiKey = controller.text.trim();
+                if (apiKey.isNotEmpty) {
+                  viewModel.save.executeWithFuture({
+                    UserSettingsKeys.floraCodexKey.key: apiKey,
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Trefle')),
+      appBar: AppBar(title: const Text('Flora Codex')),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Trefle was an exceptional platform that provided detailed data on plant species, serving both enthusiasts and developers. "
-              "Although Trefle has unfortunately shut down, you can still access a database dump of the species information and import it into this app.",
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              "Import Species",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Please be aware that due to the extensive amount of data, the import process may take a significant amount of time, potentially up to an hour, depending on your device. "
-              "This is a one-time operation that will run in the background, allowing you to continue using your phone and this app as usual.",
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 15),
-            TextButton(
-              onPressed: () => workmanager.registerOneOffTask(
-                  "trefle_import_${DateTime.timestamp()}",
-                  TrefleImportService.importTaskName),
-              style: ButtonStyle(
-                padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5)),
-                backgroundColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primary),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    LucideIcons.download,
-                    color: Theme.of(context).colorScheme.surface,
+          child: ValueListenableBuilder(
+              valueListenable: viewModel.save.results,
+              builder: (context, value, child) {
+                String? apiKey =
+                    viewModel.get(UserSettingsKeys.floraCodexKey.key);
+                bool useFloraCodex =
+                    viewModel.get(UserSettingsKeys.useFloraCodex.key) == "true";
+                return Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SwitchListTile(
+                        title: const Text('Enable Data Source'),
+                        value: useFloraCodex,
+                        onChanged: (bool value) {
+                          viewModel.save.execute({
+                            UserSettingsKeys.useFloraCodex.key:
+                                (!useFloraCodex).toString()
+                          });
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('API Key'),
+                        subtitle: (apiKey ?? "").isEmpty
+                            ? Text("not provided")
+                            : Text(
+                                "${apiKey!.substring(0, min(5, apiKey.length))}..."),
+                        trailing: const Icon(Icons.arrow_forward),
+                        enabled: useFloraCodex,
+                        onTap: () => _showApiKeyDialog(context, apiKey),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Import Species Dump",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              "Cleanup Imported Species",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Please be aware that the cleanup process may take some time, depending on your device. "
-              "This is a one-time operation that will run in the background, allowing you to continue using your phone and this app as usual.",
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 15),
-            TextButton(
-              onPressed: () => workmanager.registerOneOffTask(
-                  "trefle_cleanup_${DateTime.timestamp()}",
-                  TrefleImportService.cleanupTaskName),
-              style: ButtonStyle(
-                padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5)),
-                backgroundColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primary),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    LucideIcons.eraser,
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Cleanup Imported Species",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      )),
+                );
+              })),
     );
   }
 }
