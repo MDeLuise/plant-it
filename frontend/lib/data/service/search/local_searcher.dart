@@ -40,8 +40,8 @@ class LocalSearcher extends SpeciesSearcher {
   }
 
   @override
-  Future<Result<SpeciesSearcherResult>> getDetails(int id) async {
-    Result<Specy> species = await _speciesRepository.get(id);
+  Future<Result<SpeciesSearcherResult>> getDetails(String id) async {
+    Result<Specy> species = await _speciesRepository.get(int.parse(id));
     if (species.isError()) {
       return Failure(Exception(species.exceptionOrNull()));
     }

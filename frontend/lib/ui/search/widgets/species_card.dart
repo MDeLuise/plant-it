@@ -7,7 +7,7 @@ import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 
 class SpeciesCard extends StatelessWidget {
   final SearchViewModel viewModel;
-  final SpeciesSearcherResult speciesSearcherResult;
+  final SpeciesSearcherPartialResult speciesSearcherResult;
 
   const SpeciesCard({
     super.key,
@@ -39,6 +39,7 @@ class SpeciesCard extends StatelessWidget {
                     borderRadius: BorderRadiusGeometry.all(Radius.circular(15)),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * .4,
+                      height: MediaQuery.of(context).size.height * .17,
                       child: Image(
                         fit: BoxFit.cover,
                         image: snapshot.data!.getOrThrow().isEmpty

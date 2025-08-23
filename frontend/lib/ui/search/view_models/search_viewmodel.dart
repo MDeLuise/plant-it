@@ -41,14 +41,14 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   final _log = Logger('SearchViewModel');
-  List<SpeciesSearcherResult> _result = [];
+  List<SpeciesSearcherPartialResult> _result = [];
 
   late final Command<Query, void> search;
 
-  List<SpeciesSearcherResult> get result => _result;
+  List<SpeciesSearcherPartialResult> get result => _result;
 
   Future<Result<void>> _query(Query query) async {
-    Result<List<SpeciesSearcherResult>> species =
+    Result<List<SpeciesSearcherPartialResult>> species =
         await _speciesSearcherFacade.search(
       query.term,
       query.offset,
@@ -64,7 +64,7 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   Future<Result<String>> getImageBase64(
-      SpeciesSearcherResult speciesSearcherResult) async {
+      SpeciesSearcherPartialResult speciesSearcherResult) async {
     SpeciesCompanion species = speciesSearcherResult.speciesCompanion;
     Result<String>? base64 = await _imageRepository
         .getSpecifiedAvatarForSpeciesBase64(species.id.value);

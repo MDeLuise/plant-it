@@ -5,5 +5,5 @@ abstract class SpeciesSearcher {
   Future<Result<List<SpeciesSearcherPartialResult>>> search(
       String term, int offset, int limit);
 
-  Future<Result<SpeciesSearcherResult>> getDetails(int id);
+  Future<Result<SpeciesSearcherResult>> getDetails(String id);
 }

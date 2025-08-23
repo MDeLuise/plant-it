@@ -131,7 +131,7 @@ class _SearchPageState extends State<SearchPage> {
                         ]),
                   ),
                   ...List.generate(widget.viewModel.result.length, (index) {
-                    SpeciesSearcherResult species =
+                    SpeciesSearcherPartialResult species =
                         widget.viewModel.result[index];
                     return SpeciesCard(
                       speciesSearcherResult: species,
