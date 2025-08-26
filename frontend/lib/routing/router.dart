@@ -28,7 +28,9 @@ import 'package:plant_it/ui/settings/widgets/reminder/create/add_reminder_screen
 import 'package:plant_it/ui/settings/widgets/reminder/edit/edit_reminder_screen.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/reminder_screen.dart';
 import 'package:plant_it/ui/species/view_models/add_species_viewmodel.dart';
+import 'package:plant_it/ui/species/view_models/view_species_viewmodel.dart';
 import 'package:plant_it/ui/species/widgets/create/add_species_screen.dart';
+import 'package:plant_it/ui/species/widgets/view/view_species_screen.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router() => GoRouter(
@@ -270,6 +272,26 @@ GoRouter router() => GoRouter(
               viewModel: viewModel,
               searchedTerm: searchedTerm,
             );
+          },
+        ),
+        GoRoute(
+          path: Routes.speciesWithIdOrExternal,
+          builder: (context, state) {
+            dynamic idOrExternal;
+            if (state.extra != null) {
+              idOrExternal = state.extra;
+            }
+
+            ViewSpeciesViewModel viewModel = ViewSpeciesViewModel(
+              speciesRepository: context.read(),
+              speciesCareRepository: context.read(),
+              speciesSynonymsRepository: context.read(),
+              imageRepository: context.read(),
+              appCache: context.read(),
+            );
+            viewModel.load.execute(idOrExternal);
+
+            return ViewSpeciesScreen(viewModel: viewModel);
           },
         ),
       ],

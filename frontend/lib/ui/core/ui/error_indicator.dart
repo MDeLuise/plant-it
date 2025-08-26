@@ -28,13 +28,13 @@ class ErrorIndicator extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.error_outline,
-                    color: Theme.of(context).colorScheme.onError,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                   const SizedBox(width: 10),
                   Text(
                     title,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onError,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ],

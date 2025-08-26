@@ -89,7 +89,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
               if (command.hasError) {
                 return ErrorIndicator(
                   title:
-                      "Error", // AppLocalization.of(context).errorWhileLoadingHome,
+                      "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
                   label: "Try again", //AppLocalization.of(context).tryAgain,
                   onPressed: widget.viewModel.load.execute,
                 );

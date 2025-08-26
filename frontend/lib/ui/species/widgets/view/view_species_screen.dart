@@ -1,73 +1,25 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
+import 'package:plant_it/database/database.dart';
+import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
-import 'package:plant_it/ui/plant/widgets/plant_avatar.dart';
-import 'package:plant_it/ui/plant/widgets/plant_gallery/plant_gallery.dart';
+import 'package:plant_it/ui/species/view_models/view_species_viewmodel.dart';
+import 'package:plant_it/ui/species/widgets/view/species_image.dart';
 
-class PlantScreen extends StatefulWidget {
-  final PlantViewModel viewModel;
+class ViewSpeciesScreen extends StatefulWidget {
+  final ViewSpeciesViewModel viewModel;
 
-  const PlantScreen({super.key, required this.viewModel});
+  const ViewSpeciesScreen({
+    super.key,
+    required this.viewModel,
+  });
 
   @override
-  State<PlantScreen> createState() => _PlantScreenState();
+  State<ViewSpeciesScreen> createState() => _ViewSpeciesScreenState();
 }
 
-class _PlantScreenState extends State<PlantScreen> {
-  final ImagePicker _picker = ImagePicker();
-
-  void _deletePlant() async {
-    // return QuickAlert.show(
-    //   context: context,
-    //   type: QuickAlertType.warning,
-    //   confirmBtnText: 'Delete',
-    //   cancelBtnText: 'Cancel',
-    //   title: "Delete plant?",
-    //   text:
-    //       "Are you sure you want to delete the plant and all the linked data?",
-    //   confirmBtnColor: Colors.red,
-    //   textColor: Theme.of(context).colorScheme.onSurface,
-    //   titleColor: Theme.of(context).colorScheme.onSurface,
-    //   showCancelBtn: true,
-    //   cancelBtnTextStyle: TextStyle(
-    //     color: Theme.of(context).colorScheme.onSurface,
-    //   ),
-    //   barrierColor: Colors.grey.withAlpha(200),
-    //   backgroundColor: Theme.of(context).colorScheme.surface,
-    //   onConfirmBtnTap: () {
-    //     try {
-    //       widget.viewModel.deletePlant();
-    //     } catch (e) {
-    //       showSnackbar(
-    //           context, FeedbackLevel.error, "Error deleting plant", null);
-    //       return;
-    //     }
-    //     showSnackbar(
-    //         context, FeedbackLevel.success, "Plant deleted successfully", null);
-    //     Navigator.of(context).pop();
-    //     Navigator.of(context).pop(true);
-    //   },
-    // );
-  }
-
-  Future<void> _uploadNewPhoto() async {
-    // final XFile? pickedFile =
-    //     await _picker.pickImage(source: ImageSource.gallery);
-    // if (pickedFile == null) return;
-
-    // try {
-    //   widget.viewModel.uploadNewPhoto(pickedFile);
-
-    //   showSnackbar(context, FeedbackLevel.success, "Photo uploaded", null);
-    // } catch (e) {
-    //   showSnackbar(
-    //       context, FeedbackLevel.error, "Failed to upload image", e.toString());
-    // }
-  }
-
+class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,11 +31,11 @@ class _PlantScreenState extends State<PlantScreen> {
           }
 
           if (command.hasError) {
-            return Center(
-              child: Text(
-                "Error : ${command.error}",
-                //style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
+            return ErrorIndicator(
+              title:
+                  "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
+              label: "Try again", //AppLocalization.of(context).tryAgain,
+              onPressed: widget.viewModel.load.execute,
             );
           }
 
@@ -96,12 +48,11 @@ class _PlantScreenState extends State<PlantScreen> {
                     elevation: 0,
                     automaticallyImplyLeading: false,
                     flexibleSpace: FlexibleSpaceBar(
-                        background: PlantAvatar(viewModel: widget.viewModel)),
+                        background: SpeciesImage(viewModel: widget.viewModel)),
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 30),
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(20),
@@ -111,38 +62,32 @@ class _PlantScreenState extends State<PlantScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.viewModel.plant.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                          ),
-                          GestureDetector(
-                            // onTap: () => navigateTo(
-                            //     context,
-                            //     SpeciesPage(
-                            //         widget.env, _species!.toCompanion(true))),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  widget.viewModel.species.scientificName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(fontStyle: FontStyle.italic),
-                                ),
-                                const SizedBox(width: 5),
-                                Icon(LucideIcons.external_link,
-                                    size: 10,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                              ],
+                          Chip(
+                            labelPadding: EdgeInsets.all(0),
+                            label: Text(
+                              widget.viewModel.source ==
+                                      SpeciesDataSource.custom
+                                  ? "custom"
+                                  : "flora codex",
                             ),
                           ),
+                          Text(widget.viewModel.species,
+                              style:
+                                  Theme.of(context).textTheme.headlineSmall!),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all(
+                                    Theme.of(context).colorScheme.primary),
+                                foregroundColor: WidgetStateProperty.all(
+                                    Theme.of(context).colorScheme.onPrimary),
+                              ),
+                              child: Text("Add to collection"),
+                            ),
+                          ),
+
                           const SizedBox(height: 16),
 
                           // Info
@@ -157,17 +102,10 @@ class _PlantScreenState extends State<PlantScreen> {
                               children: [
                                 TextSpan(
                                     text:
-                                        "${widget.viewModel.plant.name} is a plant of the species "),
+                                        "${widget.viewModel.scientificName} is a species of "),
+                                const TextSpan(text: "genus "),
                                 TextSpan(
-                                  text: widget.viewModel.species.species,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: ", genus "),
-                                TextSpan(
-                                  text: widget.viewModel.species.genus,
+                                  text: widget.viewModel.genus,
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -175,7 +113,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 ),
                                 const TextSpan(text: " and family "),
                                 TextSpan(
-                                  text: widget.viewModel.species.family,
+                                  text: widget.viewModel.family,
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -194,60 +132,19 @@ class _PlantScreenState extends State<PlantScreen> {
                           ),
                           const SizedBox(height: 8),
                           SpeciesCareInfoGridWidget(
-                              care: widget.viewModel.care.toCompanion(true),
-                              maxNum: 4),
+                              care: widget.viewModel.care, maxNum: 4),
                           const SizedBox(height: 16),
 
-                          // Reminder
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                'Reminders',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
-                              ),
-                              GestureDetector(
-                                // onTap: () => navigateTo(context,
-                                //     ReminderListPage(widget.env, widget.plant)),
-                                child: const Text("Edit"),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          PlantReminderInfoGridWidget(
-                            viewModel: widget.viewModel,
-                            maxNum: 4,
-                            care: widget.viewModel.care.toCompanion(true),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Events
+                          // Synonyms
                           Text(
-                            'Events',
+                            'Synonyms',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          PlantEventInfoGridWidget(
-                            viewModel: widget.viewModel,
-                            maxNum: 4,
-                            care: widget.viewModel.care.toCompanion(true),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Gallery
                           Text(
-                            'Gallery',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: 8),
-                          PlantGallery(
-                            viewModel: widget.viewModel,
-                            allowUpload: true,
-                            onUpload: _uploadNewPhoto,
-                          ),
+                              "Species is also known as: ${widget.viewModel.synonyms.join(", ")}${widget.viewModel.synonyms.isEmpty ? "" : "."}",
+                              style: Theme.of(context).textTheme.bodyLarge!),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
@@ -282,6 +179,7 @@ class _PlantScreenState extends State<PlantScreen> {
                         items: [
                           PopupMenuItem(
                             value: 'edit',
+                            enabled: !widget.viewModel.isExternal,
                             textStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface),
                             child: ListTile(
@@ -306,6 +204,7 @@ class _PlantScreenState extends State<PlantScreen> {
                           ),
                           PopupMenuItem(
                             value: 'remove',
+                            enabled: !widget.viewModel.isExternal,
                             textStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface),
                             child: ListTile(
@@ -329,7 +228,7 @@ class _PlantScreenState extends State<PlantScreen> {
                         } else if (value == 'duplicate') {
                           //_duplicatePlant();
                         } else if (value == 'remove') {
-                          _deletePlant();
+                          // _deletePlant();
                         }
                       });
                     },

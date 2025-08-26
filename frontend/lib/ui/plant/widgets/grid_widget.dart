@@ -9,11 +9,14 @@ import 'package:plant_it/utils/common.dart';
 import 'package:plant_it/utils/icons.dart';
 
 abstract class InfoGridWidget extends StatefulWidget {
-  final PlantViewModel viewModel;
+  final SpeciesCareCompanion care;
   final int maxNum;
 
-  const InfoGridWidget(
-      {super.key, required this.viewModel, required this.maxNum});
+  const InfoGridWidget({
+    super.key,
+    required this.care,
+    required this.maxNum,
+  });
 
   List<InfoWidget> getInfoChildren();
 
@@ -95,39 +98,41 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
 }
 
 class SpeciesCareInfoGridWidget extends InfoGridWidget {
-  const SpeciesCareInfoGridWidget(
-      {super.key, required super.viewModel, required super.maxNum});
+  const SpeciesCareInfoGridWidget({
+    super.key,
+    required super.care,
+    required super.maxNum,
+  });
 
   @override
   List<InfoWidget> getInfoChildren() {
     List<InfoWidget> result = [];
-    SpeciesCareData speciesCare = viewModel.care;
 
     String sunLightValue = "Low";
-    if (speciesCare.light != null &&
-        speciesCare.light! > 3 &&
-        speciesCare.light! < 5) {
+    if (care.light.value != null &&
+        care.light.value! > 3 &&
+        care.light.value! < 5) {
       sunLightValue = "Medium";
-    } else if (speciesCare.light != null && speciesCare.light! > 5) {
+    } else if (care.light.value != null && care.light.value! > 5) {
       sunLightValue = "High";
     }
     result.add(InfoWidget(
         title: "Sunlight", value: sunLightValue, icon: LucideIcons.sun));
 
-    if (speciesCare.humidity != null) {
+    if (care.humidity.value != null) {
       result.add(InfoWidget(
           title: "Humidity",
-          value: "${speciesCare.humidity!}%",
+          value: "${care.humidity.value!}%",
           icon: LucideIcons.spray_can));
     }
 
     String? tempValue;
-    if (speciesCare.tempMax != null && speciesCare.tempMin != null) {
-      tempValue = "${speciesCare.tempMin} - ${speciesCare.tempMax} °C";
-    } else if (speciesCare.tempMax == null && speciesCare.tempMin != null) {
-      tempValue = "min ${speciesCare.tempMin} °C";
-    } else if (speciesCare.tempMax != null && speciesCare.tempMin == null) {
-      tempValue = "max ${speciesCare.tempMax} °C";
+    if (care.tempMax.value != null && care.tempMin.value != null) {
+      tempValue = "${care.tempMin.value} - ${care.tempMax.value} °C";
+    } else if (care.tempMax.value == null && care.tempMin.value != null) {
+      tempValue = "min ${care.tempMin.value} °C";
+    } else if (care.tempMax.value != null && care.tempMin.value == null) {
+      tempValue = "max ${care.tempMax.value} °C";
     }
     if (tempValue != null) {
       result.add(InfoWidget(
@@ -137,12 +142,12 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
     }
 
     String? phValue;
-    if (speciesCare.phMax != null && speciesCare.tempMin != null) {
-      phValue = "${speciesCare.phMin} - ${speciesCare.phMax}";
-    } else if (speciesCare.phMax == null && speciesCare.phMin != null) {
-      phValue = "min ${speciesCare.tempMin}";
-    } else if (speciesCare.phMax != null && speciesCare.phMin == null) {
-      phValue = "max ${speciesCare.phMax}";
+    if (care.phMax.value != null && care.tempMin.value != null) {
+      phValue = "${care.phMin.value} - ${care.phMax.value}";
+    } else if (care.phMax.value == null && care.phMin.value != null) {
+      phValue = "min ${care.tempMin.value}";
+    } else if (care.phMax.value != null && care.phMin.value == null) {
+      phValue = "max ${care.phMax.value}";
     }
     if (phValue != null) {
       result.add(
@@ -154,8 +159,14 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
 }
 
 class PlantEventInfoGridWidget extends InfoGridWidget {
-  const PlantEventInfoGridWidget(
-      {super.key, required super.viewModel, required super.maxNum});
+  final PlantViewModel viewModel;
+
+  const PlantEventInfoGridWidget({
+    super.key,
+    required this.viewModel,
+    required super.maxNum,
+    required super.care,
+  });
 
   @override
   List<InfoWidget> getInfoChildren() {
@@ -178,8 +189,14 @@ class PlantEventInfoGridWidget extends InfoGridWidget {
 }
 
 class PlantReminderInfoGridWidget extends InfoGridWidget {
-  const PlantReminderInfoGridWidget(
-      {super.key, required super.viewModel, required super.maxNum});
+  final PlantViewModel viewModel;
+
+  const PlantReminderInfoGridWidget({
+    super.key,
+    required this.viewModel,
+    required super.maxNum,
+    required super.care,
+  });
 
   @override
   List<InfoWidget> getInfoChildren() {

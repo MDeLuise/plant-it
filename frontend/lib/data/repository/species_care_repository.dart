@@ -21,6 +21,16 @@ class SpeciesCareRepository extends CRUDRepository<SpeciesCareData> {
     }
   }
 
+  @override
+  Future<Result<void>> delete(int id) async {
+    try {
+      await (db.delete(table)..where((t) => (t as dynamic).species.equals(id))).go();
+      return Success("ok");
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
   // TODO override others
 
   @override

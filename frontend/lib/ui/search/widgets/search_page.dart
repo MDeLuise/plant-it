@@ -2,6 +2,7 @@ import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
@@ -65,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title: "Error",
+                title: "Error : ${command.error}",
                 label: "Try again",
                 onPressed: widget.viewModel.search.execute,
               );
@@ -142,10 +143,19 @@ class _SearchPageState extends State<SearchPage> {
                   ...List.generate(widget.viewModel.result.length, (index) {
                     SpeciesSearcherPartialResult species =
                         widget.viewModel.result[index];
-                    return SpeciesCard(
-                      key: UniqueKey(),
-                      speciesSearcherResult: species,
-                      viewModel: widget.viewModel,
+                    dynamic idOrExternal =
+                        species.speciesCompanion.dataSource.value ==
+                                SpeciesDataSource.custom
+                            ? species.speciesCompanion.id.value
+                            : species;
+                    return GestureDetector(
+                      onTap: () => context.push(Routes.speciesWithIdOrExternal,
+                          extra: idOrExternal),
+                      child: SpeciesCard(
+                        key: UniqueKey(),
+                        speciesSearcherResult: species,
+                        viewModel: widget.viewModel,
+                      ),
                     );
                   }),
                 ],

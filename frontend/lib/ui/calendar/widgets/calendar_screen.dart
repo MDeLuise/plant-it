@@ -54,7 +54,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title: "Error",
+                title: "Error : ${command.error}",
                 label: "Try again",
                 onPressed: widget.viewModel.load.execute,
               );

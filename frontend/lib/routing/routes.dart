@@ -29,4 +29,5 @@ abstract final class Routes {
 
   static final String _speciesRelative = 'species';
   static String species = '/$_speciesRelative';
+  static String speciesWithIdOrExternal = '/${_speciesRelative}_view';
 }
