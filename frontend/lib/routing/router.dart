@@ -259,6 +259,7 @@ GoRouter router() => GoRouter(
               speciesCareRepository: context.read(),
               speciesSynonymsRepository: context.read(),
               imageRepository: context.read(),
+              appCache: context.read(),
             );
             return AddSpeciesScreen(viewModel: viewModel);
           },

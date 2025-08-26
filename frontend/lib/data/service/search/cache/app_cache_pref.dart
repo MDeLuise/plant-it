@@ -1,7 +1,10 @@
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
+import 'package:plant_it/database/database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppCachePref extends AppCache {
+  final String _speciesDetails = 'species';
+  final String _speciesSearch = 'species_search';
   final SharedPreferences _pref;
 
   AppCachePref({
@@ -9,27 +12,44 @@ class AppCachePref extends AppCache {
   }) : _pref = pref;
 
   @override
-  Future<void> put(String key, String value) {
-    return _pref.setString(key, value);
-  }
-
-  @override
-  String? get(String key) {
-    return _pref.getString(key);
-  }
-
-  @override
-  Future<bool> delete(String key) {
-    return _pref.remove(key);
-  }
-
-  @override
   Future<bool> clear() {
     return _pref.clear();
   }
 
   @override
-  bool exists(String key) {
-    return _pref.containsKey(key);
+  Future<bool> deleteSpeciesDetails(String id, SpeciesDataSource source) {
+    return _pref.remove("${_speciesDetails}_${source.name}_${id.toString()}");
+  }
+
+  @override
+  Future<bool> deleteSpeciesSearch(String term) {
+    return _pref.remove(_speciesSearch + term);
+  }
+
+  @override
+  String? getSpeciesDetails(String id, SpeciesDataSource source) {
+    return _pref.getString("${_speciesDetails}_${source.name}_${id.toString()}");
+  }
+
+  @override
+  String? getSpeciesSearch(String term) {
+    return _pref.getString(_speciesSearch + term);
+  }
+
+  @override
+  Future<void> saveSpeciesDetails(String id, SpeciesDataSource source, String value) {
+    return _pref.setString("${_speciesDetails}_${source.name}_${id.toString()}", value);
+  }
+
+  @override
+  Future<void> saveSpeciesSearch(String term, String value) {
+    return _pref.setString(_speciesSearch + term, value);
+  }
+  
+  @override
+  Future<void> clearSearch() async {
+    for (String s in _pref.getKeys().where((k) => k.startsWith(_speciesSearch))) {
+      await _pref.remove(s);
+    }
   }
 }

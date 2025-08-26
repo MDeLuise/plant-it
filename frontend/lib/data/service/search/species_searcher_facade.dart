@@ -25,10 +25,9 @@ class SpeciesSearcherFacade {
 
   Future<Result<List<SpeciesSearcherPartialResult>>> search(
       String term, int offset, int limit) async {
-    String cacheKey = term.isEmpty ? "*" : term;
-    cacheKey += "_partial";
+    String emptyToAsterisk = term.isEmpty ? AppCache.emptyChar : term;
     List<SpeciesSearcherPartialResult>? cacheResult =
-        await _cacheHitPartials(cacheKey);
+        await _cacheHitSearch(emptyToAsterisk);
     if (cacheResult != null) {
       _log.fine("Cache hit");
       return Success(cacheResult);
@@ -51,16 +50,16 @@ class SpeciesSearcherFacade {
     }
     result.addAll(floraCodexResult.getOrThrow());
 
-    await _saveCachePartials(
-        cacheKey, result.sublist(0, min(result.length, limit)));
+    await _saveCacheSearch(
+        emptyToAsterisk, result.sublist(0, min(result.length, limit)));
     return Success(result.sublist(0, min(result.length, limit)));
   }
 
   Future<Result<SpeciesSearcherResult>> getDetails(
       SpeciesSearcherPartialResult species) async {
     if (species.speciesCompanion.dataSource.value == SpeciesDataSource.custom) {
-      String cacheKey = "${species.speciesCompanion.id.value}_custom_details";
-      SpeciesSearcherResult? cached = await _cacheHitDetails(cacheKey);
+      String id = species.speciesCompanion.externalId.value ?? species.speciesCompanion.id.value.toString();
+      SpeciesSearcherResult? cached = await _cacheHitDetails(id, SpeciesDataSource.custom);
       if (cached != null) {
         return Success(cached);
       }
@@ -69,13 +68,13 @@ class SpeciesSearcherFacade {
       if (result.isError()) {
         return result;
       }
-      _saveCacheDetails(cacheKey, result.getOrThrow());
+      _saveCacheDetails(id, SpeciesDataSource.custom, result.getOrThrow());
       return result;
     } else if (species.speciesCompanion.dataSource.value ==
         SpeciesDataSource.floraCodex) {
       String cacheKey =
           "${species.speciesCompanion.externalId.value}_floraCodex_details";
-      SpeciesSearcherResult? cached = await _cacheHitDetails(cacheKey);
+      SpeciesSearcherResult? cached = await _cacheHitDetails(cacheKey, SpeciesDataSource.floraCodex);
       if (cached != null) {
         return Success(cached);
       }
@@ -84,15 +83,15 @@ class SpeciesSearcherFacade {
       if (result.isError()) {
         return result;
       }
-      _saveCacheDetails(cacheKey, result.getOrThrow());
+      _saveCacheDetails(cacheKey, SpeciesDataSource.floraCodex, result.getOrThrow());
       return result;
     }
     return Failure(Exception("missing or wrong data source value"));
   }
 
-  Future<List<SpeciesSearcherPartialResult>?> _cacheHitPartials(
-      String key) async {
-    String? result = _cache.get(key);
+  Future<List<SpeciesSearcherPartialResult>?> _cacheHitSearch(
+      String term) async {
+    String? result = _cache.getSpeciesSearch(term);
     if (result == null) {
       return null;
     }
@@ -104,19 +103,19 @@ class SpeciesSearcherFacade {
         .cast<SpeciesSearcherPartialResult>();
   }
 
-  Future<void> _saveCachePartials(
-      String key, List<SpeciesSearcherPartialResult> result) {
+  Future<void> _saveCacheSearch(
+      String term, List<SpeciesSearcherPartialResult> result) {
     String value = jsonEncode(result
         .map((r) => SpeciesSearcherPartialResult(
               speciesCompanion: r.speciesCompanion,
             ).toJson())
         .toList());
     //_log.fine("cache saving:\n$value");
-    return _cache.put(key, value);
+    return _cache.saveSpeciesSearch(term, value);
   }
 
-  Future<SpeciesSearcherResult?> _cacheHitDetails(String key) async {
-    String? result = _cache.get(key);
+  Future<SpeciesSearcherResult?> _cacheHitDetails(String id, SpeciesDataSource source) async {
+    String? result = _cache.getSpeciesDetails(id, source);
     if (result == null) {
       return null;
     }
@@ -125,13 +124,9 @@ class SpeciesSearcherFacade {
     return SpeciesSearcherResult.fromJson(json);
   }
 
-  Future<void> _saveCacheDetails(String key, SpeciesSearcherResult details) {
+  Future<void> _saveCacheDetails(String id, SpeciesDataSource source, SpeciesSearcherResult details) {
     String value = jsonEncode(details);
     //_log.fine("cache saving:\n$value");
-    return _cache.put(key, value);
-  }
-
-  Future<bool> clearCache() async {
-    return _cache.clear();
+    return _cache.saveSpeciesDetails(id, source, value);
   }
 }

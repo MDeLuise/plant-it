@@ -2,27 +2,30 @@ import 'dart:io';
 
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:plant_it/data/repository/image_repository.dart';
 import 'package:plant_it/data/repository/species_care_repository.dart';
 import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/data/repository/species_synonym_repository.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AddSpeciesViewModel extends ChangeNotifier {
-  AddSpeciesViewModel({
-    required SpeciesRepository speciesRepository,
-    required SpeciesCareRepository speciesCareRepository,
-    required SpeciesSynonymsRepository speciesSynonymsRepository,
-    required ImageRepository imageRepository,
-  })  : _speciesRepository = speciesRepository,
+  AddSpeciesViewModel(
+      {required SpeciesRepository speciesRepository,
+      required SpeciesCareRepository speciesCareRepository,
+      required SpeciesSynonymsRepository speciesSynonymsRepository,
+      required ImageRepository imageRepository,
+      required AppCache appCache})
+      : _speciesRepository = speciesRepository,
         _speciesCareRepository = speciesCareRepository,
         _speciesSynonymsRepository = speciesSynonymsRepository,
-        _imageRepository = imageRepository {
+        _imageRepository = imageRepository,
+        _appCache = appCache {
     insert = Command.createAsyncNoParam(() async {
       Result<int> result = await _save();
       if (result.isError()) throw result.exceptionOrNull()!;
@@ -34,6 +37,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
   final SpeciesCareRepository _speciesCareRepository;
   final SpeciesSynonymsRepository _speciesSynonymsRepository;
   final ImageRepository _imageRepository;
+  final AppCache _appCache;
   final _log = Logger('AddSpeciesViewModel');
 
   late final Command<void, int> insert;
@@ -137,6 +141,8 @@ class AddSpeciesViewModel extends ChangeNotifier {
       await _speciesCareRepository.delete(careId.getOrThrow());
       await _speciesSynonymsRepository.deleteBySpecies(speciesId.getOrThrow());
     }
+
+    await _appCache.clearSearch();
 
     return speciesId;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/data/service/search/cache/app_cache_pref.dart';
 import 'package:plant_it/data/service/search/species_searcher_facade.dart';
 import 'package:provider/provider.dart';
@@ -13,17 +14,20 @@ void main() async {
   Logger.root.level = Level.ALL;
 
   SharedPreferences pref = await SharedPreferences.getInstance();
+  SingleChildWidget cacheProvider = Provider<AppCache>(
+    create: (context) => AppCachePref(pref: pref),
+  );
   SingleChildWidget searchProvider = Provider(
     create: (context) => SpeciesSearcherFacade(
       localSearcher: context.read(),
       trefleSearcher: context.read(),
-      cache: AppCachePref(pref: pref),
+      cache: context.read(),
     ),
   );
 
   runApp(
     MultiProvider(
-      providers: [...providersRemote, searchProvider],
+      providers: [...providersRemote, cacheProvider, searchProvider],
       child: const MainApp(),
     ),
   );
