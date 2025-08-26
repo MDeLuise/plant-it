@@ -254,6 +254,11 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: Routes.species,
           builder: (context, state) {
+            String? searchedTerm;
+            if (state.extra != null) {
+              searchedTerm = state.extra as String;
+            }
+
             AddSpeciesViewModel viewModel = AddSpeciesViewModel(
               speciesRepository: context.read(),
               speciesCareRepository: context.read(),
@@ -261,7 +266,10 @@ GoRouter router() => GoRouter(
               imageRepository: context.read(),
               appCache: context.read(),
             );
-            return AddSpeciesScreen(viewModel: viewModel);
+            return AddSpeciesScreen(
+              viewModel: viewModel,
+              searchedTerm: searchedTerm,
+            );
           },
         ),
       ],

@@ -19,7 +19,13 @@ class ClassificationStep extends StepSection<AddSpeciesViewModel> {
   ClassificationStep({
     super.key,
     required super.viewModel,
-  });
+    String? initialSpecies,
+  }) {
+    if (initialSpecies != null) {
+      _isValidNotifier.value = initialSpecies.isNotEmpty;
+      _ongoingSpeciesSelection.value = initialSpecies;
+    }
+  }
 
   @override
   void cancel() {

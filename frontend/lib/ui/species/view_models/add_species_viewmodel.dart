@@ -15,13 +15,13 @@ import 'package:plant_it/database/database.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AddSpeciesViewModel extends ChangeNotifier {
-  AddSpeciesViewModel(
-      {required SpeciesRepository speciesRepository,
-      required SpeciesCareRepository speciesCareRepository,
-      required SpeciesSynonymsRepository speciesSynonymsRepository,
-      required ImageRepository imageRepository,
-      required AppCache appCache})
-      : _speciesRepository = speciesRepository,
+  AddSpeciesViewModel({
+    required SpeciesRepository speciesRepository,
+    required SpeciesCareRepository speciesCareRepository,
+    required SpeciesSynonymsRepository speciesSynonymsRepository,
+    required ImageRepository imageRepository,
+    required AppCache appCache,
+  })  : _speciesRepository = speciesRepository,
         _speciesCareRepository = speciesCareRepository,
         _speciesSynonymsRepository = speciesSynonymsRepository,
         _imageRepository = imageRepository,

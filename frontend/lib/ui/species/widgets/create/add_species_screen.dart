@@ -9,10 +9,12 @@ import 'package:plant_it/ui/species/widgets/create/classification_step.dart';
 
 class AddSpeciesScreen extends StatefulWidget {
   final AddSpeciesViewModel viewModel;
+  final String? searchedTerm;
 
   const AddSpeciesScreen({
     super.key,
     required this.viewModel,
+    this.searchedTerm,
   });
 
   @override
@@ -38,7 +40,10 @@ class _AddSpeciesScreenState extends State<AddSpeciesScreen> {
           summary: true,
           stepsInFocus: 2,
           steps: [
-            ClassificationStep(viewModel: widget.viewModel),
+            ClassificationStep(
+              viewModel: widget.viewModel,
+              initialSpecies: widget.searchedTerm,
+            ),
             CareStep(viewModel: widget.viewModel),
             AvatarStep(viewModel: widget.viewModel),
           ]),

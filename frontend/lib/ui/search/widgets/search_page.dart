@@ -98,8 +98,10 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           IconButton(
                             icon: const Icon(LucideIcons.plus),
-                            onPressed: () => context.push(Routes.species,
-                                extra: _searchController.text),
+                            onPressed: () => context.push(
+                              Routes.species,
+                              extra: _searchController.text,
+                            ),
                           ),
                           // PopupMenuButton<String>(
                           //   icon: const Icon(Icons.more_vert, size: 25),
