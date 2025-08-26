@@ -1,7 +1,9 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
+import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 import 'package:plant_it/ui/search/widgets/species_card.dart';
@@ -94,46 +96,52 @@ class _SearchPageState extends State<SearchPage> {
                                 _searchController.clear();
                               },
                             ),
-                          PopupMenuButton<String>(
-                            icon: const Icon(Icons.more_vert, size: 25),
-                            onSelected: (value) async {
-                              if (value == 'add') {
-                                // ...
-                              } else if (value == 'filter') {
-                                // ...
-                              }
-                            },
-                            itemBuilder: (BuildContext context) => [
-                              const PopupMenuItem(
-                                value: 'add',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(LucideIcons.plus),
-                                    SizedBox(width: 10),
-                                    Text('Create'),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'filter',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(LucideIcons.filter),
-                                    SizedBox(width: 10),
-                                    Text('Filter'),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          IconButton(
+                            icon: const Icon(LucideIcons.plus),
+                            onPressed: () => context.push(Routes.species,
+                                extra: _searchController.text),
                           ),
+                          // PopupMenuButton<String>(
+                          //   icon: const Icon(Icons.more_vert, size: 25),
+                          //   onSelected: (value) async {
+                          //     if (value == 'add') {
+                          //       context.push(Routes.species, extra: _searchController.text);
+                          //     } else if (value == 'filter') {
+                          //       // ...
+                          //     }
+                          //   },
+                          //   itemBuilder: (BuildContext context) => [
+                          //     const PopupMenuItem(
+                          //       value: 'add',
+                          //       child: Row(
+                          //         crossAxisAlignment: CrossAxisAlignment.center,
+                          //         children: [
+                          //           Icon(LucideIcons.plus),
+                          //           SizedBox(width: 10),
+                          //           Text('Create'),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //     const PopupMenuItem(
+                          //       value: 'filter',
+                          //       child: Row(
+                          //         crossAxisAlignment: CrossAxisAlignment.center,
+                          //         children: [
+                          //           Icon(LucideIcons.filter),
+                          //           SizedBox(width: 10),
+                          //           Text('Filter'),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ]),
                   ),
                   ...List.generate(widget.viewModel.result.length, (index) {
                     SpeciesSearcherPartialResult species =
                         widget.viewModel.result[index];
                     return SpeciesCard(
+                      key: UniqueKey(),
                       speciesSearcherResult: species,
                       viewModel: widget.viewModel,
                     );

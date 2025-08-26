@@ -32,12 +32,11 @@ class SearchViewModel extends ChangeNotifier {
     required ImageRepository imageRepository,
   })  : _speciesSearcherFacade = speciesSearcherFacade,
         _imageRepository = imageRepository {
-    search = Command.createAsync(
-      (Query q) async {
-        Result<void> result = await _query(q);
-        if (result.isError()) throw result.exceptionOrNull()!;
-        return;
-      }, initialValue: Failure(Exception("not started")));
+    search = Command.createAsync((Query q) async {
+      Result<void> result = await _query(q);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    }, initialValue: Failure(Exception("not started")));
   }
 
   final _log = Logger('SearchViewModel');
@@ -66,12 +65,13 @@ class SearchViewModel extends ChangeNotifier {
   Future<Result<String>> getImageBase64(
       SpeciesSearcherPartialResult speciesSearcherResult) async {
     SpeciesCompanion species = speciesSearcherResult.speciesCompanion;
-    Result<String>? base64 = await _imageRepository
-        .getSpecifiedAvatarForSpeciesBase64(species.id.value);
+    Result<String>? base64 =
+        await _imageRepository.getSpeciesImageBase64(species.id.value);
     if (base64 != null) {
       return base64;
     }
-    if (species.externalAvatarUrl.present && species.externalAvatarUrl.value != null) {
+    if (species.externalAvatarUrl.present &&
+        species.externalAvatarUrl.value != null) {
       String? fetchedBase64 =
           await _fetchImageAsBase64(species.externalAvatarUrl.value!);
       if (fetchedBase64.isNotEmpty) {

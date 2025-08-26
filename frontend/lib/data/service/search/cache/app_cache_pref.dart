@@ -1,10 +1,10 @@
-import 'package:plant_it/data/service/search/cache/search_result_cache.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SearchResultCachePref extends SearchResultCache {
+class AppCachePref extends AppCache {
   final SharedPreferences _pref;
 
-  SearchResultCachePref({
+  AppCachePref({
     required SharedPreferences pref,
   }) : _pref = pref;
 

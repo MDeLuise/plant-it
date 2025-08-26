@@ -26,4 +26,7 @@ abstract final class Routes {
   static String reminder = '/$_reminderRelative';
   static String reminders = '/$_remindersRelative';
   static String reminderWithId(int id) => '/$_reminderRelative/$id';
+
+  static final String _speciesRelative = 'species';
+  static String species = '/$_speciesRelative';
 }

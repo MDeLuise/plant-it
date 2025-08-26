@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
-import 'package:plant_it/data/service/search/cache/search_result_cache.dart';
-import 'package:plant_it/data/service/search/cache/search_result_cache_pref.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
+import 'package:plant_it/data/service/search/cache/app_cache_pref.dart';
 import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
@@ -20,9 +20,9 @@ void callbackDispatcher() {
         NotificationService notificationService = NotificationService.noParam();
         await notificationService.sendDueReminderNotifications();
       }
-      if (task == SearchResultCache.taskName) {
+      if (task == AppCache.taskName) {
         SharedPreferences pref = await SharedPreferences.getInstance();
-        SearchResultCachePref(pref: pref).clear();
+        AppCachePref(pref: pref).clear();
       }
       return Future.value(true);
     } catch (error) {
@@ -45,8 +45,8 @@ void main() async {
 
   Duration cacheRetention = Duration(days: 7);
   Workmanager().registerPeriodicTask(
-    "${SearchResultCache.taskName}_${DateTime.timestamp()}",
-    SearchResultCache.taskName,
+    "${AppCache.taskName}_${DateTime.timestamp()}",
+    AppCache.taskName,
     initialDelay: cacheRetention,
     frequency: cacheRetention,
   );

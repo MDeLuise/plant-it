@@ -141,28 +141,24 @@ class ImageRepository extends CRUDRepository<Image> {
     return getBase64(specifiedAvatarResult.getOrThrow().id);
   }
 
-  Future<Result<Image>?> getSpecifiedAvatarForSpecies(int speciesId) async {
+  Future<Result<Image>?> getSpeciesImage(int speciesId) async {
     Image? avatar = await (db.select(db.images)
-          ..where((img) =>
-              img.speciesId.equals(speciesId) & img.isAvatar.equals(true))
+          ..where((img) => img.speciesId.equals(speciesId))
           ..limit(1))
         .getSingleOrNull();
     return avatar?.toSuccess();
   }
 
-  Future<Result<String>?> getSpecifiedAvatarForSpeciesBase64(
-      int speciesId) async {
-    Result<Image>? specifiedAvatarResult =
-        await getSpecifiedAvatarForSpecies(speciesId);
+  Future<Result<String>?> getSpeciesImageBase64(int speciesId) async {
+    Result<Image>? specifiedAvatarResult = await getSpeciesImage(speciesId);
     if (specifiedAvatarResult == null) {
       return null;
     }
     return getBase64(specifiedAvatarResult.getOrThrow().id);
   }
 
-  Future<Result<void>?> removeAvatarForSpecies(int speciesId) async {
-    final Result<Image>? avatarResult =
-        await getSpecifiedAvatarForSpecies(speciesId);
+  Future<Result<void>?> removeImageForSpecies(int speciesId) async {
+    final Result<Image>? avatarResult = await getSpeciesImage(speciesId);
     if (avatarResult == null) {
       return null;
     }

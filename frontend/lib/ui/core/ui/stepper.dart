@@ -117,7 +117,8 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                 valueListenable:
                                     widget.steps[step].isValidNotifier,
                                 builder: (ct, isValid, _) {
-                                  if (step + 1 != widget.steps.length) {
+                                  if (step + 1 != widget.steps.length ||
+                                      widget.summary) {
                                     return TextButton(
                                       onPressed: isValid
                                           ? () {

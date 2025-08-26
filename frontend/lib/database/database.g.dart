@@ -2844,7 +2844,7 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways('REFERENCES species (id)'));
+          GeneratedColumn.constraintIsAlways('UNIQUE REFERENCES species (id)'));
   static const VerificationMeta _isAvatarMeta =
       const VerificationMeta('isAvatar');
   @override

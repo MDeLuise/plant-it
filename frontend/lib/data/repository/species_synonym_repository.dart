@@ -15,4 +15,8 @@ class SpeciesSynonymsRepository extends CRUDRepository<SpeciesSynonym> {
         .get();
     return speciesSynonyms.toSuccess();
   }
+
+  Future<void> deleteBySpecies(int speciesId) async {
+    return db.delete(db.speciesSynonyms).where((s) => s.species.equals(speciesId));
+  }
 }

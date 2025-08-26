@@ -1,4 +1,4 @@
-abstract class SearchResultCache {
+abstract class AppCache {
   static const String taskName = "clear_cache_task";
 
   Future<void> put(String key, String value);

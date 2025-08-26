@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:logging/logging.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/data/service/search/flora_codex_searcher.dart';
 import 'package:plant_it/data/service/search/local_searcher.dart';
-import 'package:plant_it/data/service/search/cache/search_result_cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
 import 'package:result_dart/result_dart.dart';
@@ -13,12 +13,12 @@ class SpeciesSearcherFacade {
   final LocalSearcher _localSearcher;
   final FloraCodexSearcher _floraCodexSearcher;
   final Logger _log = Logger("SpeciesSearcherFacade");
-  final SearchResultCache _cache;
+  final AppCache _cache;
 
   SpeciesSearcherFacade({
     required LocalSearcher localSearcher,
     required FloraCodexSearcher trefleSearcher,
-    required SearchResultCache cache,
+    required AppCache cache,
   })  : _localSearcher = localSearcher,
         _floraCodexSearcher = trefleSearcher,
         _cache = cache;
@@ -64,8 +64,8 @@ class SpeciesSearcherFacade {
       if (cached != null) {
         return Success(cached);
       }
-      Result<SpeciesSearcherResult> result =
-          await _localSearcher.getDetails(species.speciesCompanion.id.value.toString());
+      Result<SpeciesSearcherResult> result = await _localSearcher
+          .getDetails(species.speciesCompanion.id.value.toString());
       if (result.isError()) {
         return result;
       }
@@ -73,7 +73,8 @@ class SpeciesSearcherFacade {
       return result;
     } else if (species.speciesCompanion.dataSource.value ==
         SpeciesDataSource.floraCodex) {
-      String cacheKey = "${species.speciesCompanion.externalId.value}_floraCodex_details";
+      String cacheKey =
+          "${species.speciesCompanion.externalId.value}_floraCodex_details";
       SpeciesSearcherResult? cached = await _cacheHitDetails(cacheKey);
       if (cached != null) {
         return Success(cached);
