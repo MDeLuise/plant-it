@@ -19,4 +19,6 @@ abstract class AppCache {
   Future<bool> clear();
 
   Future<void> clearSearch();
+
+  Future<void> clearDetails(int id, SpeciesDataSource source);
 }

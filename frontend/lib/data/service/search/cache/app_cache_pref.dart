@@ -52,4 +52,9 @@ class AppCachePref extends AppCache {
       await _pref.remove(s);
     }
   }
+
+  @override
+  Future<void> clearDetails(int id, SpeciesDataSource source) {
+    return _pref.remove("${_speciesDetails}_${source.name}_${id.toString()}");
+  }
 }

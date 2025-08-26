@@ -1,0 +1,414 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
+import 'package:plant_it/ui/species/view_models/edit_species_viewmodel.dart';
+
+class CareStep extends StepSection<EditSpeciesViewModel> {
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
+  late final ValueNotifier<int?> _selectedLight =
+      ValueNotifier(viewModel.light);
+  late final ValueNotifier<int?> _ongoingLightSelection =
+      ValueNotifier(viewModel.light);
+  late final ValueNotifier<int?> _selectedHumidity =
+      ValueNotifier(viewModel.humidity);
+  late final ValueNotifier<int?> _ongoingHumiditySelection =
+      ValueNotifier(viewModel.humidity);
+  late final ValueNotifier<RangeValues?> _selectedPh = ValueNotifier(null);
+  late final ValueNotifier<RangeValues?> _ongoingPhSelection =
+      ValueNotifier(null);
+  late final ValueNotifier<RangeValues?> _selectedTemp = ValueNotifier(null);
+  late final ValueNotifier<RangeValues?> _ongoingTemp = ValueNotifier(null);
+
+  CareStep({
+    super.key,
+    required super.viewModel,
+  }) {
+    if (viewModel.phMin != null) {
+      _selectedPh.value =
+          RangeValues(viewModel.phMin!.toDouble(), viewModel.phMax!.toDouble());
+      _ongoingPhSelection.value =
+          RangeValues(viewModel.phMin!.toDouble(), viewModel.phMax!.toDouble());
+    }
+    if (viewModel.tempMin != null) {
+      _selectedPh.value = RangeValues(
+          viewModel.tempMin!.toDouble(), viewModel.tempMax!.toDouble());
+      _ongoingPhSelection.value = RangeValues(
+          viewModel.tempMin!.toDouble(), viewModel.tempMax!.toDouble());
+    }
+  }
+
+  @override
+  void cancel() {
+    _ongoingHumiditySelection.value = _selectedHumidity.value;
+    _ongoingPhSelection.value = _selectedPh.value;
+    _ongoingLightSelection.value = _selectedLight.value;
+    _ongoingTemp.value = _selectedTemp.value;
+  }
+
+  @override
+  void confirm() {
+    if (_ongoingLightSelection.value != null) {
+      viewModel.setLight(_ongoingLightSelection.value!);
+      _selectedLight.value = _ongoingLightSelection.value;
+    }
+    if (_ongoingHumiditySelection.value != null) {
+      viewModel.setHumidity(_ongoingHumiditySelection.value!);
+      _selectedHumidity.value = _ongoingHumiditySelection.value;
+    }
+    if (_ongoingTemp.value != null) {
+      viewModel.setTempMin(_ongoingTemp.value!.start.toInt());
+      viewModel.setTempMax(_ongoingTemp.value!.end.toInt());
+      _selectedTemp.value = _ongoingTemp.value;
+    }
+    if (_ongoingPhSelection.value != null) {
+      viewModel.setPhMin(_ongoingPhSelection.value!.start.toInt());
+      viewModel.setPhMax(_ongoingPhSelection.value!.end.toInt());
+      _selectedPh.value = _ongoingPhSelection.value;
+    }
+  }
+
+  @override
+  State<StatefulWidget> createState() => _CareStep();
+
+  @override
+  ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  String get title => "Care";
+
+  @override
+  String get value {
+    String fields = "";
+    if (_ongoingLightSelection.value != null) {
+      fields += "light";
+    }
+    if (_ongoingHumiditySelection.value != null) {
+      fields += "${fields.isEmpty ? "" : ", "}humidity";
+    }
+    if (_ongoingTemp.value != null) {
+      fields += "${fields.isEmpty ? "" : ", "}temp";
+    }
+    if (_ongoingPhSelection.value != null) {
+      fields += "${fields.isEmpty ? "" : ", "}ph";
+    }
+    if (fields.length > 30) {
+      fields = "${fields.substring(0, 30)}...";
+    }
+    return fields;
+  }
+}
+
+class _CareStep extends State<CareStep> {
+  void _addLight(BuildContext context) async {
+    double range = widget._ongoingLightSelection.value?.toDouble() ?? 5;
+    final int? result = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Slider(
+              value: range,
+              min: 1,
+              max: 10,
+              divisions: 10,
+              label: range.round().toString(),
+              onChanged: (double values) {
+                setState(() {
+                  range = values;
+                });
+              },
+            );
+          }),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(range.toInt());
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null) {
+      widget._ongoingLightSelection.value = result;
+    }
+  }
+
+  void _addHumidity(BuildContext context) async {
+    double range = widget._ongoingHumiditySelection.value?.toDouble() ?? 5;
+    final int? result = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Slider(
+              value: range,
+              max: 10,
+              min: 0,
+              divisions: 10,
+              label: range.round().toString(),
+              onChanged: (double values) {
+                setState(() {
+                  range = values;
+                });
+              },
+            );
+          }),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(range.toInt());
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null) {
+      widget._ongoingHumiditySelection.value = result;
+    }
+  }
+
+  void _addTemperature(BuildContext context) async {
+    RangeValues range = widget._ongoingTemp.value ?? RangeValues(-30, 50);
+    final RangeValues? result = await showDialog<RangeValues>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return RangeSlider(
+              values: range,
+              max: 50,
+              min: -30,
+              divisions: 16,
+              labels: RangeLabels(
+                range.start.round().toString(),
+                range.end.round().toString(),
+              ),
+              onChanged: (RangeValues values) {
+                setState(() {
+                  range = values;
+                });
+              },
+            );
+          }),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(range);
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null) {
+      widget._ongoingTemp.value = result;
+    }
+  }
+
+  void _addPh(BuildContext context) async {
+    RangeValues range = widget._ongoingPhSelection.value ?? RangeValues(1, 14);
+    final RangeValues? result = await showDialog<RangeValues>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return RangeSlider(
+              values: range,
+              max: 14,
+              min: 0,
+              divisions: 14,
+              labels: RangeLabels(
+                range.start.round().toString(),
+                range.end.round().toString(),
+              ),
+              onChanged: (RangeValues values) {
+                setState(() {
+                  range = values;
+                });
+              },
+            );
+          }),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(range);
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null) {
+      widget._ongoingPhSelection.value = result;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Care", style: Theme.of(context).textTheme.headlineSmall),
+          SizedBox(height: 20),
+          AnimatedBuilder(
+            animation: widget._ongoingLightSelection,
+            builder: (context, child) {
+              return GestureDetector(
+                onTap: () => _addLight(context),
+                child: Card.outlined(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Light"),
+                        Row(
+                          children: [
+                            Text(widget._ongoingLightSelection.value
+                                    ?.toString() ??
+                                ""),
+                            SizedBox(width: 10),
+                            Icon(LucideIcons.chevron_right),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          AnimatedBuilder(
+              animation: widget._ongoingHumiditySelection,
+              builder: (context, child) {
+                return GestureDetector(
+                  onTap: () => _addHumidity(context),
+                  child: Card.outlined(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Humidity"),
+                          Row(
+                            children: [
+                              Text(widget._ongoingHumiditySelection.value
+                                      ?.toString() ??
+                                  ""),
+                              SizedBox(width: 10),
+                              Icon(LucideIcons.chevron_right),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+          AnimatedBuilder(
+              animation: widget._ongoingTemp,
+              builder: (context, child) {
+                return GestureDetector(
+                  onTap: () => _addTemperature(context),
+                  child: Card.outlined(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Temperature"),
+                          Row(
+                            children: [
+                              Text(widget._ongoingTemp.value == null
+                                  ? ""
+                                  : "${widget._ongoingTemp.value!.start}-${widget._ongoingTemp.value!.end}"),
+                              SizedBox(width: 10),
+                              Icon(LucideIcons.chevron_right),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+          AnimatedBuilder(
+              animation: widget._ongoingPhSelection,
+              builder: (context, child) {
+                return GestureDetector(
+                  onTap: () => _addPh(context),
+                  child: Card.outlined(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Ph"),
+                          Row(
+                            children: [
+                              Text(widget._ongoingPhSelection.value == null
+                                  ? ""
+                                  : "${widget._ongoingPhSelection.value!.start}-${widget._ongoingPhSelection.value!.end}"),
+                              SizedBox(width: 10),
+                              Icon(LucideIcons.chevron_right),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        ],
+      ),
+    );
+  }
+}

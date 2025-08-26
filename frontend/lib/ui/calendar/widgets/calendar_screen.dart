@@ -157,15 +157,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     },
                     calendarStyle: CalendarStyle(
                       todayDecoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withAlpha(150),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withAlpha(150),
                         shape: BoxShape.circle,
                       ),
                       markerDecoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
                       ),
                       selectedDecoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withAlpha(200),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withAlpha(200),
                         shape: BoxShape.circle,
                       ),
                     ),

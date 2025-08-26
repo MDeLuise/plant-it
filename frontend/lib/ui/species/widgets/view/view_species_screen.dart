@@ -1,7 +1,9 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/species/view_models/view_species_viewmodel.dart';
@@ -216,19 +218,15 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             ),
                           ),
                         ],
-                      ).then((value) {
+                      ).then((value) async {
                         if (value == 'edit') {
-                          // navigateTo(
-                          //         context, EditPlantPage(widget.env, widget.plant))
-                          //     .then((u) {
-                          //   if (u != null) {
-                          //     replaceTo(context, PlantScreen(widget.env, u));
-                          //   }
-                          // });
+                          context
+                              .push(Routes.speciesWithId(widget.viewModel.id!));
                         } else if (value == 'duplicate') {
-                          //_duplicatePlant();
+                          await widget.viewModel.duplicate.executeWithFuture();
                         } else if (value == 'remove') {
-                          // _deletePlant();
+                          await widget.viewModel.delete.executeWithFuture();
+                          context.pop();
                         }
                       });
                     },

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/image_repository.dart';
@@ -27,7 +28,6 @@ class PlantViewModel extends ChangeNotifier {
     required EventTypeRepository eventTypeRepository,
     required ReminderRepository reminderRepository,
     required ReminderOccurrenceRepository reminderOccurrenceRepository,
-    required int plantId,
   })  : _plantRepository = plantRepository,
         _speciesRepository = speciesRepository,
         _speciesCareRepository = speciesCareRepository,
@@ -35,19 +35,24 @@ class PlantViewModel extends ChangeNotifier {
         _eventRepository = eventRepository,
         _eventTypeRepository = eventTypeRepository,
         _reminderRepository = reminderRepository,
-        _reminderOccurrenceRepository = reminderOccurrenceRepository,
-        _plantId = plantId {
+        _reminderOccurrenceRepository = reminderOccurrenceRepository {
     deletePlant = Command.createAsyncNoParam(_deletePlant,
         initialValue: Failure(Exception("not started")));
-    duplicatePlant = Command.createAsyncNoParam(_duplicatePlant,
-        initialValue: Failure(Exception("not started")));
-    uploadNewPhoto = Command.createAsync(_uploadNewPhoto,
-        initialValue: Failure(Exception("not started")));
-    load = Command.createAsyncNoParam(() async {
-      Result<void> result = await _load();
+    duplicatePlant = Command.createAsyncNoParamNoResult(() async {
+      Result<int> result = await _duplicatePlant();
+      if (result.isError()) throw result.exceptionOrNull()!;
+      load.executeWithFuture(result.getOrThrow());
+    });
+    uploadNewPhoto = Command.createAsyncNoResult((XFile file) async {
+      Result<int> result = await _uploadNewPhoto(file);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      load.executeWithFuture(_plant.id);
+    });
+    load = Command.createAsyncNoResult((int plantId) async {
+      Result<void> result = await _load(plantId);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    });
   }
 
   final Logger _log = Logger('PlantViewModel');
@@ -59,7 +64,6 @@ class PlantViewModel extends ChangeNotifier {
   final EventTypeRepository _eventTypeRepository;
   final ReminderRepository _reminderRepository;
   final ReminderOccurrenceRepository _reminderOccurrenceRepository;
-  int _plantId;
   String? _base64Avatar;
   late List<db.Image> _galleryImage;
   late db.Specy _species;
@@ -81,34 +85,35 @@ class PlantViewModel extends ChangeNotifier {
   List<db.Reminder> get reminders => _reminders;
   List<ReminderOccurrence> get remindersOccurrences => _remindersOccurrences;
   List<String> get thumbnails => _thumbnails;
+  int get id => _plant.id;
 
-  late final Command<void, void> load;
+  late final Command<int, void> load;
   late final Command<void, Result<void>> deletePlant;
-  late final Command<void, Result<int>> duplicatePlant;
-  late final Command<XFile, Result<int>> uploadNewPhoto;
+  late final Command<void, void> duplicatePlant;
+  late final Command<XFile, void> uploadNewPhoto;
 
   EventRepository get eventRepository => _eventRepository;
 
   ReminderRepository get reminderRepository => _reminderRepository;
 
-  Future<Result<void>> _load() async {
-    final loadPlant = await _loadPlant();
+  Future<Result<void>> _load(int plantId) async {
+    final loadPlant = await _loadPlant(plantId);
     if (loadPlant.isError()) {
       return loadPlant.exceptionOrNull()!.toFailure();
     }
-    final loadBase64Result = await _loadBase64();
+    final loadBase64Result = await _loadBase64(plantId);
     if (loadBase64Result.isError()) {
       return loadBase64Result.exceptionOrNull()!.toFailure();
     }
-    final loadGalleryImagesResult = await _loadGalleryImages();
+    final loadGalleryImagesResult = await _loadGalleryImages(plantId);
     if (loadGalleryImagesResult.isError()) {
       return loadGalleryImagesResult.exceptionOrNull()!.toFailure();
     }
-    final loadSpeciesResult = await _loadSpecies();
+    final loadSpeciesResult = await _loadSpecies(plantId);
     if (loadSpeciesResult.isError()) {
       return loadSpeciesResult.exceptionOrNull()!.toFailure();
     }
-    final loadCareResult = await _loadCare();
+    final loadCareResult = await _loadCare(plantId);
     if (loadCareResult.isError()) {
       return loadCareResult.exceptionOrNull()!.toFailure();
     }
@@ -116,11 +121,11 @@ class PlantViewModel extends ChangeNotifier {
     if (loadEventTypeResult.isError()) {
       return loadEventTypeResult.exceptionOrNull()!.toFailure();
     }
-    final loadLastEventResult = await _loadLastEvent();
+    final loadLastEventResult = await _loadLastEvent(plantId);
     if (loadLastEventResult.isError()) {
       return loadLastEventResult.exceptionOrNull()!.toFailure();
     }
-    final loadRemindersResult = await _loadReminders();
+    final loadRemindersResult = await _loadReminders(plantId);
     if (loadRemindersResult.isError()) {
       return loadRemindersResult.exceptionOrNull()!.toFailure();
     }
@@ -137,14 +142,14 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadBase64() async {
+  Future<Result<void>> _loadBase64(int plantId) async {
     Result<db.Image>? avatarResult =
-        await _imageRepository.getSpecifiedAvatarForPlant(_plantId);
+        await _imageRepository.getSpecifiedAvatarForPlant(plantId);
     if (avatarResult == null) {
       return Success("no base 64 avatar");
     }
 
-    Result<String> base64 = await _imageRepository.getBase64(_plantId);
+    Result<String> base64 = await _imageRepository.getBase64(plantId);
     if (base64.isError()) {
       return base64.exceptionOrNull()!.toFailure();
     }
@@ -152,9 +157,9 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadGalleryImages() async {
+  Future<Result<void>> _loadGalleryImages(int plantId) async {
     Result<List<db.Image>> images =
-        await _imageRepository.getImagesForPlant(_plantId);
+        await _imageRepository.getImagesForPlant(plantId);
     if (images.isError()) {
       return images.exceptionOrNull()!.toFailure();
     }
@@ -162,8 +167,8 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadSpecies() async {
-    Result<db.Plant> plant = await _plantRepository.get(_plantId);
+  Future<Result<void>> _loadSpecies(int plantId) async {
+    Result<db.Plant> plant = await _plantRepository.get(plantId);
     if (plant.isError()) {
       return plant.exceptionOrNull()!.toFailure();
     }
@@ -176,8 +181,8 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadCare() async {
-    Result<db.Plant> plant = await _plantRepository.get(_plantId);
+  Future<Result<void>> _loadCare(int plantId) async {
+    Result<db.Plant> plant = await _plantRepository.get(plantId);
     if (plant.isError()) {
       return plant.exceptionOrNull()!.toFailure();
     }
@@ -191,25 +196,24 @@ class PlantViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _deletePlant() {
-    return _plantRepository.delete(_plantId);
+    return _plantRepository.delete(_plant.id);
   }
 
   Future<Result<int>> _duplicatePlant() async {
     try {
-      Result<db.Plant> plant = await _plantRepository.get(_plantId);
+      Result<db.Plant> plant = await _plantRepository.get(_plant.id);
       if (plant.isError()) {
         return plant.exceptionOrNull()!.toFailure();
       }
-      String duplicateName = "${plant.getOrThrow().name} (duplicate)";
+      String duplicateName = "${plant.getOrThrow().name} copy";
       Result<int> duplicatedId = await _plantRepository
-          .insert(plant.getOrThrow().toCompanion(false).copyWith(
+          .insert(plant.getOrThrow().toCompanion(true).copyWith(
                 name: drift.Value(duplicateName),
                 id: const drift.Value.absent(),
               ));
       if (duplicatedId.isError()) {
         return duplicatedId.exceptionOrNull()!.toFailure();
       }
-      _plantId = duplicatedId.getOrThrow();
       return duplicatedId;
     } finally {
       notifyListeners();
@@ -219,7 +223,7 @@ class PlantViewModel extends ChangeNotifier {
   Future<Result<int>> _uploadNewPhoto(XFile pickedFile) async {
     try {
       File file = File(pickedFile.path);
-      String extension = pickedFile.name.split('.').last;
+      String extension = path.extension(file.path);
 
       Result<String> savedPath =
           await _imageRepository.saveImageFile(file, extension);
@@ -228,7 +232,7 @@ class PlantViewModel extends ChangeNotifier {
       }
       db.ImagesCompanion newImage = db.ImagesCompanion(
         imagePath: drift.Value(savedPath.getOrThrow()),
-        plantId: drift.Value(_plantId),
+        plantId: drift.Value(_plant.id),
         createdAt: drift.Value(DateTime.now()),
       );
       return _imageRepository.insert(newImage);
@@ -237,8 +241,8 @@ class PlantViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Result<void>> _loadPlant() async {
-    Result<db.Plant> plant = await _plantRepository.get(_plantId);
+  Future<Result<void>> _loadPlant(int plantId) async {
+    Result<db.Plant> plant = await _plantRepository.get(plantId);
     if (plant.isError()) {
       notifyListeners();
       return plant.exceptionOrNull()!.toFailure();
@@ -259,9 +263,9 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadLastEvent() async {
+  Future<Result<void>> _loadLastEvent(int plantId) async {
     Result<List<db.Event>> event =
-        await _eventRepository.getLastEventsForPlant(_plantId);
+        await _eventRepository.getLastEventsForPlant(plantId);
     if (event.isError()) {
       notifyListeners();
       return event.exceptionOrNull()!.toFailure();
@@ -271,9 +275,9 @@ class PlantViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadReminders() async {
+  Future<Result<void>> _loadReminders(int plantId) async {
     Result<List<db.Reminder>> reminders =
-        await _reminderRepository.getFiltered([_plantId], null);
+        await _reminderRepository.getFiltered([plantId], null);
     if (reminders.isError()) {
       notifyListeners();
       return reminders.exceptionOrNull()!.toFailure();

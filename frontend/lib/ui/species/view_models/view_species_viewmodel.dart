@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:plant_it/data/repository/image_repository.dart';
 import 'package:plant_it/data/repository/species_care_repository.dart';
 import 'package:plant_it/data/repository/species_repository.dart';
@@ -68,6 +71,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
   String? _base64Image;
   bool _isExternal = false;
 
+  int? get id => _species.id.value;
   String get scientificName => _species.scientificName.value;
   String get species => _species.species.value;
   String? get family => _species.family.value;
@@ -140,7 +144,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     String duplicatedSpecies = "${_species.species.value} copy";
     Result<int> dupliacatedId =
         await _speciesRepository.insert(_species.copyWith(
-      id: null,
+      id: Value.absent(),
       species: Value(duplicatedSpecies),
       scientificName: Value(duplicatedSpecies),
       dataSource: Value(SpeciesDataSource.custom),
@@ -157,15 +161,63 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     }
 
     for (SpeciesSynonymsCompanion s in _speciesSynonyms) {
-      Result<int> dupliacatedSynonymsId = await _speciesSynonymsRepository
-          .insert(s.copyWith(species: Value(dupliacatedId.getOrThrow())));
+      Result<int> dupliacatedSynonymsId =
+          await _speciesSynonymsRepository.insert(s.copyWith(
+        id: Value.absent(),
+        species: Value(dupliacatedId.getOrThrow()),
+      ));
       if (dupliacatedSynonymsId.isError()) {
         await _speciesRepository.delete(dupliacatedId.getOrThrow());
         await _speciesCareRepository.delete(dupliacatedCareId.getOrThrow());
         return dupliacatedSynonymsId;
       }
     }
+
+    if (_base64Image != null) {
+      Result<void> duplicatedImage =
+          await _duplicateImage(dupliacatedId.getOrThrow());
+
+      if (duplicatedImage.isError()) {
+        await _speciesRepository.delete(dupliacatedId.getOrThrow());
+        await _speciesCareRepository.delete(dupliacatedId.getOrThrow());
+        await _speciesSynonymsRepository
+            .deleteBySpecies(dupliacatedId.getOrThrow());
+      }
+    }
+
+    await _appCache.clearSearch();
     return dupliacatedCareId;
+  }
+
+  Future<Result<void>> _duplicateImage(int duplicatedSpeciesId) async {
+    return await _imageRepository.getSpeciesImage(id!).then((i) async {
+      if (i == null) {
+        return Success("ok");
+      }
+      if (i.isError()) {
+        return Failure(Exception(i.exceptionOrNull()));
+      }
+      if (i.getOrThrow().imagePath != null) {
+        Result<String> imagePath = await _imageRepository.saveImageFile(
+            File(i.getOrThrow().imagePath!),
+            path.extension(i.getOrThrow().imagePath!));
+        if (imagePath.isError()) {
+          return Failure(Exception(imagePath.exceptionOrNull()));
+        }
+        await _imageRepository.insert(ImagesCompanion(
+          imagePath: Value(imagePath.getOrNull()),
+          createdAt: Value(DateTime.now()),
+          speciesId: Value(duplicatedSpeciesId),
+        ));
+      } else if (i.getOrThrow().imageUrl != null) {
+        await _imageRepository.insert(ImagesCompanion(
+          imageUrl: Value(i.getOrThrow().imageUrl),
+          createdAt: Value(DateTime.now()),
+          speciesId: Value(duplicatedSpeciesId),
+        ));
+      }
+      return Success("ok");
+    });
   }
 
   Future<Result<void>> _delete() async {
@@ -189,6 +241,8 @@ class ViewSpeciesViewModel extends ChangeNotifier {
 
     await _appCache.deleteSpeciesDetails(
         _species.id.value.toString(), SpeciesDataSource.custom);
+
+    await _appCache.clearSearch();
 
     return deletedSpecies;
   }

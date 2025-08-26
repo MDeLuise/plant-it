@@ -28,8 +28,10 @@ import 'package:plant_it/ui/settings/widgets/reminder/create/add_reminder_screen
 import 'package:plant_it/ui/settings/widgets/reminder/edit/edit_reminder_screen.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/reminder_screen.dart';
 import 'package:plant_it/ui/species/view_models/add_species_viewmodel.dart';
+import 'package:plant_it/ui/species/view_models/edit_species_viewmodel.dart';
 import 'package:plant_it/ui/species/view_models/view_species_viewmodel.dart';
 import 'package:plant_it/ui/species/widgets/create/add_species_screen.dart';
+import 'package:plant_it/ui/species/widgets/edit/edit_species_screen.dart';
 import 'package:plant_it/ui/species/widgets/view/view_species_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -109,9 +111,8 @@ GoRouter router() => GoRouter(
                     eventTypeRepository: context.read(),
                     reminderRepository: context.read(),
                     reminderOccurrenceRepository: context.read(),
-                    plantId: id,
                   );
-                  viewModel.load.execute();
+                  viewModel.load.execute(id);
                   return PlantScreen(viewModel: viewModel);
                 },
               ),
@@ -292,6 +293,22 @@ GoRouter router() => GoRouter(
             viewModel.load.execute(idOrExternal);
 
             return ViewSpeciesScreen(viewModel: viewModel);
+          },
+        ),
+        GoRoute(
+          path: '${Routes.species}/:id',
+          builder: (context, state) {
+            int id = int.parse(state.pathParameters['id']!);
+            EditSpeciesViewModel viewModel = EditSpeciesViewModel(
+              speciesRepository: context.read(),
+              speciesCareRepository: context.read(),
+              speciesSynonymsRepository: context.read(),
+              imageRepository: context.read(),
+              appCache: context.read(),
+            );
+            viewModel.load.execute(id);
+
+            return EditSpeciesScreen(viewModel: viewModel);
           },
         ),
       ],

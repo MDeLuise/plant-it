@@ -242,7 +242,7 @@ class AppDatabase extends _$AppDatabase {
     await into(speciesCare).insertOnConflictUpdate(const SpeciesCareCompanion(
       species: Value(1),
       light: Value(9),
-      humidity: Value(20),
+      humidity: Value(2),
       tempMax: Value(29),
       tempMin: Value(-10),
       phMax: Value(9),

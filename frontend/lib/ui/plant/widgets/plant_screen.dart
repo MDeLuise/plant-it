@@ -1,7 +1,9 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/plant/widgets/plant_avatar.dart';
@@ -19,53 +21,13 @@ class PlantScreen extends StatefulWidget {
 class _PlantScreenState extends State<PlantScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  void _deletePlant() async {
-    // return QuickAlert.show(
-    //   context: context,
-    //   type: QuickAlertType.warning,
-    //   confirmBtnText: 'Delete',
-    //   cancelBtnText: 'Cancel',
-    //   title: "Delete plant?",
-    //   text:
-    //       "Are you sure you want to delete the plant and all the linked data?",
-    //   confirmBtnColor: Colors.red,
-    //   textColor: Theme.of(context).colorScheme.onSurface,
-    //   titleColor: Theme.of(context).colorScheme.onSurface,
-    //   showCancelBtn: true,
-    //   cancelBtnTextStyle: TextStyle(
-    //     color: Theme.of(context).colorScheme.onSurface,
-    //   ),
-    //   barrierColor: Colors.grey.withAlpha(200),
-    //   backgroundColor: Theme.of(context).colorScheme.surface,
-    //   onConfirmBtnTap: () {
-    //     try {
-    //       widget.viewModel.deletePlant();
-    //     } catch (e) {
-    //       showSnackbar(
-    //           context, FeedbackLevel.error, "Error deleting plant", null);
-    //       return;
-    //     }
-    //     showSnackbar(
-    //         context, FeedbackLevel.success, "Plant deleted successfully", null);
-    //     Navigator.of(context).pop();
-    //     Navigator.of(context).pop(true);
-    //   },
-    // );
-  }
-
   Future<void> _uploadNewPhoto() async {
-    // final XFile? pickedFile =
-    //     await _picker.pickImage(source: ImageSource.gallery);
-    // if (pickedFile == null) return;
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
 
-    // try {
-    //   widget.viewModel.uploadNewPhoto(pickedFile);
-
-    //   showSnackbar(context, FeedbackLevel.success, "Photo uploaded", null);
-    // } catch (e) {
-    //   showSnackbar(
-    //       context, FeedbackLevel.error, "Failed to upload image", e.toString());
-    // }
+    await widget.viewModel.uploadNewPhoto.executeWithFuture(pickedFile);
+    setState(() {});
   }
 
   @override
@@ -121,10 +83,10 @@ class _PlantScreenState extends State<PlantScreen> {
                                         Theme.of(context).colorScheme.primary),
                           ),
                           GestureDetector(
-                            // onTap: () => navigateTo(
-                            //     context,
-                            //     SpeciesPage(
-                            //         widget.env, _species!.toCompanion(true))),
+                            onTap: () => context.push(
+                              Routes.speciesWithIdOrExternal,
+                              extra: widget.viewModel.species.id,
+                            ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -209,11 +171,11 @@ class _PlantScreenState extends State<PlantScreen> {
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
-                              GestureDetector(
-                                // onTap: () => navigateTo(context,
-                                //     ReminderListPage(widget.env, widget.plant)),
-                                child: const Text("Edit"),
-                              ),
+                              // GestureDetector(
+                              //   // onTap: () => navigateTo(context,
+                              //   //     ReminderListPage(widget.env, widget.plant)),
+                              //   child: const Text("Edit"),
+                              // ),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -317,7 +279,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             ),
                           ),
                         ],
-                      ).then((value) {
+                      ).then((value) async {
                         if (value == 'edit') {
                           // navigateTo(
                           //         context, EditPlantPage(widget.env, widget.plant))
@@ -327,9 +289,11 @@ class _PlantScreenState extends State<PlantScreen> {
                           //   }
                           // });
                         } else if (value == 'duplicate') {
-                          //_duplicatePlant();
+                          await widget.viewModel.duplicatePlant
+                              .executeWithFuture();
                         } else if (value == 'remove') {
-                          _deletePlant();
+                          await widget.viewModel.deletePlant
+                              .executeWithFuture();
                         }
                       });
                     },

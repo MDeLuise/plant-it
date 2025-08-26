@@ -122,7 +122,7 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
     if (care.humidity.value != null) {
       result.add(InfoWidget(
           title: "Humidity",
-          value: "${care.humidity.value!}%",
+          value: "${care.humidity.value!}0%",
           icon: LucideIcons.spray_can));
     }
 
