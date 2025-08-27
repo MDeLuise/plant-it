@@ -8,11 +8,13 @@ import 'package:result_dart/result_dart.dart';
 class FullscreenGalleryViewer extends StatefulWidget {
   final PlantViewModel viewModel;
   final int initialIndex;
+  final VoidCallback reload;
 
   const FullscreenGalleryViewer({
     super.key,
     required this.viewModel,
     required this.initialIndex,
+    required this.reload,
   });
 
   @override
@@ -31,68 +33,60 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
     _pageController = PageController(initialPage: widget.initialIndex);
   }
 
-  db_image.Image get _currentImage => widget.viewModel.galleryImage[_currentIndex];
+  db_image.Image get _currentImage =>
+      widget.viewModel.galleryImage[_currentIndex];
 
   Future<void> _downloadImage() async {
-    // Result<String> base64 = await widget.viewModel.getBase64(_currentImage.id);
-    // Uint8List bytes = base64Decode(base64.getOrThrow());
-
-    // if (await Permission.storage.request().isGranted) {
-    //   final dir = await getExternalStorageDirectory();
-    //   final downloads = Directory("${dir!.path}/Download");
-    //   if (!await downloads.exists()) await downloads.create(recursive: true);
-
-    //   final file = File('${downloads.path}/${_currentImage.id}.jpg');
-    //   await file.writeAsBytes(bytes);
-
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Image downloaded successfully.')),
-    //   );
-    // }
+    return widget.viewModel.downloadPhoto(_currentImage.id);
   }
 
   Future<void> _deleteImage() async {
-    // final confirm = await showDialog<bool>(
-    //   context: context,
-    //   builder: (_) => AlertDialog(
-    //     title: const Text("Delete Image"),
-    //     content: const Text("Are you sure you want to delete this image?"),
-    //     actions: [
-    //       TextButton(
-    //           onPressed: () => Navigator.pop(context, false),
-    //           child: const Text("Cancel")),
-    //       TextButton(
-    //           onPressed: () => Navigator.pop(context, true),
-    //           child: const Text("Delete")),
-    //     ],
-    //   ),
-    // );
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Delete Image"),
+        content: const Text("Are you sure you want to delete this image?"),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Delete")),
+        ],
+      ),
+    );
 
-    // if (confirm == true) {
-    //   if (_currentImage.imagePath != null) {
-    //     await widget.imageRepo.removeImageFile(_currentImage.imagePath!);
-    //   }
-    //   widget.imageRepo.delete(_currentImage.id);
-    //   setState(() => widget.images.removeAt(_currentIndex));
-    //   if (widget.images.isEmpty) Navigator.pop(context);
-    // }
+    if (confirm == true) {
+      await widget.viewModel.deletePhoto.executeWithFuture(_currentImage.id);
+
+      // Check if the current index is the last image
+      if (_currentIndex >= widget.viewModel.galleryImage.length - 1) {
+        // If it is, go back to the previous image
+        if (_currentIndex > 0) {
+          _currentIndex--;
+        }
+      }
+
+      // Update the PageController to the new index
+      _pageController.jumpToPage(_currentIndex);
+
+      if (widget.viewModel.galleryImage.isEmpty) {
+        Navigator.pop(context, true);
+        return;
+      }
+
+      setState(() {});
+    }
   }
 
   Future<void> _toggleAvatar() async {
-    // final image = _currentImage;
-    // if (image.plantId != null) {
-    //   await widget.imageRepo.unsetAvatarForPlant(image.plantId!);
-    // }
-    // if (image.speciesId != null) {
-    //   await widget.imageRepo.removeAvatarForSpecies(image.speciesId!);
-    // }
-    // await widget.imageRepo.update(image.copyWith(isAvatar: !image.isAvatar));
-    // setState(() => widget.images[_currentIndex] =
-    //     image.copyWith(isAvatar: !image.isAvatar));
+    return widget.viewModel.toggleAvatar
+        .executeWithFuture(_currentImage.isAvatar ? null : _currentImage.id);
   }
 
-  void _showOptionsMenu() {
-    showModalBottomSheet(
+  Future<void> _showOptionsMenu() async {
+    await showModalBottomSheet(
       context: context,
       builder: (_) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -134,23 +128,28 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
           ListTile(
             leading: const Icon(Icons.delete),
             title: const Text("Delete"),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              _deleteImage();
+              await _deleteImage();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.star),
+            leading: _currentImage.isAvatar
+                ? const Icon(Icons.star_outline)
+                : const Icon(Icons.star),
             title: Text(
                 _currentImage.isAvatar ? "Unset as Avatar" : "Set as Avatar"),
-            onTap: () {
-              Navigator.pop(context);
-              _toggleAvatar();
+            onTap: () async {
+              await _toggleAvatar();
+              setState(() {});
+              Navigator.pop(context, true);
             },
           ),
         ],
       ),
     );
+
+    setState(() {});
   }
 
   @override
@@ -166,7 +165,8 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
             onPageChanged: (i) => setState(() => _currentIndex = i),
             itemBuilder: (context, index) {
               return FutureBuilder<Result<String>>(
-                future: widget.viewModel.getBase64(widget.viewModel.galleryImage[index].id),
+                future: widget.viewModel
+                    .getBase64(widget.viewModel.galleryImage[index].id),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
@@ -186,7 +186,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop(true),
             ),
           ),
           Positioned(
@@ -194,7 +194,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
             right: 20,
             child: IconButton(
               icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: _showOptionsMenu,
+              onPressed: () async => await _showOptionsMenu(),
             ),
           ),
           Positioned(

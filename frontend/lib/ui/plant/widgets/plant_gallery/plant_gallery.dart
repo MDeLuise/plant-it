@@ -7,10 +7,12 @@ class PlantGallery extends StatefulWidget {
   final PlantViewModel viewModel;
   final bool allowUpload;
   final VoidCallback? onUpload;
+  final VoidCallback reload;
 
   const PlantGallery({
     super.key,
     required this.viewModel,
+    required this.reload,
     this.allowUpload = false,
     this.onUpload,
   });
@@ -49,15 +51,18 @@ class _PlantGalleryState extends State<PlantGallery> {
     );
   }
 
-  void _openGalleryViewer(BuildContext context, {int startIndex = 0}) {
-    Navigator.of(context).push(
+  void _openGalleryViewer(BuildContext context, {int startIndex = 0}) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => FullscreenGalleryViewer(
           viewModel: widget.viewModel,
           initialIndex: startIndex,
+          reload: widget.reload,
         ),
       ),
     );
+    widget.reload();
+    setState(() {});
   }
 }
 

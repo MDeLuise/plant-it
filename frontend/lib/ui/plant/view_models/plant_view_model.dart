@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:command_it/command_it.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/image_repository.dart';
@@ -53,6 +55,21 @@ class PlantViewModel extends ChangeNotifier {
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     });
+    deletePhoto = Command.createAsync((int id) async {
+      Result<void> result = await _deletePhoto(id);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    }, initialValue: Failure(Exception("not started")));
+    toggleAvatar = Command.createAsync((int? id) async {
+      Result<void> result = await _toggleAvatar(id);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    }, initialValue: Failure(Exception("not started")));
+    downloadPhoto = Command.createAsync((int id) async {
+      Result<void> result = await _downloadPhoto(id);
+      if (result.isError()) throw result.exceptionOrNull()!;
+      return;
+    }, initialValue: Failure(Exception("not started")));
   }
 
   final Logger _log = Logger('PlantViewModel');
@@ -91,6 +108,9 @@ class PlantViewModel extends ChangeNotifier {
   late final Command<void, Result<void>> deletePlant;
   late final Command<void, void> duplicatePlant;
   late final Command<XFile, void> uploadNewPhoto;
+  late final Command<int, void> deletePhoto;
+  late final Command<int?, void> toggleAvatar;
+  late final Command<int, void> downloadPhoto;
 
   EventRepository get eventRepository => _eventRepository;
 
@@ -146,6 +166,7 @@ class PlantViewModel extends ChangeNotifier {
     Result<db.Image>? avatarResult =
         await _imageRepository.getSpecifiedAvatarForPlant(plantId);
     if (avatarResult == null) {
+      _base64Avatar = null;
       return Success("no base 64 avatar");
     }
 
@@ -329,5 +350,76 @@ class PlantViewModel extends ChangeNotifier {
 
   Future<Result<String>> getBase64(int id) {
     return _imageRepository.getBase64(id);
+  }
+
+  Future<Result<void>> _deletePhoto(int id) async {
+    Result<void> deleted = await _imageRepository.delete(id);
+
+    await _loadGalleryImages(_plant.id);
+    await _loadThumbnails();
+
+    return deleted;
+  }
+
+  Future<Result<void>> _toggleAvatar(int? id) async {
+    Result<db.Image>? currentAvatar =
+        await _imageRepository.getSpecifiedAvatarForPlant(_plant.id);
+
+    if (id == null) {
+      Result<void> unset =
+          await _imageRepository.unsetAvatarForPlant(_plant.id);
+      if (unset.isError()) {
+        return unset;
+      }
+      Result<void> gallery = await _loadGalleryImages(_plant.id);
+      if (gallery.isError()) {
+        return gallery;
+      }
+      return _loadBase64(_plant.id);
+    }
+
+    Result<db.Image> image = await _imageRepository.get(id);
+    if (image.isError()) {
+      return image;
+    }
+
+    if (currentAvatar != null && currentAvatar.isError()) {
+      return currentAvatar;
+    }
+    if (currentAvatar == null || currentAvatar.getOrThrow().id != id) {
+      if (currentAvatar != null) {
+        Result<void> unset =
+            await _imageRepository.unsetAvatarForPlant(_plant.id);
+        if (unset.isError()) {
+          return unset;
+        }
+      }
+
+      Result<void> updated = await _imageRepository.update(
+          image.getOrThrow().copyWith(isAvatar: true).toCompanion(true));
+      if (updated.isError()) {
+        return updated;
+      }
+    }
+    Result<void> gallery = await _loadGalleryImages(_plant.id);
+    if (gallery.isError()) {
+      return gallery;
+    }
+    return _loadBase64(_plant.id);
+  }
+
+  Future<Result<void>> _downloadPhoto(int id) async {
+    Result<String> base64Result = await _imageRepository.getBase64(id);
+    if (base64Result.isError()) {
+      return base64Result.exceptionOrNull()!.toFailure();
+    }
+
+    drift.Uint8List imageBytes = base64Decode(base64Result.getOrThrow());
+    final directory = await getExternalStorageDirectory();
+    final filePath = path.join(directory!.path, 'image_$id.jpg');
+    final File file = File(filePath);
+    await file.writeAsBytes(imageBytes);
+
+    return Success("Image downloaded successfully to $filePath");
   }
 }

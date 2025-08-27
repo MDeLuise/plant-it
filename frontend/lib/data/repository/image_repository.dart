@@ -180,4 +180,24 @@ class ImageRepository extends CRUDRepository<Image> {
     return await update(
         avatarResult.getOrThrow().copyWith(isAvatar: false).toCompanion(false));
   }
+
+  @override
+  Future<Result<void>> delete(int id) async {
+    Result<Image> image = await get(id);
+    if (image.isError()) {
+      return image;
+    }
+
+    try {
+      await (db.delete(table)..where((t) => (t as dynamic).id.equals(id))).go();
+
+      if (image.getOrThrow().imagePath != null) {
+        await removeImageFile(image.getOrThrow().imagePath!);
+      }
+
+      return Success("ok");
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
 }

@@ -209,6 +209,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             viewModel: widget.viewModel,
                             allowUpload: true,
                             onUpload: _uploadNewPhoto,
+                            reload: () => setState(() {}),
                           ),
                         ],
                       ),
