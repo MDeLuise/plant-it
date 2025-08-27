@@ -79,7 +79,11 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () =>
+                                  context.push(Routes.plant, extra: {
+                                'speciesId': widget.viewModel.id!.toString(),
+                                'speciesName': widget.viewModel.scientificName,
+                              }),
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all(
                                     Theme.of(context).colorScheme.primary),

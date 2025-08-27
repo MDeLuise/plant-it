@@ -24,6 +24,9 @@ class Plants extends Table {
   TextColumn get name => text().withLength(max: 50).unique()();
   DateTimeColumn get startDate => dateTime().nullable()();
   TextColumn get note => text().withLength(max: 8500).nullable()();
+  TextColumn get location => text().withLength(max: 250).nullable()();
+  RealColumn get price => real().nullable()();
+  TextColumn get seller => text().withLength(max: 250).nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
   IntColumn get species =>
       integer().references(Species, #id, onDelete: KeyAction.cascade)();

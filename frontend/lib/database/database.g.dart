@@ -956,6 +956,26 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 8500),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
+  static const VerificationMeta _locationMeta =
+      const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+      'location', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 250),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<double> price = GeneratedColumn<double>(
+      'price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _sellerMeta = const VerificationMeta('seller');
+  @override
+  late final GeneratedColumn<String> seller = GeneratedColumn<String>(
+      'seller', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 250),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -979,8 +999,18 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
               defaultValue: const Constant("none"))
           .withConverter<AvatarMode>($PlantsTable.$converteravatarMode);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, startDate, note, createdAt, species, avatarMode];
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        startDate,
+        note,
+        location,
+        price,
+        seller,
+        createdAt,
+        species,
+        avatarMode
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1007,6 +1037,18 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
     if (data.containsKey('note')) {
       context.handle(
           _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    }
+    if (data.containsKey('price')) {
+      context.handle(
+          _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
+    }
+    if (data.containsKey('seller')) {
+      context.handle(_sellerMeta,
+          seller.isAcceptableOrUnknown(data['seller']!, _sellerMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -1035,6 +1077,12 @@ class $PlantsTable extends Plants with TableInfo<$PlantsTable, Plant> {
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
       note: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note']),
+      location: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location']),
+      price: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}price']),
+      seller: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}seller']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
       species: attachedDatabase.typeMapping
@@ -1059,6 +1107,9 @@ class Plant extends DataClass implements Insertable<Plant> {
   final String name;
   final DateTime? startDate;
   final String? note;
+  final String? location;
+  final double? price;
+  final String? seller;
   final DateTime? createdAt;
   final int species;
   final AvatarMode avatarMode;
@@ -1067,6 +1118,9 @@ class Plant extends DataClass implements Insertable<Plant> {
       required this.name,
       this.startDate,
       this.note,
+      this.location,
+      this.price,
+      this.seller,
       this.createdAt,
       required this.species,
       required this.avatarMode});
@@ -1080,6 +1134,15 @@ class Plant extends DataClass implements Insertable<Plant> {
     }
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || price != null) {
+      map['price'] = Variable<double>(price);
+    }
+    if (!nullToAbsent || seller != null) {
+      map['seller'] = Variable<String>(seller);
     }
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -1100,6 +1163,13 @@ class Plant extends DataClass implements Insertable<Plant> {
           ? const Value.absent()
           : Value(startDate),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      price:
+          price == null && nullToAbsent ? const Value.absent() : Value(price),
+      seller:
+          seller == null && nullToAbsent ? const Value.absent() : Value(seller),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -1116,6 +1186,9 @@ class Plant extends DataClass implements Insertable<Plant> {
       name: serializer.fromJson<String>(json['name']),
       startDate: serializer.fromJson<DateTime?>(json['startDate']),
       note: serializer.fromJson<String?>(json['note']),
+      location: serializer.fromJson<String?>(json['location']),
+      price: serializer.fromJson<double?>(json['price']),
+      seller: serializer.fromJson<String?>(json['seller']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       species: serializer.fromJson<int>(json['species']),
       avatarMode: $PlantsTable.$converteravatarMode
@@ -1130,6 +1203,9 @@ class Plant extends DataClass implements Insertable<Plant> {
       'name': serializer.toJson<String>(name),
       'startDate': serializer.toJson<DateTime?>(startDate),
       'note': serializer.toJson<String?>(note),
+      'location': serializer.toJson<String?>(location),
+      'price': serializer.toJson<double?>(price),
+      'seller': serializer.toJson<String?>(seller),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'species': serializer.toJson<int>(species),
       'avatarMode': serializer
@@ -1142,6 +1218,9 @@ class Plant extends DataClass implements Insertable<Plant> {
           String? name,
           Value<DateTime?> startDate = const Value.absent(),
           Value<String?> note = const Value.absent(),
+          Value<String?> location = const Value.absent(),
+          Value<double?> price = const Value.absent(),
+          Value<String?> seller = const Value.absent(),
           Value<DateTime?> createdAt = const Value.absent(),
           int? species,
           AvatarMode? avatarMode}) =>
@@ -1150,6 +1229,9 @@ class Plant extends DataClass implements Insertable<Plant> {
         name: name ?? this.name,
         startDate: startDate.present ? startDate.value : this.startDate,
         note: note.present ? note.value : this.note,
+        location: location.present ? location.value : this.location,
+        price: price.present ? price.value : this.price,
+        seller: seller.present ? seller.value : this.seller,
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
         species: species ?? this.species,
         avatarMode: avatarMode ?? this.avatarMode,
@@ -1160,6 +1242,9 @@ class Plant extends DataClass implements Insertable<Plant> {
       name: data.name.present ? data.name.value : this.name,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       note: data.note.present ? data.note.value : this.note,
+      location: data.location.present ? data.location.value : this.location,
+      price: data.price.present ? data.price.value : this.price,
+      seller: data.seller.present ? data.seller.value : this.seller,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       species: data.species.present ? data.species.value : this.species,
       avatarMode:
@@ -1174,6 +1259,9 @@ class Plant extends DataClass implements Insertable<Plant> {
           ..write('name: $name, ')
           ..write('startDate: $startDate, ')
           ..write('note: $note, ')
+          ..write('location: $location, ')
+          ..write('price: $price, ')
+          ..write('seller: $seller, ')
           ..write('createdAt: $createdAt, ')
           ..write('species: $species, ')
           ..write('avatarMode: $avatarMode')
@@ -1182,8 +1270,8 @@ class Plant extends DataClass implements Insertable<Plant> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, startDate, note, createdAt, species, avatarMode);
+  int get hashCode => Object.hash(id, name, startDate, note, location, price,
+      seller, createdAt, species, avatarMode);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1192,6 +1280,9 @@ class Plant extends DataClass implements Insertable<Plant> {
           other.name == this.name &&
           other.startDate == this.startDate &&
           other.note == this.note &&
+          other.location == this.location &&
+          other.price == this.price &&
+          other.seller == this.seller &&
           other.createdAt == this.createdAt &&
           other.species == this.species &&
           other.avatarMode == this.avatarMode);
@@ -1202,6 +1293,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
   final Value<String> name;
   final Value<DateTime?> startDate;
   final Value<String?> note;
+  final Value<String?> location;
+  final Value<double?> price;
+  final Value<String?> seller;
   final Value<DateTime?> createdAt;
   final Value<int> species;
   final Value<AvatarMode> avatarMode;
@@ -1210,6 +1304,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     this.name = const Value.absent(),
     this.startDate = const Value.absent(),
     this.note = const Value.absent(),
+    this.location = const Value.absent(),
+    this.price = const Value.absent(),
+    this.seller = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.species = const Value.absent(),
     this.avatarMode = const Value.absent(),
@@ -1219,6 +1316,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     required String name,
     this.startDate = const Value.absent(),
     this.note = const Value.absent(),
+    this.location = const Value.absent(),
+    this.price = const Value.absent(),
+    this.seller = const Value.absent(),
     this.createdAt = const Value.absent(),
     required int species,
     this.avatarMode = const Value.absent(),
@@ -1229,6 +1329,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     Expression<String>? name,
     Expression<DateTime>? startDate,
     Expression<String>? note,
+    Expression<String>? location,
+    Expression<double>? price,
+    Expression<String>? seller,
     Expression<DateTime>? createdAt,
     Expression<int>? species,
     Expression<String>? avatarMode,
@@ -1238,6 +1341,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       if (name != null) 'name': name,
       if (startDate != null) 'start_date': startDate,
       if (note != null) 'note': note,
+      if (location != null) 'location': location,
+      if (price != null) 'price': price,
+      if (seller != null) 'seller': seller,
       if (createdAt != null) 'created_at': createdAt,
       if (species != null) 'species': species,
       if (avatarMode != null) 'avatar_mode': avatarMode,
@@ -1249,6 +1355,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       Value<String>? name,
       Value<DateTime?>? startDate,
       Value<String?>? note,
+      Value<String?>? location,
+      Value<double?>? price,
+      Value<String?>? seller,
       Value<DateTime?>? createdAt,
       Value<int>? species,
       Value<AvatarMode>? avatarMode}) {
@@ -1257,6 +1366,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
       name: name ?? this.name,
       startDate: startDate ?? this.startDate,
       note: note ?? this.note,
+      location: location ?? this.location,
+      price: price ?? this.price,
+      seller: seller ?? this.seller,
       createdAt: createdAt ?? this.createdAt,
       species: species ?? this.species,
       avatarMode: avatarMode ?? this.avatarMode,
@@ -1278,6 +1390,15 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
     if (note.present) {
       map['note'] = Variable<String>(note.value);
     }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (price.present) {
+      map['price'] = Variable<double>(price.value);
+    }
+    if (seller.present) {
+      map['seller'] = Variable<String>(seller.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1298,6 +1419,9 @@ class PlantsCompanion extends UpdateCompanion<Plant> {
           ..write('name: $name, ')
           ..write('startDate: $startDate, ')
           ..write('note: $note, ')
+          ..write('location: $location, ')
+          ..write('price: $price, ')
+          ..write('seller: $seller, ')
           ..write('createdAt: $createdAt, ')
           ..write('species: $species, ')
           ..write('avatarMode: $avatarMode')
@@ -4404,6 +4528,9 @@ typedef $$PlantsTableCreateCompanionBuilder = PlantsCompanion Function({
   required String name,
   Value<DateTime?> startDate,
   Value<String?> note,
+  Value<String?> location,
+  Value<double?> price,
+  Value<String?> seller,
   Value<DateTime?> createdAt,
   required int species,
   Value<AvatarMode> avatarMode,
@@ -4413,6 +4540,9 @@ typedef $$PlantsTableUpdateCompanionBuilder = PlantsCompanion Function({
   Value<String> name,
   Value<DateTime?> startDate,
   Value<String?> note,
+  Value<String?> location,
+  Value<double?> price,
+  Value<String?> seller,
   Value<DateTime?> createdAt,
   Value<int> species,
   Value<AvatarMode> avatarMode,
@@ -4499,6 +4629,15 @@ class $$PlantsTableFilterComposer
 
   ColumnFilters<String> get note => $composableBuilder(
       column: $table.note, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get price => $composableBuilder(
+      column: $table.price, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get seller => $composableBuilder(
+      column: $table.seller, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -4613,6 +4752,15 @@ class $$PlantsTableOrderingComposer
   ColumnOrderings<String> get note => $composableBuilder(
       column: $table.note, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get price => $composableBuilder(
+      column: $table.price, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get seller => $composableBuilder(
+      column: $table.seller, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
@@ -4660,6 +4808,15 @@ class $$PlantsTableAnnotationComposer
 
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<double> get price =>
+      $composableBuilder(column: $table.price, builder: (column) => column);
+
+  GeneratedColumn<String> get seller =>
+      $composableBuilder(column: $table.seller, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -4780,6 +4937,9 @@ class $$PlantsTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<String?> note = const Value.absent(),
+            Value<String?> location = const Value.absent(),
+            Value<double?> price = const Value.absent(),
+            Value<String?> seller = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
             Value<int> species = const Value.absent(),
             Value<AvatarMode> avatarMode = const Value.absent(),
@@ -4789,6 +4949,9 @@ class $$PlantsTableTableManager extends RootTableManager<
             name: name,
             startDate: startDate,
             note: note,
+            location: location,
+            price: price,
+            seller: seller,
             createdAt: createdAt,
             species: species,
             avatarMode: avatarMode,
@@ -4798,6 +4961,9 @@ class $$PlantsTableTableManager extends RootTableManager<
             required String name,
             Value<DateTime?> startDate = const Value.absent(),
             Value<String?> note = const Value.absent(),
+            Value<String?> location = const Value.absent(),
+            Value<double?> price = const Value.absent(),
+            Value<String?> seller = const Value.absent(),
             Value<DateTime?> createdAt = const Value.absent(),
             required int species,
             Value<AvatarMode> avatarMode = const Value.absent(),
@@ -4807,6 +4973,9 @@ class $$PlantsTableTableManager extends RootTableManager<
             name: name,
             startDate: startDate,
             note: note,
+            location: location,
+            price: price,
+            seller: seller,
             createdAt: createdAt,
             species: species,
             avatarMode: avatarMode,

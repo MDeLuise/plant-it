@@ -8,7 +8,9 @@ import 'package:plant_it/ui/event/widgets/edit/edit_event_screen.dart';
 import 'package:plant_it/ui/event/widgets/create/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
+import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
+import 'package:plant_it/ui/plant/widgets/create/add_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
@@ -114,6 +116,17 @@ GoRouter router() => GoRouter(
                   );
                   viewModel.load.execute(id);
                   return PlantScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: Routes.plant,
+                builder: (context, state) {
+                  Map<String, String> input = state.extra as Map<String, String>;
+                  AddPlantViewmodel viewModel = AddPlantViewmodel(
+                    plantRepository: context.read(),
+                  );
+                  viewModel.load.execute(input);
+                  return AddPlantScreen(viewModel: viewModel);
                 },
               ),
               GoRoute(
