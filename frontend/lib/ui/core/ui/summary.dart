@@ -66,7 +66,7 @@ class _Stepper<T> extends State<Summary<T>> {
           }
           return _focusOn != -1
               ? Column(
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Padding(
@@ -76,7 +76,7 @@ class _Stepper<T> extends State<Summary<T>> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
+                          horizontal: 20, vertical: 15),
                       child: Row(
                         children: [
                           Expanded(
@@ -219,8 +219,8 @@ class _Stepper<T> extends State<Summary<T>> {
                                   onPressed: () async {
                                     await widget.actionCommand
                                         .executeWithFuture();
-                                    if (widget.actionCommand.results.value
-                                        .hasError) {
+                                    if (widget
+                                        .actionCommand.results.value.hasError) {
                                       if (context.mounted) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -233,23 +233,21 @@ class _Stepper<T> extends State<Summary<T>> {
                                       }
                                     } else {
                                       if (context.mounted) {
-                                        context.pop(widget.viewModel);
                                         if (widget.successText != null) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
-                                                content: Text(
-                                                    widget.successText!)),
+                                                content:
+                                                    Text(widget.successText!)),
                                           );
                                         }
+                                        context.pop(widget.viewModel);
                                       }
                                     }
                                   },
                                   style: ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .primary),
+                                        Theme.of(context).colorScheme.primary),
                                     padding: WidgetStatePropertyAll(
                                         EdgeInsetsGeometry.symmetric(
                                             vertical: 15, horizontal: 40)),

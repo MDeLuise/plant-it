@@ -72,6 +72,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
                   sections: widget.steps,
                   actionCommand: widget.actionCommand,
                   isPrimary: false,
+                  successText: widget.successText,
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +181,6 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                               }
                                             } else {
                                               if (context.mounted) {
-                                                context.pop(widget.viewModel);
                                                 if (widget.successText !=
                                                     null) {
                                                   ScaffoldMessenger.of(context)
@@ -190,6 +190,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                                             .successText!)),
                                                   );
                                                 }
+                                                context.pop(widget.viewModel);
                                               }
                                             }
                                           }
