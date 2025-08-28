@@ -4,6 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_it/routing/routes.dart';
+import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/plant/widgets/plant_avatar.dart';
@@ -41,11 +42,10 @@ class _PlantScreenState extends State<PlantScreen> {
           }
 
           if (command.hasError) {
-            return Center(
-              child: Text(
-                "Error : ${command.error}",
-                //style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
+            return ErrorIndicator(
+              title: "Error : ${command.error}",
+              label: "Try again",
+              onPressed: widget.viewModel.load.execute,
             );
           }
 
@@ -282,13 +282,7 @@ class _PlantScreenState extends State<PlantScreen> {
                         ],
                       ).then((value) async {
                         if (value == 'edit') {
-                          // navigateTo(
-                          //         context, EditPlantPage(widget.env, widget.plant))
-                          //     .then((u) {
-                          //   if (u != null) {
-                          //     replaceTo(context, PlantScreen(widget.env, u));
-                          //   }
-                          // });
+                          context.push(Routes.editPlantWithId(widget.viewModel.id));
                         } else if (value == 'duplicate') {
                           await widget.viewModel.duplicatePlant
                               .executeWithFuture();

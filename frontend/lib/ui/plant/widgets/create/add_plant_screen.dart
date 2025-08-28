@@ -9,8 +9,8 @@ import 'package:plant_it/ui/plant/widgets/create/seller_step.dart';
 import 'package:plant_it/ui/plant/widgets/create/start_date_step.dart';
 
 class AddPlantScreen extends StatefulWidget {
-  final AddPlantViewmodel viewModel;
-  
+  final AddPlantViewModel viewModel;
+
   const AddPlantScreen({
     super.key,
     required this.viewModel,
@@ -30,7 +30,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         ),
         title: const Text('Add Plant'),
       ),
-      body: AppStepper<AddPlantViewmodel>(
+      body: AppStepper<AddPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
           actionText: "Add",

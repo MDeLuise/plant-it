@@ -1,53 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
+import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
-class SellerStep extends StepSection<AddPlantViewModel> {
+class PriceStep extends StepSection<EditPlantViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final ValueNotifier<String?> _selectedSeller = ValueNotifier(null);
-  final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
+  late final ValueNotifier<double?> _selectedPrice = ValueNotifier(viewModel.price);
+  late final ValueNotifier<double?> _ongoingSelection = ValueNotifier(viewModel.price);
 
-  SellerStep({
+  PriceStep({
     super.key,
     required super.viewModel,
   });
 
   @override
-  State<SellerStep> createState() => _SellerStepState();
+  State<PriceStep> createState() => _PriceStepState();
 
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
   void confirm() {
-    viewModel.setSeller(_ongoingSelection.value!);
-    _selectedSeller.value = _ongoingSelection.value;
+    viewModel.setPrice(_ongoingSelection.value!);
+    _selectedPrice.value = _ongoingSelection.value;
   }
 
   @override
-  String get title => "Seller";
+  String get title => "Price";
 
   @override
-  String get value {
-    String location = _ongoingSelection.value ?? "";
-    if (location.length > 20) {
-      location = "${location.substring(0, 20)}...";
-    }
-    return location.replaceAll("\n", " ");
-  }
+  String get value => _ongoingSelection.value?.toString() ?? "";
 
   @override
   void cancel() {
-    _ongoingSelection.value = _selectedSeller.value;
+    _ongoingSelection.value = _selectedPrice.value;
   }
 
   @override
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, AddPlantViewModel viewModel) async {
+  Future<void> action(BuildContext context, EditPlantViewModel viewModel) async {
     final TextEditingController controller =
-        TextEditingController(text: _ongoingSelection.value ?? "");
+        TextEditingController(text: _ongoingSelection.value?.toString() ?? "");
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -55,8 +49,9 @@ class SellerStep extends StepSection<AddPlantViewModel> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(
-              labelText: 'Seller',
+              labelText: 'Price',
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -81,12 +76,12 @@ class SellerStep extends StepSection<AddPlantViewModel> {
     );
 
     if (result != null) {
-      _ongoingSelection.value = result;
+      _ongoingSelection.value = double.parse(result.replaceAll(",", "."));
     }
   }
 }
 
-class _SellerStepState extends State<SellerStep> {
+class _PriceStepState extends State<PriceStep> {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

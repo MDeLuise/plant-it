@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
+import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
-class StartDateStep extends StepSection<AddPlantViewModel> {
+class StartDateStep extends StepSection<EditPlantViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final ValueNotifier<DateTime?> _selectedDate = ValueNotifier<DateTime?>(null);
-  final ValueNotifier<DateTime?> _ongoingSelection =
-      ValueNotifier<DateTime?>(null);
+  late final ValueNotifier<DateTime?> _selectedDate = ValueNotifier<DateTime?>(viewModel.date);
+  late final ValueNotifier<DateTime?> _ongoingSelection =
+      ValueNotifier<DateTime?>(viewModel.date);
 
   StartDateStep({
     super.key,
@@ -40,7 +40,7 @@ class StartDateStep extends StepSection<AddPlantViewModel> {
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, AddPlantViewModel viewModel) async {
+  Future<void> action(BuildContext context, EditPlantViewModel viewModel) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _ongoingSelection.value,

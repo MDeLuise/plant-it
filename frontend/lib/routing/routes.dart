@@ -4,6 +4,7 @@ abstract final class Routes {
   static final String _plantRelative = 'plant';
   static String plant = '/$_plantRelative';
   static String plantWithId(int id) => '/$_plantRelative/$id';
+  static String editPlantWithId(int id) => '/$_plantRelative/$id/_edit';
 
   static const String _eventRelative = 'event';
   static const String event = '/$_eventRelative';

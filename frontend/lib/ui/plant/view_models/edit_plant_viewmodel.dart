@@ -6,27 +6,27 @@ import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:result_dart/result_dart.dart';
 
-class AddPlantViewModel extends ChangeNotifier {
-  AddPlantViewModel({
+class EditPlantViewModel extends ChangeNotifier {
+  EditPlantViewModel({
     required PlantRepository plantRepository,
   }) : _plantRepository = plantRepository {
-    load = Command.createAsync((Map<String, String> input) async {
-      Result<void> result = await _load(input);
+    load = Command.createAsync((int id) async {
+      Result<void> result = await _load(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     }, initialValue: null);
-    insert = Command.createAsyncNoParam(() async {
-      Result<int> result = await _insert();
+    update = Command.createAsyncNoParam(() async {
+      Result<bool> result = await _update();
       if (result.isError()) throw result.exceptionOrNull()!;
       return result.getOrThrow();
-    }, initialValue: -1);
+    }, initialValue: false);
   }
 
   final PlantRepository _plantRepository;
-  final _log = Logger('AddPlantViewmodel');
+  final _log = Logger('EditPlantViewmodel');
 
-  late final Command<void, int> insert;
-  late final Command<Map<String, String>, void> load;
+  late final Command<void, bool> update;
+  late final Command<int, void> load;
 
   late PlantsCompanion _plant;
 
@@ -54,31 +54,23 @@ class AddPlantViewModel extends ChangeNotifier {
     _plant = _plant.copyWith(price: Value(price));
   }
 
-  String? get name => _plant.name.value;
+  String get name => _plant.name.value;
+  DateTime? get date => _plant.startDate.value;
+  String? get note => _plant.note.value;
+  String? get location => _plant.location.value;
+  String? get seller => _plant.seller.value;
+  double? get price => _plant.price.present ? _plant.price.value : null;
 
-  Future<Result<int>> _insert() {
-    return _plantRepository.insert(
-      _plant.copyWith(
-        createdAt: Value(
-          DateTime.now(),
-        ),
-      ),
-    );
+  Future<Result<bool>> _update() {
+    return _plantRepository.update(_plant);
   }
 
-  Future<Result<void>> _load(Map<String, String> input) async {
-    int speciesId = int.parse(input['speciesId']!);
-    String speciesName = input['speciesName']!;
-    Result<int> count = await _plantRepository.countBySpecies(speciesId);
-    if (count.isError()) {
-      return count;
+  Future<Result<void>> _load(int id) async {
+    Result<Plant> plant = await _plantRepository.get(id);
+    if (plant.isError()) {
+      return plant;
     }
-    String plantDefaultName =
-        "$speciesName${count.getOrThrow() == 0 ? "" : " ${count.getOrThrow()}"}";
-    _plant = PlantsCompanion(
-      species: Value(speciesId),
-      name: Value(plantDefaultName),
-    );
+    _plant = plant.getOrThrow().toCompanion(true);
     return Success("ok");
   }
 }

@@ -9,8 +9,10 @@ import 'package:plant_it/ui/event/widgets/create/event_screen.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/main/app_main_view.dart';
 import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
+import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/create/add_plant_screen.dart';
+import 'package:plant_it/ui/plant/widgets/edit/edit_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
@@ -121,12 +123,24 @@ GoRouter router() => GoRouter(
               GoRoute(
                 path: Routes.plant,
                 builder: (context, state) {
-                  Map<String, String> input = state.extra as Map<String, String>;
-                  AddPlantViewmodel viewModel = AddPlantViewmodel(
+                  Map<String, String> input =
+                      state.extra as Map<String, String>;
+                  AddPlantViewModel viewModel = AddPlantViewModel(
                     plantRepository: context.read(),
                   );
                   viewModel.load.execute(input);
                   return AddPlantScreen(viewModel: viewModel);
+                },
+              ),
+              GoRoute(
+                path: '${Routes.plant}/:id/_edit',
+                builder: (context, state) {
+                  int id = int.parse(state.pathParameters['id']!);
+                  EditPlantViewModel viewModel = EditPlantViewModel(
+                    plantRepository: context.read(),
+                  );
+                  viewModel.load.execute(id);
+                  return EditPlantScreen(viewModel: viewModel);
                 },
               ),
               GoRoute(

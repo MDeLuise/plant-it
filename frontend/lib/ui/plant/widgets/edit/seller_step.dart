@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
+import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
-class SellerStep extends StepSection<AddPlantViewModel> {
+class SellerStep extends StepSection<EditPlantViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final ValueNotifier<String?> _selectedSeller = ValueNotifier(null);
-  final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
+  late final ValueNotifier<String?> _selectedSeller = ValueNotifier(viewModel.seller);
+  late final ValueNotifier<String?> _ongoingSelection = ValueNotifier(viewModel.seller);
 
   SellerStep({
     super.key,
@@ -45,7 +45,7 @@ class SellerStep extends StepSection<AddPlantViewModel> {
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, AddPlantViewModel viewModel) async {
+  Future<void> action(BuildContext context, EditPlantViewModel viewModel) async {
     final TextEditingController controller =
         TextEditingController(text: _ongoingSelection.value ?? "");
     final String? result = await showDialog<String>(

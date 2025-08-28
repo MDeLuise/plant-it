@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
 
-class PriceStep extends StepSection<AddPlantViewmodel> {
+class PriceStep extends StepSection<AddPlantViewModel> {
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   final ValueNotifier<double?> _selectedPrice = ValueNotifier(null);
   final ValueNotifier<double?> _ongoingSelection = ValueNotifier(null);
@@ -39,7 +39,7 @@ class PriceStep extends StepSection<AddPlantViewmodel> {
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, AddPlantViewmodel viewModel) async {
+  Future<void> action(BuildContext context, AddPlantViewModel viewModel) async {
     final TextEditingController controller =
         TextEditingController(text: _ongoingSelection.value?.toString() ?? "");
     final String? result = await showDialog<String>(

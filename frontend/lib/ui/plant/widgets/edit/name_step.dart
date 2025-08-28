@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
-import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
+import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
-class SellerStep extends StepSection<AddPlantViewModel> {
-  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  final ValueNotifier<String?> _selectedSeller = ValueNotifier(null);
-  final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
+class NameStep extends StepSection<EditPlantViewModel> {
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
+  late final ValueNotifier<String?> _selectedName =
+      ValueNotifier(viewModel.name);
+  late final ValueNotifier<String?> _ongoingSelection =
+      ValueNotifier(viewModel.name);
 
-  SellerStep({
+  NameStep({
     super.key,
     required super.viewModel,
   });
 
   @override
-  State<SellerStep> createState() => _SellerStepState();
+  State<NameStep> createState() => _NameStepState();
 
   @override
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
   void confirm() {
-    viewModel.setSeller(_ongoingSelection.value!);
-    _selectedSeller.value = _ongoingSelection.value;
+    viewModel.setName(_ongoingSelection.value!);
+    _selectedName.value = _ongoingSelection.value;
   }
 
   @override
-  String get title => "Seller";
+  String get title => "Name";
 
   @override
   String get value {
-    String location = _ongoingSelection.value ?? "";
-    if (location.length > 20) {
-      location = "${location.substring(0, 20)}...";
+    String name = _ongoingSelection.value ?? "";
+    if (name.length > 20) {
+      name = "${name.substring(0, 20)}...";
     }
-    return location.replaceAll("\n", " ");
+    return name.replaceAll("\n", " ");
   }
 
   @override
   void cancel() {
-    _ongoingSelection.value = _selectedSeller.value;
+    _ongoingSelection.value = _selectedName.value;
   }
 
   @override
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, AddPlantViewModel viewModel) async {
+  Future<void> action(BuildContext context, EditPlantViewModel viewModel) async {
     final TextEditingController controller =
         TextEditingController(text: _ongoingSelection.value ?? "");
     final String? result = await showDialog<String>(
@@ -56,7 +58,7 @@ class SellerStep extends StepSection<AddPlantViewModel> {
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(
-              labelText: 'Seller',
+              labelText: 'Name',
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -82,11 +84,12 @@ class SellerStep extends StepSection<AddPlantViewModel> {
 
     if (result != null) {
       _ongoingSelection.value = result;
+      _isValidNotifier.value = result.isNotEmpty;
     }
   }
 }
 
-class _SellerStepState extends State<SellerStep> {
+class _NameStepState extends State<NameStep> {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();
