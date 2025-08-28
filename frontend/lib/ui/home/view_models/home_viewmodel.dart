@@ -81,6 +81,7 @@ class HomeViewModel extends ChangeNotifier {
       return plants.exceptionOrNull()!.toFailure();
     }
     _plants = plants.getOrThrow();
+    _plantMap.clear();
     for (db.Plant p in _plants) {
       _plantMap.putIfAbsent(p.id, () => p);
     }
