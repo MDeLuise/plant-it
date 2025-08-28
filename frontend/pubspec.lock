@@ -225,14 +225,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  currency_textfield:
-    dependency: "direct main"
-    description:
-      name: currency_textfield
-      sha256: a8c76835e514f8ba68e9d673319d29b2c61f2c795a6c0bfc3dcbb9f9ae4e1bab
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.14.1"
   dart_style:
     dependency: transitive
     description:
@@ -281,14 +273,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.1"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -313,14 +297,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      sha256: "8986dec4581b4bcd4b6df5d75a2ea0bede3db802f500635d05fa8be298f9467f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "10.1.2"
   file_selector_linux:
     dependency: transitive
     description:
@@ -533,14 +509,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  iconsax_flutter:
-    dependency: transitive
-    description:
-      name: iconsax_flutter
-      sha256: "95b65699da8ea98f87c5d232f06b0debaaf1ec1332b697e4d90969ec9a93037d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -837,14 +805,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
-  pausable_timer:
-    dependency: transitive
-    description:
-      name: pausable_timer
-      sha256: "6ef1a95441ec3439de6fb63f39a011b67e693198e7dae14e20675c3c00e86074"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0+3"
   permission_handler:
     dependency: "direct main"
     description:
@@ -949,14 +909,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  quickalert:
-    dependency: "direct main"
-    description:
-      name: quickalert
-      sha256: b5d62b1e20b08cc0ff5f40b6da519bdc7a5de6082f13d90572cf4e72eea56c5e
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   quiver:
     dependency: transitive
     description:
@@ -1058,14 +1010,6 @@ packages:
     description:
       name: shelf_web_socket
       sha256: "3632775c8e90d6c9712f883e633716432a27758216dfb61bd86a8321c0580925"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
-  shimmer:
-    dependency: "direct main"
-    description:
-      name: shimmer
-      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
@@ -1210,22 +1154,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: "458fb70ad9a6a5fa286a0062ddafa536038d21d6afffe2b0cd057e091108311f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "29.1.40"
-  syncfusion_flutter_sliders:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_sliders
-      sha256: eef97f1fc8e69bf8ec232bae1f62407652d38252839da73014efae41b8df445f
-      url: "https://pub.dev"
-    source: hosted
-    version: "29.1.40"
   synchronized:
     dependency: transitive
     description:
@@ -1274,14 +1202,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  toastification:
-    dependency: "direct main"
-    description:
-      name: toastification
-      sha256: "9713989549d60754fd0522425d1251501919cfb7bab4ffbbb36ef40de5ea72b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   typed_data:
     dependency: transitive
     description:
@@ -1418,14 +1338,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  wheel_picker:
-    dependency: "direct main"
-    description:
-      name: wheel_picker
-      sha256: c116ef7e801d50b090ecd033b41efecd82f90fb51dbfc3543408bba54e36ed83
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   win32:
     dependency: transitive
     description:

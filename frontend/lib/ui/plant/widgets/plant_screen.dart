@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -9,11 +11,17 @@ import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/plant/widgets/plant_avatar.dart';
 import 'package:plant_it/ui/plant/widgets/plant_gallery/plant_gallery.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class PlantScreen extends StatefulWidget {
   final PlantViewModel viewModel;
+  final StreamController<StreamCode> streamController;
 
-  const PlantScreen({super.key, required this.viewModel});
+  const PlantScreen({
+    super.key,
+    required this.viewModel,
+    required this.streamController,
+  });
 
   @override
   State<PlantScreen> createState() => _PlantScreenState();
@@ -282,13 +290,47 @@ class _PlantScreenState extends State<PlantScreen> {
                         ],
                       ).then((value) async {
                         if (value == 'edit') {
-                          context.push(Routes.editPlantWithId(widget.viewModel.id));
+                          context.push(
+                              Routes.editPlantWithId(widget.viewModel.id));
                         } else if (value == 'duplicate') {
-                          await widget.viewModel.duplicatePlant
-                              .executeWithFuture();
+                          Command<void, void> command =
+                              widget.viewModel.duplicatePlant;
+                          await command.executeWithFuture();
+                          if (command.results.value.hasError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    command.results.value.error.toString()),
+                              ),
+                            );
+                          } else {
+                            widget.streamController.add(StreamCode.insertPlant);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Plant duplicated"),
+                              ),
+                            );
+                          }
                         } else if (value == 'remove') {
-                          await widget.viewModel.deletePlant
-                              .executeWithFuture();
+                          Command<void, void> command =
+                              widget.viewModel.deletePlant;
+                          await command.executeWithFuture();
+                          if (command.results.value.hasError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    command.results.value.error.toString()),
+                              ),
+                            );
+                          } else {
+                            widget.streamController.add(StreamCode.deletePlant);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Plant deleted"),
+                              ),
+                            );
+                            context.pop();
+                          }
                         }
                       });
                     },

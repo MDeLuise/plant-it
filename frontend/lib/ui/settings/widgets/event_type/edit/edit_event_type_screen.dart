@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/ui/core/ui/stepper.dart';
+import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/color_step.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/description_step.dart';
@@ -23,20 +23,21 @@ class _EditEventTypeScreenState extends State<EditEventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit event type"),
+        title: Text("Edit Event Type"),
       ),
-      body: AppStepper<EditEventTypeViewModel>(
+      body: Summary<EditEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
         actionText: "Update",
-        steps: [
+        sections: [
           EventTypeNameStep(viewModel: widget.viewModel),
           IconStep(viewModel: widget.viewModel),
           ColorStep(viewModel: widget.viewModel),
           DescriptionStep(viewModel: widget.viewModel),
         ],
-        stepsInFocus: 0,
         actionCommand: widget.viewModel.update,
+        successText: "Event type updated",
+        isPrimary: false,
       ),
     );
   }

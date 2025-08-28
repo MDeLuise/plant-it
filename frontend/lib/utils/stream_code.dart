@@ -1,4 +1,7 @@
 enum StreamCode {
   insertEvent,
-  deleteEvent;
+  deleteEvent,
+  insertPlant,
+  editPlant,
+  deletePlant;
 }

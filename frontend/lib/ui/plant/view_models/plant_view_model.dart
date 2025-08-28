@@ -165,17 +165,34 @@ class PlantViewModel extends ChangeNotifier {
   Future<Result<void>> _loadBase64(int plantId) async {
     Result<db.Image>? avatarResult =
         await _imageRepository.getSpecifiedAvatarForPlant(plantId);
-    if (avatarResult == null) {
-      _base64Avatar = null;
-      return Success("no base 64 avatar");
+    if (avatarResult != null && avatarResult.isError()) {
+      return avatarResult.exceptionOrNull()!.toFailure();
+    }
+    if (avatarResult != null && avatarResult.isSuccess()) {
+      Result<String> base64 =
+          await _imageRepository.getBase64(avatarResult.getOrThrow().id);
+      if (base64.isError()) {
+        return base64.exceptionOrNull()!.toFailure();
+      }
+      _base64Avatar = base64.getOrThrow();
+      return Success("ok");
     }
 
-    Result<String> base64 = await _imageRepository.getBase64(plantId);
-    if (base64.isError()) {
-      return base64.exceptionOrNull()!.toFailure();
+    Result<db.Image>? speciesImage =
+        await _imageRepository.getSpeciesImage(_plant.species);
+    if (speciesImage != null && speciesImage.isError()) {
+      return speciesImage.exceptionOrNull()!.toFailure();
     }
-    _base64Avatar = base64.getOrThrow();
-    return Success("ok");
+    if (speciesImage != null && speciesImage.isSuccess()) {
+      Result<String> base64 =
+          await _imageRepository.getBase64(speciesImage.getOrThrow().id);
+      if (base64.isError()) {
+        return base64.exceptionOrNull()!.toFailure();
+      }
+      _base64Avatar = base64.getOrThrow();
+      return Success("ok");
+    }
+    return Success("no avatar");
   }
 
   Future<Result<void>> _loadGalleryImages(int plantId) async {

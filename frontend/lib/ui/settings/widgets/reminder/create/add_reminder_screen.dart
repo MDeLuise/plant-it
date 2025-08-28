@@ -42,6 +42,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
         stepsInFocus: 2,
         actionCommand: widget.viewModel.insert,
         summary: true,
+        successText: "Reminder created",
       ),
     );
   }

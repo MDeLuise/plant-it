@@ -48,6 +48,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
           ],
           actionCommand:  widget.viewModel.update,
           mainText: "Edit the event",
+          successText: "Event updated",
+          isPrimary: false,
         ));
   }
 }

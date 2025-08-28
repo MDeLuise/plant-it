@@ -91,14 +91,47 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<Result<void>> _loadAvatarBase64() async {
     for (db.Plant p in _plants) {
-      Result<String>? base64 =
-          await _imageRepository.getSpecifiedAvatarForPlantBase64(p.id);
-      if (base64 != null) {
+      Result<String> base64 = await _loadBase64AvatarForPlant(p);
+      if (base64.isError()) {
+        return base64;
+      }
+      if (base64.getOrThrow().isNotEmpty) {
         _imagesBase64.putIfAbsent(p.id, () => base64.getOrThrow());
       }
     }
     _log.fine('Loaded base64 plants avatar');
     return Success("ok");
+  }
+
+  Future<Result<String>> _loadBase64AvatarForPlant(db.Plant plant) async {
+    Result<db.Image>? avatarResult =
+        await _imageRepository.getSpecifiedAvatarForPlant(plant.id);
+    if (avatarResult != null && avatarResult.isError()) {
+      return avatarResult.exceptionOrNull()!.toFailure();
+    }
+    if (avatarResult != null && avatarResult.isSuccess()) {
+      Result<String> base64 =
+          await _imageRepository.getBase64(avatarResult.getOrThrow().id);
+      if (base64.isError()) {
+        return base64.exceptionOrNull()!.toFailure();
+      }
+      return Success(base64.getOrThrow());
+    }
+
+    Result<db.Image>? speciesImage =
+        await _imageRepository.getSpeciesImage(plant.species);
+    if (speciesImage != null && speciesImage.isError()) {
+      return speciesImage.exceptionOrNull()!.toFailure();
+    }
+    if (speciesImage != null && speciesImage.isSuccess()) {
+      Result<String> base64 =
+          await _imageRepository.getBase64(speciesImage.getOrThrow().id);
+      if (base64.isError()) {
+        return base64.exceptionOrNull()!.toFailure();
+      }
+      return Success(base64.getOrThrow());
+    }
+    return Success("");
   }
 
   Future<Result<void>> _loadReminderOccurrences() async {

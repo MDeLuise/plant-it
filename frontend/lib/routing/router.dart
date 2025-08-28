@@ -117,7 +117,10 @@ GoRouter router() => GoRouter(
                     reminderOccurrenceRepository: context.read(),
                   );
                   viewModel.load.execute(id);
-                  return PlantScreen(viewModel: viewModel);
+                  return PlantScreen(
+                    viewModel: viewModel,
+                    streamController: context.read(),
+                  );
                 },
               ),
               GoRoute(
@@ -129,7 +132,10 @@ GoRouter router() => GoRouter(
                     plantRepository: context.read(),
                   );
                   viewModel.load.execute(input);
-                  return AddPlantScreen(viewModel: viewModel);
+                  return AddPlantScreen(
+                    viewModel: viewModel,
+                    streamController: context.read(),
+                  );
                 },
               ),
               GoRoute(
@@ -140,7 +146,10 @@ GoRouter router() => GoRouter(
                     plantRepository: context.read(),
                   );
                   viewModel.load.execute(id);
-                  return EditPlantScreen(viewModel: viewModel);
+                  return EditPlantScreen(
+                    viewModel: viewModel,
+                    streamController: context.read(),
+                  );
                 },
               ),
               GoRoute(

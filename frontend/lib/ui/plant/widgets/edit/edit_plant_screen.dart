@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
@@ -7,13 +10,16 @@ import 'package:plant_it/ui/plant/widgets/edit/name_step.dart';
 import 'package:plant_it/ui/plant/widgets/edit/price_step.dart';
 import 'package:plant_it/ui/plant/widgets/edit/seller_step.dart';
 import 'package:plant_it/ui/plant/widgets/edit/start_date_step.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class EditPlantScreen extends StatefulWidget {
   final EditPlantViewModel viewModel;
+  final StreamController<StreamCode> streamController;
 
   const EditPlantScreen({
     super.key,
     required this.viewModel,
+    required this.streamController,
   });
 
   @override
@@ -34,7 +40,14 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
           actionText: "Update",
-          actionCommand: widget.viewModel.update,
+          actionCommand: Command.createAsyncNoParam(() async {
+            Command<void, bool> command = widget.viewModel.update;
+            await command.executeWithFuture();
+            if (command.results.value.hasError) {
+              throw Exception(command.results.value.error);
+            }
+            widget.streamController.add(StreamCode.editPlant);
+          }, initialValue: null),
           successText: "Plant updated",
           summary: true,
           stepsInFocus: 0,

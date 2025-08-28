@@ -41,12 +41,9 @@ class _CarouselState extends State<Carousel> {
                 6,
                 3,
                 1
-              ], // [1, 7, 1], [7, 2, 2], [6, 4, 1]
-              onTap: (index) async {
-                context.push(Routes.plantWithId(plantIdsList[index])).then((_) {
-                  widget.viewModel.load.execute();
-                });
-              },
+              ], // [1, 7, 1],  [7, 2, 2], [6, 4, 1]
+              onTap: (index) =>
+                  context.push(Routes.plantWithId(plantIdsList[index])),
               children: plantIds.map((int plantId) {
                 return HeroLayoutCard(
                     plantId: plantId, viewModel: widget.viewModel);

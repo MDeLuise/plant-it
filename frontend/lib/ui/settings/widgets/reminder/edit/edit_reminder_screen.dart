@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/ui/core/ui/stepper.dart';
+import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/edit/end_step.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/edit/event_type_step.dart';
@@ -25,13 +25,13 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit reminder"),
+        title: Text("Edit Reminder"),
       ),
-      body: AppStepper<EditReminderViewModel>(
+      body: Summary<EditReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
         actionText: "Update",
-        steps: [
+        sections: [
           EventTypeStep(viewModel: widget.viewModel),
           PlantStep(viewModel: widget.viewModel),
           FrequencyStep(viewModel: widget.viewModel),
@@ -39,9 +39,9 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
           StartStep(viewModel: widget.viewModel),
           EndStep(viewModel: widget.viewModel),
         ],
-        stepsInFocus: 0,
         actionCommand: widget.viewModel.update,
-        summary: true,
+        successText: "Reminder updated",
+        isPrimary: false,
       ),
     );
   }

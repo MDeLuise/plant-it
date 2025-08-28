@@ -38,6 +38,7 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
         ],
         stepsInFocus: 3,
         actionCommand: widget.viewModel.insert,
+        successText: "Event created",
       ),
     );
   }
