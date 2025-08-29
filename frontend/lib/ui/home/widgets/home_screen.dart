@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 import 'package:plant_it/ui/home/widgets/carousel.dart';
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: SearchBar(
                     controller: _searchController,
-                    hintText: "Search your plants",
+                    hintText: AppLocalizations.of(context)!.searchYourPlants,
                     leading: const Icon(Icons.search),
                     elevation: WidgetStatePropertyAll(0),
                     padding: const WidgetStatePropertyAll<EdgeInsets>(

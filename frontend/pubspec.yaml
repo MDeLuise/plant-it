@@ -73,3 +73,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/generic-plant.jpg
+  generate: true

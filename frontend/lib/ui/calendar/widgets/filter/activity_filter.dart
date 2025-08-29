@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/event_type_step.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/plant_step.dart';
@@ -27,7 +28,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
             context.pop();
           },
         ),
-        title: const Text('Filter activities'),
+        title: Text(AppLocalizations.of(context)!.filterActivities),
       ),
       body: AppStepper(
         viewModel: widget.viewModel,
