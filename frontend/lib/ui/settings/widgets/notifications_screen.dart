@@ -43,8 +43,8 @@ class NotificationsScreen extends StatelessWidget {
                     enabled: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
                         "true",
-                    onTap: () {
-                      _showWeekdayTimeSelector(context);
+                    onTap: () async {
+                      await _showWeekdayTimeSelector(context);
                     },
                   ),
                   ListTile(
@@ -67,13 +67,15 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 
-  void _showWeekdayTimeSelector(BuildContext context) {
-    showDialog(
+  Future<void> _showWeekdayTimeSelector(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (context) {
         return _WeekdayTimeSelector(viewModel: viewModel);
       },
     );
+
+    await viewModel.load.executeWithFuture();
   }
 
   void _showNextNotificationDateTime(BuildContext context) {
@@ -82,6 +84,7 @@ class NotificationsScreen extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: viewModel.notificationDateTimeDays.map((s) {
                 return Text(s ?? "");
               }).toList(),

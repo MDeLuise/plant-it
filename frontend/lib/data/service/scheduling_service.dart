@@ -8,6 +8,7 @@ import 'package:workmanager/workmanager.dart';
 
 class SchedulingService {
   static const String taskName = "notification_task";
+  static const String tagName = "notification_tag";
   final UserSettingRepository _userSettingRepository;
   final Workmanager _workmanager;
   final _log = Logger('SchedulingService');
@@ -18,7 +19,7 @@ class SchedulingService {
   })  : _userSettingRepository = userSettingRepository,
         _workmanager = workmanager;
 
-  void updateSchedule() async {
+  Future<void> updateSchedule() async {
     List<UserSettingsKeys> dayKeys = [
       UserSettingsKeys.notificationTimeMonday,
       UserSettingsKeys.notificationTimeTuesday,
@@ -51,6 +52,9 @@ class SchedulingService {
       return;
     }
     if (result.getOrThrow().isEmpty) {
+      Workmanager().cancelByUniqueName("${weekDayKey}_$taskName");
+      _userSettingRepository.remove(weekDayKey.key);
+      _userSettingRepository.remove(weekDayKeyDateTime.key);
       return;
     }
 
@@ -60,7 +64,6 @@ class SchedulingService {
     Duration difference = scheduledDateTime.difference(DateTime.now());
 
     if (difference.inSeconds < 0) {
-      //difference += Duration(days: 1);
       difference += Duration(days: 7 - _getDaysUntilNextWeekday(weekDayKey));
     }
 
@@ -69,10 +72,10 @@ class SchedulingService {
     //   difference = Duration(minutes: 15, seconds: 2);
     // }
 
-    //Workmanager().cancelByUniqueName("${weekDayKey}_$taskName");
     Workmanager().registerPeriodicTask(
       "${weekDayKey}_$taskName",
       taskName,
+      tag: tagName,
       frequency: const Duration(hours: 24),
       initialDelay: difference,
       existingWorkPolicy: ExistingWorkPolicy.replace,

@@ -45,9 +45,9 @@ class UserSettingRepository {
     }
   }
 
-  Result<void> remove(String key) {
+  Future<Result<void>> remove(String key) async {
     try {
-      db.delete(db.userSettings).where((s) => s.key.equals(key));
+      await (db.delete(db.userSettings)..where((s) => s.key.equals(key))).go();
       return Success("ok");
     } catch (e) {
       return Failure(Exception(e.toString()));

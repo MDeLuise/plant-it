@@ -87,10 +87,12 @@ class SettingsViewModel extends ChangeNotifier {
   List<Reminder> get reminders => _reminders;
 
   Future<Result<void>> _load() async {
-    Result<List<UserSetting>> loadUserSettings = await _userSettingRepository.getAll();
+    Result<List<UserSetting>> loadUserSettings =
+        await _userSettingRepository.getAll();
     if (loadUserSettings.isError()) {
       return loadUserSettings.exceptionOrNull()!.toFailure();
     }
+    _userSettings.clear();
     for (UserSetting us in loadUserSettings.getOrThrow()) {
       _userSettings.putIfAbsent(us.key, () => us.value);
     }
@@ -140,18 +142,27 @@ class SettingsViewModel extends ChangeNotifier {
     String key = _dayKeys[weekDay];
     String value = (hour * 60 + minute).toString();
     Result<void> result = await _put({key: value});
-    _schedulingService.updateSchedule();
+    await _schedulingService.updateSchedule();
     return result;
   }
 
   Future<Result<void>> _removeAllNotificationTime() async {
     for (String k in _dayKeys) {
-      Result<void> result = _userSettingRepository.remove(k);
+      Result<void> result = await _userSettingRepository.remove(k);
       if (result.isError()) {
         return result.exceptionOrNull()!.toFailure();
       }
     }
     _log.fine('time notification settings removed');
+
+    for (String k in _dayKeysDateTime) {
+      Result<void> result = await _userSettingRepository.remove(k);
+      if (result.isError()) {
+        return result.exceptionOrNull()!.toFailure();
+      }
+    }
+    _log.fine('date time notification settings removed');
+
     notifyListeners();
     return Success("ok");
   }
