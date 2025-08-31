@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
@@ -55,8 +56,8 @@ class LocationStep extends StepSection<EditPlantViewModel> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Location',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.location,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -67,13 +68,13 @@ class LocationStep extends StepSection<EditPlantViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/species/view_models/add_species_viewmodel.dart';
 
@@ -78,7 +79,7 @@ class _AvatarStep extends State<AvatarStep> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Avatar",
+                Text(AppLocalizations.of(context)!.avatar,
                     style: Theme.of(context).textTheme.headlineSmall),
                 SizedBox(height: 20),
                 Row(
@@ -90,7 +91,7 @@ class _AvatarStep extends State<AvatarStep> {
                         widget._avatarOption.value = newValue!;
                       },
                     ),
-                    Text("No avatar"),
+                    Text(AppLocalizations.of(context)!.noAvatar),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -103,7 +104,7 @@ class _AvatarStep extends State<AvatarStep> {
                         widget._avatarOption.value = newValue!;
                       },
                     ),
-                    Text("Upload photo"),
+                    Text(AppLocalizations.of(context)!.uploadPhoto),
                   ],
                 ),
                 if (widget._avatarOption.value == 1)
@@ -111,9 +112,9 @@ class _AvatarStep extends State<AvatarStep> {
                     children: [
                       TextButton(
                           onPressed: _uploadNewPhoto,
-                          child: Text("Choose photo")),
+                          child: Text(AppLocalizations.of(context)!.choosePhoto)),
                       Text(
-                          widget._ongoingAvatarImage.value?.name ?? "no photo"),
+                          widget._ongoingAvatarImage.value?.name ?? AppLocalizations.of(context)!.noPhoto),
                     ],
                   ),
                 SizedBox(height: 10),
@@ -126,7 +127,7 @@ class _AvatarStep extends State<AvatarStep> {
                         widget._avatarOption.value = newValue!;
                       },
                     ),
-                    Text("Use web image"),
+                    Text(AppLocalizations.of(context)!.useWebImage),
                   ],
                 ),
                 if (widget._avatarOption.value == 2)
@@ -135,8 +136,8 @@ class _AvatarStep extends State<AvatarStep> {
                     onChanged: (value) {
                       widget._ongoingAvatarUrl.value = value;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'URL',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.url,
                       border: OutlineInputBorder(),
                     ),
                   ),

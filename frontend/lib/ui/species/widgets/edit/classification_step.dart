@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/species/view_models/edit_species_viewmodel.dart';
 
@@ -83,8 +84,8 @@ class _ClassificationStep extends State<ClassificationStep> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Species',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.species,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -95,13 +96,13 @@ class _ClassificationStep extends State<ClassificationStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );
@@ -124,8 +125,8 @@ class _ClassificationStep extends State<ClassificationStep> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Genus',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.genus,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -136,13 +137,13 @@ class _ClassificationStep extends State<ClassificationStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );
@@ -164,8 +165,8 @@ class _ClassificationStep extends State<ClassificationStep> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Family',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.family,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -176,13 +177,13 @@ class _ClassificationStep extends State<ClassificationStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );
@@ -239,8 +240,8 @@ class _ClassificationStep extends State<ClassificationStep> {
                               Expanded(
                                 child: TextField(
                                   controller: controllers[index],
-                                  decoration: const InputDecoration(
-                                    labelText: 'Synonym',
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!.synonym,
                                     border: OutlineInputBorder(),
                                   ),
                                   maxLines: null,
@@ -264,7 +265,7 @@ class _ClassificationStep extends State<ClassificationStep> {
                     },
                   ),
                   TextButton(
-                    child: const Text("Add synonym"),
+                    child: Text(AppLocalizations.of(context)!.addSynonym),
                     onPressed: () {
                       controllers.add(TextEditingController());
                       setState(() {});
@@ -279,14 +280,14 @@ class _ClassificationStep extends State<ClassificationStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 String addedSynonyms = controllers.map((c) => c.text).join("|");
                 Navigator.of(context).pop(addedSynonyms);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );
@@ -306,7 +307,7 @@ class _ClassificationStep extends State<ClassificationStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Classification",
+          Text(AppLocalizations.of(context)!.classification,
               style: Theme.of(context).textTheme.headlineSmall),
           SizedBox(height: 20),
           AnimatedBuilder(
@@ -321,7 +322,7 @@ class _ClassificationStep extends State<ClassificationStep> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Species"),
+                        Text(AppLocalizations.of(context)!.species),
                         Row(
                           children: [
                             Text(widget._ongoingSpeciesSelection.value),
@@ -348,7 +349,7 @@ class _ClassificationStep extends State<ClassificationStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Genus"),
+                          Text(AppLocalizations.of(context)!.genus),
                           Row(
                             children: [
                               Text(widget._ongoingGenusSelection.value ?? ""),
@@ -374,7 +375,7 @@ class _ClassificationStep extends State<ClassificationStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Family"),
+                          Text(AppLocalizations.of(context)!.family),
                           Row(
                             children: [
                               Text(widget._ongoingFamilySelection.value ?? ""),
@@ -400,7 +401,7 @@ class _ClassificationStep extends State<ClassificationStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Synonyms"),
+                          Text(AppLocalizations.of(context)!.synonyms),
                           Row(
                             children: [
                               Text(getSynonyms()),

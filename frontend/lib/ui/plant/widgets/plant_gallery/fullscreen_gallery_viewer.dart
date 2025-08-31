@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:plant_it/database/database.dart' as db_image;
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:result_dart/result_dart.dart';
 
@@ -44,15 +45,15 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Delete Image"),
-        content: const Text("Are you sure you want to delete this image?"),
+        title: Text(AppLocalizations.of(context)!.deleteImage),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisImage),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text("Cancel")),
+              child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text("Delete")),
+              child: Text(AppLocalizations.of(context)!.delete)),
         ],
       ),
     );
@@ -93,14 +94,14 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
         children: [
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text("Info"),
+            title: Text(AppLocalizations.of(context)!.info),
             onTap: () {
               Navigator.pop(context);
               final image = _currentImage;
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: const Text("Image Info"),
+                  title: Text(AppLocalizations.of(context)!.imageInfo),
                   content: Text(
                     "ID: ${image.id}\n"
                     "Path: ${image.imagePath ?? '-'}\n"
@@ -111,7 +112,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
                   actions: [
                     TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text("OK"))
+                        child: Text(AppLocalizations.of(context)!.ok))
                   ],
                 ),
               );
@@ -119,7 +120,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
           ),
           ListTile(
             leading: const Icon(Icons.download),
-            title: const Text("Download"),
+            title: Text(AppLocalizations.of(context)!.download),
             onTap: () {
               Navigator.pop(context);
               _downloadImage();
@@ -127,7 +128,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
           ),
           ListTile(
             leading: const Icon(Icons.delete),
-            title: const Text("Delete"),
+            title: Text(AppLocalizations.of(context)!.delete),
             onTap: () async {
               Navigator.pop(context);
               await _deleteImage();
@@ -138,7 +139,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
                 ? const Icon(Icons.star_outline)
                 : const Icon(Icons.star),
             title: Text(
-                _currentImage.isAvatar ? "Unset as Avatar" : "Set as Avatar"),
+                _currentImage.isAvatar ? AppLocalizations.of(context)!.unsetAsAvatar : AppLocalizations.of(context)!.setAsAvatar),
             onTap: () async {
               await _toggleAvatar();
               setState(() {});

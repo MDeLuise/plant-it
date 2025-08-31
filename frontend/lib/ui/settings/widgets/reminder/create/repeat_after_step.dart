@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 
@@ -65,8 +66,8 @@ class RepeatAfterStep extends StepSection<AddReminderViewModel> {
               TextField(
                 controller: controller,
                 keyboardType: TextInputType.numberWithOptions(),
-                decoration: const InputDecoration(
-                  labelText: 'Quantity',
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.quantity,
                   border: OutlineInputBorder(),
                 ),
                 maxLines: null,
@@ -104,13 +105,13 @@ class RepeatAfterStep extends StepSection<AddReminderViewModel> {
                 _ongoingFrequencyUnit.value = currentFrequencyUnit;
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );

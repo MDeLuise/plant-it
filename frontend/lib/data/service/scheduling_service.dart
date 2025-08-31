@@ -19,7 +19,7 @@ class SchedulingService {
         _workmanager = workmanager;
 
   void updateSchedule() async {
-    final List<UserSettingsKeys> dayKeys = [
+    List<UserSettingsKeys> dayKeys = [
       UserSettingsKeys.notificationTimeMonday,
       UserSettingsKeys.notificationTimeTuesday,
       UserSettingsKeys.notificationTimeWednesday,
@@ -28,13 +28,23 @@ class SchedulingService {
       UserSettingsKeys.notificationTimeSaturday,
       UserSettingsKeys.notificationTimeSunday,
     ];
+    List<UserSettingsKeys> dayKeysDateTime = [
+      UserSettingsKeys.notificationDateTimeMonday,
+      UserSettingsKeys.notificationDateTimeTuesday,
+      UserSettingsKeys.notificationDateTimeWednesday,
+      UserSettingsKeys.notificationDateTimeThursday,
+      UserSettingsKeys.notificationDateTimeFriday,
+      UserSettingsKeys.notificationDateTimeSaturday,
+      UserSettingsKeys.notificationDateTimeSunday,
+    ];
 
-    for (UserSettingsKeys dayKey in dayKeys) {
-      await _updateScheduleFor(dayKey);
+    for (int i = 0; i < dayKeys.length; i++) {
+      await _updateScheduleFor(dayKeys[i], dayKeysDateTime[i]);
     }
   }
 
-  Future<void> _updateScheduleFor(UserSettingsKeys weekDayKey) async {
+  Future<void> _updateScheduleFor(
+      UserSettingsKeys weekDayKey, UserSettingsKeys weekDayKeyDateTime) async {
     Result<String> result =
         await _userSettingRepository.getOrDefault(weekDayKey.key, "");
     if (result.isError()) {
@@ -50,7 +60,8 @@ class SchedulingService {
     Duration difference = scheduledDateTime.difference(DateTime.now());
 
     if (difference.inSeconds < 0) {
-      difference += Duration(days: 1);
+      //difference += Duration(days: 1);
+      difference += Duration(days: 7 - _getDaysUntilNextWeekday(weekDayKey));
     }
 
     // Ensure the minimum delay is 15 minutes
@@ -65,6 +76,11 @@ class SchedulingService {
       frequency: const Duration(hours: 24),
       initialDelay: difference,
       existingWorkPolicy: ExistingWorkPolicy.replace,
+    );
+
+    _userSettingRepository.put(
+      weekDayKeyDateTime.key,
+      DateTime.now().add(difference).toString(),
     );
     _log.info(
         "Registered notification task for ${weekDayKey.key} with initial delay ${difference.inSeconds} seconds");

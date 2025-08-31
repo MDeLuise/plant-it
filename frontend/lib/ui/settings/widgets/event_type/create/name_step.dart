@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 
@@ -45,8 +46,7 @@ class _EventTypeNameStepState extends State<EventTypeNameStep> {
           controller: _nameController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: "Insert a name",
-            //hint: Center(child: Text("Insert a name")),
+            hintText: AppLocalizations.of(context)!.insertAName,
           ),
           onChanged: (value) {
             widget.name.value = value;

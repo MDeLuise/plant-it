@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
@@ -50,8 +51,8 @@ class PriceStep extends StepSection<EditPlantViewModel> {
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Price',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.price,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -62,13 +63,13 @@ class PriceStep extends StepSection<EditPlantViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );

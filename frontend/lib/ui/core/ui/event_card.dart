@@ -3,6 +3,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/utils/common.dart';
@@ -54,25 +55,25 @@ class EventCard extends StatelessWidget {
             }
           },
           itemBuilder: (BuildContext context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'edit',
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(LucideIcons.pencil),
                   SizedBox(width: 10),
-                  Text('Edit'),
+                  Text(AppLocalizations.of(context)!.edit),
                 ],
               ),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'delete',
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(LucideIcons.trash),
                   SizedBox(width: 10),
-                  Text('Delete'),
+                  Text(AppLocalizations.of(context)!.delete),
                 ],
               ),
             ),

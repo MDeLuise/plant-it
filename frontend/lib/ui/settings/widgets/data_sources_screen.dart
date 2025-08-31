@@ -3,26 +3,32 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DataSourcesScreen extends StatelessWidget {
   final SettingsViewModel viewModel;
-  const DataSourcesScreen({super.key, required this.viewModel,});
+  const DataSourcesScreen({
+    super.key,
+    required this.viewModel,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Data sources')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.dataSources)),
       body: SafeArea(
           child: Column(
         children: [
           GestureDetector(
-            onTap: () => context.push(Routes.settingsFloraCodex, extra: viewModel),
+            onTap: () =>
+                context.push(Routes.settingsFloraCodex, extra: viewModel),
             child: ListTile(
-              title: Text("Flora Codex"),
-              subtitle: Text("Configure the Flora Codex settings"),
+              title: Text(AppLocalizations.of(context)!.floraCodex),
+              subtitle: Text(
+                  AppLocalizations.of(context)!.configureTheFloraCodexSettings),
             ),
           ),
         ],
@@ -41,7 +47,8 @@ class FloraCodexScreen extends StatelessWidget {
     required this.viewModel,
   });
 
-  Future<String?> _showApiKeyDialog(BuildContext context, String? initialValue) async {
+  Future<String?> _showApiKeyDialog(
+      BuildContext context, String? initialValue) async {
     TextEditingController controller =
         TextEditingController(text: initialValue);
 
@@ -49,17 +56,18 @@ class FloraCodexScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Insert the Flora Codex API Key"),
+          title: Text(AppLocalizations.of(context)!.insertTheFloraCodexApiKey),
           content: TextField(
             controller: controller,
-            decoration: InputDecoration(hintText: "Enter API Key"),
+            decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.enterApiKey),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -71,7 +79,7 @@ class FloraCodexScreen extends StatelessWidget {
                 }
                 Navigator.of(context).pop();
               },
-              child: Text("Confirm"),
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
           ],
         );
@@ -82,7 +90,7 @@ class FloraCodexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flora Codex')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.floraCodex)),
       body: SafeArea(
           child: ValueListenableBuilder(
               valueListenable: viewModel.save.results,
@@ -97,7 +105,8 @@ class FloraCodexScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SwitchListTile(
-                        title: const Text('Enable Data Source'),
+                        title: Text(
+                            AppLocalizations.of(context)!.enableDataSource),
                         value: useFloraCodex,
                         onChanged: (bool value) {
                           viewModel.save.execute({
@@ -107,9 +116,9 @@ class FloraCodexScreen extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        title: const Text('API Key'),
+                        title: Text(AppLocalizations.of(context)!.apiKey),
                         subtitle: (apiKey ?? "").isEmpty
-                            ? Text("not provided")
+                            ? Text(AppLocalizations.of(context)!.notProvided)
                             : Text(
                                 "${apiKey!.substring(0, min(5, apiKey.length))}..."),
                         trailing: const Icon(Icons.arrow_forward),

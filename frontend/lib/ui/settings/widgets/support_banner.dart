@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportBanner extends StatefulWidget {
@@ -80,7 +81,7 @@ class _SupportBannerState extends State<SupportBanner>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Your support helps us grow!",
+                      AppLocalizations.of(context)!.yourSupportHelpsUsGrow,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -88,7 +89,7 @@ class _SupportBannerState extends State<SupportBanner>
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Support the project",
+                      AppLocalizations.of(context)!.supportTheProject,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -182,7 +183,7 @@ class _DonationPageState extends State<_DonationPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Why Support Plant-it?",
+                            AppLocalizations.of(context)!.whySupportPlantIt,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -196,7 +197,8 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  "Open-source project that benefits everyone.",
+                                  AppLocalizations.of(context)!
+                                      .openSourceProjectThatBenefitsEveryone,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -212,7 +214,8 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  "Your donations help us improve the app.",
+                                  AppLocalizations.of(context)!
+                                      .yourDonationsHelpUsImproveTheApp,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -228,7 +231,8 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  "Support new features and updates.",
+                                  AppLocalizations.of(context)!
+                                      .supportNewFeaturesAndUpdates,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -247,13 +251,6 @@ class _DonationPageState extends State<_DonationPage>
                                 throw Exception('Could not launch $url');
                               }
                             },
-                            child: Text(
-                              "Donate Now",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             style: ElevatedButton.styleFrom(
                               //primary: Colors.white,
                               //onPrimary: Colors.blue,
@@ -261,6 +258,13 @@ class _DonationPageState extends State<_DonationPage>
                                   horizontal: 24, vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.donateNow,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),

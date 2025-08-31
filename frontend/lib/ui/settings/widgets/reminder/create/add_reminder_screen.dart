@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/create/end_step.dart';
@@ -25,12 +26,12 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create reminder"),
+        title: Text(AppLocalizations.of(context)!.createReminder),
       ),
       body: AppStepper<AddReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: "Create",
+        actionText: AppLocalizations.of(context)!.create,
         steps: [
           EventTypeStep(viewModel: widget.viewModel),
           PlantStep(viewModel: widget.viewModel),
@@ -42,7 +43,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
         stepsInFocus: 2,
         actionCommand: widget.viewModel.insert,
         summary: true,
-        successText: "Reminder created",
+        successText: AppLocalizations.of(context)!.reminderCreated,
       ),
     );
   }

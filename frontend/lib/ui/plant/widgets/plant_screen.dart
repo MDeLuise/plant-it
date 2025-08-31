@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -52,7 +53,7 @@ class _PlantScreenState extends State<PlantScreen> {
           if (command.hasError) {
             return ErrorIndicator(
               title: "Error : ${command.error}",
-              label: "Try again",
+              label: AppLocalizations.of(context)!.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -117,7 +118,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Info
                           Text(
-                            'Information',
+                            AppLocalizations.of(context)!.information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -159,7 +160,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Care
                           Text(
-                            'Care',
+                            AppLocalizations.of(context)!.care,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -175,7 +176,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                'Reminders',
+                                AppLocalizations.of(context)!.reminders,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
@@ -196,7 +197,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Events
                           Text(
-                            'Events',
+                            AppLocalizations.of(context)!.events,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -209,7 +210,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Gallery
                           Text(
-                            'Gallery',
+                            AppLocalizations.of(context)!.gallery,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -260,7 +261,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Edit'),
+                              title: Text(AppLocalizations.of(context)!.edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -272,7 +273,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Duplicate'),
+                              title: Text(AppLocalizations.of(context)!.duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -284,7 +285,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Remove'),
+                              title: Text(AppLocalizations.of(context)!.remove),
                             ),
                           ),
                         ],
@@ -307,7 +308,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.insertPlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Plant duplicated"),
+                                content: Text(AppLocalizations.of(context)!.plantDuplicated),
                               ),
                             );
                           }
@@ -326,7 +327,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.deletePlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Plant deleted"),
+                                content: Text(AppLocalizations.of(context)!.plantDeleted),
                               ),
                             );
                             context.pop();

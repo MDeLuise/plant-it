@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/ui/core/ui/stepper.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/widgets/create/location_step.dart';
@@ -35,12 +35,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: const Text('Add Plant'),
+        title: Text(AppLocalizations.of(context)!.addPlant),
       ),
       body: Summary<AddPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: "Add",
+          actionText: AppLocalizations.of(context)!.add,
           actionCommand: Command.createAsyncNoParam(() async {
             Command<void, int> command = widget.viewModel.insert;
             await command.executeWithFuture();
@@ -49,7 +49,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             }
             widget.streamController.add(StreamCode.insertPlant);
           }, initialValue: null),
-          successText: "Plant added",
+          successText: AppLocalizations.of(context)!.plantAdded,
           isPrimary: false,
           sections: [
             NameStep(viewModel: widget.viewModel),

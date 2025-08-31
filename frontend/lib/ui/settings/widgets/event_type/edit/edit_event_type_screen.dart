@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/edit/color_step.dart';
@@ -23,12 +24,12 @@ class _EditEventTypeScreenState extends State<EditEventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Event Type"),
+        title: Text(AppLocalizations.of(context)!.editEventType),
       ),
       body: Summary<EditEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: "Update",
+        actionText: AppLocalizations.of(context)!.update,
         sections: [
           EventTypeNameStep(viewModel: widget.viewModel),
           IconStep(viewModel: widget.viewModel),
@@ -36,7 +37,7 @@ class _EditEventTypeScreenState extends State<EditEventTypeScreen> {
           DescriptionStep(viewModel: widget.viewModel),
         ],
         actionCommand: widget.viewModel.update,
-        successText: "Event type updated",
+        successText: AppLocalizations.of(context)!.eventTypeUpdated,
         isPrimary: false,
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Notifications')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.notifications)),
       body: SafeArea(
         child: ValueListenableBuilder(
           valueListenable: viewModel.save.results,
@@ -23,7 +24,8 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: const Text('Enable Notifications'),
+                    title:
+                        Text(AppLocalizations.of(context)!.enableNotifications),
                     value: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
                         "true",
@@ -35,13 +37,25 @@ class NotificationsScreen extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    title: const Text('Select Weekdays and Times'),
+                    title: Text(
+                        AppLocalizations.of(context)!.selectWeekdaysAndTimes),
                     trailing: const Icon(Icons.arrow_forward),
                     enabled: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
                         "true",
                     onTap: () {
                       _showWeekdayTimeSelector(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text(AppLocalizations.of(context)!
+                        .showNextNotificationsDateTime),
+                    trailing: const Icon(Icons.arrow_forward),
+                    enabled: viewModel
+                            .get(UserSettingsKeys.notificationEnabled.key) ==
+                        "true",
+                    onTap: () {
+                      _showNextNotificationDateTime(context);
                     },
                   ),
                 ],
@@ -60,6 +74,28 @@ class NotificationsScreen extends StatelessWidget {
         return _WeekdayTimeSelector(viewModel: viewModel);
       },
     );
+  }
+
+  void _showNextNotificationDateTime(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              children: viewModel.notificationDateTimeDays.map((s) {
+                return Text(s ?? "");
+              }).toList(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.ok),
+              ),
+            ],
+          );
+        });
   }
 }
 
@@ -99,7 +135,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select Weekdays and Time'),
+      title: Text(AppLocalizations.of(context)!.selectWeekdaysAndTimes),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -128,7 +164,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
                             ? () => _selectTime(index)
                             : null,
                         child: Text(selectedTimes[index]?.format(context) ??
-                            'Pick Time'),
+                            AppLocalizations.of(context)!.pickTime),
                       ),
                     ],
                   ),
@@ -143,7 +179,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
           onPressed: () {
             context.pop();
           },
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           onPressed: () async {
@@ -161,7 +197,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
             }
             context.pop();
           },
-          child: const Text('Done'),
+          child: Text(AppLocalizations.of(context)!.done),
         ),
       ],
     );

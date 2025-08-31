@@ -4,6 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
@@ -28,13 +29,13 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text(
-            'Are you sure you want to delete the event type and all linked events?'),
+        title: Text(AppLocalizations.of(context)!.confirmDelete),
+        content: Text(
+          AppLocalizations.of(context)!.areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -51,12 +52,12 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Event type deleted"),
+                  content: Text(AppLocalizations.of(context)!.eventTypeDeleted),
                 ),
               );
               context.pop();
             },
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -67,7 +68,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Types'),
+        title: Text(AppLocalizations.of(context)!.eventTypes),
         actions: [
           IconButton(
             onPressed: () => context.push(Routes.eventType),
@@ -86,7 +87,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                 return ErrorIndicator(
                   title:
                       "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-                  label: "Try again", //AppLocalization.of(context).tryAgain,
+                  label: AppLocalizations.of(context)!.tryAgain,
                   onPressed: widget.viewModel.load.execute,
                 );
               }
@@ -109,25 +110,25 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                             }
                           },
                           itemBuilder: (BuildContext context) => [
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'edit',
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(LucideIcons.pencil),
                                   SizedBox(width: 10),
-                                  Text('Edit'),
+                                  Text(AppLocalizations.of(context)!.edit),
                                 ],
                               ),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'delete',
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(LucideIcons.trash),
                                   SizedBox(width: 10),
-                                  Text('Delete'),
+                                  Text(AppLocalizations.of(context)!.delete),
                                 ],
                               ),
                             ),

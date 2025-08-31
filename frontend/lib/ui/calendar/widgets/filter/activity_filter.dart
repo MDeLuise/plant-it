@@ -33,7 +33,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
       body: AppStepper(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: "Filter",
+        actionText: AppLocalizations.of(context)!.filter,
         actionCommand: widget.viewModel.filter,
         stepsInFocus: 0,
         steps: [

@@ -1,5 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/color_step.dart';
@@ -24,12 +25,12 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create event type"),
+        title: Text(AppLocalizations.of(context)!.createEventType),
       ),
       body: AppStepper<AddEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: Command.createAsyncNoParamNoResult(() => Future.value()),
-        actionText: "Create",
+        actionText: AppLocalizations.of(context)!.create,
         steps: [
           EventTypeNameStep(viewModel: widget.viewModel),
           IconStep(viewModel: widget.viewModel),
@@ -38,7 +39,7 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
         ],
         stepsInFocus: 3,
         actionCommand: widget.viewModel.insert,
-        successText: "Event created",
+        successText: AppLocalizations.of(context)!.eventCreated,
       ),
     );
   }

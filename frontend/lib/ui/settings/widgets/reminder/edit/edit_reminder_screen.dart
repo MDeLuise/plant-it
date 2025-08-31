@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/edit/end_step.dart';
@@ -25,12 +26,12 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Reminder"),
+        title: Text(AppLocalizations.of(context)!.editReminder),
       ),
       body: Summary<EditReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: "Update",
+        actionText: AppLocalizations.of(context)!.update,
         sections: [
           EventTypeStep(viewModel: widget.viewModel),
           PlantStep(viewModel: widget.viewModel),
@@ -40,7 +41,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
           EndStep(viewModel: widget.viewModel),
         ],
         actionCommand: widget.viewModel.update,
-        successText: "Reminder updated",
+        successText: AppLocalizations.of(context)!.reminderUpdated,
         isPrimary: false,
       ),
     );

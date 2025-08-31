@@ -7,8 +7,10 @@ import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
+import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/reminder_occurrence_service.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:result_dart/result_dart.dart';
 
 class NotificationService {
@@ -60,14 +62,17 @@ class NotificationService {
   late final ReminderOccurrenceService _reminderOccurrenceService;
   late final EventTypeRepository _eventTypeRepository;
   late final PlantRepository _plantRepository;
+  late final UserSettingRepository _userSettingRepository;
 
   NotificationService({
     required ReminderOccurrenceService reminderOccurrenceService,
     required EventTypeRepository eventTypeRepository,
     required PlantRepository plantRepository,
+    required UserSettingRepository userSettingRepository,
   })  : _reminderOccurrenceService = reminderOccurrenceService,
         _eventTypeRepository = eventTypeRepository,
-        _plantRepository = plantRepository;
+        _plantRepository = plantRepository,
+        _userSettingRepository = userSettingRepository;
 
   /// To use only in callbackDispatcher
   NotificationService.noParam() {
@@ -139,5 +144,24 @@ class NotificationService {
         body, NotificationDetails(android: notificationDetails));
 
     await _reminderOccurrenceService.updateLastNotified(reminder);
+
+    await _updatedNextNotificationTimeInDB();
+  }
+
+  Future<void> _updatedNextNotificationTimeInDB() async {
+    List<UserSettingsKeys> dayKeysDateTime = [
+      UserSettingsKeys.notificationDateTimeMonday,
+      UserSettingsKeys.notificationDateTimeTuesday,
+      UserSettingsKeys.notificationDateTimeWednesday,
+      UserSettingsKeys.notificationDateTimeThursday,
+      UserSettingsKeys.notificationDateTimeFriday,
+      UserSettingsKeys.notificationDateTimeSaturday,
+      UserSettingsKeys.notificationDateTimeSunday,
+    ];
+
+    DateTime now = DateTime.now();
+    String keyToSave = dayKeysDateTime[now.weekday - 1].key;
+    String valueToSave = DateTime.now().add(Duration(days: 1)).toString();
+    await _userSettingRepository.put(keyToSave, valueToSave);
   }
 }

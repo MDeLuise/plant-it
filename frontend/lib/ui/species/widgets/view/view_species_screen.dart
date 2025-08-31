@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
@@ -36,7 +37,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
             return ErrorIndicator(
               title:
                   "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-              label: "Try again", //AppLocalization.of(context).tryAgain,
+              label: AppLocalizations.of(context)!.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -69,8 +70,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             label: Text(
                               widget.viewModel.source ==
                                       SpeciesDataSource.custom
-                                  ? "custom"
-                                  : "flora codex",
+                                  ? AppLocalizations.of(context)!.custom
+                                  : AppLocalizations.of(context)!.floraCodex,
                             ),
                           ),
                           Text(widget.viewModel.species,
@@ -90,7 +91,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 foregroundColor: WidgetStateProperty.all(
                                     Theme.of(context).colorScheme.onPrimary),
                               ),
-                              child: Text("Add to collection"),
+                              child: Text(AppLocalizations.of(context)!.addToCollection),
                             ),
                           ),
 
@@ -98,7 +99,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
                           // Info
                           Text(
-                            'Information',
+                            AppLocalizations.of(context)!.information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -193,7 +194,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Edit'),
+                              title: Text(AppLocalizations.of(context)!.edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -205,7 +206,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Duplicate'),
+                              title: Text(AppLocalizations.of(context)!.duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -218,7 +219,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text('Remove'),
+                              title: Text(AppLocalizations.of(context)!.remove),
                             ),
                           ),
                         ],

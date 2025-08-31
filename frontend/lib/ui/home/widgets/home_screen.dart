@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return ErrorIndicator(
               title:
                   "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-              label: "Try again", //AppLocalization.of(context).tryAgain,
+              label: AppLocalizations.of(context)!.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Next actions",
+                        AppLocalizations.of(context)!.nextActions,
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall!

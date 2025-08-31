@@ -1,6 +1,7 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/species/view_models/add_species_viewmodel.dart';
 import 'package:plant_it/ui/species/widgets/create/avatar_step.dart';
@@ -29,14 +30,14 @@ class _AddSpeciesScreenState extends State<AddSpeciesScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: const Text('Create Species'),
+        title: Text(AppLocalizations.of(context)!.createSpecies),
       ),
       body: AppStepper<AddSpeciesViewModel>(
           viewModel: widget.viewModel,
           mainCommand: Command.createAsyncNoParamNoResult(() => Future.value()),
-          actionText: "Create",
+          actionText: AppLocalizations.of(context)!.create,
           actionCommand: widget.viewModel.insert,
-          successText: "Species created",
+          successText: AppLocalizations.of(context)!.speciesCreated,
           summary: true,
           stepsInFocus: 2,
           steps: [

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_screen.dart';
@@ -81,12 +82,12 @@ class _AppMainViewState extends State<AppMainView> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.home), label: AppLocalizations.of(context)!.home),
           NavigationDestination(
-              icon: Icon(Icons.calendar_month), label: 'Calendar'),
-          NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
+              icon: Icon(Icons.calendar_month), label: AppLocalizations.of(context)!.calendar),
+          NavigationDestination(icon: Icon(Icons.search), label: AppLocalizations.of(context)!.search),
+          NavigationDestination(icon: Icon(Icons.more_horiz), label: AppLocalizations.of(context)!.more),
         ],
       ),
     );

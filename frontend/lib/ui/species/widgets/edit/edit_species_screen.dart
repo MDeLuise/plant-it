@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/species/view_models/edit_species_viewmodel.dart';
 import 'package:plant_it/ui/species/widgets/edit/avatar_step.dart';
@@ -28,14 +29,14 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: const Text('Edit Species'),
+        title: Text(AppLocalizations.of(context)!.editSpecies),
       ),
       body: Summary<EditSpeciesViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: "Update",
+          actionText: AppLocalizations.of(context)!.update,
           actionCommand: widget.viewModel.update,
-          successText: "Species updated",
+          successText: AppLocalizations.of(context)!.speciesUpdated,
           isPrimary: false,
           sections: [
             ClassificationStep(viewModel: widget.viewModel),

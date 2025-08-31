@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
@@ -62,8 +63,8 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Note',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.note,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -74,13 +75,13 @@ class NoteSection extends StepSection<EditEventFormViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: const Text("Save"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         );

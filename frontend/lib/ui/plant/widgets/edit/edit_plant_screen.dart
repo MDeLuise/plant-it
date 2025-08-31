@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/widgets/edit/location_step.dart';
@@ -34,7 +35,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: const Text('Edit Plant'),
+        title: Text(AppLocalizations.of(context)!.editPlant),
       ),
       body: AppStepper<EditPlantViewModel>(
           viewModel: widget.viewModel,
@@ -48,7 +49,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
             }
             widget.streamController.add(StreamCode.editPlant);
           }, initialValue: null),
-          successText: "Plant updated",
+          successText: AppLocalizations.of(context)!.plantUpdated,
           summary: true,
           stepsInFocus: 0,
           steps: [

@@ -81,6 +81,7 @@ List<SingleChildWidget> get providersLocal {
         reminderOccurrenceService: context.read(),
         eventTypeRepository: context.read(),
         plantRepository: context.read(),
+        userSettingRepository: context.read(),
       ),
     ),
     Provider(

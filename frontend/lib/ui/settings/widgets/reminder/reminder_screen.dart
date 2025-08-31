@@ -4,6 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
@@ -28,12 +29,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text('Are you sure you want to delete the reminder?'),
+        title: Text(AppLocalizations.of(context)!.confirmDelete),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteTheReminder),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -50,12 +51,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Reminder deleted"),
+                  content: Text(AppLocalizations.of(context)!.reminderDeleted),
                 ),
               );
               context.pop();
             },
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -66,7 +67,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reminders'),
+        title: Text(AppLocalizations.of(context)!.reminders),
         actions: [
           // TODO
           // IconButton(
@@ -90,7 +91,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 return ErrorIndicator(
                   title:
                       "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-                  label: "Try again", //AppLocalization.of(context).tryAgain,
+                  label: AppLocalizations.of(context)!.tryAgain,
                   onPressed: widget.viewModel.load.execute,
                 );
               }
@@ -118,25 +119,25 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             }
                           },
                           itemBuilder: (BuildContext context) => [
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'edit',
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(LucideIcons.pencil),
                                   SizedBox(width: 10),
-                                  Text('Edit'),
+                                  Text(AppLocalizations.of(context)!.edit),
                                 ],
                               ),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'delete',
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(LucideIcons.trash),
                                   SizedBox(width: 10),
-                                  Text('Delete'),
+                                  Text(AppLocalizations.of(context)!.delete),
                                 ],
                               ),
                             ),

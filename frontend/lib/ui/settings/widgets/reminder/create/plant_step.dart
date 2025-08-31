@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 
@@ -45,7 +46,7 @@ class _PlantStepState extends State<PlantStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Which plant you want to set?",
+          AppLocalizations.of(context)!.whichPlantsYouWantToSet,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),

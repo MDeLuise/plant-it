@@ -1,5 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/edit/date_section.dart';
@@ -39,7 +40,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
         body: Summary<EditEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: _mainCommand,
-          actionText: "Update",
+          actionText: AppLocalizations.of(context)!.update,
           sections: [
             EventTypeSection(viewModel: widget.viewModel),
             PlantSection(viewModel: widget.viewModel),
@@ -47,8 +48,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
             NoteSection(viewModel: widget.viewModel),
           ],
           actionCommand:  widget.viewModel.update,
-          mainText: "Edit the event",
-          successText: "Event updated",
+          mainText: AppLocalizations.of(context)!.editTheEvent,
+          successText: AppLocalizations.of(context)!.eventUpdated,
           isPrimary: false,
         ));
   }

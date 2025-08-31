@@ -2,6 +2,7 @@ import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
@@ -29,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
               return ErrorIndicator(
                 title:
                     "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-                label: "Try again", //AppLocalization.of(context).tryAgain,
+                label: AppLocalizations.of(context)!.tryAgain,
                 onPressed: viewModel.load.execute,
               );
             }
@@ -44,24 +45,24 @@ class SettingsScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () => context.push(Routes.eventTypes),
                       child: ListTile(
-                        title: Text("Event Types"),
-                        subtitle: Text("Manage the event types"),
+                        title: Text(AppLocalizations.of(context)!.eventTypes),
+                        subtitle: Text(AppLocalizations.of(context)!.manageTheEventTypes),
                         leading: Icon(LucideIcons.glass_water),
                       ),
                     ),
                     GestureDetector(
                       onTap: () => context.push(Routes.reminders),
                       child: ListTile(
-                        title: Text("Reminders"),
-                        subtitle: Text("Manage the reminders"),
+                        title: Text(AppLocalizations.of(context)!.reminders),
+                        subtitle: Text(AppLocalizations.of(context)!.manageTheReminders),
                         leading: Icon(LucideIcons.clock),
                       ),
                     ),
                     GestureDetector(
                       onTap: () => context.push(Routes.settingsDataSources, extra: viewModel),
                       child: ListTile(
-                        title: Text("Data Sources"),
-                        subtitle: Text("Manage the data sources"),
+                        title: Text(AppLocalizations.of(context)!.dataSources),
+                        subtitle: Text(AppLocalizations.of(context)!.manageTheDataSources),
                         leading: Icon(LucideIcons.text_search),
                       ),
                     ),
@@ -69,9 +70,9 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () => context.push(Routes.settingsNotifications,
                           extra: viewModel),
                       child: ListTile(
-                        title: Text("Notification"),
+                        title: Text(AppLocalizations.of(context)!.notifications),
                         subtitle: Text(
-                            "Configure when and if notifications are received"),
+                          AppLocalizations.of(context)!.configureWhenAndIfNotificationsAreReceived),
                         leading: Icon(LucideIcons.bell),
                       ),
                     ),
@@ -83,8 +84,8 @@ class SettingsScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () => context.push(Routes.settingsInfo),
                       child: ListTile(
-                        title: Text("About Plant-it"),
-                        subtitle: Text("Details about the app"),
+                        title: Text(AppLocalizations.of(context)!.aboutPlantIt),
+                        subtitle: Text(AppLocalizations.of(context)!.detailsAboutTheApp),
                         leading: Icon(LucideIcons.info),
                       ),
                     ),

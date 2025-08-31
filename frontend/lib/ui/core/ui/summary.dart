@@ -2,6 +2,7 @@ import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 
@@ -60,7 +61,7 @@ class _Stepper<T> extends State<Summary<T>> {
             return ErrorIndicator(
               title:
                   "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
-              label: "Try again", //AppLocalization.of(context).tryAgain,
+              label: AppLocalizations.of(context)!.tryAgain,
               onPressed: widget.mainCommand.execute,
             );
           }
@@ -95,7 +96,7 @@ class _Stepper<T> extends State<Summary<T>> {
                                     EdgeInsetsGeometry.symmetric(
                                         vertical: 15, horizontal: 40)),
                               ),
-                              child: Text("Cancel"),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                           ),
                           SizedBox(width: 10),
@@ -123,7 +124,7 @@ class _Stepper<T> extends State<Summary<T>> {
                                             )
                                           : null,
                                       child: Text(
-                                        "Confirm",
+                                        AppLocalizations.of(context)!.confirm,
                                         style: valid
                                             ? TextStyle(
                                                 color: Theme.of(context)
@@ -210,7 +211,7 @@ class _Stepper<T> extends State<Summary<T>> {
                                       EdgeInsetsGeometry.symmetric(
                                           vertical: 15, horizontal: 40)),
                                 ),
-                                child: Text("Cancel"),
+                                child: Text(AppLocalizations.of(context)!.cancel),
                               ),
                             ),
                             SizedBox(width: 10),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/create/date_step.dart';
@@ -27,14 +28,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: const Text('Create Event'),
+        title: Text(AppLocalizations.of(context)!.createEvent),
       ),
       body: AppStepper<CreateEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: "Create",
+          actionText: AppLocalizations.of(context)!.create,
           actionCommand: widget.viewModel.insert,
-          successText: "Events created",
+          successText: AppLocalizations.of(context)!.eventsCreated,
           summary: true,
           stepsInFocus: 2,
           steps: [

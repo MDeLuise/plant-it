@@ -73,12 +73,21 @@ class SettingsViewModel extends ChangeNotifier {
     UserSettingsKeys.notificationTimeSaturday.key,
     UserSettingsKeys.notificationTimeSunday.key,
   ];
+  final List<String> _dayKeysDateTime = [
+    UserSettingsKeys.notificationDateTimeMonday.key,
+    UserSettingsKeys.notificationDateTimeTuesday.key,
+    UserSettingsKeys.notificationDateTimeWednesday.key,
+    UserSettingsKeys.notificationDateTimeThursday.key,
+    UserSettingsKeys.notificationDateTimeFriday.key,
+    UserSettingsKeys.notificationDateTimeSaturday.key,
+    UserSettingsKeys.notificationDateTimeSunday.key,
+  ];
   List<Reminder> _reminders = [];
 
   List<Reminder> get reminders => _reminders;
 
   Future<Result<void>> _load() async {
-    final loadUserSettings = await _userSettingRepository.getAll();
+    Result<List<UserSetting>> loadUserSettings = await _userSettingRepository.getAll();
     if (loadUserSettings.isError()) {
       return loadUserSettings.exceptionOrNull()!.toFailure();
     }
@@ -157,6 +166,15 @@ class SettingsViewModel extends ChangeNotifier {
         return null;
       }
       return _convertMinutesToTimeOfDay(int.parse(_userSettings[dk]!));
+    }).toList();
+  }
+
+  List<String?> get notificationDateTimeDays {
+    return _dayKeysDateTime.map((dk) {
+      if (!_userSettings.containsKey(dk)) {
+        return null;
+      }
+      return _userSettings[dk];
     }).toList();
   }
 

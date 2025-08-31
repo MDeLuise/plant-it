@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
@@ -63,13 +64,13 @@ class _IconStepState extends State<IconStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Which icon you want to use?",
+          AppLocalizations.of(context)!.whichIconYouWantToUse,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),
         SearchBar(
           controller: _filterController,
-          hintText: "Filter icons",
+          hintText: AppLocalizations.of(context)!.filterIcons,
           leading: const Icon(Icons.search),
           elevation: WidgetStatePropertyAll(0),
           padding: const WidgetStatePropertyAll<EdgeInsets>(
