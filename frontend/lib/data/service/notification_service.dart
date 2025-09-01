@@ -112,6 +112,7 @@ class NotificationService {
     for (Reminder r in reminders.getOrThrow()) {
       await _notifyReminder(r);
     }
+    await _updatedNextNotificationTimeInDB();
   }
 
   Future<void> _notifyReminder(Reminder reminder) async {
@@ -144,8 +145,6 @@ class NotificationService {
         body, NotificationDetails(android: notificationDetails));
 
     await _reminderOccurrenceService.updateLastNotified(reminder);
-
-    await _updatedNextNotificationTimeInDB();
   }
 
   Future<void> _updatedNextNotificationTimeInDB() async {
@@ -161,7 +160,7 @@ class NotificationService {
 
     DateTime now = DateTime.now();
     String keyToSave = dayKeysDateTime[now.weekday - 1].key;
-    String valueToSave = DateTime.now().add(Duration(days: 1)).toString();
+    String valueToSave = DateTime.now().add(Duration(days: 7)).toString();
     await _userSettingRepository.put(keyToSave, valueToSave);
   }
 }

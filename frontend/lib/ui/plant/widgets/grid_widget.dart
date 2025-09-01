@@ -108,16 +108,16 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
   List<InfoWidget> getInfoChildren() {
     List<InfoWidget> result = [];
 
-    String sunLightValue = "Low";
-    if (care.light.value != null &&
-        care.light.value! > 3 &&
-        care.light.value! < 5) {
-      sunLightValue = "Medium";
-    } else if (care.light.value != null && care.light.value! > 5) {
-      sunLightValue = "High";
+    if (care.light.value != null) {
+      String sunLightValue = "Low";
+      if (care.light.value! > 3 && care.light.value! < 5) {
+        sunLightValue = "Medium";
+      } else if (care.light.value != null && care.light.value! > 5) {
+        sunLightValue = "High";
+      }
+      result.add(InfoWidget(
+          title: "Sunlight", value: sunLightValue, icon: LucideIcons.sun));
     }
-    result.add(InfoWidget(
-        title: "Sunlight", value: sunLightValue, icon: LucideIcons.sun));
 
     if (care.humidity.value != null) {
       result.add(InfoWidget(

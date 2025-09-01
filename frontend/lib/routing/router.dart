@@ -325,6 +325,7 @@ GoRouter router() => GoRouter(
               speciesSynonymsRepository: context.read(),
               imageRepository: context.read(),
               appCache: context.read(),
+              speciesSearcherFacade: context.read(),
             );
             viewModel.load.execute(idOrExternal);
 

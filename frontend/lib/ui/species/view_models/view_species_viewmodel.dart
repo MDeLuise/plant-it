@@ -11,6 +11,7 @@ import 'package:plant_it/data/repository/species_care_repository.dart';
 import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/data/repository/species_synonym_repository.dart';
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
+import 'package:plant_it/data/service/search/species_searcher_facade.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
 import 'package:result_dart/result_dart.dart';
@@ -22,17 +23,19 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     required SpeciesSynonymsRepository speciesSynonymsRepository,
     required ImageRepository imageRepository,
     required AppCache appCache,
+    required SpeciesSearcherFacade speciesSearcherFacade,
   })  : _speciesRepository = speciesRepository,
         _speciesCareRepository = speciesCareRepository,
         _speciesSynonymsRepository = speciesSynonymsRepository,
         _imageRepository = imageRepository,
-        _appCache = appCache {
+        _appCache = appCache,
+        _speciesSearcherFacade = speciesSearcherFacade {
     load = Command.createAsyncNoResult((dynamic idOrExternal) async {
       if (idOrExternal is int) {
         Result<void> result = await _load(idOrExternal);
         if (result.isError()) throw result.exceptionOrNull()!;
         return result.getOrThrow();
-      } else if (idOrExternal is SpeciesSearcherResult) {
+      } else if (idOrExternal is SpeciesSearcherPartialResult) {
         Result<void> result = await _loadExternal(idOrExternal);
         if (result.isError()) throw result.exceptionOrNull()!;
         _isExternal = true;
@@ -58,9 +61,10 @@ class ViewSpeciesViewModel extends ChangeNotifier {
   final SpeciesSynonymsRepository _speciesSynonymsRepository;
   final ImageRepository _imageRepository;
   final AppCache _appCache;
+  final SpeciesSearcherFacade _speciesSearcherFacade;
   final _log = Logger('ViewSpeciesViewModel');
 
-  late final Command<int, void> load;
+  late final Command<dynamic, void> load;
   late final Command<SpeciesSearcherResult, void> loadExternal;
   late final Command<void, void> duplicate;
   late final Command<void, void> delete;
@@ -127,14 +131,19 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     return Success("ok");
   }
 
-  Future<Result<void>> _loadExternal(SpeciesSearcherResult external) async {
+  Future<Result<void>> _loadExternal(SpeciesSearcherPartialResult external) async {
+    Result<SpeciesSearcherResult> details = await _speciesSearcherFacade.getDetails(external);
+    if (details.isError()) {
+      return details;
+    }
+
     _species = external.speciesCompanion;
     _log.fine("External species loaded");
 
-    _speciesCare = external.speciesCareCompanion;
+    _speciesCare = details.getOrThrow().speciesCareCompanion;
     _log.fine("External species care loaded");
 
-    _speciesSynonyms = external.speciesSynonymsCompanion;
+    _speciesSynonyms = details.getOrThrow().speciesSynonymsCompanion;
     _log.fine("External species synonyms loaded");
 
     return Success("ok");
