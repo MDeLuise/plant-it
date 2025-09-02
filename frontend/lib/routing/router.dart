@@ -135,6 +135,7 @@ GoRouter router() => GoRouter(
                   return AddPlantScreen(
                     viewModel: viewModel,
                     streamController: context.read(),
+                    appLocalizationsContext: context,
                   );
                 },
               ),
@@ -149,6 +150,7 @@ GoRouter router() => GoRouter(
                   return EditPlantScreen(
                     viewModel: viewModel,
                     streamController: context.read(),
+                    appLocalizationsContext: context,
                   );
                 },
               ),
@@ -266,14 +268,20 @@ GoRouter router() => GoRouter(
               streamController: context.read(),
             );
             viewModel.load.execute();
-            return CreateEventScreen(viewModel: viewModel);
+            return CreateEventScreen(
+              viewModel: viewModel,
+              appLocalizationsContext: context.read(),
+            );
           },
         ),
         GoRoute(
           path: Routes.activityFilter,
           builder: (context, state) {
             CalendarViewModel viewModel = state.extra as CalendarViewModel;
-            return ActivityFilter(viewModel: viewModel);
+            return ActivityFilter(
+              viewModel: viewModel,
+              appLocalizationsContext: context,
+            );
           },
         ),
         GoRoute(
@@ -287,7 +295,11 @@ GoRouter router() => GoRouter(
               speciesRepository: context.read(),
             );
             viewModel.load.execute(id);
-            return EditEventScreen(viewModel: viewModel, eventId: id);
+            return EditEventScreen(
+              viewModel: viewModel,
+              eventId: id,
+              appLocalizationsContext: context.read(),
+            );
           },
         ),
         GoRoute(

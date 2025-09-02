@@ -14,6 +14,7 @@ import 'package:plant_it/ui/plant/widgets/edit/start_date_step.dart';
 import 'package:plant_it/utils/stream_code.dart';
 
 class EditPlantScreen extends StatefulWidget {
+  final BuildContext appLocalizationsContext;
   final EditPlantViewModel viewModel;
   final StreamController<StreamCode> streamController;
 
@@ -21,6 +22,7 @@ class EditPlantScreen extends StatefulWidget {
     super.key,
     required this.viewModel,
     required this.streamController,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -28,6 +30,14 @@ class EditPlantScreen extends StatefulWidget {
 }
 
 class _EditPlantScreenState extends State<EditPlantScreen> {
+  late final AppLocalizations appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +50,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
       body: AppStepper<EditPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: "Update",
+          actionText: AppLocalizations.of(context)!.update,
           actionCommand: Command.createAsyncNoParam(() async {
             Command<void, bool> command = widget.viewModel.update;
             await command.executeWithFuture();
@@ -53,11 +63,26 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
           summary: true,
           stepsInFocus: 0,
           steps: [
-            NameStep(viewModel: widget.viewModel),
-            StartDateStep(viewModel: widget.viewModel),
-            PriceStep(viewModel: widget.viewModel),
-            SellerStep(viewModel: widget.viewModel),
-            LocationStep(viewModel: widget.viewModel),
+            NameStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            StartDateStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            PriceStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            SellerStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            LocationStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ]),
     );
   }

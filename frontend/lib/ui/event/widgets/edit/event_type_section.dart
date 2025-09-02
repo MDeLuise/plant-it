@@ -6,6 +6,7 @@ import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeSection extends StepSection<EditEventFormViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
   late final ValueNotifier<EventType?> _selectedEventType =
       ValueNotifier<EventType?>(viewModel.eventType);
@@ -14,6 +15,7 @@ class EventTypeSection extends StepSection<EditEventFormViewModel> {
   EventTypeSection({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -23,7 +25,7 @@ class EventTypeSection extends StepSection<EditEventFormViewModel> {
   ValueNotifier<bool> get isValidNotifier => _valid;
 
   @override
-  String get title => "Event Type";
+  String get title => appLocalizations.eventTypes;
 
   @override
   String get value => _ongoingSelection.value!.name;

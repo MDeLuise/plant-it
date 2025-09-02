@@ -6,6 +6,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CalendarViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable(viewModel.filteredEventTypes));
@@ -15,6 +16,7 @@ class EventTypeStep extends StepSection<CalendarViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -24,7 +26,7 @@ class EventTypeStep extends StepSection<CalendarViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Event Types";
+  String get title => appLocalizations.eventTypes;
 
   @override
   String get value {
@@ -32,7 +34,7 @@ class EventTypeStep extends StepSection<CalendarViewModel> {
     if (eventTypes.length < 3) {
       return _returnTruncatedEventTypeName(eventTypes);
     }
-    return "${eventTypes.length} event types";
+    return appLocalizations.nEventTypes(eventTypes.length);
   }
 
   String _returnTruncatedEventTypeName(List<EventType> eventTypes) {

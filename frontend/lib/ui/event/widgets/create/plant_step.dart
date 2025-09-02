@@ -5,6 +5,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
 class PlantStep extends StepSection<CreateEventFormViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<Plant>> _selectedPlants =
       ValueNotifier(List.unmodifiable([]));
@@ -14,6 +15,7 @@ class PlantStep extends StepSection<CreateEventFormViewModel> {
   PlantStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -23,7 +25,7 @@ class PlantStep extends StepSection<CreateEventFormViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Plants";
+  String get title => appLocalizations.plants;
 
   @override
   String get value {

@@ -16,11 +16,13 @@ import 'package:plant_it/utils/stream_code.dart';
 class AddPlantScreen extends StatefulWidget {
   final AddPlantViewModel viewModel;
   final StreamController<StreamCode> streamController;
+  final BuildContext appLocalizationsContext;
 
   const AddPlantScreen({
     super.key,
     required this.viewModel,
     required this.streamController,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -28,6 +30,14 @@ class AddPlantScreen extends StatefulWidget {
 }
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
+  late final AppLocalizations appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,11 +62,26 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           successText: AppLocalizations.of(context)!.plantAdded,
           isPrimary: false,
           sections: [
-            NameStep(viewModel: widget.viewModel),
-            StartDateStep(viewModel: widget.viewModel),
-            PriceStep(viewModel: widget.viewModel),
-            SellerStep(viewModel: widget.viewModel),
-            LocationStep(viewModel: widget.viewModel),
+            NameStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            StartDateStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            PriceStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            SellerStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            LocationStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ]),
     );
   }

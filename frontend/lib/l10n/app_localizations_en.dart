@@ -469,4 +469,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get showNextNotificationsDateTime =>
       'Show next notifications date and time';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get plant => 'Plant';
+
+  @override
+  String get low => 'Low';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get high => 'High';
+
+  @override
+  String get sunlight => 'Sunlight';
+
+  @override
+  String get min => 'min';
+
+  @override
+  String get max => 'max';
+
+  @override
+  String errorWithMessage(String message) {
+    return 'Error: $message';
+  }
 }

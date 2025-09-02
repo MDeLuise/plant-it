@@ -949,6 +949,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show next notifications date and time'**
   String get showNextNotificationsDateTime;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @plant.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant'**
+  String get plant;
+
+  /// No description provided for @low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// No description provided for @sunlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunlight'**
+  String get sunlight;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get min;
+
+  /// No description provided for @max.
+  ///
+  /// In en, this message translates to:
+  /// **'max'**
+  String get max;
+
+  /// An erro with a message
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String errorWithMessage(String message);
 }
 
 class _AppLocalizationsDelegate

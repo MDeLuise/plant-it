@@ -9,11 +9,13 @@ import 'package:plant_it/ui/event/widgets/create/event_type_step.dart';
 import 'package:plant_it/ui/event/widgets/create/note_step.dart';
 
 class CreateEventScreen extends StatefulWidget {
+  final BuildContext appLocalizationsContext;
   final CreateEventFormViewModel viewModel;
 
   const CreateEventScreen({
     super.key,
     required this.viewModel,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -21,6 +23,14 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
+  late final AppLocalizations appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +49,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           summary: true,
           stepsInFocus: 2,
           steps: [
-            EventTypeStep(viewModel: widget.viewModel),
-            PlantStep(viewModel: widget.viewModel),
-            DateStep(viewModel: widget.viewModel),
-            NoteStep(viewModel: widget.viewModel),
+            EventTypeStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            PlantStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            DateStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            NoteStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ]),
     );
   }

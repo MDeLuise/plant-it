@@ -4,6 +4,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class PriceStep extends StepSection<EditPlantViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<double?> _selectedPrice = ValueNotifier(viewModel.price);
   late final ValueNotifier<double?> _ongoingSelection = ValueNotifier(viewModel.price);
@@ -11,6 +12,7 @@ class PriceStep extends StepSection<EditPlantViewModel> {
   PriceStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -26,7 +28,7 @@ class PriceStep extends StepSection<EditPlantViewModel> {
   }
 
   @override
-  String get title => "Price";
+  String get title => appLocalizations.price;
 
   @override
   String get value => _ongoingSelection.value?.toString() ?? "";

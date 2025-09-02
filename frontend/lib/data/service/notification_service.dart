@@ -48,6 +48,7 @@ class NotificationService {
     "{emoji} {plantName} needs its {eventType}. You're the hero it deserves!",
     "{emoji} {plantName} misses its {eventType}. Time to make it happy again!"
   ];
+
   final AndroidNotificationDetails notificationDetails =
       AndroidNotificationDetails(
     'reminder_channel',

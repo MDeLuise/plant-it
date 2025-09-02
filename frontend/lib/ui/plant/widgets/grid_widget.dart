@@ -3,6 +3,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/info_widget.dart';
 import 'package:plant_it/utils/common.dart';
@@ -18,7 +19,7 @@ abstract class InfoGridWidget extends StatefulWidget {
     required this.maxNum,
   });
 
-  List<InfoWidget> getInfoChildren();
+  List<InfoWidget> getInfoChildren(BuildContext context);
 
   @override
   State<InfoGridWidget> createState() => _InfoGridWidgetState();
@@ -30,7 +31,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
   @override
   void initState() {
     super.initState();
-    _pages = (widget.getInfoChildren().length / widget.maxNum).ceil();
+    _pages = (widget.getInfoChildren(context).length / widget.maxNum).ceil();
   }
 
   Widget _buildSinglePage(List<Widget>? tiles) {
@@ -75,7 +76,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
   }
 
   List<List<Widget>> _chunkWidgets(int chunkSize) {
-    List<Widget> widgets = widget.getInfoChildren();
+    List<Widget> widgets = widget.getInfoChildren(context);
     List<List<Widget>> chunks = [];
     for (var i = 0; i < widgets.length; i += chunkSize) {
       final chunk = widgets.sublist(
@@ -91,7 +92,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
       return SizedBox();
     }
     if (_pages == 1) {
-      return _buildSinglePage(widget.getInfoChildren());
+      return _buildSinglePage(widget.getInfoChildren(context));
     }
     return _buildMultiplePages();
   }
@@ -105,23 +106,26 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
   });
 
   @override
-  List<InfoWidget> getInfoChildren() {
+  List<InfoWidget> getInfoChildren(BuildContext context) {
     List<InfoWidget> result = [];
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
 
     if (care.light.value != null) {
-      String sunLightValue = "Low";
+      String sunLightValue = appLocalizations.low;
       if (care.light.value! > 3 && care.light.value! < 5) {
-        sunLightValue = "Medium";
+        sunLightValue = appLocalizations.medium;
       } else if (care.light.value != null && care.light.value! > 5) {
-        sunLightValue = "High";
+        sunLightValue = appLocalizations.high;
       }
       result.add(InfoWidget(
-          title: "Sunlight", value: sunLightValue, icon: LucideIcons.sun));
+          title: appLocalizations.sunlight,
+          value: sunLightValue,
+          icon: LucideIcons.sun));
     }
 
     if (care.humidity.value != null) {
       result.add(InfoWidget(
-          title: "Humidity",
+          title: appLocalizations.humidity,
           value: "${care.humidity.value!}0%",
           icon: LucideIcons.spray_can));
     }
@@ -130,28 +134,32 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
     if (care.tempMax.value != null && care.tempMin.value != null) {
       tempValue = "${care.tempMin.value} - ${care.tempMax.value} °C";
     } else if (care.tempMax.value == null && care.tempMin.value != null) {
-      tempValue = "min ${care.tempMin.value} °C";
+      tempValue = "${appLocalizations.min} ${care.tempMin.value} °C";
     } else if (care.tempMax.value != null && care.tempMin.value == null) {
-      tempValue = "max ${care.tempMax.value} °C";
+      tempValue = "${appLocalizations.max} ${care.tempMax.value} °C";
     }
     if (tempValue != null) {
       result.add(InfoWidget(
-          title: "Temperature",
-          value: tempValue,
-          icon: LucideIcons.thermometer));
+        title: appLocalizations.temperature,
+        value: tempValue,
+        icon: LucideIcons.thermometer,
+      ));
     }
 
     String? phValue;
     if (care.phMax.value != null && care.tempMin.value != null) {
       phValue = "${care.phMin.value} - ${care.phMax.value}";
     } else if (care.phMax.value == null && care.phMin.value != null) {
-      phValue = "min ${care.tempMin.value}";
+      phValue = "${appLocalizations.min} ${care.tempMin.value}";
     } else if (care.phMax.value != null && care.phMin.value == null) {
-      phValue = "max ${care.phMax.value}";
+      phValue = "${appLocalizations.max} ${care.phMax.value}";
     }
     if (phValue != null) {
-      result.add(
-          InfoWidget(title: "Ph", value: phValue, icon: LucideIcons.test_tube));
+      result.add(InfoWidget(
+        title: appLocalizations.ph,
+        value: phValue,
+        icon: LucideIcons.test_tube,
+      ));
     }
 
     return result;
@@ -169,7 +177,7 @@ class PlantEventInfoGridWidget extends InfoGridWidget {
   });
 
   @override
-  List<InfoWidget> getInfoChildren() {
+  List<InfoWidget> getInfoChildren(BuildContext context) {
     List<InfoWidget> result = [];
     List<Event> events = viewModel.events;
     Map<int, EventType> eventTypes = {};
@@ -199,7 +207,7 @@ class PlantReminderInfoGridWidget extends InfoGridWidget {
   });
 
   @override
-  List<InfoWidget> getInfoChildren() {
+  List<InfoWidget> getInfoChildren(BuildContext context) {
     Map<int, EventType> eventTypes = {};
     for (EventType t in viewModel.eventType) {
       eventTypes.putIfAbsent(t.id, () => t);

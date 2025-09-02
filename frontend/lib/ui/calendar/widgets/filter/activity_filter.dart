@@ -7,10 +7,13 @@ import 'package:plant_it/ui/calendar/widgets/filter/plant_step.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 
 class ActivityFilter extends StatefulWidget {
+  final BuildContext appLocalizationsContext;
   final CalendarViewModel viewModel;
+
   const ActivityFilter({
     super.key,
     required this.viewModel,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -18,6 +21,14 @@ class ActivityFilter extends StatefulWidget {
 }
 
 class _ActivityFilterState extends State<ActivityFilter> {
+  late AppLocalizations _appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +48,14 @@ class _ActivityFilterState extends State<ActivityFilter> {
         actionCommand: widget.viewModel.filter,
         stepsInFocus: 0,
         steps: [
-          PlantStep(viewModel: widget.viewModel),
-          EventTypeStep(viewModel: widget.viewModel),
+          PlantStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          EventTypeStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
         ],
       ),
     );

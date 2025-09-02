@@ -158,5 +158,22 @@
   "editSpecies": "Edit Species",
   "speciesUpdated": "Species updated",
   "addToCollection": "Add to collection",
-  "showNextNotificationsDateTime": "Show next notifications date and time"
+  "showNextNotificationsDateTime": "Show next notifications date and time",
+  "date": "Date",
+  "plant": "Plant",
+  "low": "Low",
+  "medium": "Medium",
+  "high": "High",
+  "sunlight": "Sunlight",
+  "min": "min",
+  "max": "max",
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "description": "An erro with a message",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  }
 }

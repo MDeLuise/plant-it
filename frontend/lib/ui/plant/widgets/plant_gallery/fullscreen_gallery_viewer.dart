@@ -183,7 +183,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
             },
           ),
           Positioned(
-            top: 40,
+            top: 50,
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.close, color: Colors.white),
@@ -191,7 +191,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
             ),
           ),
           Positioned(
-            top: 40,
+            top: 50,
             right: 20,
             child: IconButton(
               icon: const Icon(Icons.more_vert, color: Colors.white),

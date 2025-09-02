@@ -5,6 +5,7 @@ import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 
 class PlantStep extends StepSection<CalendarViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<List<Plant>> _selectedPlants =
       ValueNotifier(List.unmodifiable(viewModel.filteredPlants));
@@ -14,6 +15,7 @@ class PlantStep extends StepSection<CalendarViewModel> {
   PlantStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -23,7 +25,7 @@ class PlantStep extends StepSection<CalendarViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Plants";
+  String get title => appLocalizations.plants;
 
   @override
   String get value {
@@ -31,7 +33,7 @@ class PlantStep extends StepSection<CalendarViewModel> {
     if (plants.length < 3) {
       return _returnTruncatedPlantName(plants);
     }
-    return "${plants.length} plants";
+    return appLocalizations.nPlants(plants.length);
   }
 
   String _returnTruncatedPlantName(List<Plant> plants) {

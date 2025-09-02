@@ -4,6 +4,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class LocationStep extends StepSection<EditPlantViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<String?> _selectedLocation = ValueNotifier(viewModel.location);
   late final ValueNotifier<String?> _ongoingSelection = ValueNotifier(viewModel.location);
@@ -11,6 +12,7 @@ class LocationStep extends StepSection<EditPlantViewModel> {
   LocationStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -26,7 +28,7 @@ class LocationStep extends StepSection<EditPlantViewModel> {
   }
 
   @override
-  String get title => "Location";
+  String get title => appLocalizations.location;
 
   @override
   String get value {

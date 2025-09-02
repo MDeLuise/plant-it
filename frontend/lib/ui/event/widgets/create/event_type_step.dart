@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CreateEventFormViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable([]));
@@ -14,6 +16,7 @@ class EventTypeStep extends StepSection<CreateEventFormViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -23,7 +26,7 @@ class EventTypeStep extends StepSection<CreateEventFormViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Event Types";
+  String get title => appLocalizations.eventTypes;
 
   @override
   String get value {
@@ -31,7 +34,7 @@ class EventTypeStep extends StepSection<CreateEventFormViewModel> {
     if (eventTypes.length < 3) {
       return _returnTruncatedEventTypeName(eventTypes);
     }
-    return "${eventTypes.length} event types";
+    return appLocalizations.nEventTypes(eventTypes.length);
   }
 
   String _returnTruncatedEventTypeName(List<EventType> eventTypes) {
@@ -85,7 +88,7 @@ class _EventTypeStepState extends State<EventTypeStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Which events you want to add?",
+          AppLocalizations.of(context)!.whichEventsYouWantToAdd,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(height: 10),

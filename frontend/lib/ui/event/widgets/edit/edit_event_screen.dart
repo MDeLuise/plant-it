@@ -9,6 +9,7 @@ import 'package:plant_it/ui/event/widgets/edit/note_section.dart';
 import 'package:plant_it/ui/event/widgets/edit/plant_section.dart';
 
 class EditEventScreen extends StatefulWidget {
+  final BuildContext appLocalizationsContext;
   final int eventId;
   final EditEventFormViewModel viewModel;
 
@@ -16,6 +17,7 @@ class EditEventScreen extends StatefulWidget {
     super.key,
     required this.viewModel,
     required this.eventId,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -24,13 +26,15 @@ class EditEventScreen extends StatefulWidget {
 
 class _EditEventScreenState extends State<EditEventScreen> {
   late final Command<void, void> _mainCommand;
-  
+  late final AppLocalizations appLocalizations;
+
   @override
   void initState() {
     super.initState();
-    _mainCommand = Command.createAsyncNoParamNoResult(
-              () async => await widget.viewModel.load.executeWithFuture(widget.eventId));
+    _mainCommand = Command.createAsyncNoParamNoResult(() async =>
+        await widget.viewModel.load.executeWithFuture(widget.eventId));
     _mainCommand.execute();
+    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -42,12 +46,24 @@ class _EditEventScreenState extends State<EditEventScreen> {
           mainCommand: _mainCommand,
           actionText: AppLocalizations.of(context)!.update,
           sections: [
-            EventTypeSection(viewModel: widget.viewModel),
-            PlantSection(viewModel: widget.viewModel),
-            DateSection(viewModel: widget.viewModel),
-            NoteSection(viewModel: widget.viewModel),
+            EventTypeSection(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            PlantSection(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            DateSection(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            NoteSection(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ],
-          actionCommand:  widget.viewModel.update,
+          actionCommand: widget.viewModel.update,
           mainText: AppLocalizations.of(context)!.editTheEvent,
           successText: AppLocalizations.of(context)!.eventUpdated,
           isPrimary: false,

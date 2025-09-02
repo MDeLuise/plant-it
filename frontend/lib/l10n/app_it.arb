@@ -1,4 +1,132 @@
 {
   "searchYourPlants": "Cerca nelle tue piante",
-  "filterActivities": "Filtra Attività"
+  "filterActivities": "Filtra Attività",
+  "notificationTitle1": "AAA",
+  "notificationTitle2": "BBB",
+  "notificationTitle3": "CCC",
+  "notificationTitle4": "DDD",
+  "notificationTitle5": "EEE",
+  "notificationTitle6": "FFF",
+  "notificationTitle7": "GG",
+  "notificationTitle8": "HH",
+  "notificationBody1": "{emoji} {plantName} I",
+  "notificationBody2": "{emoji} {plantName} L",
+  "notificationBody3": "{emoji} {plantName} M",
+  "notificationBody4": "{emoji} {plantName} N",
+  "notificationBody5": "{emoji} {plantName} O {eventType}. ",
+  "notificationBody6": "{emoji} {plantName} P {eventType}. ",
+  "notificationBody7": "{emoji} {plantName} Q {eventType}. ",
+  "notificationBody8": "{emoji} {plantName} R {eventType}. ",
+  "@notificationBody1": {
+    "description": "Notification body 1",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody2": {
+    "description": "Notification body 2",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody3": {
+    "description": "Notification body 3",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody4": {
+    "description": "Notification body 4",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody5": {
+    "description": "Notification body 5",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody6": {
+    "description": "Notification body 6",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody7": {
+    "description": "Notification body 7",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationBody8": {
+    "description": "Notification body 8",
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "plantName": {
+        "type": "String"
+      },
+      "eventType": {
+        "type": "String"
+      }
+    }
+  }
 }
