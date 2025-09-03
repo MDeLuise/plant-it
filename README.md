@@ -1,10 +1,10 @@
-<p align="center">
-  <img width="150px" src="images/plant-it-logo.png" title="Plant-it">
-</p>
+<div style="display: flex; justify-content: center;">
+    <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <img src="images/plant-it-logo.png" alt="Plant-it" style="width: 100%; height: auto;"/>
+    </div>
+</div>
+<br>
 
-<h1 align="center">Plant-it</h1>
-
-<p align="center"><i><b>[Project under "active" development, some features may be unstable or change in the future. A first release version is planned to be packed soon].</b></i></p>
 <p align="center">Plant-it is a <b>gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
 <p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#download">Download</a> • <a href="https://github.com/MDeLuise/plant-it/#support-the-project">Support</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
