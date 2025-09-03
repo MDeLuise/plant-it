@@ -10,25 +10,6 @@ env:
   DOCKER_NAME: plant-it-server
 
 jobs:
-  build_and_test_backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.2.1
-        with:
-          java-version: 21
-
-      - name: Create JAR File
-        run: mvn package
-        working-directory: ./backend
-
-      - name: Save JAR File
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar
-          retention-days: 1
-          path: ./backend/target/*.jar
-
   build_and_test_frontend:
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +35,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Create Flutter Build Files
-        run: flutter build web --release
+        run: flutter build apk --release
         working-directory: ./frontend
 
       - name: Save Flutter Build Files
@@ -63,59 +44,6 @@ jobs:
           name: frontend-build
           retention-days: 1
           path: ./frontend/build
-
-  create_and_push_images:
-    needs: [build_and_test_backend, build_and_test_frontend]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Load JAR File
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-jar
-          path: ./backend/target/
-
-      - name: Load Flutter Build Files
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: ./frontend/build
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to the GitHub Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set lowercase actor
-        run: echo "LOWERCASE_ACTOR=${GITHUB_REPOSITORY_OWNER@L}" >> "${GITHUB_ENV}"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: linux/amd64,linux/arm64
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./deployment/Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:${{ github.ref_name }}
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ env.DOCKER_NAME }}:latest
-            ghcr.io/${{ env.LOWERCASE_ACTOR }}/${{ env.DOCKER_NAME }}:${{ github.ref_name }}
-            ghcr.io/${{ env.LOWERCASE_ACTOR }}/${{ env.DOCKER_NAME }}:latest
 
   create_apk:
     needs: build_and_test_frontend
@@ -132,12 +60,6 @@ jobs:
         with:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
 
       - name: Create apk File
         run: flutter pub get && flutter build apk --release
@@ -175,24 +97,6 @@ jobs:
           name: frontend-apk
           path: .
 
-      - name: Load backend jar
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-jar
-          path: .
-
-      - name: Rename backend jar to server.jar
-        run: mv *.jar ./server.jar
-
-      - name: Load frontend files
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: .
-
-      - name: Create client.tar.gz
-        run: tar -czf client.tar.gz -C ./web .
-
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
@@ -226,7 +130,5 @@ jobs:
           append_body: true
           files: |
             app-release.apk
-            server.jar
-            client.tar.gz
           fail_on_unmatched_files: true
           token: ${{ secrets.GITHUB_TOKEN }}

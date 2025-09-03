@@ -26,12 +26,6 @@ jobs:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '21'
-
       - name: Create apk File
         run: flutter pub get && flutter build apk --release
         working-directory: ./frontend
