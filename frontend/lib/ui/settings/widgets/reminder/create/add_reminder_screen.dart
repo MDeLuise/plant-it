@@ -27,7 +27,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   @override
   void initState() {
     super.initState();
-    _appLocalizations = L.of(context)!;
+    _appLocalizations = L.of(context);
   }
 
   @override

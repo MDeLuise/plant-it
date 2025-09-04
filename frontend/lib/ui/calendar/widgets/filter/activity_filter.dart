@@ -26,7 +26,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
   @override
   void initState() {
     super.initState();
-    _appLocalizations = L.of(widget.appLocalizationsContext)!;
+    _appLocalizations = L.of(widget.appLocalizationsContext);
   }
 
   @override

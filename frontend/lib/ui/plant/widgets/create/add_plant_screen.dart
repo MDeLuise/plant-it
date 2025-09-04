@@ -35,7 +35,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   @override
   void initState() {
     super.initState();
-    appLocalizations = L.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext);
   }
 
   @override

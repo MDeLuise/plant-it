@@ -28,7 +28,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void initState() {
     super.initState();
-    appLocalizations = L.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext);
   }
 
   @override

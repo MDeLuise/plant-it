@@ -108,7 +108,7 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
   @override
   List<InfoWidget> getInfoChildren(BuildContext context) {
     List<InfoWidget> result = [];
-    L appLocalizations = L.of(context)!;
+    L appLocalizations = L.of(context);
 
     if (care.light.value != null) {
       String sunLightValue = appLocalizations.low;

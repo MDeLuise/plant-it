@@ -28,7 +28,7 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
   @override
   void initState() {
     super.initState();
-    _appLocalizations = L.of(context)!;
+    _appLocalizations = L.of(context);
   }
 
   @override

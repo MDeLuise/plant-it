@@ -34,7 +34,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     _mainCommand = Command.createAsyncNoParamNoResult(() async =>
         await widget.viewModel.load.executeWithFuture(widget.eventId));
     _mainCommand.execute();
-    appLocalizations = L.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext);
   }
 
   @override

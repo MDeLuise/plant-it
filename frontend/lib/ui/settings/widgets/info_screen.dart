@@ -42,7 +42,7 @@ class InfoScreen extends StatelessWidget {
                 if (snapshot.hasError) {
                   return ErrorIndicator(
                     title: L
-                        .of(context)!
+                        .of(context)
                         .errorWithMessage(snapshot.error.toString()),
                     label: L.of(context).tryAgain,
                     onPressed: _loadAppVersion,

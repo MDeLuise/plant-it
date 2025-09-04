@@ -198,7 +198,7 @@ class _DonationPageState extends State<_DonationPage>
                               Expanded(
                                 child: Text(
                                   L
-                                      .of(context)!
+                                      .of(context)
                                       .openSourceProjectThatBenefitsEveryone,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -216,7 +216,7 @@ class _DonationPageState extends State<_DonationPage>
                               Expanded(
                                 child: Text(
                                   L
-                                      .of(context)!
+                                      .of(context)
                                       .yourDonationsHelpUsImproveTheApp,
                                   style: TextStyle(
                                     color: Colors.white,

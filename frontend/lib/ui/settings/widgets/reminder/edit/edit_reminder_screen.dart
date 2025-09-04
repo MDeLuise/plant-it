@@ -27,7 +27,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   @override
   void initState() {
     super.initState();
-    _appLocalizations = L.of(context)!;
+    _appLocalizations = L.of(context);
   }
 
   @override

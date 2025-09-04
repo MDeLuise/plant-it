@@ -31,7 +31,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(L.of(context).confirmDelete),
         content: Text(L
-            .of(context)!
+            .of(context)
             .areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents),
         actions: [
           TextButton(
