@@ -808,13 +808,13 @@ abstract class L {
   /// No description provided for @createSpecies.
   ///
   /// In en, this message translates to:
-  /// **'Create Specy'**
+  /// **'Create Species'**
   String get createSpecies;
 
   /// No description provided for @speciesCreated.
   ///
   /// In en, this message translates to:
-  /// **'Specy created'**
+  /// **'Species created'**
   String get speciesCreated;
 
   /// No description provided for @avatar.
@@ -916,7 +916,7 @@ abstract class L {
   /// No description provided for @species.
   ///
   /// In en, this message translates to:
-  /// **'Specy'**
+  /// **'Species'**
   String get species;
 
   /// No description provided for @synonyms.
@@ -928,13 +928,13 @@ abstract class L {
   /// No description provided for @editSpecies.
   ///
   /// In en, this message translates to:
-  /// **'Edit Specy'**
+  /// **'Edit Species'**
   String get editSpecies;
 
   /// No description provided for @speciesUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Specy updated'**
+  /// **'Species updated'**
   String get speciesUpdated;
 
   /// No description provided for @addToCollection.

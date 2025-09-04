@@ -15,10 +15,10 @@ class LIt extends L {
   String get filterActivities => 'Filtra Attività';
 
   @override
-  String get filter => 'Filter';
+  String get filter => 'Filtra';
 
   @override
-  String get eventTypes => 'Event Types';
+  String get eventTypes => 'Tipi Evento';
 
   @override
   String nEventTypes(num count) {
@@ -27,20 +27,14 @@ class LIt extends L {
     );
     final String countString = countNumberFormat.format(count);
 
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 's',
-      one: '',
-    );
-    return '$countString event type$_temp0';
+    return '$countString tipi evento';
   }
 
   @override
-  String get whichEventsYouWantToAdd => 'Which events you want to add?';
+  String get whichEventsYouWantToAdd => 'Quali eventi vuoi aggiungere?';
 
   @override
-  String get plants => 'Plants';
+  String get plants => 'Piante';
 
   @override
   String nPlants(num count) {
@@ -52,133 +46,133 @@ class LIt extends L {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 's',
-      one: '',
+      other: 'e',
+      one: 'a',
     );
-    return '$countString plant$_temp0';
+    return '$countString piant$_temp0';
   }
 
   @override
-  String get whichPlantsYouWantToAdd => 'Which plants you want to add?';
+  String get whichPlantsYouWantToAdd => 'Quali piante vuoi aggiungere?';
 
   @override
-  String get error => 'Error';
+  String get error => 'Errore';
 
   @override
-  String get tryAgain => 'Try again';
+  String get tryAgain => 'Riprova';
 
   @override
-  String get confirmDelete => 'Confirm Delete';
+  String get confirmDelete => 'Conferma eliminazione';
 
   @override
   String get areYouSureYouWantToDeleteThisEvent =>
-      'Are you sure you want to delete this event?';
+      'Sei sicuro di rimuovere l\'evento?';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Annulla';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Rimuovi';
 
   @override
-  String get eventDeleted => 'Event deleted';
+  String get eventDeleted => 'Evento rimosso';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Modifica';
 
   @override
-  String get eventCreated => 'Event created';
+  String get eventCreated => 'Evento creato';
 
   @override
-  String get markDone => 'Mark done';
+  String get markDone => 'Segna fatto';
 
   @override
-  String get reminder => 'Reminder';
+  String get reminder => 'Promemoria';
 
   @override
-  String get back => 'Back';
+  String get back => 'Indietro';
 
   @override
-  String get next => 'Next';
+  String get next => 'Avanti';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Conferma';
 
   @override
-  String get createEvent => 'Create Event';
+  String get createEvent => 'Crea Evento';
 
   @override
-  String get create => 'Create';
+  String get create => 'Crea';
 
   @override
-  String get eventsCreated => 'Events created';
+  String get eventsCreated => 'Evento creato';
 
   @override
-  String get save => 'Save';
+  String get save => 'Salva';
 
   @override
-  String get editTheEvent => 'Edit the event';
+  String get editTheEvent => 'Modifica l\'evento';
 
   @override
-  String get eventUpdated => 'Event updated';
+  String get eventUpdated => 'Evento aggiornato';
 
   @override
-  String get selectTheEventType => 'Select the event type';
+  String get selectTheEventType => 'Seleziona il tipo di evento';
 
   @override
-  String get selectThePlant => 'Select the plant';
+  String get selectThePlant => 'Seleziona la pianta';
 
   @override
-  String get nextActions => 'Next actions';
+  String get nextActions => 'Prossima azione';
 
   @override
   String get home => 'Home';
 
   @override
-  String get calendar => 'Calendar';
+  String get calendar => 'Calendario';
 
   @override
-  String get search => 'Search';
+  String get search => 'Cerca';
 
   @override
-  String get more => 'More';
+  String get more => 'Altro';
 
   @override
-  String get addPlant => 'Add Plant';
+  String get addPlant => 'Aggiungi Pianta';
 
   @override
-  String get add => 'Add';
+  String get add => 'Aggiungi';
 
   @override
-  String get plantAdded => 'Plant added';
+  String get plantAdded => 'Pianta aggiunta';
 
   @override
-  String get location => 'Location';
+  String get location => 'Posizione';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nome';
 
   @override
-  String get price => 'Price';
+  String get price => 'Prezzo';
 
   @override
-  String get editPlant => 'Edit Plant';
+  String get editPlant => 'Modifica Pianta';
 
   @override
-  String get plantUpdated => 'Plant updated';
+  String get plantUpdated => 'Pianta aggiornata';
 
   @override
-  String get deleteImage => 'Delete image';
+  String get deleteImage => 'Elimina immagine';
 
   @override
   String get areYouSureYouWantToDeleteThisImage =>
-      'Are you sure you want to delete this image?';
+      'Sicuro di voler rimuovere l\'immagine?';
 
   @override
   String get info => 'Info';
 
   @override
-  String get imageInfo => 'Image info';
+  String get imageInfo => 'Info sull\'immagine';
 
   @override
   String get ok => 'Ok';
@@ -187,306 +181,306 @@ class LIt extends L {
   String get download => 'Download';
 
   @override
-  String get unsetAsAvatar => 'Unset as Avatar';
+  String get unsetAsAvatar => 'Rimuovi come Avatar';
 
   @override
-  String get setAsAvatar => 'Set as Avatar';
+  String get setAsAvatar => 'Seleziona come Avatar';
 
   @override
-  String get information => 'Information';
+  String get information => 'Informazioni';
 
   @override
-  String get care => 'Care';
+  String get care => 'Cura';
 
   @override
-  String get reminders => 'Reminders';
+  String get reminders => 'Promemoria';
 
   @override
-  String get events => 'Events';
+  String get events => 'Eventi';
 
   @override
-  String get gallery => 'Gallery';
+  String get gallery => 'Galleria';
 
   @override
-  String get duplicate => 'Duplicate';
+  String get duplicate => 'Duplica';
 
   @override
-  String get plantDuplicated => 'Plant duplicated';
+  String get plantDuplicated => 'Pianta duplicata';
 
   @override
-  String get plantDeleted => 'Plant deleted';
+  String get plantDeleted => 'Pianta eliminata';
 
   @override
-  String get searchGreenFriends => 'Search green friends';
+  String get searchGreenFriends => 'Cerca nuovi amici';
 
   @override
   String get note => 'Note';
 
   @override
-  String get update => 'Update';
+  String get update => 'Aggiorna';
 
   @override
-  String get custom => 'custom';
+  String get custom => 'creato';
 
   @override
   String get floraCodex => 'Flora Codex';
 
   @override
-  String get seller => 'Seller';
+  String get seller => 'Venditore';
 
   @override
-  String get remove => 'Remove';
+  String get remove => 'Rimuovi';
 
   @override
-  String get createEventType => 'Create Event Type';
+  String get createEventType => 'Crea Tipo Evento';
 
   @override
-  String get selectAColor => 'Select a color';
+  String get selectAColor => 'Seleziona un colore';
 
   @override
-  String get select => 'Select';
+  String get select => 'Seleziona';
 
   @override
-  String get whichColorYouWantToUse => 'Which color you want to use?';
+  String get whichColorYouWantToUse => 'Quale colore vuoi usare?';
 
   @override
-  String get description => 'Description';
+  String get description => 'Descrizione';
 
   @override
-  String get whichIconYouWantToUse => 'Which icon you want to use?';
+  String get whichIconYouWantToUse => 'Quale icona vuoi usare?';
 
   @override
-  String get filterIcons => 'Filter icons';
+  String get filterIcons => 'Filtra icone';
 
   @override
-  String get insertAName => 'Insert a name';
+  String get insertAName => 'Inserisci un nome';
 
   @override
-  String get editEventType => 'Edit Event Type';
+  String get editEventType => 'Modifica Tipo Evento';
 
   @override
-  String get eventTypeUpdated => 'Event Type updated';
+  String get eventTypeUpdated => 'Tipo Evento aggiornato';
 
   @override
   String get areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents =>
-      'Are you sure you want to delete the event type and all linked events?';
+      'Sicuro di voler eliminare il tipo evento e tutti gli eventi collegati?';
 
   @override
-  String get eventTypeDeleted => 'Event Type deleted';
+  String get eventTypeDeleted => 'Tipo Evento eliminato';
 
   @override
-  String get createReminder => 'Create Reminder';
+  String get createReminder => 'Crea Promemoria';
 
   @override
-  String get reminderCreated => 'Reminder created';
+  String get reminderCreated => 'Promemoria creato';
 
   @override
-  String get whichEventTypeYouWantToSet => 'Which event type you want to set?';
+  String get whichEventTypeYouWantToSet =>
+      'Quale tipo evento vuoi selezionare?';
 
   @override
-  String get quantity => 'Quantity';
+  String get quantity => 'Quantità';
 
   @override
-  String get whichPlantsYouWantToSet => 'Which plant you want to set?';
+  String get whichPlantsYouWantToSet => 'Quale pianta vuoi selezionare?';
 
   @override
-  String get editReminder => 'Edit Reminder';
+  String get editReminder => 'Modifica Promemoria';
 
   @override
-  String get reminderUpdated => 'Reminder updated';
+  String get reminderUpdated => 'Promemoria aggiornato';
 
   @override
-  String get whichEventsYouWantToSet => 'Which events you want to set?';
+  String get whichEventsYouWantToSet => 'Quali eventi vuoi selezionare?';
 
   @override
-  String get reminderDeleted => 'Reminder deleted';
+  String get reminderDeleted => 'Promemoria eliminato';
 
   @override
   String get areYouSureYouWantToDeleteTheReminder =>
-      'Are you sure you want to delete the reminder?';
+      'Sicuro di voler eliminare il promemoria?';
 
   @override
-  String get dataSources => 'Data sources';
+  String get dataSources => 'Sorgenti dei dati';
 
   @override
   String get configureTheFloraCodexSettings =>
-      'Configure the Flora Codex settings';
+      'Configura le impostazioni di Flora Codex';
 
   @override
-  String get insertTheFloraCodexApiKey => 'Insert the Flora Codex API Key';
+  String get insertTheFloraCodexApiKey => 'Inserisci l\'API Key di Flora Codex';
 
   @override
-  String get enterApiKey => 'Enter API Key';
+  String get enterApiKey => 'Inserisci l\'API Key';
 
   @override
-  String get enableDataSource => 'Enable data source';
+  String get enableDataSource => 'Attiva la sorgente dei dati';
 
   @override
   String get apiKey => 'API Key';
 
   @override
-  String get notProvided => 'not porvided';
+  String get notProvided => 'non specificata';
 
   @override
-  String get appInfo => 'App Info';
+  String get appInfo => 'Informazioni sull\'app';
 
   @override
-  String get appVersion => 'App version';
+  String get appVersion => 'Versione dell\'app';
 
   @override
-  String get sourceCode => 'Source code';
+  String get sourceCode => 'Codice sorgente';
 
   @override
-  String get support => 'Support ♥️';
+  String get support => 'Supporta ♥️';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notifiche';
 
   @override
-  String get enableNotifications => 'Enable Notifications';
+  String get enableNotifications => 'Attiva Notifiche';
 
   @override
-  String get selectWeekdaysAndTimes => 'Select Weekdays and Times';
+  String get selectWeekdaysAndTimes => 'Seleziona giorni e orari';
 
   @override
-  String get pickTime => 'Pick Time';
+  String get pickTime => 'Scegli orario';
 
   @override
-  String get done => 'Done';
+  String get done => 'Fatto';
 
   @override
-  String get aboutPlantIt => 'About Plant-it';
+  String get aboutPlantIt => 'Plant-it info';
 
   @override
-  String get manageTheEventTypes => 'Manage the event types';
+  String get manageTheEventTypes => 'Gestisci i tipi di evento';
 
   @override
-  String get manageTheReminders => 'Manage the reminders';
+  String get manageTheReminders => 'Gestisci i promemoria';
 
   @override
-  String get manageTheDataSources => 'Manage the data sources';
+  String get manageTheDataSources => 'Gestisci le sorgenti di dati';
 
   @override
   String get configureWhenAndIfNotificationsAreReceived =>
-      'Configure when and if notifications are received';
+      'Configura se e quando ricevere notifiche';
 
   @override
-  String get detailsAboutTheApp => 'Details about the app';
+  String get detailsAboutTheApp => 'Dettagli sull\'app';
 
   @override
-  String get yourSupportHelpsUsGrow => 'Your support helps us grow!';
+  String get yourSupportHelpsUsGrow => 'Il tuo supporto ci aiuta a crescere!';
 
   @override
-  String get supportTheProject => 'Support the project';
+  String get supportTheProject => 'Supporta il progetto';
 
   @override
-  String get whySupportPlantIt => 'Why Support Plant-it?';
+  String get whySupportPlantIt => 'Perchè supportare Plant-it?';
 
   @override
   String get openSourceProjectThatBenefitsEveryone =>
-      'Open-source project that benefits everyone.';
+      'Progetto open-source utilizzabile da chiunque';
 
   @override
   String get yourDonationsHelpUsImproveTheApp =>
-      'Your donations help us improve the app.';
+      'Le donazioni ci aiutano a migliorare l\'app';
 
   @override
-  String get supportNewFeaturesAndUpdates =>
-      'Support new features and updates.';
+  String get supportNewFeaturesAndUpdates => 'Supporta nuovi aggiornamenti';
 
   @override
-  String get donateNow => 'Donate Now';
+  String get donateNow => 'Dona Ora';
 
   @override
-  String get createSpecies => 'Create Specy';
+  String get createSpecies => 'Crea Specie';
 
   @override
-  String get speciesCreated => 'Specy created';
+  String get speciesCreated => 'Specie creata';
 
   @override
   String get avatar => 'Avatar';
 
   @override
-  String get noAvatar => 'No avatar';
+  String get noAvatar => 'Nessun avatar';
 
   @override
-  String get uploadPhoto => 'Upload photo';
+  String get uploadPhoto => 'Carica foto';
 
   @override
-  String get choosePhoto => 'Choose photo';
+  String get choosePhoto => 'Scegli foto';
 
   @override
-  String get noPhoto => 'No photo';
+  String get noPhoto => 'Nessuna foto';
 
   @override
-  String get useWebImage => 'Use web image';
+  String get useWebImage => 'Usa immagine web';
 
   @override
   String get url => 'Url';
 
   @override
-  String get light => 'Light';
+  String get light => 'Luce';
 
   @override
-  String get humidity => 'Humidity';
+  String get humidity => 'Umidità';
 
   @override
-  String get temperature => 'Temperature';
+  String get temperature => 'Temperatura';
 
   @override
   String get ph => 'Ph';
 
   @override
-  String get genus => 'Genus';
+  String get genus => 'Genere';
 
   @override
-  String get family => 'Family';
+  String get family => 'Famiglia';
 
   @override
-  String get synonym => 'Synonym';
+  String get synonym => 'Sinonimo';
 
   @override
-  String get addSynonym => 'Add synonym';
+  String get addSynonym => 'Aggiungi sinonimo';
 
   @override
-  String get classification => 'Classification';
+  String get classification => 'Classificazione';
 
   @override
-  String get species => 'Specy';
+  String get species => 'Specie';
 
   @override
-  String get synonyms => 'Synonyms';
+  String get synonyms => 'Sinonimi';
 
   @override
-  String get editSpecies => 'Edit Specy';
+  String get editSpecies => 'Modifica Specie';
 
   @override
-  String get speciesUpdated => 'Specy updated';
+  String get speciesUpdated => 'Specie aggiornata';
 
   @override
-  String get addToCollection => 'Add to collection';
+  String get addToCollection => 'Aggiungi alla collezione';
 
   @override
   String get showNextNotificationsDateTime =>
-      'Show next notifications date and time';
+      'Mostra prossimi giorni e orari delle notifiche';
 
   @override
-  String get date => 'Date';
+  String get date => 'Data';
 
   @override
-  String get plant => 'Plant';
+  String get plant => 'Pianta';
 
   @override
-  String get low => 'Low';
+  String get low => 'Basso';
 
   @override
-  String get medium => 'Medium';
+  String get medium => 'Medio';
 
   @override
-  String get high => 'High';
+  String get high => 'Alto';
 
   @override
-  String get sunlight => 'Sunlight';
+  String get sunlight => 'Luce';
 
   @override
   String get min => 'min';
@@ -496,38 +490,38 @@ class LIt extends L {
 
   @override
   String errorWithMessage(String message) {
-    return 'Error: $message';
+    return 'Errore: $message';
   }
 
   @override
-  String get color => 'Color';
+  String get color => 'Colore';
 
   @override
-  String get red => 'red';
+  String get red => 'rosso';
 
   @override
-  String get green => 'green';
+  String get green => 'verde';
 
   @override
-  String get blue => 'blue';
+  String get blue => 'blu';
 
   @override
-  String get white => 'white';
+  String get white => 'bianco';
 
   @override
-  String get teal => 'teal';
+  String get teal => 'verde acqua';
 
   @override
-  String get yellow => 'yellow';
+  String get yellow => 'giallo';
 
   @override
-  String get icon => 'Icon';
+  String get icon => 'Icona';
 
   @override
-  String get every => 'Every';
+  String get every => 'Ogni';
 
   @override
-  String get repeatAfter => 'Repeat after';
+  String get repeatAfter => 'Ripeti dopo';
 
   @override
   String repeatAfterMessage(num quantity, String unit) {
@@ -536,13 +530,7 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 's',
-      one: '',
-    );
-    return '$quantityString $unit$_temp0';
+    return '$quantityString $unit';
   }
 
   @override
@@ -552,13 +540,7 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 's',
-      one: '',
-    );
-    return 'Every $quantityString $unit$_temp0';
+    return 'Ogni $quantityString $unit';
   }
 
   @override
@@ -568,54 +550,32 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 's',
-      one: '',
-    );
-    return 'After $quantityString $unit$_temp0';
+    return 'Dopo $quantityString $unit';
   }
 
   @override
-  String get day => 'day';
+  String get day => 'giorno';
 
   @override
-  String get week => 'week';
+  String get week => 'settimane';
 
   @override
-  String get month => 'month';
+  String get month => 'mesi';
 
   @override
-  String get year => 'year';
+  String get year => 'anni';
 
   @override
   String reminderDescription(
       num quantity, String unit, DateTime startDate, String endDate) {
-    final intl.DateFormat startDateDateFormat = intl.DateFormat.yMd(localeName);
-    final String startDateString = startDateDateFormat.format(startDate);
-
     final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 's',
-      one: '',
-    );
-    String _temp1 = intl.Intl.selectLogic(
-      endDate,
-      {
-        'null': '',
-        'other': ' to $endDate',
-      },
-    );
-    return 'Every $quantityString $unit$_temp0 from $startDateString$_temp1';
+    return 'Ogni $quantityString $unit';
   }
 
   @override
-  String get start => 'Start';
+  String get start => 'Inizio';
 }

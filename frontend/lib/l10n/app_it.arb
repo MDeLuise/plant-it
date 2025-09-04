@@ -1,132 +1,329 @@
 {
   "searchYourPlants": "Cerca nelle tue piante",
   "filterActivities": "Filtra Attività",
-  "notificationTitle1": "AAA",
-  "notificationTitle2": "BBB",
-  "notificationTitle3": "CCC",
-  "notificationTitle4": "DDD",
-  "notificationTitle5": "EEE",
-  "notificationTitle6": "FFF",
-  "notificationTitle7": "GG",
-  "notificationTitle8": "HH",
-  "notificationBody1": "{emoji} {plantName} I",
-  "notificationBody2": "{emoji} {plantName} L",
-  "notificationBody3": "{emoji} {plantName} M",
-  "notificationBody4": "{emoji} {plantName} N",
-  "notificationBody5": "{emoji} {plantName} O {eventType}. ",
-  "notificationBody6": "{emoji} {plantName} P {eventType}. ",
-  "notificationBody7": "{emoji} {plantName} Q {eventType}. ",
-  "notificationBody8": "{emoji} {plantName} R {eventType}. ",
-  "@notificationBody1": {
-    "description": "Notification body 1",
+  "filter": "Filtra",
+  "eventTypes": "Tipi Evento",
+  "nEventTypes": "{count} tipi evento",
+  "@nEventTypes": {
+    "description": "A plural event type message",
     "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "whichEventsYouWantToAdd": "Quali eventi vuoi aggiungere?",
+  "plants": "Piante",
+  "nPlants": "{count} piant{count, plural, =1 {a} other {e}}",
+  "@nPlants": {
+    "description": "A plural plant message",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "whichPlantsYouWantToAdd": "Quali piante vuoi aggiungere?",
+  "error": "Errore",
+  "tryAgain": "Riprova",
+  "confirmDelete": "Conferma eliminazione",
+  "areYouSureYouWantToDeleteThisEvent": "Sei sicuro di rimuovere l'evento?",
+  "cancel": "Annulla",
+  "delete": "Rimuovi",
+  "eventDeleted": "Evento rimosso",
+  "edit": "Modifica",
+  "eventCreated": "Evento creato",
+  "markDone": "Segna fatto",
+  "reminder": "Promemoria",
+  "back": "Indietro",
+  "next": "Avanti",
+  "confirm": "Conferma",
+  "createEvent": "Crea Evento",
+  "create": "Crea",
+  "eventsCreated": "Evento creato",
+  "save": "Salva",
+  "editTheEvent": "Modifica l'evento",
+  "eventUpdated": "Evento aggiornato",
+  "selectTheEventType": "Seleziona il tipo di evento",
+  "selectThePlant": "Seleziona la pianta",
+  "nextActions": "Prossima azione",
+  "home": "Home",
+  "calendar": "Calendario",
+  "search": "Cerca",
+  "more": "Altro",
+  "addPlant": "Aggiungi Pianta",
+  "add": "Aggiungi",
+  "plantAdded": "Pianta aggiunta",
+  "location": "Posizione",
+  "name": "Nome",
+  "price": "Prezzo",
+  "editPlant": "Modifica Pianta",
+  "plantUpdated": "Pianta aggiornata",
+  "deleteImage": "Elimina immagine",
+  "areYouSureYouWantToDeleteThisImage": "Sicuro di voler rimuovere l'immagine?",
+  "info": "Info",
+  "imageInfo": "Info sull'immagine",
+  "ok": "Ok",
+  "download": "Download",
+  "unsetAsAvatar": "Rimuovi come Avatar",
+  "setAsAvatar": "Seleziona come Avatar",
+  "information": "Informazioni",
+  "care": "Cura",
+  "reminders": "Promemoria",
+  "events": "Eventi",
+  "gallery": "Galleria",
+  "duplicate": "Duplica",
+  "plantDuplicated": "Pianta duplicata",
+  "plantDeleted": "Pianta eliminata",
+  "searchGreenFriends": "Cerca nuovi amici",
+  "note": "Note",
+  "update": "Aggiorna",
+  "custom": "creato",
+  "floraCodex": "Flora Codex",
+  "seller": "Venditore",
+  "remove": "Rimuovi",
+  "createEventType": "Crea Tipo Evento",
+  "selectAColor": "Seleziona un colore",
+  "select": "Seleziona",
+  "whichColorYouWantToUse": "Quale colore vuoi usare?",
+  "description": "Descrizione",
+  "whichIconYouWantToUse": "Quale icona vuoi usare?",
+  "filterIcons": "Filtra icone",
+  "insertAName": "Inserisci un nome",
+  "editEventType": "Modifica Tipo Evento",
+  "eventTypeUpdated": "Tipo Evento aggiornato",
+  "areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents": "Sicuro di voler eliminare il tipo evento e tutti gli eventi collegati?",
+  "eventTypeDeleted": "Tipo Evento eliminato",
+  "createReminder": "Crea Promemoria",
+  "reminderCreated": "Promemoria creato",
+  "whichEventTypeYouWantToSet": "Quale tipo evento vuoi selezionare?",
+  "quantity": "Quantità",
+  "whichPlantsYouWantToSet": "Quale pianta vuoi selezionare?",
+  "editReminder": "Modifica Promemoria",
+  "reminderUpdated": "Promemoria aggiornato",
+  "whichEventsYouWantToSet": "Quali eventi vuoi selezionare?",
+  "reminderDeleted": "Promemoria eliminato",
+  "areYouSureYouWantToDeleteTheReminder": "Sicuro di voler eliminare il promemoria?",
+  "dataSources": "Sorgenti dei dati",
+  "configureTheFloraCodexSettings": "Configura le impostazioni di Flora Codex",
+  "insertTheFloraCodexApiKey": "Inserisci l'API Key di Flora Codex",
+  "enterApiKey": "Inserisci l'API Key",
+  "enableDataSource": "Attiva la sorgente dei dati",
+  "apiKey": "API Key",
+  "notProvided": "non specificata",
+  "appInfo": "Informazioni sull'app",
+  "appVersion": "Versione dell'app",
+  "sourceCode": "Codice sorgente",
+  "support": "Supporta ♥️",
+  "notifications": "Notifiche",
+  "enableNotifications": "Attiva Notifiche",
+  "selectWeekdaysAndTimes": "Seleziona giorni e orari",
+  "pickTime": "Scegli orario",
+  "done": "Fatto",
+  "aboutPlantIt": "Plant-it info",
+  "manageTheEventTypes": "Gestisci i tipi di evento",
+  "manageTheReminders": "Gestisci i promemoria",
+  "manageTheDataSources": "Gestisci le sorgenti di dati",
+  "configureWhenAndIfNotificationsAreReceived": "Configura se e quando ricevere notifiche",
+  "detailsAboutTheApp": "Dettagli sull'app",
+  "yourSupportHelpsUsGrow": "Il tuo supporto ci aiuta a crescere!",
+  "supportTheProject": "Supporta il progetto",
+  "whySupportPlantIt": "Perchè supportare Plant-it?",
+  "openSourceProjectThatBenefitsEveryone": "Progetto open-source utilizzabile da chiunque",
+  "yourDonationsHelpUsImproveTheApp": "Le donazioni ci aiutano a migliorare l'app",
+  "supportNewFeaturesAndUpdates": "Supporta nuovi aggiornamenti",
+  "donateNow": "Dona Ora",
+  "createSpecies": "Crea Specie",
+  "speciesCreated": "Specie creata",
+  "avatar": "Avatar",
+  "noAvatar": "Nessun avatar",
+  "uploadPhoto": "Carica foto",
+  "choosePhoto": "Scegli foto",
+  "noPhoto": "Nessuna foto",
+  "useWebImage": "Usa immagine web",
+  "url": "Url",
+  "light": "Luce",
+  "humidity": "Umidità",
+  "temperature": "Temperatura",
+  "ph": "Ph",
+  "genus": "Genere",
+  "family": "Famiglia",
+  "synonym": "Sinonimo",
+  "addSynonym": "Aggiungi sinonimo",
+  "classification": "Classificazione",
+  "species": "Specie",
+  "synonyms": "Sinonimi",
+  "editSpecies": "Modifica Specie",
+  "speciesUpdated": "Specie aggiornata",
+  "addToCollection": "Aggiungi alla collezione",
+  "showNextNotificationsDateTime": "Mostra prossimi giorni e orari delle notifiche",
+  "date": "Data",
+  "plant": "Pianta",
+  "low": "Basso",
+  "medium": "Medio",
+  "high": "Alto",
+  "sunlight": "Luce",
+  "min": "min",
+  "max": "max",
+  "errorWithMessage": "Errore: {message}",
+  "@errorWithMessage": {
+    "description": "An error with a message",
+    "placeholders": {
+      "message": {
         "type": "String"
       }
     }
   },
-  "@notificationBody2": {
-    "description": "Notification body 2",
+  "color": "Colore",
+  "red": "rosso",
+  "green": "verde",
+  "blue": "blu",
+  "white": "bianco",
+  "teal": "verde acqua",
+  "yellow": "giallo",
+  "icon": "Icona",
+  "every": "Ogni",
+  "repeatAfter": "Ripeti dopo",
+  "repeatAfterMessage": "{quantity} {unit}",
+  "@repeatAfterMessage": {
+    "description": "A representation of repeat after",
     "placeholders": {
-      "emoji": {
-        "type": "String"
+      "quantity": {
+        "type": "num",
+        "format": "compact"
       },
-      "plantName": {
-        "type": "String"
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "giorni"
+          },
+          "week": {
+            "type": "String",
+            "value": "settimane"
+          },
+          "month": {
+            "type": "String",
+            "value": "mesi"
+          },
+          "year": {
+            "type": "String",
+            "value": "anni"
+          }
+        }
+      }
+    }
+  },
+  "frequencyMessage": "Ogni {quantity} {unit}",
+  "@frequencyMessage": {
+    "description": "A representation of frequency",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
       },
-      "eventType": {
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "giorni"
+          },
+          "week": {
+            "type": "String",
+            "value": "settimane"
+          },
+          "month": {
+            "type": "String",
+            "value": "mesi"
+          },
+          "year": {
+            "type": "String",
+            "value": "anni"
+          }
+        }
+      }
+    }
+  },
+  "afterMessage": "Dopo {quantity} {unit}",
+  "@afterMessage": {
+    "description": "A representation of after",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "giorni"
+          },
+          "week": {
+            "type": "String",
+            "value": "settimane"
+          },
+          "month": {
+            "type": "String",
+            "value": "mesi"
+          },
+          "year": {
+            "type": "String",
+            "value": "anni"
+          }
+        }
+      }
+    }
+  },
+  "day": "giorno",
+  "week": "settimane",
+  "month": "mesi",
+  "year": "anni",
+  "reminderDescription": "Ogni {quantity} {unit}",
+  "@reminderDescription": {
+    "description": "A description of reminder",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "giorni"
+          },
+          "week": {
+            "type": "String",
+            "value": "settimane"
+          },
+          "month": {
+            "type": "String",
+            "value": "mesi"
+          },
+          "year": {
+            "type": "String",
+            "value": "anni"
+          }
+        }
+      },
+      "startDate": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endDate": {
         "type": "String"
       }
     }
   },
-  "@notificationBody3": {
-    "description": "Notification body 3",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  },
-  "@notificationBody4": {
-    "description": "Notification body 4",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  },
-  "@notificationBody5": {
-    "description": "Notification body 5",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  },
-  "@notificationBody6": {
-    "description": "Notification body 6",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  },
-  "@notificationBody7": {
-    "description": "Notification body 7",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  },
-  "@notificationBody8": {
-    "description": "Notification body 8",
-    "placeholders": {
-      "emoji": {
-        "type": "String"
-      },
-      "plantName": {
-        "type": "String"
-      },
-      "eventType": {
-        "type": "String"
-      }
-    }
-  }
+  "start": "Inizio"
 }

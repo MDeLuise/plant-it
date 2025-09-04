@@ -398,10 +398,10 @@ class LEn extends L {
   String get donateNow => 'Donate Now';
 
   @override
-  String get createSpecies => 'Create Specy';
+  String get createSpecies => 'Create Species';
 
   @override
-  String get speciesCreated => 'Specy created';
+  String get speciesCreated => 'Species created';
 
   @override
   String get avatar => 'Avatar';
@@ -452,16 +452,16 @@ class LEn extends L {
   String get classification => 'Classification';
 
   @override
-  String get species => 'Specy';
+  String get species => 'Species';
 
   @override
   String get synonyms => 'Synonyms';
 
   @override
-  String get editSpecies => 'Edit Specy';
+  String get editSpecies => 'Edit Species';
 
   @override
-  String get speciesUpdated => 'Specy updated';
+  String get speciesUpdated => 'Species updated';
 
   @override
   String get addToCollection => 'Add to collection';
