@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/plant/view_models/add_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/widgets/create/location_step.dart';
@@ -30,12 +30,12 @@ class AddPlantScreen extends StatefulWidget {
 }
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
-  late final AppLocalizations appLocalizations;
+  late final L appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -45,12 +45,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.addPlant),
+        title: Text(L.of(context).addPlant),
       ),
       body: Summary<AddPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: AppLocalizations.of(context)!.add,
+          actionText: L.of(context).add,
           actionCommand: Command.createAsyncNoParam(() async {
             Command<void, int> command = widget.viewModel.insert;
             await command.executeWithFuture();
@@ -59,7 +59,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             }
             widget.streamController.add(StreamCode.insertPlant);
           }, initialValue: null),
-          successText: AppLocalizations.of(context)!.plantAdded,
+          successText: L.of(context).plantAdded,
           isPrimary: false,
           sections: [
             NameStep(

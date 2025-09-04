@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -52,8 +52,8 @@ class _PlantScreenState extends State<PlantScreen> {
 
           if (command.hasError) {
             return ErrorIndicator(
-              title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-              label: AppLocalizations.of(context)!.tryAgain,
+              title: L.of(context).errorWithMessage(command.error.toString()),
+              label: L.of(context).tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -118,7 +118,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Info
                           Text(
-                            AppLocalizations.of(context)!.information,
+                            L.of(context).information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -160,7 +160,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Care
                           Text(
-                            AppLocalizations.of(context)!.care,
+                            L.of(context).care,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -176,7 +176,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.reminders,
+                                L.of(context).reminders,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
@@ -197,7 +197,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Events
                           Text(
-                            AppLocalizations.of(context)!.events,
+                            L.of(context).events,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -210,7 +210,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Gallery
                           Text(
-                            AppLocalizations.of(context)!.gallery,
+                            L.of(context).gallery,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -261,7 +261,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.edit),
+                              title: Text(L.of(context).edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -273,7 +273,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.duplicate),
+                              title: Text(L.of(context).duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -285,7 +285,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.remove),
+                              title: Text(L.of(context).remove),
                             ),
                           ),
                         ],
@@ -308,7 +308,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.insertPlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(AppLocalizations.of(context)!.plantDuplicated),
+                                content: Text(L.of(context).plantDuplicated),
                               ),
                             );
                           }
@@ -327,7 +327,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.deletePlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(AppLocalizations.of(context)!.plantDeleted),
+                                content: Text(L.of(context).plantDeleted),
                               ),
                             );
                             context.pop();

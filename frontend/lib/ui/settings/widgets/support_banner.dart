@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportBanner extends StatefulWidget {
@@ -81,7 +81,7 @@ class _SupportBannerState extends State<SupportBanner>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.yourSupportHelpsUsGrow,
+                      L.of(context).yourSupportHelpsUsGrow,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -89,7 +89,7 @@ class _SupportBannerState extends State<SupportBanner>
                     ),
                     SizedBox(height: 4),
                     Text(
-                      AppLocalizations.of(context)!.supportTheProject,
+                      L.of(context).supportTheProject,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -183,7 +183,7 @@ class _DonationPageState extends State<_DonationPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.whySupportPlantIt,
+                            L.of(context).whySupportPlantIt,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -197,7 +197,8 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  AppLocalizations.of(context)!
+                                  L
+                                      .of(context)!
                                       .openSourceProjectThatBenefitsEveryone,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -214,7 +215,8 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  AppLocalizations.of(context)!
+                                  L
+                                      .of(context)!
                                       .yourDonationsHelpUsImproveTheApp,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -231,8 +233,7 @@ class _DonationPageState extends State<_DonationPage>
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  AppLocalizations.of(context)!
-                                      .supportNewFeaturesAndUpdates,
+                                  L.of(context).supportNewFeaturesAndUpdates,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -261,7 +262,7 @@ class _DonationPageState extends State<_DonationPage>
                               ),
                             ),
                             child: Text(
-                              AppLocalizations.of(context)!.donateNow,
+                              L.of(context).donateNow,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

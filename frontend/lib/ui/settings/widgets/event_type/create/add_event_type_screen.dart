@@ -1,6 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/color_step.dart';
@@ -23,19 +23,19 @@ class AddEventTypeScreen extends StatefulWidget {
 }
 
 class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
-  late final AppLocalizations _appLocalizations;
+  late final L _appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    _appLocalizations = AppLocalizations.of(context)!;
+    _appLocalizations = L.of(context)!;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.createEventType),
+        title: Text(L.of(context).createEventType),
       ),
       body: AppStepper<AddEventTypeViewModel>(
         viewModel: widget.viewModel,

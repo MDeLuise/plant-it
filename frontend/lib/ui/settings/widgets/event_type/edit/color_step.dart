@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/utils/common.dart' as common;
 
 class ColorStep extends StepSection<EditEventTypeViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   late final ValueNotifier<Color> _selectedColor =
       ValueNotifier(common.hexToColor(viewModel.color));
   late final ValueNotifier<Color> _ongoingSelection =
@@ -87,7 +87,7 @@ class _ColorStepState extends State<ColorStep> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.selectAColor),
+          title: Text(L.of(context).selectAColor),
           content: SingleChildScrollView(
             child: ColorPicker(
               enableAlpha: false,
@@ -103,7 +103,7 @@ class _ColorStepState extends State<ColorStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             TextButton(
               onPressed: () {
@@ -112,7 +112,7 @@ class _ColorStepState extends State<ColorStep> {
                 widget._valid.value = true;
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.select),
+              child: Text(L.of(context).select),
             ),
           ],
         );
@@ -127,7 +127,7 @@ class _ColorStepState extends State<ColorStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichColorYouWantToUse,
+          L.of(context).whichColorYouWantToUse,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),
@@ -215,7 +215,7 @@ class _ColorStepState extends State<ColorStep> {
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    Text(AppLocalizations.of(context)!.custom,
+                                    Text(L.of(context).custom,
                                         overflow: TextOverflow.ellipsis),
                                   ],
                                 ),

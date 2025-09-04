@@ -32,6 +32,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+l10n_missing.txt
 
 # Symbolication related
 app.*.symbols

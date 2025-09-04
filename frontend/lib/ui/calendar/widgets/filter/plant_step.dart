@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 
 class PlantStep extends StepSection<CalendarViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<List<Plant>> _selectedPlants =
       ValueNotifier(List.unmodifiable(viewModel.filteredPlants));
@@ -87,7 +87,7 @@ class _PlantStepState extends State<PlantStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-           AppLocalizations.of(context)!.whichPlantsYouWantToAdd,
+          L.of(context).whichPlantsYouWantToAdd,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),

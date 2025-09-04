@@ -4,7 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
@@ -29,12 +29,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.confirmDelete),
-        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteTheReminder),
+        title: Text(L.of(context).confirmDelete),
+        content: Text(L.of(context).areYouSureYouWantToDeleteTheReminder),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(L.of(context).cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -51,12 +51,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.reminderDeleted),
+                  content: Text(L.of(context).reminderDeleted),
                 ),
               );
               context.pop();
             },
-            child: Text(AppLocalizations.of(context)!.delete),
+            child: Text(L.of(context).delete),
           ),
         ],
       ),
@@ -67,7 +67,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.reminders),
+        title: Text(L.of(context).reminders),
         actions: [
           // TODO
           // IconButton(
@@ -89,8 +89,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
               }
               if (command.hasError) {
                 return ErrorIndicator(
-                  title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-                  label: AppLocalizations.of(context)!.tryAgain,
+                  title:
+                      L.of(context).errorWithMessage(command.error.toString()),
+                  label: L.of(context).tryAgain,
                   onPressed: widget.viewModel.load.execute,
                 );
               }
@@ -104,7 +105,13 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       child: ListTile(
                         title: Text(plant.name),
                         subtitle: Text(
-                          "Every ${et.frequencyQuantity} ${et.frequencyUnit.name} from ${et.startDate} ${et.endDate == null ? "" : "to ${et.endDate}"}",
+                          //"Every ${et.frequencyQuantity} ${et.frequencyUnit.name} from ${et.startDate} ${et.endDate == null ? "" : "to ${et.endDate}"}",
+                          L.of(context).reminderDescription(
+                                et.frequencyQuantity,
+                                et.frequencyUnit.name,
+                                et.startDate,
+                                et.endDate.toString(),
+                              ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: PopupMenuButton<String>(
@@ -125,7 +132,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 children: [
                                   Icon(LucideIcons.pencil),
                                   SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.edit),
+                                  Text(L.of(context).edit),
                                 ],
                               ),
                             ),
@@ -136,7 +143,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 children: [
                                   Icon(LucideIcons.trash),
                                   SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.delete),
+                                  Text(L.of(context).delete),
                                 ],
                               ),
                             ),

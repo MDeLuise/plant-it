@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart' as db;
 import 'package:plant_it/domain/models/species_searcher_result.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 
 class SpeciesCard extends StatelessWidget {
@@ -60,8 +60,8 @@ class SpeciesCard extends StatelessWidget {
                         labelPadding: EdgeInsets.all(0),
                         label: Text(
                           source == db.SpeciesDataSource.custom
-                              ? AppLocalizations.of(context)!.custom
-                              : AppLocalizations.of(context)!.floraCodex,
+                              ? L.of(context).custom
+                              : L.of(context).floraCodex,
                         ),
                       ),
                       SizedBox(

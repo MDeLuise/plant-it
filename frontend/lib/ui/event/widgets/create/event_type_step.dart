@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CreateEventFormViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable([]));
@@ -88,7 +88,7 @@ class _EventTypeStepState extends State<EventTypeStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichEventsYouWantToAdd,
+          L.of(context).whichEventsYouWantToAdd,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(height: 10),

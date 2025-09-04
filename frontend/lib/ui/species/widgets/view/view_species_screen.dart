@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
@@ -35,9 +35,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
           if (command.hasError) {
             return ErrorIndicator(
-              title: AppLocalizations.of(context)!
-                  .errorWithMessage(command.error.toString()),
-              label: AppLocalizations.of(context)!.tryAgain,
+              title: L.of(context).errorWithMessage(command.error.toString()),
+              label: L.of(context).tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -70,8 +69,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             label: Text(
                               widget.viewModel.source ==
                                       SpeciesDataSource.custom
-                                  ? AppLocalizations.of(context)!.custom
-                                  : AppLocalizations.of(context)!.floraCodex,
+                                  ? L.of(context).custom
+                                  : L.of(context).floraCodex,
                             ),
                           ),
                           Text(widget.viewModel.species,
@@ -91,8 +90,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 foregroundColor: WidgetStateProperty.all(
                                     Theme.of(context).colorScheme.onPrimary),
                               ),
-                              child: Text(AppLocalizations.of(context)!
-                                  .addToCollection),
+                              child: Text(L.of(context).addToCollection),
                             ),
                           ),
 
@@ -100,7 +98,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
                           // Info
                           Text(
-                            AppLocalizations.of(context)!.information,
+                            L.of(context).information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -195,7 +193,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.edit),
+                              title: Text(L.of(context).edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -207,8 +205,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title:
-                                  Text(AppLocalizations.of(context)!.duplicate),
+                              title: Text(L.of(context).duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -221,7 +218,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.remove),
+                              title: Text(L.of(context).remove),
                             ),
                           ),
                         ],

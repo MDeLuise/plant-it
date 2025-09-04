@@ -3,7 +3,7 @@
   "filterActivities": "Filter Activities",
   "filter": "Filter",
   "eventTypes": "Event Types",
-  "nEventTypes": "{count, plural, =1{1 event type} other{{count} event types}}",
+  "nEventTypes": "{count} event type{count, plural, =1 {} other {s}}",
   "@nEventTypes": {
     "description": "A plural event type message",
     "placeholders": {
@@ -15,7 +15,7 @@
   },
   "whichEventsYouWantToAdd": "Which events you want to add?",
   "plants": "Plants",
-  "nPlants": "{count, plural, =1{1 plant} other{{count} plants}}",
+  "nPlants": "{count} plant{count, plural, =1 {} other {s}}",
   "@nPlants": {
     "description": "A plural plant message",
     "placeholders": {
@@ -185,7 +185,40 @@
   "yellow": "yellow",
   "icon": "Icon",
   "every": "Every",
-  "frequencyMessage": "{quantity, plural, =1 {Every {quantity} {unit}} other {Every {quantity} {unit}s}}",
+  "repeatAfter": "Repeat after",
+  "repeatAfterMessage": "{quantity} {unit}{quantity, plural, =1{} other {s}}",
+  "@repeatAfterMessage": {
+    "description": "A representation of repeat after",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "day"
+          },
+          "week": {
+            "type": "String",
+            "value": "week"
+          },
+          "month": {
+            "type": "String",
+            "value": "month"
+          },
+          "year": {
+            "type": "String",
+            "value": "year"
+          }
+        }
+      }
+    }
+  },
+  "frequencyMessage": "Every {quantity} {unit}{quantity, plural, =1 {} other {s}}",
   "@frequencyMessage": {
     "description": "A representation of frequency",
     "placeholders": {
@@ -217,7 +250,7 @@
       }
     }
   },
-  "afterMessage": "{quantity, plural, =1 {After {quantity} {unit}} other {After {quantity} {unit}s}}",
+  "afterMessage": "After {quantity} {unit}{quantity, plural, =1 {} other {s}}",
   "@afterMessage": {
     "description": "A representation of after",
     "placeholders": {
@@ -253,7 +286,7 @@
   "week": "week",
   "month": "month",
   "year": "year",
-  "reminderDescription": "{quantity, plural, =1 {Every {quantity} {unit} from {startDate}{endDate, select, null {}} other { to {endDate}}} other {Every {quantity} {unit}s from {startDate}{endDate, select, null {}} other { to {endDate}}}}",
+  "reminderDescription": "Every {quantity} {unit}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}",
   "@reminderDescription": {
     "description": "A description of reminder",
     "placeholders": {
@@ -288,9 +321,9 @@
         "format": "yMd"
       },
       "endDate": {
-        "type": "DateTime",
-        "format": "yMd"
+        "type": "String"
       }
     }
-  }
+  },
+  "start": "Start"
 }

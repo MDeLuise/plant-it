@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 
 class PlantSection extends StepSection<EditEventFormViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _valid = ValueNotifier<bool>(true);
-  late final ValueNotifier<Plant?> _selectedPlant = ValueNotifier<Plant?>(viewModel.plant);
-  late final ValueNotifier<Plant?> _ongoingSelection = ValueNotifier<Plant?>(viewModel.plant);
+  late final ValueNotifier<Plant?> _selectedPlant =
+      ValueNotifier<Plant?>(viewModel.plant);
+  late final ValueNotifier<Plant?> _ongoingSelection =
+      ValueNotifier<Plant?>(viewModel.plant);
 
   PlantSection({
     super.key,
@@ -47,7 +49,7 @@ class _PlantSectionState extends State<PlantSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.selectThePlant,
+          L.of(context).selectThePlant,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(height: 10),
@@ -71,8 +73,8 @@ class _PlantSectionState extends State<PlantSection> {
                       bool isSelected =
                           widget._ongoingSelection.value!.id == plant.id;
                       return GestureDetector(
-                        onTap: () =>
-                            setState(() => widget._ongoingSelection.value = plant),
+                        onTap: () => setState(
+                            () => widget._ongoingSelection.value = plant),
                         child: Card.outlined(
                             shape: isSelected
                                 ? RoundedRectangleBorder(

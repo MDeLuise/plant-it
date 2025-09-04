@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/edit/end_step.dart';
@@ -22,12 +22,12 @@ class EditReminderScreen extends StatefulWidget {
 }
 
 class _EditReminderScreenState extends State<EditReminderScreen> {
-  late final AppLocalizations _appLocalizations;
+  late final L _appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    _appLocalizations = AppLocalizations.of(context)!;
+    _appLocalizations = L.of(context)!;
   }
 
   @override

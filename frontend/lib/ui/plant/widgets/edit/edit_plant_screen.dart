@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 import 'package:plant_it/ui/plant/widgets/edit/location_step.dart';
@@ -30,12 +30,12 @@ class EditPlantScreen extends StatefulWidget {
 }
 
 class _EditPlantScreenState extends State<EditPlantScreen> {
-  late final AppLocalizations appLocalizations;
+  late final L appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -45,12 +45,12 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.editPlant),
+        title: Text(L.of(context).editPlant),
       ),
       body: AppStepper<EditPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: AppLocalizations.of(context)!.update,
+          actionText: L.of(context).update,
           actionCommand: Command.createAsyncNoParam(() async {
             Command<void, bool> command = widget.viewModel.update;
             await command.executeWithFuture();
@@ -59,7 +59,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
             }
             widget.streamController.add(StreamCode.editPlant);
           }, initialValue: null),
-          successText: AppLocalizations.of(context)!.plantUpdated,
+          successText: L.of(context).plantUpdated,
           summary: true,
           stepsInFocus: 0,
           steps: [

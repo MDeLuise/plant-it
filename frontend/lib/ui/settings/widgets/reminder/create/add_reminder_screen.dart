@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/reminder/create/end_step.dart';
@@ -22,12 +22,12 @@ class AddReminderScreen extends StatefulWidget {
 }
 
 class _AddReminderScreenState extends State<AddReminderScreen> {
-  late final AppLocalizations _appLocalizations;
+  late final L _appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    _appLocalizations = AppLocalizations.of(context)!;
+    _appLocalizations = L.of(context)!;
   }
 
   @override

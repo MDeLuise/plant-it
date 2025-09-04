@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/stepper.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/create/date_step.dart';
@@ -23,12 +23,12 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  late final AppLocalizations appLocalizations;
+  late final L appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -38,14 +38,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.createEvent),
+        title: Text(L.of(context).createEvent),
       ),
       body: AppStepper<CreateEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: AppLocalizations.of(context)!.create,
+          actionText: L.of(context).create,
           actionCommand: widget.viewModel.insert,
-          successText: AppLocalizations.of(context)!.eventsCreated,
+          successText: L.of(context).eventsCreated,
           summary: true,
           stepsInFocus: 2,
           steps: [

@@ -10,19 +10,19 @@ import 'app_localizations_it.dart';
 
 // ignore_for_file: type=lint
 
-/// Callers can lookup localized strings with an instance of AppLocalizations
-/// returned by `AppLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of L
+/// returned by `L.of(context)`.
 ///
-/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// Applications need to include `L.delegate()` in their app's
 /// `localizationDelegates` list, and the locales they support in the app's
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'generated/app_localizations.dart';
 ///
 /// return MaterialApp(
-///   localizationsDelegates: AppLocalizations.localizationsDelegates,
-///   supportedLocales: AppLocalizations.supportedLocales,
+///   localizationsDelegates: L.localizationsDelegates,
+///   supportedLocales: L.supportedLocales,
 ///   home: MyApplicationHome(),
 /// );
 /// ```
@@ -59,20 +59,19 @@ import 'app_localizations_it.dart';
 /// Select and expand the newly-created Localizations item then, for each
 /// locale your application supports, add a new item and select the locale
 /// you wish to add from the pop-up menu in the Value field. This list should
-/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// be consistent with the languages listed in the L.supportedLocales
 /// property.
-abstract class AppLocalizations {
-  AppLocalizations(String locale)
+abstract class L {
+  L(String locale)
       : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static L of(BuildContext context) {
+    return Localizations.of<L>(context, L)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<L> delegate = _LDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -125,7 +124,7 @@ abstract class AppLocalizations {
   /// A plural event type message
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 event type} other{{count} event types}}'**
+  /// **'{count} event type{count, plural, =1 {} other {s}}'**
   String nEventTypes(num count);
 
   /// No description provided for @whichEventsYouWantToAdd.
@@ -143,7 +142,7 @@ abstract class AppLocalizations {
   /// A plural plant message
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 plant} other{{count} plants}}'**
+  /// **'{count} plant{count, plural, =1 {} other {s}}'**
   String nPlants(num count);
 
   /// No description provided for @whichPlantsYouWantToAdd.
@@ -1058,16 +1057,28 @@ abstract class AppLocalizations {
   /// **'Every'**
   String get every;
 
+  /// No description provided for @repeatAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat after'**
+  String get repeatAfter;
+
+  /// A representation of repeat after
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit}{quantity, plural, =1{} other {s}}'**
+  String repeatAfterMessage(num quantity, String unit);
+
   /// A representation of frequency
   ///
   /// In en, this message translates to:
-  /// **'{quantity, plural, =1 {Every {quantity} {unit}} other {Every {quantity} {unit}s}}'**
+  /// **'Every {quantity} {unit}{quantity, plural, =1 {} other {s}}'**
   String frequencyMessage(num quantity, String unit);
 
   /// A representation of after
   ///
   /// In en, this message translates to:
-  /// **'{quantity, plural, =1 {After {quantity} {unit}} other {After {quantity} {unit}s}}'**
+  /// **'After {quantity} {unit}{quantity, plural, =1 {} other {s}}'**
   String afterMessage(num quantity, String unit);
 
   /// No description provided for @day.
@@ -1093,15 +1104,27 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'year'**
   String get year;
+
+  /// A description of reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Every {quantity} {unit}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}'**
+  String reminderDescription(
+      num quantity, String unit, DateTime startDate, String endDate);
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
-  const _AppLocalizationsDelegate();
+class _LDelegate extends LocalizationsDelegate<L> {
+  const _LDelegate();
 
   @override
-  Future<AppLocalizations> load(Locale locale) {
-    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  Future<L> load(Locale locale) {
+    return SynchronousFuture<L>(lookupL(locale));
   }
 
   @override
@@ -1109,20 +1132,20 @@ class _AppLocalizationsDelegate
       <String>['en', 'it'].contains(locale.languageCode);
 
   @override
-  bool shouldReload(_AppLocalizationsDelegate old) => false;
+  bool shouldReload(_LDelegate old) => false;
 }
 
-AppLocalizations lookupAppLocalizations(Locale locale) {
+L lookupL(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':
-      return AppLocalizationsEn();
+      return LEn();
     case 'it':
-      return AppLocalizationsIt();
+      return LIt();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'L.delegate failed to load unsupported locale "$locale". This is likely '
       'an issue with the localizations generation tool. Please file an issue '
       'on GitHub with a reproducible sample app and the gen-l10n configuration '
       'that was used.');

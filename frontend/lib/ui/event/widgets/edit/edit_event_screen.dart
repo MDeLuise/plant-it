@@ -1,6 +1,6 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
 import 'package:plant_it/ui/event/view_models/edit_event_viewmodel.dart';
 import 'package:plant_it/ui/event/widgets/edit/date_section.dart';
@@ -26,7 +26,7 @@ class EditEventScreen extends StatefulWidget {
 
 class _EditEventScreenState extends State<EditEventScreen> {
   late final Command<void, void> _mainCommand;
-  late final AppLocalizations appLocalizations;
+  late final L appLocalizations;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     _mainCommand = Command.createAsyncNoParamNoResult(() async =>
         await widget.viewModel.load.executeWithFuture(widget.eventId));
     _mainCommand.execute();
-    appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+    appLocalizations = L.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -44,7 +44,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
         body: Summary<EditEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: _mainCommand,
-          actionText: AppLocalizations.of(context)!.update,
+          actionText: L.of(context).update,
           sections: [
             EventTypeSection(
               viewModel: widget.viewModel,
@@ -64,8 +64,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
             ),
           ],
           actionCommand: widget.viewModel.update,
-          mainText: AppLocalizations.of(context)!.editTheEvent,
-          successText: AppLocalizations.of(context)!.eventUpdated,
+          mainText: L.of(context).editTheEvent,
+          successText: L.of(context).eventUpdated,
           isPrimary: false,
         ));
   }

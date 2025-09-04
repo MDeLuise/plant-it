@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,7 +31,7 @@ class InfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.appInfo)),
+      appBar: AppBar(title: Text(L.of(context).appInfo)),
       body: SafeArea(
           child: FutureBuilder<String>(
               future: _loadAppVersion(),
@@ -41,9 +41,10 @@ class InfoScreen extends StatelessWidget {
                 }
                 if (snapshot.hasError) {
                   return ErrorIndicator(
-                    title: AppLocalizations.of(context)!
+                    title: L
+                        .of(context)!
                         .errorWithMessage(snapshot.error.toString()),
-                    label: AppLocalizations.of(context)!.tryAgain,
+                    label: L.of(context).tryAgain,
                     onPressed: _loadAppVersion,
                   );
                 }
@@ -51,20 +52,20 @@ class InfoScreen extends StatelessWidget {
                 return Column(
                   children: [
                     ListTile(
-                      title: Text(AppLocalizations.of(context)!.appVersion),
+                      title: Text(L.of(context).appVersion),
                       subtitle: Text(snapshot.data!),
                     ),
                     GestureDetector(
                       onTap: _goToSourceCode,
                       child: ListTile(
-                        title: Text(AppLocalizations.of(context)!.sourceCode),
+                        title: Text(L.of(context).sourceCode),
                         trailing: Icon(LucideIcons.external_link),
                       ),
                     ),
                     GestureDetector(
                       onTap: _goToSupport,
                       child: ListTile(
-                        title: Text(AppLocalizations.of(context)!.support),
+                        title: Text(L.of(context).support),
                         trailing: Icon(LucideIcons.external_link),
                       ),
                     ),

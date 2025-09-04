@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class IconStep extends StepSection<EditEventTypeViewModel> {
-  final AppLocalizations appLocalizations;
-  late final ValueNotifier<String> _selectedIcon = ValueNotifier(viewModel.icon);
-  late final ValueNotifier<String> _ongoingSelection = ValueNotifier(viewModel.icon);
+  final L appLocalizations;
+  late final ValueNotifier<String> _selectedIcon =
+      ValueNotifier(viewModel.icon);
+  late final ValueNotifier<String> _ongoingSelection =
+      ValueNotifier(viewModel.icon);
   final ValueNotifier<bool> _valid = ValueNotifier(true);
 
   IconStep({
@@ -66,13 +68,13 @@ class _IconStepState extends State<IconStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichIconYouWantToUse,
+          L.of(context).whichIconYouWantToUse,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),
         SearchBar(
           controller: _filterController,
-          hintText: AppLocalizations.of(context)!.filterIcons,
+          hintText: L.of(context).filterIcons,
           leading: const Icon(Icons.search),
           elevation: WidgetStatePropertyAll(0),
           padding: const WidgetStatePropertyAll<EdgeInsets>(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
 class StartStep extends StepSection<EditReminderViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime> _selectedDate =
       ValueNotifier<DateTime>(viewModel.startDate);
@@ -30,7 +30,7 @@ class StartStep extends StepSection<EditReminderViewModel> {
   }
 
   @override
-  String get title => "Start";
+  String get title => appLocalizations.start;
 
   @override
   String get value => _ongoingSelection.value.toString();

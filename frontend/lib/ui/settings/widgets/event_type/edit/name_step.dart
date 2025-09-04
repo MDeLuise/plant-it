@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 
 class EventTypeNameStep extends StepSection<EditEventTypeViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   late final ValueNotifier<String> name = ValueNotifier(viewModel.name);
   final ValueNotifier<bool> valid = ValueNotifier(true);
 
@@ -54,7 +54,7 @@ class _EventTypeNameStepState extends State<EventTypeNameStep> {
           controller: _nameController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.insertAName,
+            hintText: L.of(context).insertAName,
             //hint: Center(child: Text("Insert a name")),
           ),
           onChanged: (value) {

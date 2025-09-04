@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.notifications)),
+      appBar: AppBar(title: Text(L.of(context).notifications)),
       body: SafeArea(
         child: ValueListenableBuilder(
           valueListenable: viewModel.save.results,
@@ -24,8 +24,7 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title:
-                        Text(AppLocalizations.of(context)!.enableNotifications),
+                    title: Text(L.of(context).enableNotifications),
                     value: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
                         "true",
@@ -37,8 +36,7 @@ class NotificationsScreen extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    title: Text(
-                        AppLocalizations.of(context)!.selectWeekdaysAndTimes),
+                    title: Text(L.of(context).selectWeekdaysAndTimes),
                     trailing: const Icon(Icons.arrow_forward),
                     enabled: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
@@ -48,8 +46,7 @@ class NotificationsScreen extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    title: Text(AppLocalizations.of(context)!
-                        .showNextNotificationsDateTime),
+                    title: Text(L.of(context).showNextNotificationsDateTime),
                     trailing: const Icon(Icons.arrow_forward),
                     enabled: viewModel
                             .get(UserSettingsKeys.notificationEnabled.key) ==
@@ -94,7 +91,7 @@ class NotificationsScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(AppLocalizations.of(context)!.ok),
+                child: Text(L.of(context).ok),
               ),
             ],
           );
@@ -138,7 +135,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.selectWeekdaysAndTimes),
+      title: Text(L.of(context).selectWeekdaysAndTimes),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -167,7 +164,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
                             ? () => _selectTime(index)
                             : null,
                         child: Text(selectedTimes[index]?.format(context) ??
-                            AppLocalizations.of(context)!.pickTime),
+                            L.of(context).pickTime),
                       ),
                     ],
                   ),
@@ -182,7 +179,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
           onPressed: () {
             context.pop();
           },
-          child: Text(AppLocalizations.of(context)!.cancel),
+          child: Text(L.of(context).cancel),
         ),
         TextButton(
           onPressed: () async {
@@ -200,7 +197,7 @@ class _WeekdayTimeSelectorState extends State<_WeekdayTimeSelector> {
             }
             context.pop();
           },
-          child: Text(AppLocalizations.of(context)!.done),
+          child: Text(L.of(context).done),
         ),
       ],
     );

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:workmanager/workmanager.dart';
@@ -18,7 +18,7 @@ class DataSourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.dataSources)),
+      appBar: AppBar(title: Text(L.of(context).dataSources)),
       body: SafeArea(
           child: Column(
         children: [
@@ -26,9 +26,8 @@ class DataSourcesScreen extends StatelessWidget {
             onTap: () =>
                 context.push(Routes.settingsFloraCodex, extra: viewModel),
             child: ListTile(
-              title: Text(AppLocalizations.of(context)!.floraCodex),
-              subtitle: Text(
-                  AppLocalizations.of(context)!.configureTheFloraCodexSettings),
+              title: Text(L.of(context).floraCodex),
+              subtitle: Text(L.of(context).configureTheFloraCodexSettings),
             ),
           ),
         ],
@@ -56,18 +55,17 @@ class FloraCodexScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.insertTheFloraCodexApiKey),
+          title: Text(L.of(context).insertTheFloraCodexApiKey),
           content: TextField(
             controller: controller,
-            decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.enterApiKey),
+            decoration: InputDecoration(hintText: L.of(context).enterApiKey),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             TextButton(
               onPressed: () {
@@ -79,7 +77,7 @@ class FloraCodexScreen extends StatelessWidget {
                 }
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.confirm),
+              child: Text(L.of(context).confirm),
             ),
           ],
         );
@@ -90,7 +88,7 @@ class FloraCodexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.floraCodex)),
+      appBar: AppBar(title: Text(L.of(context).floraCodex)),
       body: SafeArea(
           child: ValueListenableBuilder(
               valueListenable: viewModel.save.results,
@@ -105,8 +103,7 @@ class FloraCodexScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SwitchListTile(
-                        title: Text(
-                            AppLocalizations.of(context)!.enableDataSource),
+                        title: Text(L.of(context).enableDataSource),
                         value: useFloraCodex,
                         onChanged: (bool value) {
                           viewModel.save.execute({
@@ -116,9 +113,9 @@ class FloraCodexScreen extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        title: Text(AppLocalizations.of(context)!.apiKey),
+                        title: Text(L.of(context).apiKey),
                         subtitle: (apiKey ?? "").isEmpty
-                            ? Text(AppLocalizations.of(context)!.notProvided)
+                            ? Text(L.of(context).notProvided)
                             : Text(
                                 "${apiKey!.substring(0, min(5, apiKey.length))}..."),
                         trailing: const Icon(Icons.arrow_forward),

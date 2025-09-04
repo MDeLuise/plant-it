@@ -4,7 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/species_searcher_result.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
@@ -67,8 +67,8 @@ class _SearchPageState extends State<SearchPage> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-                label: AppLocalizations.of(context)!.tryAgain,
+                title: L.of(context).errorWithMessage(command.error.toString()),
+                label: L.of(context).tryAgain,
                 onPressed: widget.viewModel.search.execute,
               );
             }
@@ -83,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                         vertical: 20, horizontal: 15),
                     child: SearchBar(
                         controller: _searchController,
-                        hintText: AppLocalizations.of(context)!.searchGreenFriends,
+                        hintText: L.of(context).searchGreenFriends,
                         leading: const Icon(Icons.search),
                         elevation: WidgetStatePropertyAll(0),
                         padding: const WidgetStatePropertyAll<EdgeInsets>(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 
 class PlantStep extends StepSection<AddReminderViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<Plant?> _selectedPlants = ValueNotifier(null);
   final ValueNotifier<Plant?> _ongoingSelection = ValueNotifier(null);
@@ -48,7 +48,7 @@ class _PlantStepState extends State<PlantStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichPlantsYouWantToSet,
+          L.of(context).whichPlantsYouWantToSet,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),

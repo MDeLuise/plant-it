@@ -3,7 +3,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/info_widget.dart';
 import 'package:plant_it/utils/common.dart';
@@ -108,7 +108,7 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
   @override
   List<InfoWidget> getInfoChildren(BuildContext context) {
     List<InfoWidget> result = [];
-    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    L appLocalizations = L.of(context)!;
 
     if (care.light.value != null) {
       String sunLightValue = appLocalizations.low;

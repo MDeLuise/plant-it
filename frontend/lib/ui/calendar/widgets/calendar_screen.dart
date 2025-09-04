@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/calendar_header.dart';
@@ -55,8 +55,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-                label: AppLocalizations.of(context)!.tryAgain,
+                title: L.of(context).errorWithMessage(command.error.toString()),
+                label: L.of(context).tryAgain,
                 onPressed: widget.viewModel.load.execute,
               );
             }

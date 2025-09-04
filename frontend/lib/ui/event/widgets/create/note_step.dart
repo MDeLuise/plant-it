@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
 class NoteStep extends StepSection<CreateEventFormViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   final ValueNotifier<String?> _selectedNote = ValueNotifier(null);
   final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
@@ -60,7 +60,7 @@ class NoteStep extends StepSection<CreateEventFormViewModel> {
           content: TextField(
             controller: controller,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.note,
+              labelText: L.of(context).note,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -71,13 +71,13 @@ class NoteStep extends StepSection<CreateEventFormViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );

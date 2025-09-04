@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<AddReminderViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<EventType?> _selectedEventTypes = ValueNotifier(null);
   final ValueNotifier<EventType?> _ongoingSelection = ValueNotifier(null);
@@ -49,7 +49,7 @@ class _EventTypeStepState extends State<EventTypeStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichEventTypeYouWantToSet,
+          L.of(context).whichEventTypeYouWantToSet,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(height: 10),

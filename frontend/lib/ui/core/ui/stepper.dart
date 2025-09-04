@@ -1,7 +1,7 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/core/ui/summary.dart';
@@ -59,8 +59,8 @@ class _Stepper<T> extends State<AppStepper<T>> {
           }
           if (command.hasError) {
             return ErrorIndicator(
-              title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-              label: AppLocalizations.of(context)!.tryAgain,
+              title: L.of(context).errorWithMessage(command.error.toString()),
+              label: L.of(context).tryAgain,
               onPressed: widget.mainCommand.execute,
             );
           }
@@ -109,7 +109,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                       EdgeInsetsGeometry.symmetric(
                                           vertical: 15, horizontal: 40)),
                                 ),
-                                child: Text(AppLocalizations.of(context)!.back),
+                                child: Text(L.of(context).back),
                               ),
                             ),
                           SizedBox(width: 10),
@@ -151,7 +151,7 @@ class _Stepper<T> extends State<AppStepper<T>> {
                                             )
                                           : null,
                                       child: Text(
-                                        AppLocalizations.of(context)!.next,
+                                        L.of(context).next,
                                         style: isValid
                                             ? TextStyle(
                                                 color: Theme.of(context)

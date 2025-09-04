@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/event_card.dart';
@@ -41,12 +41,12 @@ class _ActivityListState extends State<ActivityList> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.confirmDelete),
-        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisEvent),
+        title: Text(L.of(context).confirmDelete),
+        content: Text(L.of(context).areYouSureYouWantToDeleteThisEvent),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(L.of(context).cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -67,12 +67,12 @@ class _ActivityListState extends State<ActivityList> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.eventDeleted),
+                  content: Text(L.of(context).eventDeleted),
                 ),
               );
               context.pop();
             },
-            child: Text(AppLocalizations.of(context)!.delete),
+            child: Text(L.of(context).delete),
           ),
         ],
       ),

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 
 class DescriptionStep extends StepSection<EditEventTypeViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  late final ValueNotifier<String?> _selectedNote = ValueNotifier(viewModel.description);
-  late final ValueNotifier<String?> _ongoingSelection = ValueNotifier(viewModel.description);
+  late final ValueNotifier<String?> _selectedNote =
+      ValueNotifier(viewModel.description);
+  late final ValueNotifier<String?> _ongoingSelection =
+      ValueNotifier(viewModel.description);
 
   DescriptionStep({
     super.key,
@@ -60,7 +62,7 @@ class DescriptionStep extends StepSection<EditEventTypeViewModel> {
           content: TextField(
             controller: controller,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.description,
+              labelText: L.of(context).description,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -71,13 +73,13 @@ class DescriptionStep extends StepSection<EditEventTypeViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );

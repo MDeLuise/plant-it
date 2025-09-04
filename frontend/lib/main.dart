@@ -4,7 +4,7 @@ import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/data/service/search/cache/app_cache_pref.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
@@ -63,8 +63,8 @@ class MainApp extends StatelessWidget {
     // see https://github.com/material-foundation/flutter-packages/issues/574#issuecomment-2635023116
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp.router(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
         scrollBehavior: AppCustomScrollBehavior(),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

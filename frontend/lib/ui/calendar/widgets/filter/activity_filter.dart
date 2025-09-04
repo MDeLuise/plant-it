@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/event_type_step.dart';
 import 'package:plant_it/ui/calendar/widgets/filter/plant_step.dart';
@@ -21,12 +21,12 @@ class ActivityFilter extends StatefulWidget {
 }
 
 class _ActivityFilterState extends State<ActivityFilter> {
-  late AppLocalizations _appLocalizations;
+  late L _appLocalizations;
 
   @override
   void initState() {
     super.initState();
-    _appLocalizations = AppLocalizations.of(widget.appLocalizationsContext)!;
+    _appLocalizations = L.of(widget.appLocalizationsContext)!;
   }
 
   @override
@@ -39,12 +39,12 @@ class _ActivityFilterState extends State<ActivityFilter> {
             context.pop();
           },
         ),
-        title: Text(AppLocalizations.of(context)!.filterActivities),
+        title: Text(L.of(context).filterActivities),
       ),
       body: AppStepper(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: AppLocalizations.of(context)!.filter,
+        actionText: L.of(context).filter,
         actionCommand: widget.viewModel.filter,
         stepsInFocus: 0,
         steps: [

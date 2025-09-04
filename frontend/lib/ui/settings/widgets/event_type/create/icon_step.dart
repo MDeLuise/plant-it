@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class IconStep extends StepSection<AddEventTypeViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<String?> _selectedIcon = ValueNotifier(null);
   final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
   final ValueNotifier<bool> _valid = ValueNotifier(false);
@@ -66,13 +66,13 @@ class _IconStepState extends State<IconStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.whichIconYouWantToUse,
+          L.of(context).whichIconYouWantToUse,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),
         SearchBar(
           controller: _filterController,
-          hintText: AppLocalizations.of(context)!.filterIcons,
+          hintText: L.of(context).filterIcons,
           leading: const Icon(Icons.search),
           elevation: WidgetStatePropertyAll(0),
           padding: const WidgetStatePropertyAll<EdgeInsets>(

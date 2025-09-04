@@ -4,7 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
@@ -29,13 +29,14 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.confirmDelete),
-        content: Text(
-          AppLocalizations.of(context)!.areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents),
+        title: Text(L.of(context).confirmDelete),
+        content: Text(L
+            .of(context)!
+            .areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(L.of(context).cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -52,12 +53,12 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               setState(() {});
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.eventTypeDeleted),
+                  content: Text(L.of(context).eventTypeDeleted),
                 ),
               );
               context.pop();
             },
-            child: Text(AppLocalizations.of(context)!.delete),
+            child: Text(L.of(context).delete),
           ),
         ],
       ),
@@ -68,7 +69,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.eventTypes),
+        title: Text(L.of(context).eventTypes),
         actions: [
           IconButton(
             onPressed: () => context.push(Routes.eventType),
@@ -85,8 +86,9 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
               }
               if (command.hasError) {
                 return ErrorIndicator(
-                  title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
-                  label: AppLocalizations.of(context)!.tryAgain,
+                  title:
+                      L.of(context).errorWithMessage(command.error.toString()),
+                  label: L.of(context).tryAgain,
                   onPressed: widget.viewModel.load.execute,
                 );
               }
@@ -116,7 +118,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                                 children: [
                                   Icon(LucideIcons.pencil),
                                   SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.edit),
+                                  Text(L.of(context).edit),
                                 ],
                               ),
                             ),
@@ -127,7 +129,7 @@ class _EventTypeScreenState extends State<EventTypeScreen> {
                                 children: [
                                   Icon(LucideIcons.trash),
                                   SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.delete),
+                                  Text(L.of(context).delete),
                                 ],
                               ),
                             ),

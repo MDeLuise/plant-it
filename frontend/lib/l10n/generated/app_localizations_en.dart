@@ -4,15 +4,15 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Italian (`it`).
-class AppLocalizationsIt extends AppLocalizations {
-  AppLocalizationsIt([String locale = 'it']) : super(locale);
+/// The translations for English (`en`).
+class LEn extends L {
+  LEn([String locale = 'en']) : super(locale);
 
   @override
-  String get searchYourPlants => 'Cerca nelle tue piante';
+  String get searchYourPlants => 'Search your plants';
 
   @override
-  String get filterActivities => 'Filtra Attività';
+  String get filterActivities => 'Filter Activities';
 
   @override
   String get filter => 'Filter';
@@ -30,10 +30,10 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$countString event types',
-      one: '1 event type',
+      other: 's',
+      one: '',
     );
-    return '$_temp0';
+    return '$countString event type$_temp0';
   }
 
   @override
@@ -52,10 +52,10 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$countString plants',
-      one: '1 plant',
+      other: 's',
+      one: '',
     );
-    return '$_temp0';
+    return '$countString plant$_temp0';
   }
 
   @override
@@ -527,6 +527,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get every => 'Every';
 
   @override
+  String get repeatAfter => 'Repeat after';
+
+  @override
+  String repeatAfterMessage(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    return '$quantityString $unit$_temp0';
+  }
+
+  @override
   String frequencyMessage(num quantity, String unit) {
     final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
@@ -536,10 +555,10 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
-      other: 'Every $quantityString ${unit}s',
-      one: 'Every $quantityString $unit',
+      other: 's',
+      one: '',
     );
-    return '$_temp0';
+    return 'Every $quantityString $unit$_temp0';
   }
 
   @override
@@ -552,10 +571,10 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
-      other: 'After $quantityString ${unit}s',
-      one: 'After $quantityString $unit',
+      other: 's',
+      one: '',
     );
-    return '$_temp0';
+    return 'After $quantityString $unit$_temp0';
   }
 
   @override
@@ -569,4 +588,34 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get year => 'year';
+
+  @override
+  String reminderDescription(
+      num quantity, String unit, DateTime startDate, String endDate) {
+    final intl.DateFormat startDateDateFormat = intl.DateFormat.yMd(localeName);
+    final String startDateString = startDateDateFormat.format(startDate);
+
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    String _temp1 = intl.Intl.selectLogic(
+      endDate,
+      {
+        'null': '',
+        'other': ' to $endDate',
+      },
+    );
+    return 'Every $quantityString $unit$_temp0 from $startDateString$_temp1';
+  }
+
+  @override
+  String get start => 'Start';
 }

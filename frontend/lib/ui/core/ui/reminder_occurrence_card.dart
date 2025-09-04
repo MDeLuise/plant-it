@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_shapes/material_shapes.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/reminder_occurrence.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/themes/colors.dart';
 import 'package:plant_it/utils/common.dart';
@@ -47,10 +47,10 @@ class ReminderOccurrenceCard extends StatelessWidget {
             Text(" • "),
             Text(
               // "every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
-              AppLocalizations.of(context)!.frequencyMessage(
-                reminderOccurrence.reminder.frequencyQuantity,
-                reminderOccurrence.reminder.frequencyUnit.name,
-              ),
+              L.of(context).frequencyMessage(
+                    reminderOccurrence.reminder.frequencyQuantity,
+                    reminderOccurrence.reminder.frequencyUnit.name,
+                  ),
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: AppColors.grey4,
                   ),
@@ -76,7 +76,7 @@ class ReminderOccurrenceCard extends StatelessWidget {
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(AppLocalizations.of(context)!.eventCreated),
+                    content: Text(L.of(context).eventCreated),
                   ),
                 );
               }
@@ -90,7 +90,7 @@ class ReminderOccurrenceCard extends StatelessWidget {
                 children: [
                   Icon(LucideIcons.check),
                   SizedBox(width: 10),
-                  Text(AppLocalizations.of(context)!.markDone),
+                  Text(L.of(context).markDone),
                 ],
               ),
             ),
@@ -101,7 +101,7 @@ class ReminderOccurrenceCard extends StatelessWidget {
                 children: [
                   Icon(LucideIcons.clock),
                   SizedBox(width: 10),
-                  Text(AppLocalizations.of(context)!.reminder),
+                  Text(L.of(context).reminder),
                 ],
               ),
             ),

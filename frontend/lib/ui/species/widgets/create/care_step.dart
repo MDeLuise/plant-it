@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/species/view_models/add_species_viewmodel.dart';
 
@@ -109,13 +109,13 @@ class _CareStep extends State<CareStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(range.toInt());
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );
@@ -154,13 +154,13 @@ class _CareStep extends State<CareStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(range.toInt());
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );
@@ -202,13 +202,13 @@ class _CareStep extends State<CareStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(range);
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );
@@ -250,13 +250,13 @@ class _CareStep extends State<CareStep> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(range);
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );
@@ -275,7 +275,8 @@ class _CareStep extends State<CareStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.of(context)!.care, style: Theme.of(context).textTheme.headlineSmall),
+          Text(L.of(context).care,
+              style: Theme.of(context).textTheme.headlineSmall),
           SizedBox(height: 20),
           AnimatedBuilder(
             animation: widget._ongoingLightSelection,
@@ -289,7 +290,7 @@ class _CareStep extends State<CareStep> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(AppLocalizations.of(context)!.light),
+                        Text(L.of(context).light),
                         Row(
                           children: [
                             Text(widget._ongoingLightSelection.value
@@ -318,7 +319,7 @@ class _CareStep extends State<CareStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.humidity),
+                          Text(L.of(context).humidity),
                           Row(
                             children: [
                               Text(widget._ongoingHumiditySelection.value
@@ -346,7 +347,7 @@ class _CareStep extends State<CareStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.temperature),
+                          Text(L.of(context).temperature),
                           Row(
                             children: [
                               Text(widget._ongoingTemp.value == null
@@ -374,7 +375,7 @@ class _CareStep extends State<CareStep> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.ph),
+                          Text(L.of(context).ph),
                           Row(
                             children: [
                               Text(widget._ongoingPhSelection.value == null

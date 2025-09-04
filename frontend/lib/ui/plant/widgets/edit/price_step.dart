@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/app_localizations.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class PriceStep extends StepSection<EditPlantViewModel> {
-  final AppLocalizations appLocalizations;
+  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
-  late final ValueNotifier<double?> _selectedPrice = ValueNotifier(viewModel.price);
-  late final ValueNotifier<double?> _ongoingSelection = ValueNotifier(viewModel.price);
+  late final ValueNotifier<double?> _selectedPrice =
+      ValueNotifier(viewModel.price);
+  late final ValueNotifier<double?> _ongoingSelection =
+      ValueNotifier(viewModel.price);
 
   PriceStep({
     super.key,
@@ -42,7 +44,8 @@ class PriceStep extends StepSection<EditPlantViewModel> {
   bool get isActionSection => true;
 
   @override
-  Future<void> action(BuildContext context, EditPlantViewModel viewModel) async {
+  Future<void> action(
+      BuildContext context, EditPlantViewModel viewModel) async {
     final TextEditingController controller =
         TextEditingController(text: _ongoingSelection.value?.toString() ?? "");
     final String? result = await showDialog<String>(
@@ -54,7 +57,7 @@ class PriceStep extends StepSection<EditPlantViewModel> {
             controller: controller,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.price,
+              labelText: L.of(context).price,
               border: OutlineInputBorder(),
             ),
             maxLines: null,
@@ -65,13 +68,13 @@ class PriceStep extends StepSection<EditPlantViewModel> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(L.of(context).cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(L.of(context).save),
             ),
           ],
         );
