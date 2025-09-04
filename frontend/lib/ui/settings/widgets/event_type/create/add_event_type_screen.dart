@@ -9,11 +9,13 @@ import 'package:plant_it/ui/settings/widgets/event_type/create/icon_step.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/name_step.dart';
 
 class AddEventTypeScreen extends StatefulWidget {
+  final BuildContext appLocalizationsContext;
   final AddEventTypeViewModel viewModel;
 
   const AddEventTypeScreen({
     super.key,
     required this.viewModel,
+    required this.appLocalizationsContext,
   });
 
   @override
@@ -21,6 +23,14 @@ class AddEventTypeScreen extends StatefulWidget {
 }
 
 class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
+  late final AppLocalizations _appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLocalizations = AppLocalizations.of(context)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,16 +40,28 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
       body: AppStepper<AddEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: Command.createAsyncNoParamNoResult(() => Future.value()),
-        actionText: AppLocalizations.of(context)!.create,
+        actionText: _appLocalizations.create,
         steps: [
-          EventTypeNameStep(viewModel: widget.viewModel),
-          IconStep(viewModel: widget.viewModel),
-          ColorStep(viewModel: widget.viewModel),
-          DescriptionStep(viewModel: widget.viewModel),
+          EventTypeNameStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          IconStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          ColorStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          DescriptionStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
         ],
         stepsInFocus: 3,
         actionCommand: widget.viewModel.insert,
-        successText: AppLocalizations.of(context)!.eventCreated,
+        successText: _appLocalizations.eventCreated,
       ),
     );
   }

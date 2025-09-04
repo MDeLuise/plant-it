@@ -6,6 +6,7 @@ import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmode
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<EditReminderViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   late final ValueNotifier<EventType> _selectedEventTypes =
       ValueNotifier(viewModel.eventTypes[viewModel.type]!);
@@ -15,6 +16,7 @@ class EventTypeStep extends StepSection<EditReminderViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override

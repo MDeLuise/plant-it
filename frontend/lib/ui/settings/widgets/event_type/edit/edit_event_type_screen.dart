@@ -20,24 +20,44 @@ class EditEventTypeScreen extends StatefulWidget {
 }
 
 class _EditEventTypeScreenState extends State<EditEventTypeScreen> {
+  late final AppLocalizations _appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLocalizations = AppLocalizations.of(context)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.editEventType),
+        title: Text(_appLocalizations.editEventType),
       ),
       body: Summary<EditEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: AppLocalizations.of(context)!.update,
+        actionText: _appLocalizations.update,
         sections: [
-          EventTypeNameStep(viewModel: widget.viewModel),
-          IconStep(viewModel: widget.viewModel),
-          ColorStep(viewModel: widget.viewModel),
-          DescriptionStep(viewModel: widget.viewModel),
+          EventTypeNameStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          IconStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          ColorStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          DescriptionStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
         ],
         actionCommand: widget.viewModel.update,
-        successText: AppLocalizations.of(context)!.eventTypeUpdated,
+        successText: _appLocalizations.eventTypeUpdated,
         isPrimary: false,
       ),
     );

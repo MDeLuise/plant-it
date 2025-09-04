@@ -100,7 +100,9 @@ class SpeciesRepository extends CRUDRepository<Specy> {
     return species.toSuccess();
   }
 
-  void deleteAllByDataSources(SpeciesDataSource dataSource) async{
-    await (db.delete(db.species)..where((s) => s.dataSource.equals(dataSource.name))).go();
+  void deleteAllByDataSources(SpeciesDataSource dataSource) async {
+    await (db.delete(db.species)
+          ..where((s) => s.dataSource.equals(dataSource.name)))
+        .go();
   }
 }

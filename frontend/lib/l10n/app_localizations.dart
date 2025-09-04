@@ -809,13 +809,13 @@ abstract class AppLocalizations {
   /// No description provided for @createSpecies.
   ///
   /// In en, this message translates to:
-  /// **'Create Species'**
+  /// **'Create Specy'**
   String get createSpecies;
 
   /// No description provided for @speciesCreated.
   ///
   /// In en, this message translates to:
-  /// **'Species created'**
+  /// **'Specy created'**
   String get speciesCreated;
 
   /// No description provided for @avatar.
@@ -917,7 +917,7 @@ abstract class AppLocalizations {
   /// No description provided for @species.
   ///
   /// In en, this message translates to:
-  /// **'Species'**
+  /// **'Specy'**
   String get species;
 
   /// No description provided for @synonyms.
@@ -929,13 +929,13 @@ abstract class AppLocalizations {
   /// No description provided for @editSpecies.
   ///
   /// In en, this message translates to:
-  /// **'Edit Species'**
+  /// **'Edit Specy'**
   String get editSpecies;
 
   /// No description provided for @speciesUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Species updated'**
+  /// **'Specy updated'**
   String get speciesUpdated;
 
   /// No description provided for @addToCollection.
@@ -1003,6 +1003,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error: {message}'**
   String errorWithMessage(String message);
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @red.
+  ///
+  /// In en, this message translates to:
+  /// **'red'**
+  String get red;
+
+  /// No description provided for @green.
+  ///
+  /// In en, this message translates to:
+  /// **'green'**
+  String get green;
+
+  /// No description provided for @blue.
+  ///
+  /// In en, this message translates to:
+  /// **'blue'**
+  String get blue;
+
+  /// No description provided for @white.
+  ///
+  /// In en, this message translates to:
+  /// **'white'**
+  String get white;
+
+  /// No description provided for @teal.
+  ///
+  /// In en, this message translates to:
+  /// **'teal'**
+  String get teal;
+
+  /// No description provided for @yellow.
+  ///
+  /// In en, this message translates to:
+  /// **'yellow'**
+  String get yellow;
+
+  /// No description provided for @icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get icon;
+
+  /// No description provided for @every.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get every;
+
+  /// A representation of frequency
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity, plural, =1 {Every {quantity} {unit}} other {Every {quantity} {unit}s}}'**
+  String frequencyMessage(num quantity, String unit);
+
+  /// A representation of after
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity, plural, =1 {After {quantity} {unit}} other {After {quantity} {unit}s}}'**
+  String afterMessage(num quantity, String unit);
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'week'**
+  String get week;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'year'**
+  String get year;
 }
 
 class _AppLocalizationsDelegate

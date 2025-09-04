@@ -67,7 +67,7 @@ class _SearchPageState extends State<SearchPage> {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title: "Error : ${command.error}",
+                title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
                 label: AppLocalizations.of(context)!.tryAgain,
                 onPressed: widget.viewModel.search.execute,
               );

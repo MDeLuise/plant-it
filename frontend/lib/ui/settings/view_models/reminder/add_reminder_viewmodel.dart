@@ -74,7 +74,7 @@ class AddReminderViewModel extends ChangeNotifier {
     for (Specy s in species.getOrThrow()) {
       _species.putIfAbsent(s.id, () => s);
     }
-    _log.fine("Species loaded");
+    _log.fine("Specy loaded");
 
     notifyListeners();
     return Success("ok");

@@ -99,7 +99,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     if (species.isError()) {
       return Failure(Exception(species.exceptionOrNull()));
     }
-    _log.fine("Species loaded");
+    _log.fine("Specy loaded");
     _species = species.getOrThrow().toCompanion(true);
 
     Result<SpeciesCareData> care = await _speciesCareRepository.get(speciesId);
@@ -107,7 +107,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       return Failure(Exception(care.exceptionOrNull()));
     }
     _speciesCare = care.getOrThrow().toCompanion(true);
-    _log.fine("Species care loaded");
+    _log.fine("Specy care loaded");
 
     Result<List<SpeciesSynonym>> synonyms =
         await _speciesSynonymsRepository.getBySpecies(speciesId);
@@ -116,7 +116,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     }
     _speciesSynonyms =
         synonyms.getOrThrow().map((s) => s.toCompanion(true)).toList();
-    _log.fine("Species synonyms loaded");
+    _log.fine("Specy synonyms loaded");
 
     Result<String>? speciesImageBase64 =
         await _imageRepository.getSpeciesImageBase64(_species.id.value);
@@ -126,13 +126,15 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       }
       _base64Image = speciesImageBase64.getOrThrow();
     }
-    _log.fine("Species image loaded");
+    _log.fine("Specy image loaded");
 
     return Success("ok");
   }
 
-  Future<Result<void>> _loadExternal(SpeciesSearcherPartialResult external) async {
-    Result<SpeciesSearcherResult> details = await _speciesSearcherFacade.getDetails(external);
+  Future<Result<void>> _loadExternal(
+      SpeciesSearcherPartialResult external) async {
+    Result<SpeciesSearcherResult> details =
+        await _speciesSearcherFacade.getDetails(external);
     if (details.isError()) {
       return details;
     }

@@ -5,6 +5,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
 class FrequencyStep extends StepSection<EditReminderViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<FrequencyUnit> _selectedFrequencyUnit =
       ValueNotifier(viewModel.frequencyUnit);
@@ -18,6 +19,7 @@ class FrequencyStep extends StepSection<EditReminderViewModel> {
   FrequencyStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -35,7 +37,7 @@ class FrequencyStep extends StepSection<EditReminderViewModel> {
   }
 
   @override
-  String get title => "Every";
+  String get title => appLocalizations.every;
 
   @override
   String get value =>

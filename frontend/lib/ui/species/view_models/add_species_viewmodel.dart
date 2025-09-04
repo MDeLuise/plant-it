@@ -116,7 +116,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
     if (speciesId.isError()) {
       return speciesId;
     }
-    _log.fine("Species saved");
+    _log.fine("Specy saved");
     _setSpeciesId(speciesId.getOrThrow());
     Result<int> careId =
         await _speciesCareRepository.insert(_speciesCareCompanion);
@@ -124,7 +124,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
       await _speciesRepository.delete(speciesId.getOrThrow());
       return careId;
     }
-    _log.fine("Species care saved");
+    _log.fine("Specy care saved");
     for (SpeciesSynonymsCompanion s in _speciesSynonymsCompanion) {
       Result<int> synonymId = await _speciesSynonymsRepository.insert(s);
       if (synonymId.isError()) {
@@ -133,7 +133,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
         return synonymId;
       }
     }
-    _log.fine("Species synonyms saved");
+    _log.fine("Specy synonyms saved");
 
     Result<int> avatarResult = await _saveAvatar(speciesId.getOrThrow());
     if (avatarResult.isError()) {
@@ -171,7 +171,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
       await _imageRepository.removeImageFile(savedPath.getOrThrow());
       return imageId;
     }
-    _log.fine("Species uploaded image saved");
+    _log.fine("Specy uploaded image saved");
     return imageId;
   }
 
@@ -182,7 +182,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
       createdAt: Value(DateTime.now()),
     ));
     if (imageId.isSuccess()) {
-      _log.fine("Species URL image saved");
+      _log.fine("Specy URL image saved");
     }
     return imageId;
   }

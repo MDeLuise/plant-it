@@ -113,7 +113,8 @@ class Images extends Table {
   TextColumn get description => text().withLength(max: 250).nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
   IntColumn get plantId => integer().nullable().references(Plants, #id)();
-  IntColumn get speciesId => integer().nullable().references(Species, #id).unique()();
+  IntColumn get speciesId =>
+      integer().nullable().references(Species, #id).unique()();
   BoolColumn get isAvatar => boolean().withDefault(const Constant(false))();
 
   @override

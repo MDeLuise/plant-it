@@ -22,26 +22,52 @@ class EditReminderScreen extends StatefulWidget {
 }
 
 class _EditReminderScreenState extends State<EditReminderScreen> {
+  late final AppLocalizations _appLocalizations;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLocalizations = AppLocalizations.of(context)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.editReminder),
+        title: Text(_appLocalizations.editReminder),
       ),
       body: Summary<EditReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: AppLocalizations.of(context)!.update,
+        actionText: _appLocalizations.update,
         sections: [
-          EventTypeStep(viewModel: widget.viewModel),
-          PlantStep(viewModel: widget.viewModel),
-          FrequencyStep(viewModel: widget.viewModel),
-          RepeatAfterStep(viewModel: widget.viewModel),
-          StartStep(viewModel: widget.viewModel),
-          EndStep(viewModel: widget.viewModel),
+          EventTypeStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          PlantStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          FrequencyStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          RepeatAfterStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          StartStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
+          EndStep(
+            viewModel: widget.viewModel,
+            appLocalizations: _appLocalizations,
+          ),
         ],
         actionCommand: widget.viewModel.update,
-        successText: AppLocalizations.of(context)!.reminderUpdated,
+        successText: _appLocalizations.reminderUpdated,
         isPrimary: false,
       ),
     );

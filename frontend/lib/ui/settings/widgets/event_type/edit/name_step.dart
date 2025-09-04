@@ -4,10 +4,15 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 
 class EventTypeNameStep extends StepSection<EditEventTypeViewModel> {
+  final AppLocalizations appLocalizations;
   late final ValueNotifier<String> name = ValueNotifier(viewModel.name);
   final ValueNotifier<bool> valid = ValueNotifier(true);
 
-  EventTypeNameStep({super.key, required super.viewModel,});
+  EventTypeNameStep({
+    super.key,
+    required super.viewModel,
+    required this.appLocalizations,
+  });
 
   @override
   void cancel() {}
@@ -24,7 +29,7 @@ class EventTypeNameStep extends StepSection<EditEventTypeViewModel> {
   ValueNotifier<bool> get isValidNotifier => valid;
 
   @override
-  String get title => "Name";
+  String get title => appLocalizations.name;
 
   @override
   String get value => name.value;

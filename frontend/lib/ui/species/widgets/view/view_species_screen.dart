@@ -35,8 +35,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
           if (command.hasError) {
             return ErrorIndicator(
-              title:
-                  "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
+              title: AppLocalizations.of(context)!
+                  .errorWithMessage(command.error.toString()),
               label: AppLocalizations.of(context)!.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
@@ -91,7 +91,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 foregroundColor: WidgetStateProperty.all(
                                     Theme.of(context).colorScheme.onPrimary),
                               ),
-                              child: Text(AppLocalizations.of(context)!.addToCollection),
+                              child: Text(AppLocalizations.of(context)!
+                                  .addToCollection),
                             ),
                           ),
 
@@ -149,7 +150,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                              "Species is also known as: ${widget.viewModel.synonyms.join(", ")}${widget.viewModel.synonyms.isEmpty ? "" : "."}",
+                              "Specy is also known as: ${widget.viewModel.synonyms.join(", ")}${widget.viewModel.synonyms.isEmpty ? "" : "."}",
                               style: Theme.of(context).textTheme.bodyLarge!),
                           const SizedBox(height: 16),
                         ],
@@ -206,7 +207,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(AppLocalizations.of(context)!.duplicate),
+                              title:
+                                  Text(AppLocalizations.of(context)!.duplicate),
                             ),
                           ),
                           PopupMenuItem(

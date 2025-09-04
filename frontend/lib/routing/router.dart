@@ -203,7 +203,10 @@ GoRouter router() => GoRouter(
                   AddEventTypeViewModel viewModel = AddEventTypeViewModel(
                     eventTypeRepository: context.read(),
                   );
-                  return AddEventTypeScreen(viewModel: viewModel);
+                  return AddEventTypeScreen(
+                    viewModel: viewModel,
+                    appLocalizationsContext: context,
+                  );
                 },
               ),
               GoRoute(

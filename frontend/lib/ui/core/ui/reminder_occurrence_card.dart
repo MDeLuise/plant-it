@@ -46,7 +46,11 @@ class ReminderOccurrenceCard extends StatelessWidget {
             ),
             Text(" • "),
             Text(
-              "every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
+              // "every ${reminderOccurrence.reminder.frequencyQuantity} ${reminderOccurrence.reminder.frequencyUnit.name}",
+              AppLocalizations.of(context)!.frequencyMessage(
+                reminderOccurrence.reminder.frequencyQuantity,
+                reminderOccurrence.reminder.frequencyUnit.name,
+              ),
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: AppColors.grey4,
                   ),

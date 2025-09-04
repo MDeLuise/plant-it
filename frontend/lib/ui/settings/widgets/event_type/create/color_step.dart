@@ -6,6 +6,7 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 
 class ColorStep extends StepSection<AddEventTypeViewModel> {
+  final AppLocalizations appLocalizations;
   final ValueNotifier<Color?> _selectedColor = ValueNotifier(null);
   final ValueNotifier<Color?> _ongoingSelection = ValueNotifier(null);
   final ValueNotifier<bool> _valid = ValueNotifier(false);
@@ -13,6 +14,7 @@ class ColorStep extends StepSection<AddEventTypeViewModel> {
   ColorStep({
     super.key,
     required super.viewModel,
+    required this.appLocalizations,
   });
 
   @override
@@ -33,7 +35,7 @@ class ColorStep extends StepSection<AddEventTypeViewModel> {
   ValueNotifier<bool> get isValidNotifier => _valid;
 
   @override
-  String get title => "Color";
+  String get title => appLocalizations.color;
 
   @override
   String get value => _selectedColor.value?.toHexString() ?? "";
@@ -48,14 +50,7 @@ class _ColorStepState extends State<ColorStep> {
     Colors.teal,
     Colors.yellow,
   ];
-  final List<String> _defaultColorsNames = [
-    "red",
-    "green",
-    "blue",
-    "white",
-    "teal",
-    "yellow",
-  ];
+  final List<String> _defaultColorsNames = [];
   late Color _customColor;
   late Color _ongoingSelection;
 
@@ -64,6 +59,14 @@ class _ColorStepState extends State<ColorStep> {
     super.initState();
     _customColor = Colors.purple;
     _ongoingSelection = Colors.purple;
+    _defaultColorsNames.addAll([
+      widget.appLocalizations.red,
+      widget.appLocalizations.green,
+      widget.appLocalizations.blue,
+      widget.appLocalizations.white,
+      widget.appLocalizations.teal,
+      widget.appLocalizations.yellow,
+    ]);
   }
 
   void _pickColor() {

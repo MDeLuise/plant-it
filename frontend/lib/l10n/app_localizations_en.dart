@@ -398,10 +398,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get donateNow => 'Donate Now';
 
   @override
-  String get createSpecies => 'Create Species';
+  String get createSpecies => 'Create Specy';
 
   @override
-  String get speciesCreated => 'Species created';
+  String get speciesCreated => 'Specy created';
 
   @override
   String get avatar => 'Avatar';
@@ -452,16 +452,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classification => 'Classification';
 
   @override
-  String get species => 'Species';
+  String get species => 'Specy';
 
   @override
   String get synonyms => 'Synonyms';
 
   @override
-  String get editSpecies => 'Edit Species';
+  String get editSpecies => 'Edit Specy';
 
   @override
-  String get speciesUpdated => 'Species updated';
+  String get speciesUpdated => 'Specy updated';
 
   @override
   String get addToCollection => 'Add to collection';
@@ -498,4 +498,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorWithMessage(String message) {
     return 'Error: $message';
   }
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get red => 'red';
+
+  @override
+  String get green => 'green';
+
+  @override
+  String get blue => 'blue';
+
+  @override
+  String get white => 'white';
+
+  @override
+  String get teal => 'teal';
+
+  @override
+  String get yellow => 'yellow';
+
+  @override
+  String get icon => 'Icon';
+
+  @override
+  String get every => 'Every';
+
+  @override
+  String frequencyMessage(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'Every $quantityString ${unit}s',
+      one: 'Every $quantityString $unit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String afterMessage(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'After $quantityString ${unit}s',
+      one: 'After $quantityString $unit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get day => 'day';
+
+  @override
+  String get week => 'week';
+
+  @override
+  String get month => 'month';
+
+  @override
+  String get year => 'year';
 }

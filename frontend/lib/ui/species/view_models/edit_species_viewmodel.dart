@@ -140,7 +140,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
     if (species.isError()) {
       return Failure(Exception(species.exceptionOrNull()));
     }
-    _log.fine("Species loaded");
+    _log.fine("Specy loaded");
     _species = species.getOrThrow().toCompanion(true);
 
     Result<db.SpeciesCareData> care =
@@ -149,7 +149,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       return Failure(Exception(care.exceptionOrNull()));
     }
     _speciesCare = care.getOrThrow().toCompanion(true);
-    _log.fine("Species care loaded");
+    _log.fine("Specy care loaded");
 
     Result<List<db.SpeciesSynonym>> synonyms =
         await _speciesSynonymsRepository.getBySpecies(speciesId);
@@ -158,7 +158,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
     }
     _speciesSynonyms =
         synonyms.getOrThrow().map((s) => s.toCompanion(true)).toList();
-    _log.fine("Species synonyms loaded");
+    _log.fine("Specy synonyms loaded");
 
     Result<db.Image>? speciesImage =
         await _imageRepository.getSpeciesImage(_species.id.value);
@@ -168,7 +168,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       }
       _image = speciesImage.getOrThrow();
     }
-    _log.fine("Species image loaded");
+    _log.fine("Specy image loaded");
 
     return Success("ok");
   }
@@ -178,13 +178,13 @@ class EditSpeciesViewModel extends ChangeNotifier {
     if (speciesId.isError()) {
       return speciesId;
     }
-    _log.fine("Species updated");
+    _log.fine("Specy updated");
 
     Result<bool> careId = await _speciesCareRepository.update(_speciesCare);
     if (careId.isError()) {
       return careId;
     }
-    _log.fine("Species care updated");
+    _log.fine("Specy care updated");
 
     await _speciesSynonymsRepository.deleteBySpecies(_species.id.value);
     for (db.SpeciesSynonymsCompanion s in _speciesSynonyms) {
@@ -197,7 +197,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
         return Failure(Exception(synonymId.exceptionOrNull()));
       }
     }
-    _log.fine("Species synonyms updated");
+    _log.fine("Specy synonyms updated");
 
     if (_imageModified) {
       Result<db.Image>? currentImage =
@@ -251,7 +251,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       await _imageRepository.removeImageFile(savedPath.getOrThrow());
       return imageId;
     }
-    _log.fine("Species uploaded image updated");
+    _log.fine("Specy uploaded image updated");
     return imageId;
   }
 
@@ -262,7 +262,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       createdAt: Value(DateTime.now()),
     ));
     if (imageId.isSuccess()) {
-      _log.fine("Species URL image updated");
+      _log.fine("Specy URL image updated");
     }
     return imageId;
   }

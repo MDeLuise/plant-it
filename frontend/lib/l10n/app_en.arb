@@ -135,8 +135,8 @@
   "yourDonationsHelpUsImproveTheApp": "Your donations help us improve the app.",
   "supportNewFeaturesAndUpdates": "Support new features and updates.",
   "donateNow": "Donate Now",
-  "createSpecies": "Create Species",
-  "speciesCreated": "Species created",
+  "createSpecies": "Create Specy",
+  "speciesCreated": "Specy created",
   "avatar": "Avatar",
   "noAvatar": "No avatar",
   "uploadPhoto": "Upload photo",
@@ -153,10 +153,10 @@
   "synonym": "Synonym",
   "addSynonym": "Add synonym",
   "classification": "Classification",
-  "species": "Species",
+  "species": "Specy",
   "synonyms": "Synonyms",
-  "editSpecies": "Edit Species",
-  "speciesUpdated": "Species updated",
+  "editSpecies": "Edit Specy",
+  "speciesUpdated": "Specy updated",
   "addToCollection": "Add to collection",
   "showNextNotificationsDateTime": "Show next notifications date and time",
   "date": "Date",
@@ -173,6 +173,123 @@
     "placeholders": {
       "message": {
         "type": "String"
+      }
+    }
+  },
+  "color": "Color",
+  "red": "red",
+  "green": "green",
+  "blue": "blue",
+  "white": "white",
+  "teal": "teal",
+  "yellow": "yellow",
+  "icon": "Icon",
+  "every": "Every",
+  "frequencyMessage": "{quantity, plural, =1 {Every {quantity} {unit}} other {Every {quantity} {unit}s}}",
+  "@frequencyMessage": {
+    "description": "A representation of frequency",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "day"
+          },
+          "week": {
+            "type": "String",
+            "value": "week"
+          },
+          "month": {
+            "type": "String",
+            "value": "month"
+          },
+          "year": {
+            "type": "String",
+            "value": "year"
+          }
+        }
+      }
+    }
+  },
+  "afterMessage": "{quantity, plural, =1 {After {quantity} {unit}} other {After {quantity} {unit}s}}",
+  "@afterMessage": {
+    "description": "A representation of after",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "day"
+          },
+          "week": {
+            "type": "String",
+            "value": "week"
+          },
+          "month": {
+            "type": "String",
+            "value": "month"
+          },
+          "year": {
+            "type": "String",
+            "value": "year"
+          }
+        }
+      }
+    }
+  },
+  "day": "day",
+  "week": "week",
+  "month": "month",
+  "year": "year",
+  "reminderDescription": "{quantity, plural, =1 {Every {quantity} {unit} from {startDate}{endDate, select, null {}} other { to {endDate}}} other {Every {quantity} {unit}s from {startDate}{endDate, select, null {}} other { to {endDate}}}}",
+  "@reminderDescription": {
+    "description": "A description of reminder",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String",
+        "format": "select",
+        "options": {
+          "day": {
+            "type": "String",
+            "value": "day"
+          },
+          "week": {
+            "type": "String",
+            "value": "week"
+          },
+          "month": {
+            "type": "String",
+            "value": "month"
+          },
+          "year": {
+            "type": "String",
+            "value": "year"
+          }
+        }
+      },
+      "startDate": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endDate": {
+        "type": "DateTime",
+        "format": "yMd"
       }
     }
   }

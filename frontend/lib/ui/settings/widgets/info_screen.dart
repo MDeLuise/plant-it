@@ -41,8 +41,8 @@ class InfoScreen extends StatelessWidget {
                 }
                 if (snapshot.hasError) {
                   return ErrorIndicator(
-                    title:
-                        "Error: ${snapshot.data}", // AppLocalization.of(context).errorWhileLoadingHome,
+                    title: AppLocalizations.of(context)!
+                        .errorWithMessage(snapshot.error.toString()),
                     label: AppLocalizations.of(context)!.tryAgain,
                     onPressed: _loadAppVersion,
                   );

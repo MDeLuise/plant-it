@@ -28,8 +28,7 @@ class SettingsScreen extends StatelessWidget {
 
             if (command.hasError) {
               return ErrorIndicator(
-                title:
-                    "Error : ${command.error}", // AppLocalization.of(context).errorWhileLoadingHome,
+                title: AppLocalizations.of(context)!.errorWithMessage(command.error.toString()),
                 label: AppLocalizations.of(context)!.tryAgain,
                 onPressed: viewModel.load.execute,
               );
