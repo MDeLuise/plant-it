@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:plant_it/data/repository/image_repository.dart';
@@ -99,7 +101,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     if (species.isError()) {
       return Failure(Exception(species.exceptionOrNull()));
     }
-    _log.fine("Specy loaded");
+    _log.fine("Species loaded");
     _species = species.getOrThrow().toCompanion(true);
 
     Result<SpeciesCareData> care = await _speciesCareRepository.get(speciesId);
@@ -107,7 +109,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       return Failure(Exception(care.exceptionOrNull()));
     }
     _speciesCare = care.getOrThrow().toCompanion(true);
-    _log.fine("Specy care loaded");
+    _log.fine("Species care loaded");
 
     Result<List<SpeciesSynonym>> synonyms =
         await _speciesSynonymsRepository.getBySpecies(speciesId);
@@ -116,7 +118,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     }
     _speciesSynonyms =
         synonyms.getOrThrow().map((s) => s.toCompanion(true)).toList();
-    _log.fine("Specy synonyms loaded");
+    _log.fine("Species synonyms loaded");
 
     Result<String>? speciesImageBase64 =
         await _imageRepository.getSpeciesImageBase64(_species.id.value);
@@ -126,7 +128,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       }
       _base64Image = speciesImageBase64.getOrThrow();
     }
-    _log.fine("Specy image loaded");
+    _log.fine("Species image loaded");
 
     return Success("ok");
   }
@@ -148,6 +150,18 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     _speciesSynonyms = details.getOrThrow().speciesSynonymsCompanion;
     _log.fine("External species synonyms loaded");
 
+    if (details.getOrThrow().speciesCompanion.externalAvatarUrl.present) {
+      String url =
+          details.getOrThrow().speciesCompanion.externalAvatarUrl.value!;
+
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode != 200) {
+        return Failure(Exception("Failed to download image from URL: $url"));
+      }
+      _log.fine("External species image loaded");
+      _base64Image = base64Encode(response.bodyBytes);
+    }
+
     return Success("ok");
   }
 
@@ -159,6 +173,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       species: Value(duplicatedSpecies),
       scientificName: Value(duplicatedSpecies),
       dataSource: Value(SpeciesDataSource.custom),
+      externalAvatarUrl: Value.absent(),
     ));
     if (dupliacatedId.isError()) {
       return dupliacatedId;
@@ -201,34 +216,42 @@ class ViewSpeciesViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _duplicateImage(int duplicatedSpeciesId) async {
-    return await _imageRepository.getSpeciesImage(id!).then((i) async {
-      if (i == null) {
-        return Success("ok");
-      }
-      if (i.isError()) {
-        return Failure(Exception(i.exceptionOrNull()));
-      }
-      if (i.getOrThrow().imagePath != null) {
-        Result<String> imagePath = await _imageRepository.saveImageFile(
-            File(i.getOrThrow().imagePath!),
-            path.extension(i.getOrThrow().imagePath!));
-        if (imagePath.isError()) {
-          return Failure(Exception(imagePath.exceptionOrNull()));
+    if (!isExternal) {
+      return await _imageRepository.getSpeciesImage(id!).then((i) async {
+        if (i == null) {
+          return Success("ok");
         }
-        await _imageRepository.insert(ImagesCompanion(
-          imagePath: Value(imagePath.getOrNull()),
-          createdAt: Value(DateTime.now()),
-          speciesId: Value(duplicatedSpeciesId),
-        ));
-      } else if (i.getOrThrow().imageUrl != null) {
-        await _imageRepository.insert(ImagesCompanion(
-          imageUrl: Value(i.getOrThrow().imageUrl),
-          createdAt: Value(DateTime.now()),
-          speciesId: Value(duplicatedSpeciesId),
-        ));
-      }
-      return Success("ok");
-    });
+        if (i.isError()) {
+          return Failure(Exception(i.exceptionOrNull()));
+        }
+        if (i.getOrThrow().imagePath != null) {
+          Result<String> imagePath = await _imageRepository.saveImageFile(
+              File(i.getOrThrow().imagePath!),
+              path.extension(i.getOrThrow().imagePath!));
+          if (imagePath.isError()) {
+            return Failure(Exception(imagePath.exceptionOrNull()));
+          }
+          await _imageRepository.insert(ImagesCompanion(
+            imagePath: Value(imagePath.getOrNull()),
+            createdAt: Value(DateTime.now()),
+            speciesId: Value(duplicatedSpeciesId),
+          ));
+        } else if (i.getOrThrow().imageUrl != null) {
+          await _imageRepository.insert(ImagesCompanion(
+            imageUrl: Value(i.getOrThrow().imageUrl),
+            createdAt: Value(DateTime.now()),
+            speciesId: Value(duplicatedSpeciesId),
+          ));
+        }
+        return Success("ok");
+      });
+    } else {
+      return _imageRepository.insert(ImagesCompanion(
+        imageUrl: _species.externalAvatarUrl,
+        speciesId: Value(duplicatedSpeciesId),
+        createdAt: Value(DateTime.now()),
+      ));
+    }
   }
 
   Future<Result<void>> _delete() async {
