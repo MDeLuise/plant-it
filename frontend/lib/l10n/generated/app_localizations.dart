@@ -1117,6 +1117,37 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Start'**
   String get start;
+
+  /// A description of a plant classification
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is a plant of species |{species}|{genus, select, null {} other {, genus |{genus}|}}{family, select, null {} other {, family |{family}|}}.'**
+  String plantClassificationInfo(
+      String name, String species, String genus, String family);
+
+  /// A list of species synonyms
+  ///
+  /// In en, this message translates to:
+  /// **'{synonyms, select, null {{species} has no synonyms} other {{species} is also known as: {synonyms}}}.'**
+  String speciesSynonyms(String synonyms, String species);
+
+  /// A description of a plant classification
+  ///
+  /// In en, this message translates to:
+  /// **'{species} is a species of genus {genus, select, null {uknown} other {|{genus}|}} and family {family, select, null {uknown} other {|{family}|}}.'**
+  String speciesClassificationInfo(String species, String genus, String family);
+
+  /// No description provided for @eventType.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Type'**
+  String get eventType;
+
+  /// No description provided for @end.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

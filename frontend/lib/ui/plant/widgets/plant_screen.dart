@@ -31,6 +31,11 @@ class PlantScreen extends StatefulWidget {
 class _PlantScreenState extends State<PlantScreen> {
   final ImagePicker _picker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> _uploadNewPhoto() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
@@ -42,6 +47,7 @@ class _PlantScreenState extends State<PlantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
     return Scaffold(
       body: ValueListenableBuilder<CommandResult<void, void>>(
         valueListenable: widget.viewModel.load.results,
@@ -52,8 +58,9 @@ class _PlantScreenState extends State<PlantScreen> {
 
           if (command.hasError) {
             return ErrorIndicator(
-              title: L.of(context).errorWithMessage(command.error.toString()),
-              label: L.of(context).tryAgain,
+              title:
+                  appLocalizations.errorWithMessage(command.error.toString()),
+              label: appLocalizations.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -118,55 +125,24 @@ class _PlantScreenState extends State<PlantScreen> {
 
                           // Info
                           Text(
-                            L.of(context).information,
+                            appLocalizations.information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          RichText(
-                            text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              children: [
-                                TextSpan(
-                                    text:
-                                        "${widget.viewModel.plant.name} is a plant of the species "),
-                                TextSpan(
-                                  text: widget.viewModel.species.species,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: ", genus "),
-                                TextSpan(
-                                  text: widget.viewModel.species.genus,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: " and family "),
-                                TextSpan(
-                                  text: widget.viewModel.species.family,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: "."),
-                              ],
-                            ),
-                          ),
+                          _getPlantInfo(),
                           const SizedBox(height: 16),
 
                           // Care
                           Text(
-                            L.of(context).care,
+                            appLocalizations.care,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
                           SpeciesCareInfoGridWidget(
-                              care: widget.viewModel.care.toCompanion(true),
-                              maxNum: 4),
+                            care: widget.viewModel.care.toCompanion(true),
+                            maxNum: 4,
+                            appLocalizations: appLocalizations,
+                          ),
                           const SizedBox(height: 16),
 
                           // Reminder
@@ -176,7 +152,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                L.of(context).reminders,
+                                appLocalizations.reminders,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ),
@@ -192,12 +168,13 @@ class _PlantScreenState extends State<PlantScreen> {
                             viewModel: widget.viewModel,
                             maxNum: 4,
                             care: widget.viewModel.care.toCompanion(true),
+                            appLocalizations: appLocalizations,
                           ),
                           const SizedBox(height: 16),
 
                           // Events
                           Text(
-                            L.of(context).events,
+                            appLocalizations.events,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -205,12 +182,13 @@ class _PlantScreenState extends State<PlantScreen> {
                             viewModel: widget.viewModel,
                             maxNum: 4,
                             care: widget.viewModel.care.toCompanion(true),
+                            appLocalizations: appLocalizations,
                           ),
                           const SizedBox(height: 16),
 
                           // Gallery
                           Text(
-                            L.of(context).gallery,
+                            appLocalizations.gallery,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
@@ -261,7 +239,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).edit),
+                              title: Text(appLocalizations.edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -273,7 +251,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).duplicate),
+                              title: Text(appLocalizations.duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -285,7 +263,7 @@ class _PlantScreenState extends State<PlantScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).remove),
+                              title: Text(appLocalizations.remove),
                             ),
                           ),
                         ],
@@ -308,7 +286,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.insertPlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(L.of(context).plantDuplicated),
+                                content: Text(appLocalizations.plantDuplicated),
                               ),
                             );
                           }
@@ -327,7 +305,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             widget.streamController.add(StreamCode.deletePlant);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(L.of(context).plantDeleted),
+                                content: Text(appLocalizations.plantDeleted),
                               ),
                             );
                             context.pop();
@@ -346,6 +324,73 @@ class _PlantScreenState extends State<PlantScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  RichText _getPlantInfo() {
+    String plantInfo = L.of(context).plantClassificationInfo(
+          widget.viewModel.plant.name,
+          widget.viewModel.species.species,
+          widget.viewModel.species.genus ?? "",
+          widget.viewModel.species.family ?? "",
+        );
+
+    List<TextSpan> textSpans = [];
+    RegExp regExp = RegExp(
+        r'(\|.*?\|)|(\{name\}|\{species\}|\{genus\}|\{family\})|([^|{}]+)');
+    Iterable<Match> matches = regExp.allMatches(plantInfo);
+    int lastMatchEnd = 0;
+
+    for (Match match in matches) {
+      if (lastMatchEnd < match.start) {
+        textSpans.add(
+            TextSpan(text: plantInfo.substring(lastMatchEnd, match.start)));
+      }
+
+      if (match.group(1) != null) {
+        String matchedText = match.group(1)!.replaceAll('|', '');
+        textSpans.add(TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ));
+      } else if (match.group(2) != null) {
+        String matchedPlaceholder = match.group(2)!;
+        switch (matchedPlaceholder) {
+          case '{name}':
+            textSpans.add(TextSpan(text: widget.viewModel.plant.name));
+            break;
+          case '{species}':
+            textSpans.add(TextSpan(text: widget.viewModel.species.species));
+            break;
+          case '{genus}':
+            textSpans.add(TextSpan(
+              text: widget.viewModel.species.genus,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ));
+            break;
+          case '{family}':
+            textSpans.add(TextSpan(
+              text: widget.viewModel.species.family,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ));
+            break;
+        }
+      } else if (match.group(3) != null) {
+        textSpans.add(TextSpan(text: match.group(3)));
+      }
+
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < plantInfo.length) {
+      textSpans.add(TextSpan(text: plantInfo.substring(lastMatchEnd)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyLarge,
+        children: textSpans,
       ),
     );
   }

@@ -618,4 +618,62 @@ class LEn extends L {
 
   @override
   String get start => 'Start';
+
+  @override
+  String plantClassificationInfo(
+      String name, String species, String genus, String family) {
+    String _temp0 = intl.Intl.selectLogic(
+      genus,
+      {
+        'null': '',
+        'other': ', genus |$genus|',
+      },
+    );
+    String _temp1 = intl.Intl.selectLogic(
+      family,
+      {
+        'null': '',
+        'other': ', family |$family|',
+      },
+    );
+    return '$name is a plant of species |$species|$_temp0$_temp1.';
+  }
+
+  @override
+  String speciesSynonyms(String synonyms, String species) {
+    String _temp0 = intl.Intl.selectLogic(
+      synonyms,
+      {
+        'null': '$species has no synonyms',
+        'other': '$species is also known as: $synonyms',
+      },
+    );
+    return '$_temp0.';
+  }
+
+  @override
+  String speciesClassificationInfo(
+      String species, String genus, String family) {
+    String _temp0 = intl.Intl.selectLogic(
+      genus,
+      {
+        'null': 'uknown',
+        'other': '|$genus|',
+      },
+    );
+    String _temp1 = intl.Intl.selectLogic(
+      family,
+      {
+        'null': 'uknown',
+        'other': '|$family|',
+      },
+    );
+    return '$species is a species of genus $_temp0 and family $_temp1.';
+  }
+
+  @override
+  String get eventType => 'Event Type';
+
+  @override
+  String get end => 'End';
 }

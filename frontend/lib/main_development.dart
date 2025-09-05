@@ -28,11 +28,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [...providersLocal, cacheProvider, searchProvider],
-      child: Builder(
-        builder: (context) {
-          return MainApp();
-        },
-      ),
+      child: const MainApp(),
     ),
   );
 }

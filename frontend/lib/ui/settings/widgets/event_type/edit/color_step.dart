@@ -53,14 +53,7 @@ class _ColorStepState extends State<ColorStep> {
     Colors.teal,
     Colors.yellow,
   ];
-  final List<String> _defaultColorsNames = [
-    "red",
-    "green",
-    "blue",
-    "white",
-    "teal",
-    "yellow",
-  ];
+  final List<String> _defaultColorsNames = [];
   late Color _customColor;
   late Color _ongoingSelection;
 
@@ -75,6 +68,14 @@ class _ColorStepState extends State<ColorStep> {
       _customColor = Colors.purple;
       _ongoingSelection = _defaultColors[selectedColorIndex];
     }
+    _defaultColorsNames.addAll([
+      widget.appLocalizations.red,
+      widget.appLocalizations.green,
+      widget.appLocalizations.blue,
+      widget.appLocalizations.white,
+      widget.appLocalizations.teal,
+      widget.appLocalizations.yellow,
+    ]);
   }
 
   int _getSelectedDefaultColorIndex() {

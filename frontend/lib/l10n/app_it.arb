@@ -48,7 +48,7 @@
   "eventUpdated": "Evento aggiornato",
   "selectTheEventType": "Seleziona il tipo di evento",
   "selectThePlant": "Seleziona la pianta",
-  "nextActions": "Prossima azione",
+  "nextActions": "Prossime azioni",
   "home": "Home",
   "calendar": "Calendario",
   "search": "Cerca",
@@ -198,19 +198,19 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "s": {
             "type": "String",
             "value": "giorni"
           },
-          "week": {
+          "weeks": {
             "type": "String",
             "value": "settimane"
           },
-          "month": {
+          "months": {
             "type": "String",
             "value": "mesi"
           },
-          "year": {
+          "years": {
             "type": "String",
             "value": "anni"
           }
@@ -230,19 +230,19 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
             "value": "giorni"
           },
-          "week": {
+          "weeks": {
             "type": "String",
             "value": "settimane"
           },
-          "month": {
+          "months": {
             "type": "String",
             "value": "mesi"
           },
-          "year": {
+          "years": {
             "type": "String",
             "value": "anni"
           }
@@ -262,19 +262,19 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
             "value": "giorni"
           },
-          "week": {
+          "weeks": {
             "type": "String",
             "value": "settimane"
           },
-          "month": {
+          "months": {
             "type": "String",
             "value": "mesi"
           },
-          "year": {
+          "years": {
             "type": "String",
             "value": "anni"
           }
@@ -298,19 +298,19 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
             "value": "giorni"
           },
-          "week": {
+          "weeks": {
             "type": "String",
             "value": "settimane"
           },
-          "month": {
+          "months": {
             "type": "String",
             "value": "mesi"
           },
-          "year": {
+          "years": {
             "type": "String",
             "value": "anni"
           }
@@ -325,5 +325,52 @@
       }
     }
   },
-  "start": "Inizio"
+  "start": "Inizio",
+  "plantClassificationInfo": "{name} è una pianta della specie |{species}|{genus, select, null {} other {, genere |{genus}|}}{family, select, null {} other {, famiglia |{family}|}}.",
+  "@plantClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesSynonyms": "{synonyms, select, null {{species} non ha sinonimi} other {{species} è conosciuta anche come: {synonyms}}}.",
+  "@speciesSynonyms": {
+    "description": "A list of species synonyms",
+    "placeholders": {
+      "synonyms": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesClassificationInfo": "{species} è una specie del genere {genus, select, null {sconosciuto} other {|{genus}|}} e famiglia {family, select, null {sconosciuta} other {|{family}|}}.",
+  "@speciesClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "eventType": "Tipo Evento",
+  "end": "Fine"
 }

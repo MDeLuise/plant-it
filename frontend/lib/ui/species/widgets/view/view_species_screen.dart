@@ -25,6 +25,8 @@ class ViewSpeciesScreen extends StatefulWidget {
 class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       body: ValueListenableBuilder<CommandResult<void, void>>(
         valueListenable: widget.viewModel.load.results,
@@ -35,8 +37,9 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
           if (command.hasError) {
             return ErrorIndicator(
-              title: L.of(context).errorWithMessage(command.error.toString()),
-              label: L.of(context).tryAgain,
+              title:
+                  appLocalizations.errorWithMessage(command.error.toString()),
+              label: appLocalizations.tryAgain,
               onPressed: widget.viewModel.load.execute,
             );
           }
@@ -69,8 +72,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             label: Text(
                               widget.viewModel.source ==
                                       SpeciesDataSource.custom
-                                  ? L.of(context).custom
-                                  : L.of(context).floraCodex,
+                                  ? appLocalizations.custom
+                                  : appLocalizations.floraCodex,
                             ),
                           ),
                           Text(widget.viewModel.species,
@@ -90,7 +93,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 foregroundColor: WidgetStateProperty.all(
                                     Theme.of(context).colorScheme.onPrimary),
                               ),
-                              child: Text(L.of(context).addToCollection),
+                              child: Text(appLocalizations.addToCollection),
                             ),
                           ),
 
@@ -98,57 +101,37 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
 
                           // Info
                           Text(
-                            L.of(context).information,
+                            appLocalizations.information,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          RichText(
-                            text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              children: [
-                                TextSpan(
-                                    text:
-                                        "${widget.viewModel.scientificName} is a species of "),
-                                const TextSpan(text: "genus "),
-                                TextSpan(
-                                  text: widget.viewModel.genus,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: " and family "),
-                                TextSpan(
-                                  text: widget.viewModel.family,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                const TextSpan(text: "."),
-                              ],
-                            ),
-                          ),
+                          _getSpeciesInfo(),
                           const SizedBox(height: 16),
 
                           // Care
                           Text(
-                            'Care',
+                            appLocalizations.care,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
                           SpeciesCareInfoGridWidget(
-                              care: widget.viewModel.care, maxNum: 4),
+                            care: widget.viewModel.care,
+                            maxNum: 4,
+                            appLocalizations: appLocalizations,
+                          ),
                           const SizedBox(height: 16),
 
                           // Synonyms
                           Text(
-                            'Synonyms',
+                            appLocalizations.synonyms,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                              "Specy is also known as: ${widget.viewModel.synonyms.join(", ")}${widget.viewModel.synonyms.isEmpty ? "" : "."}",
+                              appLocalizations.speciesSynonyms(
+                                widget.viewModel.synonyms.join(", "),
+                                widget.viewModel.species,
+                              ),
                               style: Theme.of(context).textTheme.bodyLarge!),
                           const SizedBox(height: 16),
                         ],
@@ -193,7 +176,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.pencil,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).edit),
+                              title: Text(appLocalizations.edit),
                             ),
                           ),
                           PopupMenuItem(
@@ -205,7 +188,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.copy,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).duplicate),
+                              title: Text(appLocalizations.duplicate),
                             ),
                           ),
                           PopupMenuItem(
@@ -218,7 +201,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                                 LucideIcons.trash,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              title: Text(L.of(context).remove),
+                              title: Text(appLocalizations.remove),
                             ),
                           ),
                         ],
@@ -245,6 +228,69 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  RichText _getSpeciesInfo() {
+    String plantInfo = L.of(context).speciesClassificationInfo(
+          widget.viewModel.species,
+          widget.viewModel.genus ?? "",
+          widget.viewModel.family ?? "",
+        );
+
+    List<TextSpan> textSpans = [];
+    RegExp regExp = RegExp(
+        r'(\|.*?\|)|(\{name\}|\{species\}|\{genus\}|\{family\})|([^|{}]+)');
+    Iterable<Match> matches = regExp.allMatches(plantInfo);
+    int lastMatchEnd = 0;
+
+    for (Match match in matches) {
+      if (lastMatchEnd < match.start) {
+        textSpans.add(
+            TextSpan(text: plantInfo.substring(lastMatchEnd, match.start)));
+      }
+
+      if (match.group(1) != null) {
+        String matchedText = match.group(1)!.replaceAll('|', '');
+        textSpans.add(TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ));
+      } else if (match.group(2) != null) {
+        String matchedPlaceholder = match.group(2)!;
+        switch (matchedPlaceholder) {
+          case '{species}':
+            textSpans.add(TextSpan(text: widget.viewModel.species));
+            break;
+          case '{genus}':
+            textSpans.add(TextSpan(
+              text: widget.viewModel.genus,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ));
+            break;
+          case '{family}':
+            textSpans.add(TextSpan(
+              text: widget.viewModel.family,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ));
+            break;
+        }
+      } else if (match.group(3) != null) {
+        textSpans.add(TextSpan(text: match.group(3)));
+      }
+
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < plantInfo.length) {
+      textSpans.add(TextSpan(text: plantInfo.substring(lastMatchEnd)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyLarge,
+        children: textSpans,
       ),
     );
   }

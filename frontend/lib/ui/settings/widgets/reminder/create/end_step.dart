@@ -30,7 +30,7 @@ class EndStep extends StepSection<AddReminderViewModel> {
   }
 
   @override
-  String get title => "End";
+  String get title => appLocalizations.end;
 
   @override
   String get value => _ongoingSelection.value?.toString() ?? "";

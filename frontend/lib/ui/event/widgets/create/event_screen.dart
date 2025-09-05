@@ -9,13 +9,11 @@ import 'package:plant_it/ui/event/widgets/create/event_type_step.dart';
 import 'package:plant_it/ui/event/widgets/create/note_step.dart';
 
 class CreateEventScreen extends StatefulWidget {
-  final BuildContext appLocalizationsContext;
   final CreateEventFormViewModel viewModel;
 
   const CreateEventScreen({
     super.key,
     required this.viewModel,
-    required this.appLocalizationsContext,
   });
 
   @override
@@ -23,29 +21,23 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  late final L appLocalizations;
-
-  @override
-  void initState() {
-    super.initState();
-    appLocalizations = L.of(widget.appLocalizationsContext);
-  }
-
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(L.of(context).createEvent),
+        title: Text(appLocalizations.createEvent),
       ),
       body: AppStepper<CreateEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: L.of(context).create,
+          actionText: appLocalizations.create,
           actionCommand: widget.viewModel.insert,
-          successText: L.of(context).eventsCreated,
+          successText: appLocalizations.eventsCreated,
           summary: true,
           stepsInFocus: 2,
           steps: [

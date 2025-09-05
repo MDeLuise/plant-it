@@ -135,7 +135,6 @@ GoRouter router() => GoRouter(
                   return AddPlantScreen(
                     viewModel: viewModel,
                     streamController: context.read(),
-                    appLocalizationsContext: context,
                   );
                 },
               ),
@@ -150,7 +149,6 @@ GoRouter router() => GoRouter(
                   return EditPlantScreen(
                     viewModel: viewModel,
                     streamController: context.read(),
-                    appLocalizationsContext: context,
                   );
                 },
               ),
@@ -203,10 +201,7 @@ GoRouter router() => GoRouter(
                   AddEventTypeViewModel viewModel = AddEventTypeViewModel(
                     eventTypeRepository: context.read(),
                   );
-                  return AddEventTypeScreen(
-                    viewModel: viewModel,
-                    appLocalizationsContext: context,
-                  );
+                  return AddEventTypeScreen(viewModel: viewModel);
                 },
               ),
               GoRoute(
@@ -271,20 +266,14 @@ GoRouter router() => GoRouter(
               streamController: context.read(),
             );
             viewModel.load.execute();
-            return CreateEventScreen(
-              viewModel: viewModel,
-              appLocalizationsContext: context.read(),
-            );
+            return CreateEventScreen(viewModel: viewModel);
           },
         ),
         GoRoute(
           path: Routes.activityFilter,
           builder: (context, state) {
             CalendarViewModel viewModel = state.extra as CalendarViewModel;
-            return ActivityFilter(
-              viewModel: viewModel,
-              appLocalizationsContext: context,
-            );
+            return ActivityFilter(viewModel: viewModel);
           },
         ),
         GoRoute(
@@ -301,7 +290,6 @@ GoRouter router() => GoRouter(
             return EditEventScreen(
               viewModel: viewModel,
               eventId: id,
-              appLocalizationsContext: context.read(),
             );
           },
         ),

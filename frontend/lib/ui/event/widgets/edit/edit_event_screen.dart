@@ -9,7 +9,6 @@ import 'package:plant_it/ui/event/widgets/edit/note_section.dart';
 import 'package:plant_it/ui/event/widgets/edit/plant_section.dart';
 
 class EditEventScreen extends StatefulWidget {
-  final BuildContext appLocalizationsContext;
   final int eventId;
   final EditEventFormViewModel viewModel;
 
@@ -17,7 +16,6 @@ class EditEventScreen extends StatefulWidget {
     super.key,
     required this.viewModel,
     required this.eventId,
-    required this.appLocalizationsContext,
   });
 
   @override
@@ -26,7 +24,6 @@ class EditEventScreen extends StatefulWidget {
 
 class _EditEventScreenState extends State<EditEventScreen> {
   late final Command<void, void> _mainCommand;
-  late final L appLocalizations;
 
   @override
   void initState() {
@@ -34,17 +31,18 @@ class _EditEventScreenState extends State<EditEventScreen> {
     _mainCommand = Command.createAsyncNoParamNoResult(() async =>
         await widget.viewModel.load.executeWithFuture(widget.eventId));
     _mainCommand.execute();
-    appLocalizations = L.of(widget.appLocalizationsContext);
   }
 
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
         appBar: null,
         body: Summary<EditEventFormViewModel>(
           viewModel: widget.viewModel,
           mainCommand: _mainCommand,
-          actionText: L.of(context).update,
+          actionText: appLocalizations.update,
           sections: [
             EventTypeSection(
               viewModel: widget.viewModel,
@@ -64,8 +62,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
             ),
           ],
           actionCommand: widget.viewModel.update,
-          mainText: L.of(context).editTheEvent,
-          successText: L.of(context).eventUpdated,
+          mainText: appLocalizations.editTheEvent,
+          successText: appLocalizations.eventUpdated,
           isPrimary: false,
         ));
   }

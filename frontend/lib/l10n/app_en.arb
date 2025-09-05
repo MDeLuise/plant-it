@@ -198,21 +198,21 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
-            "value": "day"
+            "value": "days"
           },
-          "week": {
+          "weeks": {
             "type": "String",
-            "value": "week"
+            "value": "weeks"
           },
-          "month": {
+          "months": {
             "type": "String",
-            "value": "month"
+            "value": "months"
           },
-          "year": {
+          "years": {
             "type": "String",
-            "value": "year"
+            "value": "years"
           }
         }
       }
@@ -230,21 +230,21 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
-            "value": "day"
+            "value": "days"
           },
-          "week": {
+          "weeks": {
             "type": "String",
-            "value": "week"
+            "value": "weeks"
           },
-          "month": {
+          "months": {
             "type": "String",
-            "value": "month"
+            "value": "months"
           },
-          "year": {
+          "years": {
             "type": "String",
-            "value": "year"
+            "value": "years"
           }
         }
       }
@@ -262,21 +262,21 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
-            "value": "day"
+            "value": "days"
           },
-          "week": {
+          "weeks": {
             "type": "String",
-            "value": "week"
+            "value": "weeks"
           },
-          "month": {
+          "months": {
             "type": "String",
-            "value": "month"
+            "value": "months"
           },
-          "year": {
+          "years": {
             "type": "String",
-            "value": "year"
+            "value": "years"
           }
         }
       }
@@ -298,21 +298,21 @@
         "type": "String",
         "format": "select",
         "options": {
-          "day": {
+          "days": {
             "type": "String",
-            "value": "day"
+            "value": "days"
           },
-          "week": {
+          "weeks": {
             "type": "String",
-            "value": "week"
+            "value": "weeks"
           },
-          "month": {
+          "months": {
             "type": "String",
-            "value": "month"
+            "value": "months"
           },
-          "year": {
+          "years": {
             "type": "String",
-            "value": "year"
+            "value": "years"
           }
         }
       },
@@ -325,5 +325,52 @@
       }
     }
   },
-  "start": "Start"
+  "start": "Start",
+  "plantClassificationInfo": "{name} is a plant of species |{species}|{genus, select, null {} other {, genus |{genus}|}}{family, select, null {} other {, family |{family}|}}.",
+  "@plantClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesSynonyms": "{synonyms, select, null {{species} has no synonyms} other {{species} is also known as: {synonyms}}}.",
+  "@speciesSynonyms": {
+    "description": "A list of species synonyms",
+    "placeholders": {
+      "synonyms": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesClassificationInfo": "{species} is a species of genus {genus, select, null {uknown} other {|{genus}|}} and family {family, select, null {uknown} other {|{family}|}}.",
+  "@speciesClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "eventType": "Event Type",
+  "end": "End"
 }

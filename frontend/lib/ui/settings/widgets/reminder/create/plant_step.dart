@@ -23,7 +23,7 @@ class PlantStep extends StepSection<AddReminderViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Plants";
+  String get title => appLocalizations.plant;
 
   @override
   String get value => _ongoingSelection.value?.name ?? "";

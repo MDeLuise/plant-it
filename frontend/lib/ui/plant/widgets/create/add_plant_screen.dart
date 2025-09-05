@@ -16,13 +16,11 @@ import 'package:plant_it/utils/stream_code.dart';
 class AddPlantScreen extends StatefulWidget {
   final AddPlantViewModel viewModel;
   final StreamController<StreamCode> streamController;
-  final BuildContext appLocalizationsContext;
 
   const AddPlantScreen({
     super.key,
     required this.viewModel,
     required this.streamController,
-    required this.appLocalizationsContext,
   });
 
   @override
@@ -30,27 +28,21 @@ class AddPlantScreen extends StatefulWidget {
 }
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
-  late final L appLocalizations;
-
-  @override
-  void initState() {
-    super.initState();
-    appLocalizations = L.of(widget.appLocalizationsContext);
-  }
-
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(L.of(context).addPlant),
+        title: Text(appLocalizations.addPlant),
       ),
       body: Summary<AddPlantViewModel>(
           viewModel: widget.viewModel,
           mainCommand: widget.viewModel.load,
-          actionText: L.of(context).add,
+          actionText: appLocalizations.add,
           actionCommand: Command.createAsyncNoParam(() async {
             Command<void, int> command = widget.viewModel.insert;
             await command.executeWithFuture();
@@ -59,7 +51,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             }
             widget.streamController.add(StreamCode.insertPlant);
           }, initialValue: null),
-          successText: L.of(context).plantAdded,
+          successText: appLocalizations.plantAdded,
           isPrimary: false,
           sections: [
             NameStep(

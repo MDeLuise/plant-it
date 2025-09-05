@@ -24,7 +24,7 @@ class EventTypeStep extends StepSection<AddReminderViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Event Type";
+  String get title => appLocalizations.eventType;
 
   @override
   String get value => _ongoingSelection.value?.name ?? "";

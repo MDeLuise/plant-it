@@ -9,13 +9,11 @@ import 'package:plant_it/ui/settings/widgets/event_type/create/icon_step.dart';
 import 'package:plant_it/ui/settings/widgets/event_type/create/name_step.dart';
 
 class AddEventTypeScreen extends StatefulWidget {
-  final BuildContext appLocalizationsContext;
   final AddEventTypeViewModel viewModel;
 
   const AddEventTypeScreen({
     super.key,
     required this.viewModel,
-    required this.appLocalizationsContext,
   });
 
   @override
@@ -23,16 +21,10 @@ class AddEventTypeScreen extends StatefulWidget {
 }
 
 class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
-  late final L _appLocalizations;
-
-  @override
-  void initState() {
-    super.initState();
-    _appLocalizations = L.of(context);
-  }
-
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(L.of(context).createEventType),
@@ -40,28 +32,28 @@ class _AddEventTypeScreenState extends State<AddEventTypeScreen> {
       body: AppStepper<AddEventTypeViewModel>(
         viewModel: widget.viewModel,
         mainCommand: Command.createAsyncNoParamNoResult(() => Future.value()),
-        actionText: _appLocalizations.create,
+        actionText: appLocalizations.create,
         steps: [
           EventTypeNameStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           IconStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           ColorStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           DescriptionStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
         ],
         stepsInFocus: 3,
         actionCommand: widget.viewModel.insert,
-        successText: _appLocalizations.eventCreated,
+        successText: appLocalizations.eventCreated,
       ),
     );
   }

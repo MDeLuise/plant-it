@@ -22,52 +22,46 @@ class EditReminderScreen extends StatefulWidget {
 }
 
 class _EditReminderScreenState extends State<EditReminderScreen> {
-  late final L _appLocalizations;
-
-  @override
-  void initState() {
-    super.initState();
-    _appLocalizations = L.of(context);
-  }
-
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(_appLocalizations.editReminder),
+        title: Text(appLocalizations.editReminder),
       ),
       body: Summary<EditReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: _appLocalizations.update,
+        actionText: appLocalizations.update,
         sections: [
           EventTypeStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           PlantStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           FrequencyStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           RepeatAfterStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           StartStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           EndStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
         ],
         actionCommand: widget.viewModel.update,
-        successText: _appLocalizations.reminderUpdated,
+        successText: appLocalizations.reminderUpdated,
         isPrimary: false,
       ),
     );

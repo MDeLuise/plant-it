@@ -123,7 +123,7 @@ class LIt extends L {
   String get selectThePlant => 'Seleziona la pianta';
 
   @override
-  String get nextActions => 'Prossima azione';
+  String get nextActions => 'Prossime azioni';
 
   @override
   String get home => 'Home';
@@ -578,4 +578,62 @@ class LIt extends L {
 
   @override
   String get start => 'Inizio';
+
+  @override
+  String plantClassificationInfo(
+      String name, String species, String genus, String family) {
+    String _temp0 = intl.Intl.selectLogic(
+      genus,
+      {
+        'null': '',
+        'other': ', genere |$genus|',
+      },
+    );
+    String _temp1 = intl.Intl.selectLogic(
+      family,
+      {
+        'null': '',
+        'other': ', famiglia |$family|',
+      },
+    );
+    return '$name è una pianta della specie |$species|$_temp0$_temp1.';
+  }
+
+  @override
+  String speciesSynonyms(String synonyms, String species) {
+    String _temp0 = intl.Intl.selectLogic(
+      synonyms,
+      {
+        'null': '$species non ha sinonimi',
+        'other': '$species è conosciuta anche come: $synonyms',
+      },
+    );
+    return '$_temp0.';
+  }
+
+  @override
+  String speciesClassificationInfo(
+      String species, String genus, String family) {
+    String _temp0 = intl.Intl.selectLogic(
+      genus,
+      {
+        'null': 'sconosciuto',
+        'other': '|$genus|',
+      },
+    );
+    String _temp1 = intl.Intl.selectLogic(
+      family,
+      {
+        'null': 'sconosciuta',
+        'other': '|$family|',
+      },
+    );
+    return '$species è una specie del genere $_temp0 e famiglia $_temp1.';
+  }
+
+  @override
+  String get eventType => 'Tipo Evento';
+
+  @override
+  String get end => 'Fine';
 }

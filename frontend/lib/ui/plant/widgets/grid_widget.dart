@@ -12,14 +12,16 @@ import 'package:plant_it/utils/icons.dart';
 abstract class InfoGridWidget extends StatefulWidget {
   final SpeciesCareCompanion care;
   final int maxNum;
+  final L appLocalizations;
 
   const InfoGridWidget({
     super.key,
     required this.care,
     required this.maxNum,
+    required this.appLocalizations,
   });
 
-  List<InfoWidget> getInfoChildren(BuildContext context);
+  List<InfoWidget> getInfoChildren();
 
   @override
   State<InfoGridWidget> createState() => _InfoGridWidgetState();
@@ -31,7 +33,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
   @override
   void initState() {
     super.initState();
-    _pages = (widget.getInfoChildren(context).length / widget.maxNum).ceil();
+    _pages = (widget.getInfoChildren().length / widget.maxNum).ceil();
   }
 
   Widget _buildSinglePage(List<Widget>? tiles) {
@@ -76,7 +78,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
   }
 
   List<List<Widget>> _chunkWidgets(int chunkSize) {
-    List<Widget> widgets = widget.getInfoChildren(context);
+    List<Widget> widgets = widget.getInfoChildren();
     List<List<Widget>> chunks = [];
     for (var i = 0; i < widgets.length; i += chunkSize) {
       final chunk = widgets.sublist(
@@ -92,7 +94,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
       return SizedBox();
     }
     if (_pages == 1) {
-      return _buildSinglePage(widget.getInfoChildren(context));
+      return _buildSinglePage(widget.getInfoChildren());
     }
     return _buildMultiplePages();
   }
@@ -103,12 +105,12 @@ class SpeciesCareInfoGridWidget extends InfoGridWidget {
     super.key,
     required super.care,
     required super.maxNum,
+    required super.appLocalizations,
   });
 
   @override
-  List<InfoWidget> getInfoChildren(BuildContext context) {
+  List<InfoWidget> getInfoChildren() {
     List<InfoWidget> result = [];
-    L appLocalizations = L.of(context);
 
     if (care.light.value != null) {
       String sunLightValue = appLocalizations.low;
@@ -174,10 +176,11 @@ class PlantEventInfoGridWidget extends InfoGridWidget {
     required this.viewModel,
     required super.maxNum,
     required super.care,
+    required super.appLocalizations,
   });
 
   @override
-  List<InfoWidget> getInfoChildren(BuildContext context) {
+  List<InfoWidget> getInfoChildren() {
     List<InfoWidget> result = [];
     List<Event> events = viewModel.events;
     Map<int, EventType> eventTypes = {};
@@ -204,10 +207,11 @@ class PlantReminderInfoGridWidget extends InfoGridWidget {
     required this.viewModel,
     required super.maxNum,
     required super.care,
+    required super.appLocalizations,
   });
 
   @override
-  List<InfoWidget> getInfoChildren(BuildContext context) {
+  List<InfoWidget> getInfoChildren() {
     Map<int, EventType> eventTypes = {};
     for (EventType t in viewModel.eventType) {
       eventTypes.putIfAbsent(t.id, () => t);
