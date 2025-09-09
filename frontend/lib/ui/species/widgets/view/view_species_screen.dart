@@ -84,7 +84,14 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             child: ElevatedButton(
                               onPressed: () =>
                                   context.push(Routes.plant, extra: {
-                                'speciesId': widget.viewModel.id!.toString(),
+                                'toCreate': widget.viewModel.isExternal
+                                    ? {
+                                        'species': widget.viewModel.speciesObj,
+                                        'care': widget.viewModel.care,
+                                        'synonyms': widget.viewModel.synonyms,
+                                      }
+                                    : null,
+                                'speciesId': widget.viewModel.id?.toString(),
                                 'speciesName': widget.viewModel.scientificName,
                               }),
                               style: ButtonStyle(

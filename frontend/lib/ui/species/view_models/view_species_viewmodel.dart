@@ -95,6 +95,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
   bool get isExternal => _isExternal;
   SpeciesCareCompanion get care => _speciesCare;
   SpeciesDataSource get source => _species.dataSource.value;
+  SpeciesCompanion get speciesObj => _species;
 
   Future<Result<void>> _load(int speciesId) async {
     Result<Specy> species = await _speciesRepository.get(speciesId);

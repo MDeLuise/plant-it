@@ -126,10 +126,22 @@ GoRouter router() => GoRouter(
               GoRoute(
                 path: Routes.plant,
                 builder: (context, state) {
-                  Map<String, String> input =
-                      state.extra as Map<String, String>;
+                  Map<String, Object?> input =
+                      state.extra as Map<String, Object?>;
+
+                  Map<String, Object?>? toCreate;
+                  if (input.containsKey('toCreate')) {
+                    toCreate = input['toCreate'] as Map<String, Object?>;
+                  }
+
                   AddPlantViewModel viewModel = AddPlantViewModel(
                     plantRepository: context.read(),
+                    speciesToCreate: toCreate,
+                    speciesRepository: context.read(),
+                    speciesCareRepository: context.read(),
+                    speciesSynonymsRepository: context.read(),
+                    imageRepository: context.read(),
+                    appCache: context.read(),
                   );
                   viewModel.load.execute(input);
                   return AddPlantScreen(
