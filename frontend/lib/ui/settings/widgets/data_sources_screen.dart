@@ -59,6 +59,7 @@ class FloraCodexScreen extends StatelessWidget {
           content: TextField(
             controller: controller,
             decoration: InputDecoration(hintText: L.of(context).enterApiKey),
+            autofocus: true,
           ),
           actions: <Widget>[
             TextButton(
