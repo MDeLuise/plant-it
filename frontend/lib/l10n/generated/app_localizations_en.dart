@@ -676,4 +676,16 @@ class LEn extends L {
 
   @override
   String get end => 'End';
+
+  @override
+  String get databaseAndCache => 'Database and Cache';
+
+  @override
+  String get manageDatabaseAndCache => 'Manage Database and Cache settings';
+
+  @override
+  String get clearCache => 'Clear the Cache';
+
+  @override
+  String get cacheCleaned => 'Cache cleaned';
 }

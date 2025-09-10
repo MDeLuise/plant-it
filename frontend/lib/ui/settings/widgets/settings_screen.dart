@@ -77,6 +77,17 @@ class SettingsScreen extends StatelessWidget {
                         leading: Icon(LucideIcons.bell),
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () => context.push(Routes.settingsDatabaseAndCache,
+                          extra: viewModel),
+                      child: ListTile(
+                        title: Text(L.of(context).databaseAndCache),
+                        subtitle: Text(L
+                            .of(context)
+                            .manageDatabaseAndCache),
+                        leading: Icon(LucideIcons.database),
+                      ),
+                    ),
                     // ListTile(
                     //   title: Text("Theme"),
                     //   subtitle: Text("Theme options"),

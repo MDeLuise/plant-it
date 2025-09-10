@@ -372,5 +372,9 @@
     }
   },
   "eventType": "Tipo Evento",
-  "end": "Fine"
+  "end": "Fine",
+  "databaseAndCache": "Database e Cache",
+  "manageDatabaseAndCache": "Gestisci le impostazioni del Database e della Cache",
+  "clearCache": "Svuota la Cache",
+  "cacheCleaned": "Cache svuotata"
 }

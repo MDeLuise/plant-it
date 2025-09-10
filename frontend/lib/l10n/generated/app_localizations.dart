@@ -1148,6 +1148,30 @@ abstract class L {
   /// In en, this message translates to:
   /// **'End'**
   String get end;
+
+  /// No description provided for @databaseAndCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Database and Cache'**
+  String get databaseAndCache;
+
+  /// No description provided for @manageDatabaseAndCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Database and Cache settings'**
+  String get manageDatabaseAndCache;
+
+  /// No description provided for @clearCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the Cache'**
+  String get clearCache;
+
+  /// No description provided for @cacheCleaned.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleaned'**
+  String get cacheCleaned;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

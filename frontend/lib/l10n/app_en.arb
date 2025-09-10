@@ -372,5 +372,9 @@
     }
   },
   "eventType": "Event Type",
-  "end": "End"
+  "end": "End",
+  "databaseAndCache": "Database and Cache",
+  "manageDatabaseAndCache": "Manage Database and Cache settings",
+  "clearCache": "Clear the Cache",
+  "cacheCleaned": "Cache cleaned"
 }

@@ -636,4 +636,17 @@ class LIt extends L {
 
   @override
   String get end => 'Fine';
+
+  @override
+  String get databaseAndCache => 'Database e Cache';
+
+  @override
+  String get manageDatabaseAndCache =>
+      'Gestisci le impostazioni del Database e della Cache';
+
+  @override
+  String get clearCache => 'Svuota la Cache';
+
+  @override
+  String get cacheCleaned => 'Cache svuotata';
 }

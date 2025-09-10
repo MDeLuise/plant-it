@@ -89,6 +89,7 @@ GoRouter router() => GoRouter(
                 schedulingService: context.read(),
                 notificationService: context.read(),
                 reminderRepository: context.read(),
+                appCache: context.read(),
               );
               settingsViewModel.load.execute();
 

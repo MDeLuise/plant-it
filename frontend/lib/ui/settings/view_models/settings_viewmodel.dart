@@ -5,6 +5,7 @@ import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:result_dart/result_dart.dart';
@@ -15,10 +16,12 @@ class SettingsViewModel extends ChangeNotifier {
     required ReminderRepository reminderRepository,
     required SchedulingService schedulingService,
     required NotificationService notificationService,
+    required AppCache appCache,
   })  : _userSettingRepository = userSettingRepository,
         _reminderRepository = reminderRepository,
         _schedulingService = schedulingService,
-        _notificationService = notificationService {
+        _notificationService = notificationService,
+        _appCache = appCache {
     load = Command.createAsyncNoParam(() async {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
@@ -49,12 +52,17 @@ class SettingsViewModel extends ChangeNotifier {
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
     }, initialValue: Failure(Exception("not started")));
+    clearCache = Command.createAsyncNoParam(() async {
+      await _appCache.clear();
+      return;
+    }, initialValue: null);
   }
 
   final UserSettingRepository _userSettingRepository;
   final ReminderRepository _reminderRepository;
   final SchedulingService _schedulingService;
   final NotificationService _notificationService;
+  final AppCache _appCache;
   final _log = Logger('SettingsViewModel');
   final Map<String, String> _userSettings = {};
 
@@ -63,6 +71,7 @@ class SettingsViewModel extends ChangeNotifier {
   late final Command<Map<String, int>, void> saveNotificationTime;
   late final Command<void, void> removeAllNotificationTime;
   late final Command<void, void> loadReminders;
+  late final Command<void, void> clearCache;
 
   final List<String> _dayKeys = [
     UserSettingsKeys.notificationTimeMonday.key,
