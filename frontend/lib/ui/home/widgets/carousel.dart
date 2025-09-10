@@ -7,7 +7,13 @@ import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
 
 class Carousel extends StatefulWidget {
   final HomeViewModel viewModel;
-  const Carousel({super.key, required this.viewModel});
+  final String filter;
+
+  const Carousel({
+    super.key,
+    required this.viewModel,
+    required this.filter,
+  });
 
   @override
   State<Carousel> createState() => _CarouselState();
@@ -18,13 +24,16 @@ class _CarouselState extends State<Carousel> {
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Iterable<int> plantIds = widget.viewModel.plantMap.keys;
+    final Iterable<int> plantIds =
+        widget.viewModel.plantMap.keys.toList().where((id) {
+      return widget.viewModel.plantMap[id]!.name.toLowerCase().contains(widget.filter.toLowerCase());
+    }).toList();
     final List<int> plantIdsList = plantIds.toList();
 
     return SizedBox(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/home/view_models/home_viewmodel.dart';
@@ -25,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  String _filter = '';
 
   @override
   void initState() {
@@ -70,9 +72,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const WidgetStatePropertyAll<EdgeInsets>(
                       EdgeInsets.symmetric(horizontal: 16.0),
                     ),
+                    onSubmitted: (value) {
+                      setState(() => _filter = value);
+                    },
+                    trailing: _filter.isEmpty
+                        ? null
+                        : [
+                            IconButton(
+                              onPressed: () {
+                                setState(() => _filter = '');
+                                _searchController.clear();
+                              },
+                              icon: Icon(LucideIcons.x),
+                            ),
+                          ],
                   ),
                 ),
-                Carousel(viewModel: widget.viewModel),
+                Carousel(
+                  viewModel: widget.viewModel,
+                  filter: _filter,
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
