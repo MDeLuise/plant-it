@@ -380,5 +380,10 @@
   "noSynonyms": "Nessun sinonimo conosciuto",
   "areYouSureYouWantToDeleteThisPlant": "Sicuro di voler eliminare questa pianta?",
   "areYouSureYouWantToDeleteThisSpecies": "Sicuro di voler eliminare questa specie e tutte le tue piante collegate?",
-  "speciesDeleted": "Specie eliminata"
+  "speciesDeleted": "Specie eliminata",
+  "noPlantsFound": "Nessuna pianta trovata",
+  "yourPlantWillAppearHere": "Le tue piante appariranno qui una volta aggiunte alla tua collezione",
+  "howToAddPlants": "Come aggiungere una pianta",
+  "addPlantInstruction": "Questa app funziona con piante di varie specie.\n\nPuoi aggiungere una nuova pianta cercando prima la specie (o aggiungendone una nuova) e poi collegando una pianta ad essa.\n\nPer iniziare, cerca una specie.",
+  "searchASpecies": "Cerca una specie"
 }

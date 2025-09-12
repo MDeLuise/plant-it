@@ -380,5 +380,10 @@
   "noSynonyms": "No known synonyms",
   "areYouSureYouWantToDeleteThisPlant": "Are you sure you want to delete this plant?",
   "areYouSureYouWantToDeleteThisSpecies": "Are you sure you want to delete this species and all of your related plants?",
-  "speciesDeleted": "Species deleted"
+  "speciesDeleted": "Species deleted",
+  "noPlantsFound": "No plants found",
+  "yourPlantWillAppearHere": "Your plants will appear here when once you add them into your collection",
+  "howToAddPlants": "How to add plants",
+  "addPlantInstruction": "This app works with plants from various species.\n\nYou can add a new plant by first searching for the species (or adding a new one) and then linking a plant to it.\n\nTo get started, search for a species.",
+  "searchASpecies": "Search a species"
 }

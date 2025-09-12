@@ -1196,6 +1196,36 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Species deleted'**
   String get speciesDeleted;
+
+  /// No description provided for @noPlantsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No plants found'**
+  String get noPlantsFound;
+
+  /// No description provided for @yourPlantWillAppearHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Your plants will appear here when once you add them into your collection'**
+  String get yourPlantWillAppearHere;
+
+  /// No description provided for @howToAddPlants.
+  ///
+  /// In en, this message translates to:
+  /// **'How to add plants'**
+  String get howToAddPlants;
+
+  /// No description provided for @addPlantInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'This app works with plants from various species.\n\nYou can add a new plant by first searching for the species (or adding a new one) and then linking a plant to it.\n\nTo get started, search for a species.'**
+  String get addPlantInstruction;
+
+  /// No description provided for @searchASpecies.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a species'**
+  String get searchASpecies;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

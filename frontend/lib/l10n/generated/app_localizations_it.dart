@@ -663,4 +663,21 @@ class LIt extends L {
 
   @override
   String get speciesDeleted => 'Specie eliminata';
+
+  @override
+  String get noPlantsFound => 'Nessuna pianta trovata';
+
+  @override
+  String get yourPlantWillAppearHere =>
+      'Le tue piante appariranno qui una volta aggiunte alla tua collezione';
+
+  @override
+  String get howToAddPlants => 'Come aggiungere una pianta';
+
+  @override
+  String get addPlantInstruction =>
+      'Questa app funziona con piante di varie specie.\n\nPuoi aggiungere una nuova pianta cercando prima la specie (o aggiungendone una nuova) e poi collegando una pianta ad essa.\n\nPer iniziare, cerca una specie.';
+
+  @override
+  String get searchASpecies => 'Cerca una specie';
 }

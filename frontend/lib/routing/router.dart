@@ -58,8 +58,11 @@ GoRouter router() => GoRouter(
               );
               homeViewModel.load.execute();
 
+              if (state.extra != null && state.extra is int) {
+                selectedView = state.extra as int;
+              }
               CalendarViewModel calendarViewModel;
-              if (state.extra != null) {
+              if (state.extra != null && state.extra is CalendarViewModel) {
                 calendarViewModel = state.extra as CalendarViewModel;
                 selectedView = 1;
                 calendarViewModel.filter.execute();

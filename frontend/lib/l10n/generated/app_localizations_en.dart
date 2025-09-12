@@ -702,4 +702,21 @@ class LEn extends L {
 
   @override
   String get speciesDeleted => 'Species deleted';
+
+  @override
+  String get noPlantsFound => 'No plants found';
+
+  @override
+  String get yourPlantWillAppearHere =>
+      'Your plants will appear here when once you add them into your collection';
+
+  @override
+  String get howToAddPlants => 'How to add plants';
+
+  @override
+  String get addPlantInstruction =>
+      'This app works with plants from various species.\n\nYou can add a new plant by first searching for the species (or adding a new one) and then linking a plant to it.\n\nTo get started, search for a species.';
+
+  @override
+  String get searchASpecies => 'Search a species';
 }
