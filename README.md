@@ -1,9 +1,6 @@
-<div style="display: flex; justify-content: center;">
-    <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <img src="images/plant-it-logo.png" alt="Plant-it" style="width: 100%; height: auto;"/>
-    </div>
-</div>
-<br>
+<p align="center">
+<img src="images/plant-it-logo-rounded.png" alt="Plant-it" style="width: 150px; height: 150px"/>
+</p>
 
 <p align="center">Plant-it is a <b>gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
