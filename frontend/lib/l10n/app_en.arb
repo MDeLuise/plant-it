@@ -385,5 +385,9 @@
   "yourPlantWillAppearHere": "Your plants will appear here when once you add them into your collection",
   "howToAddPlants": "How to add plants",
   "addPlantInstruction": "This app works with plants from various species.\n\nYou can add a new plant by first searching for the species (or adding a new one) and then linking a plant to it.\n\nTo get started, search for a species.",
-  "searchASpecies": "Search a species"
+  "searchASpecies": "Search a species",
+  "noSpeciesFound": "No species found",
+  "searchAndAddSpeciesInstructions": "You can add a new species, or you can connect the app to a service to access additional species.",
+  "connectToAService": "Connect to a service",
+  "noClassification": "Classification not known"
 }

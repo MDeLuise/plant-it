@@ -719,4 +719,17 @@ class LEn extends L {
 
   @override
   String get searchASpecies => 'Search a species';
+
+  @override
+  String get noSpeciesFound => 'No species found';
+
+  @override
+  String get searchAndAddSpeciesInstructions =>
+      'You can add a new species, or you can connect the app to a service to access additional species.';
+
+  @override
+  String get connectToAService => 'Connect to a service';
+
+  @override
+  String get noClassification => 'Classification not known';
 }

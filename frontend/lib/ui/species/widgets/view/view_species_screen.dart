@@ -28,7 +28,6 @@ class ViewSpeciesScreen extends StatefulWidget {
 }
 
 class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
-  
   Future<void> deleteWithConfirm() async {
     await showDialog(
       context: context,
@@ -46,9 +45,8 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
               if (widget.viewModel.delete.results.value.hasError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(widget
-                        .viewModel.delete.results.value.error
-                        .toString()),
+                    content: Text(
+                        widget.viewModel.delete.results.value.error.toString()),
                   ),
                 );
                 return;
@@ -158,7 +156,13 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          _getSpeciesInfo(),
+                          widget.viewModel.genus == null &&
+                                  widget.viewModel.family == null
+                              ? Text(
+                                  L.of(context).noClassification,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                )
+                              : _getSpeciesInfo(),
                           const SizedBox(height: 16),
 
                           // Care

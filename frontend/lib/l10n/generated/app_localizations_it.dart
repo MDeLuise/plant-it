@@ -680,4 +680,17 @@ class LIt extends L {
 
   @override
   String get searchASpecies => 'Cerca una specie';
+
+  @override
+  String get noSpeciesFound => 'Nessuna specie trovata';
+
+  @override
+  String get searchAndAddSpeciesInstructions =>
+      'Puoi aggiungere una nuova specie, oppure puoi collegare l\'app a un servizio per accedere a ulteriori specie.';
+
+  @override
+  String get connectToAService => 'Connetti l\'app ad un servizio';
+
+  @override
+  String get noClassification => 'Classificazione non conosciuta';
 }

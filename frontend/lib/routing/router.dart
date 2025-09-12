@@ -187,8 +187,18 @@ GoRouter router() => GoRouter(
               GoRoute(
                 path: Routes.settingsDataSources,
                 builder: (context, state) {
-                  SettingsViewModel viewModel =
-                      state.extra as SettingsViewModel;
+                  SettingsViewModel viewModel;
+                  if (state.extra != null) {
+                    viewModel = state.extra as SettingsViewModel;
+                  } else {
+                    viewModel = SettingsViewModel(
+                        userSettingRepository: context.read(),
+                        reminderRepository: context.read(),
+                        schedulingService: context.read(),
+                        notificationService: context.read(),
+                        appCache: context.read());
+                    viewModel.load.execute();
+                  }
                   return DataSourcesScreen(viewModel: viewModel);
                 },
               ),

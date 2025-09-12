@@ -1226,6 +1226,30 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Search a species'**
   String get searchASpecies;
+
+  /// No description provided for @noSpeciesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No species found'**
+  String get noSpeciesFound;
+
+  /// No description provided for @searchAndAddSpeciesInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add a new species, or you can connect the app to a service to access additional species.'**
+  String get searchAndAddSpeciesInstructions;
+
+  /// No description provided for @connectToAService.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to a service'**
+  String get connectToAService;
+
+  /// No description provided for @noClassification.
+  ///
+  /// In en, this message translates to:
+  /// **'Classification not known'**
+  String get noClassification;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

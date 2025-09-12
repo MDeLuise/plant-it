@@ -8,6 +8,7 @@ import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
+import 'package:plant_it/ui/search/widgets/empty_search.dart';
 import 'package:plant_it/ui/search/widgets/species_card.dart';
 
 class SearchPage extends StatefulWidget {
@@ -76,7 +77,6 @@ class _SearchPageState extends State<SearchPage> {
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -141,6 +141,18 @@ class _SearchPageState extends State<SearchPage> {
                           // ),
                         ]),
                   ),
+                  widget.viewModel.result.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height - 300,
+                            child: Center(
+                              child: EmptySearch(
+                                  searchedSpecies: _searchController.text),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   ...List.generate(widget.viewModel.result.length, (index) {
                     SpeciesSearcherPartialResult species =
                         widget.viewModel.result[index];
