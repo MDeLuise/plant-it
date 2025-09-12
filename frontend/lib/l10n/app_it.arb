@@ -376,5 +376,9 @@
   "databaseAndCache": "Database e Cache",
   "manageDatabaseAndCache": "Gestisci le impostazioni del Database e della Cache",
   "clearCache": "Svuota la Cache",
-  "cacheCleaned": "Cache svuotata"
+  "cacheCleaned": "Cache svuotata",
+  "noSynonyms": "Nessun sinonimo conosciuto",
+  "areYouSureYouWantToDeleteThisPlant": "Sicuro di voler eliminare questa pianta?",
+  "areYouSureYouWantToDeleteThisSpecies": "Sicuro di voler eliminare questa specie e tutte le tue piante collegate?",
+  "speciesDeleted": "Specie eliminata"
 }

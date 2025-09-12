@@ -1172,6 +1172,30 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Cache cleaned'**
   String get cacheCleaned;
+
+  /// No description provided for @noSynonyms.
+  ///
+  /// In en, this message translates to:
+  /// **'No known synonyms'**
+  String get noSynonyms;
+
+  /// No description provided for @areYouSureYouWantToDeleteThisPlant.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this plant?'**
+  String get areYouSureYouWantToDeleteThisPlant;
+
+  /// No description provided for @areYouSureYouWantToDeleteThisSpecies.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this species and all of your related plants?'**
+  String get areYouSureYouWantToDeleteThisSpecies;
+
+  /// No description provided for @speciesDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Species deleted'**
+  String get speciesDeleted;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

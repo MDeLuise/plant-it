@@ -2958,8 +2958,8 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       'plant_id', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('REFERENCES plants (id)'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES plants (id) ON DELETE CASCADE'));
   static const VerificationMeta _speciesIdMeta =
       const VerificationMeta('speciesId');
   @override
@@ -2967,8 +2967,8 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       'species_id', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('UNIQUE REFERENCES species (id)'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'UNIQUE REFERENCES species (id) ON DELETE CASCADE'));
   static const VerificationMeta _isAvatarMeta =
       const VerificationMeta('isAvatar');
   @override
@@ -3618,6 +3618,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('reminders', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('plants',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('images', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('species',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('images', kind: UpdateKind.delete),
             ],
           ),
         ],

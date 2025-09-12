@@ -21,7 +21,7 @@ class CalendarViewModel extends ChangeNotifier {
       required EventTypeRepository eventTypeRepository,
       required SpeciesRepository speciesRepository,
       required ReminderOccurrenceService reminderOccurrenceService,
-      required StreamController<StreamCode> streamController})
+      required StreamController<StreamCode> streamController,})
       : _eventRepository = eventRepository,
         _plantRepository = plantRepository,
         _eventTypeRepository = eventTypeRepository,

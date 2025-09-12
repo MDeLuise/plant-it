@@ -688,4 +688,18 @@ class LEn extends L {
 
   @override
   String get cacheCleaned => 'Cache cleaned';
+
+  @override
+  String get noSynonyms => 'No known synonyms';
+
+  @override
+  String get areYouSureYouWantToDeleteThisPlant =>
+      'Are you sure you want to delete this plant?';
+
+  @override
+  String get areYouSureYouWantToDeleteThisSpecies =>
+      'Are you sure you want to delete this species and all of your related plants?';
+
+  @override
+  String get speciesDeleted => 'Species deleted';
 }

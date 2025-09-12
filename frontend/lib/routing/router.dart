@@ -15,6 +15,7 @@ import 'package:plant_it/ui/plant/widgets/create/add_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/edit/edit_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
+import 'package:plant_it/ui/settings/database_and_cache_screen.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
@@ -131,7 +132,8 @@ GoRouter router() => GoRouter(
                       state.extra as Map<String, Object?>;
 
                   Map<String, Object?>? toCreate;
-                  if (input.containsKey('toCreate')) {
+                  if (input.containsKey('toCreate') &&
+                      input['toCreate'] != null) {
                     toCreate = input['toCreate'] as Map<String, Object?>;
                   }
 
@@ -196,6 +198,14 @@ GoRouter router() => GoRouter(
                     workmanager: context.read(),
                     viewModel: viewModel,
                   );
+                },
+              ),
+              GoRoute(
+                path: Routes.settingsDatabaseAndCache,
+                builder: (context, state) {
+                  SettingsViewModel viewModel =
+                      state.extra as SettingsViewModel;
+                  return DatabaseAndCacheScreen(viewModel: viewModel);
                 },
               ),
               GoRoute(
@@ -279,7 +289,9 @@ GoRouter router() => GoRouter(
               streamController: context.read(),
             );
             viewModel.load.execute();
-            return CreateEventScreen(viewModel: viewModel);
+            return CreateEventScreen(
+              viewModel: viewModel,
+            );
           },
         ),
         GoRoute(
@@ -345,7 +357,10 @@ GoRouter router() => GoRouter(
             );
             viewModel.load.execute(idOrExternal);
 
-            return ViewSpeciesScreen(viewModel: viewModel);
+            return ViewSpeciesScreen(
+              viewModel: viewModel,
+              streamController: context.read(),
+            );
           },
         ),
         GoRoute(

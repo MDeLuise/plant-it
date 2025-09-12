@@ -649,4 +649,18 @@ class LIt extends L {
 
   @override
   String get cacheCleaned => 'Cache svuotata';
+
+  @override
+  String get noSynonyms => 'Nessun sinonimo conosciuto';
+
+  @override
+  String get areYouSureYouWantToDeleteThisPlant =>
+      'Sicuro di voler eliminare questa pianta?';
+
+  @override
+  String get areYouSureYouWantToDeleteThisSpecies =>
+      'Sicuro di voler eliminare questa specie e tutte le tue piante collegate?';
+
+  @override
+  String get speciesDeleted => 'Specie eliminata';
 }

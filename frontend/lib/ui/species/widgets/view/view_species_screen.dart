@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -9,13 +11,16 @@ import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/plant/widgets/grid_widget.dart';
 import 'package:plant_it/ui/species/view_models/view_species_viewmodel.dart';
 import 'package:plant_it/ui/species/widgets/view/species_image.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class ViewSpeciesScreen extends StatefulWidget {
   final ViewSpeciesViewModel viewModel;
+  final StreamController<StreamCode> streamController;
 
   const ViewSpeciesScreen({
     super.key,
     required this.viewModel,
+    required this.streamController,
   });
 
   @override
@@ -23,6 +28,47 @@ class ViewSpeciesScreen extends StatefulWidget {
 }
 
 class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
+  
+  Future<void> deleteWithConfirm() async {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(L.of(context).confirmDelete),
+        content: Text(L.of(context).areYouSureYouWantToDeleteThisSpecies),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(L.of(context).cancel),
+          ),
+          TextButton(
+            onPressed: () async {
+              await widget.viewModel.delete.executeWithFuture();
+              if (widget.viewModel.delete.results.value.hasError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(widget
+                        .viewModel.delete.results.value.error
+                        .toString()),
+                  ),
+                );
+                return;
+              }
+              widget.streamController.add(StreamCode.deleteSpecies);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(L.of(context).speciesDeleted),
+                ),
+              );
+              context.pop();
+              context.pop();
+            },
+            child: Text(L.of(context).delete),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     L appLocalizations = L.of(context);
@@ -134,12 +180,16 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                              appLocalizations.speciesSynonyms(
-                                widget.viewModel.synonyms.join(", "),
-                                widget.viewModel.species,
-                              ),
-                              style: Theme.of(context).textTheme.bodyLarge!),
+                          widget.viewModel.synonyms.isEmpty
+                              ? Text(appLocalizations.noSynonyms,
+                                  style: Theme.of(context).textTheme.bodyLarge!)
+                              : Text(
+                                  appLocalizations.speciesSynonyms(
+                                    widget.viewModel.synonyms.join(", "),
+                                    widget.viewModel.species,
+                                  ),
+                                  style:
+                                      Theme.of(context).textTheme.bodyLarge!),
                           const SizedBox(height: 16),
                         ],
                       ),
@@ -219,8 +269,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                         } else if (value == 'duplicate') {
                           await widget.viewModel.duplicate.executeWithFuture();
                         } else if (value == 'remove') {
-                          await widget.viewModel.delete.executeWithFuture();
-                          context.pop();
+                          await deleteWithConfirm();
                         }
                       });
                     },

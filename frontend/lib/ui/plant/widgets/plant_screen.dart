@@ -31,11 +31,6 @@ class PlantScreen extends StatefulWidget {
 class _PlantScreenState extends State<PlantScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> _uploadNewPhoto() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
@@ -43,6 +38,46 @@ class _PlantScreenState extends State<PlantScreen> {
 
     await widget.viewModel.uploadNewPhoto.executeWithFuture(pickedFile);
     setState(() {});
+  }
+
+  void deleteWithConfirm() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(L.of(context).confirmDelete),
+        content: Text(L.of(context).areYouSureYouWantToDeleteThisPlant),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(L.of(context).cancel),
+          ),
+          TextButton(
+            onPressed: () async {
+              await widget.viewModel.deletePlant.executeWithFuture();
+              if (widget.viewModel.deletePlant.results.value.hasError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(widget
+                        .viewModel.deletePlant.results.value.error
+                        .toString()),
+                  ),
+                );
+                return;
+              }
+              widget.streamController.add(StreamCode.deletePlant);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(L.of(context).plantDeleted),
+                ),
+              );
+              context.pop();
+              context.pop();
+            },
+            child: Text(L.of(context).delete),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -291,25 +326,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             );
                           }
                         } else if (value == 'remove') {
-                          Command<void, void> command =
-                              widget.viewModel.deletePlant;
-                          await command.executeWithFuture();
-                          if (command.results.value.hasError) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    command.results.value.error.toString()),
-                              ),
-                            );
-                          } else {
-                            widget.streamController.add(StreamCode.deletePlant);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(appLocalizations.plantDeleted),
-                              ),
-                            );
-                            context.pop();
-                          }
+                          deleteWithConfirm();
                         }
                       });
                     },

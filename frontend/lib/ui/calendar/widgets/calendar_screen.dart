@@ -35,7 +35,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     widget.streamController.stream.listen((c) {
-      if (c == StreamCode.insertEvent) {
+      List<StreamCode> eventsThatTriggerUpdate = [
+        StreamCode.insertEvent,
+        StreamCode.deletePlant,
+        StreamCode.deleteEvent,
+      ];
+      if (eventsThatTriggerUpdate.contains(c)) {
         widget.viewModel.load.execute();
       }
     });

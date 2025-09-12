@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 String colorToHex(Color color) {
   return "#${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}";
@@ -13,25 +12,21 @@ Color hexToColor(String hexString) {
   return Color(int.parse('0x$hexString'));
 }
 
-String formatDate(DateTime date) {
-  return DateFormat('E, dd MMM yyyy').format(date);
-}
-
 String timeDiffStr(DateTime dateTime) {
-  final now = DateTime.now();
-  final difference = now.difference(dateTime);
+  DateTime now = DateTime.now();
+  Duration difference = now.difference(dateTime);
 
-  final isFuture = difference.isNegative;
-  final duration = isFuture ? -difference : difference;
+  bool isFuture = difference.isNegative;
+  Duration duration = isFuture ? -difference : difference;
 
   if (duration.inDays >= 365) {
-    final years = duration.inDays ~/ 365;
+    int years = duration.inDays ~/ 365;
     return _buildTimeString(years, 'year', isFuture);
   } else if (duration.inDays >= 30) {
-    final months = duration.inDays ~/ 30;
+    int months = duration.inDays ~/ 30;
     return _buildTimeString(months, 'month', isFuture);
   } else if (duration.inDays >= 7) {
-    final weeks = duration.inDays ~/ 7;
+    int weeks = duration.inDays ~/ 7;
     return _buildTimeString(weeks, 'week', isFuture);
   } else if (duration.inDays >= 1) {
     return _buildTimeString(duration.inDays, 'day', isFuture);

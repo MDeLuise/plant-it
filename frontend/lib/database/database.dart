@@ -112,9 +112,9 @@ class Images extends Table {
   TextColumn get imageUrl => text().withLength(max: 256).nullable()();
   TextColumn get description => text().withLength(max: 250).nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
-  IntColumn get plantId => integer().nullable().references(Plants, #id)();
+  IntColumn get plantId => integer().nullable().references(Plants, #id, onDelete: KeyAction.cascade)();
   IntColumn get speciesId =>
-      integer().nullable().references(Species, #id).unique()();
+      integer().nullable().references(Species, #id, onDelete: KeyAction.cascade).unique()();
   BoolColumn get isAvatar => boolean().withDefault(const Constant(false))();
 
   @override
@@ -165,10 +165,15 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration {
-    return MigrationStrategy(onCreate: (m) async {
-      await m.createAll();
-      await initDummyData();
-    });
+    return MigrationStrategy(
+      onCreate: (m) async {
+        await m.createAll();
+        await initDummyData();
+      },
+      beforeOpen: (details) async {
+        await customStatement('PRAGMA foreign_keys = ON');
+      },
+    );
   }
 
   Future<void> initDummyData() async {

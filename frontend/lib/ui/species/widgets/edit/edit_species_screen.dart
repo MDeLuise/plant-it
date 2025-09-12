@@ -27,7 +27,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          onPressed: () => context.pop(),
+          onPressed: context.pop,
         ),
         title: Text(L.of(context).editSpecies),
       ),

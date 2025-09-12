@@ -376,5 +376,9 @@
   "databaseAndCache": "Database and Cache",
   "manageDatabaseAndCache": "Manage Database and Cache settings",
   "clearCache": "Clear the Cache",
-  "cacheCleaned": "Cache cleaned"
+  "cacheCleaned": "Cache cleaned",
+  "noSynonyms": "No known synonyms",
+  "areYouSureYouWantToDeleteThisPlant": "Are you sure you want to delete this plant?",
+  "areYouSureYouWantToDeleteThisSpecies": "Are you sure you want to delete this species and all of your related plants?",
+  "speciesDeleted": "Species deleted"
 }
