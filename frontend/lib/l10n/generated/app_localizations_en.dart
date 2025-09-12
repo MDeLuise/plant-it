@@ -731,5 +731,9 @@ class LEn extends L {
   String get connectToAService => 'Connect to a service';
 
   @override
-  String get noClassification => 'Classification not known';
+  String get noInfoAvailable => 'No info available';
+
+  @override
+  String get noReminder =>
+      'No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take.';
 }

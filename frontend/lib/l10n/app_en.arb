@@ -389,5 +389,6 @@
   "noSpeciesFound": "No species found",
   "searchAndAddSpeciesInstructions": "You can add a new species, or you can connect the app to a service to access additional species.",
   "connectToAService": "Connect to a service",
-  "noClassification": "Classification not known"
+  "noInfoAvailable": "No info available",
+  "noReminder": "No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take."
 }

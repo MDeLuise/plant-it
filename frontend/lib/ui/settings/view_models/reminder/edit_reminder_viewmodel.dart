@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class EditReminderViewModel extends ChangeNotifier {
@@ -15,6 +18,7 @@ class EditReminderViewModel extends ChangeNotifier {
     required EventTypeRepository eventTypeRepository,
     required PlantRepository plantRepository,
     required SpeciesRepository speciesRepository,
+    required StreamController<StreamCode> streamController,
   })  : _reminderRepository = reminderRepository,
         _eventTypeRepository = eventTypeRepository,
         _plantRepository = plantRepository,
@@ -22,6 +26,7 @@ class EditReminderViewModel extends ChangeNotifier {
     load = Command.createAsyncNoResult<int>((int id) async {
       Result<void> result = await _load(id);
       if (result.isError()) throw result.exceptionOrNull()!;
+      streamController.add(StreamCode.editReminder);
     });
     update = Command.createAsyncNoParam(() async {
       Result<void> result = await _update();

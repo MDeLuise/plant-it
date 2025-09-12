@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -5,6 +7,7 @@ import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class ReminderViewModel extends ChangeNotifier {
@@ -12,6 +15,7 @@ class ReminderViewModel extends ChangeNotifier {
     required ReminderRepository reminderRepository,
     required EventTypeRepository eventTypeRepository,
     required PlantRepository plantRepository,
+    required StreamController<StreamCode> streamController,
   })  : _reminderRepository = reminderRepository,
         _eventTypeRepository = eventTypeRepository,
         _plantRepository = plantRepository {
@@ -23,6 +27,8 @@ class ReminderViewModel extends ChangeNotifier {
     delete = Command.createAsync((int id) async {
       Result<void> result = await _delete(id);
       if (result.isError()) throw result.exceptionOrNull()!;
+      _reminders.removeWhere((r) => r.id == id);
+      streamController.add(StreamCode.deleteReminder);
       return;
     }, initialValue: Failure(Exception("not started")));
   }

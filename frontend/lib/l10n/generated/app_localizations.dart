@@ -1245,11 +1245,17 @@ abstract class L {
   /// **'Connect to a service'**
   String get connectToAService;
 
-  /// No description provided for @noClassification.
+  /// No description provided for @noInfoAvailable.
   ///
   /// In en, this message translates to:
-  /// **'Classification not known'**
-  String get noClassification;
+  /// **'No info available'**
+  String get noInfoAvailable;
+
+  /// No description provided for @noReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take.'**
+  String get noReminder;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

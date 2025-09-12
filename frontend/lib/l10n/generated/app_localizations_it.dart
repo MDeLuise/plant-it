@@ -692,5 +692,9 @@ class LIt extends L {
   String get connectToAService => 'Connetti l\'app ad un servizio';
 
   @override
-  String get noClassification => 'Classificazione non conosciuta';
+  String get noInfoAvailable => 'Nessuna informazione disponibile';
+
+  @override
+  String get noReminder =>
+      'Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare.';
 }

@@ -159,7 +159,7 @@ class _ViewSpeciesScreenState extends State<ViewSpeciesScreen> {
                           widget.viewModel.genus == null &&
                                   widget.viewModel.family == null
                               ? Text(
-                                  L.of(context).noClassification,
+                                  L.of(context).noInfoAvailable,
                                   style: Theme.of(context).textTheme.bodyLarge!,
                                 )
                               : _getSpeciesInfo(),

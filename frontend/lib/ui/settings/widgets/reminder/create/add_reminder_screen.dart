@@ -22,54 +22,48 @@ class AddReminderScreen extends StatefulWidget {
 }
 
 class _AddReminderScreenState extends State<AddReminderScreen> {
-  late final L _appLocalizations;
-
-  @override
-  void initState() {
-    super.initState();
-    _appLocalizations = L.of(context);
-  }
-
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(_appLocalizations.createReminder),
+        title: Text(appLocalizations.createReminder),
       ),
       body: AppStepper<AddReminderViewModel>(
         viewModel: widget.viewModel,
         mainCommand: widget.viewModel.load,
-        actionText: _appLocalizations.create,
+        actionText: appLocalizations.create,
         steps: [
           EventTypeStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           PlantStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           FrequencyStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           RepeatAfterStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           StartStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
           EndStep(
             viewModel: widget.viewModel,
-            appLocalizations: _appLocalizations,
+            appLocalizations: appLocalizations,
           ),
         ],
         stepsInFocus: 2,
         actionCommand: widget.viewModel.insert,
         summary: true,
-        successText: _appLocalizations.reminderCreated,
+        successText: appLocalizations.reminderCreated,
       ),
     );
   }

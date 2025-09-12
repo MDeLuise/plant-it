@@ -258,6 +258,7 @@ GoRouter router() => GoRouter(
                     eventTypeRepository: context.read(),
                     reminderRepository: context.read(),
                     plantRepository: context.read(),
+                    streamController: context.read(),
                   );
                   viewModel.load.execute();
                   return ReminderScreen(viewModel: viewModel);
@@ -271,6 +272,7 @@ GoRouter router() => GoRouter(
                     eventTypeRepository: context.read(),
                     plantRepository: context.read(),
                     speciesRepository: context.read(),
+                    streamController: context.read(),
                   );
                   viewModel.load.execute();
                   return AddReminderScreen(viewModel: viewModel);
@@ -285,6 +287,7 @@ GoRouter router() => GoRouter(
                     eventTypeRepository: context.read(),
                     plantRepository: context.read(),
                     speciesRepository: context.read(),
+                    streamController: context.read(),
                   );
                   viewModel.load.execute(id);
                   return EditReminderScreen(viewModel: viewModel);

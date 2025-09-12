@@ -389,5 +389,6 @@
   "noSpeciesFound": "Nessuna specie trovata",
   "searchAndAddSpeciesInstructions": "Puoi aggiungere una nuova specie, oppure puoi collegare l'app a un servizio per accedere a ulteriori specie.",
   "connectToAService": "Connetti l'app ad un servizio",
-  "noClassification": "Classificazione non conosciuta"
+  "noInfoAvailable": "Nessuna informazione disponibile",
+  "noReminder": "Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare."
 }
