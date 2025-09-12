@@ -64,7 +64,8 @@ class SchedulingService {
     Duration difference = scheduledDateTime.difference(DateTime.now());
 
     if (difference.inSeconds < 0) {
-      difference += Duration(days: 7 - _getDaysUntilNextWeekday(weekDayKey));
+      difference += Duration(days: 7);
+      //difference += Duration(days: 7 - _getDaysUntilNextWeekday(weekDayKey));
     }
 
     // Ensure the minimum delay is 15 minutes
@@ -76,7 +77,7 @@ class SchedulingService {
       "${weekDayKey}_$taskName",
       taskName,
       tag: tagName,
-      frequency: const Duration(hours: 24),
+      frequency: const Duration(days: 7),
       initialDelay: difference,
       existingWorkPolicy: ExistingWorkPolicy.replace,
     );

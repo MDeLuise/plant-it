@@ -11,7 +11,7 @@ class ReminderRepository extends CRUDRepository<Reminder> {
 
   Future<Result<bool>> updateLastNotified(Reminder reminder) {
     return update(reminder
-        .copyWith(lastNotified: Value.absentIfNull(DateTime.now()))
+        .copyWith(lastNotified: Value(DateTime.now()))
         .toCompanion(false));
   }
 
