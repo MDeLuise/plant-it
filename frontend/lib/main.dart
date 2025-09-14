@@ -1,15 +1,19 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+import 'package:plant_it/config/dependencies.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/data/service/search/cache/app_cache_pref.dart';
+import 'package:plant_it/data/service/search/species_searcher_facade.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
-import 'main_development.dart' as development;
 import 'routing/router.dart';
 
 @pragma('vm:entry-point')
@@ -34,6 +38,8 @@ void callbackDispatcher() {
 
 /// Default main method
 void main() async {
+  const String environment =
+      String.fromEnvironment('ENV', defaultValue: 'prod');
   WidgetsFlutterBinding.ensureInitialized();
 
   await Workmanager().initialize(
@@ -51,8 +57,26 @@ void main() async {
     frequency: cacheRetention,
   );
 
-  // Launch development config by default
-  development.main();
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  SingleChildWidget cacheProvider = Provider<AppCache>(
+    create: (context) => AppCachePref(pref: pref),
+  );
+  SingleChildWidget searchProvider = Provider(
+    create: (context) => SpeciesSearcherFacade(
+      localSearcher: context.read(),
+      floraCodexSearcher: context.read(),
+      cache: context.read(),
+    ),
+  );
+
+  Logger.root.level = "dev" == environment ? Level.ALL : Level.WARNING;
+
+  runApp(
+    MultiProvider(
+      providers: [...providersLocal, cacheProvider, searchProvider],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

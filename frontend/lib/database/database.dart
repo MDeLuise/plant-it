@@ -165,10 +165,16 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration {
+    const String environment =
+      String.fromEnvironment('ENV', defaultValue: 'prod');
+
     return MigrationStrategy(
       onCreate: (m) async {
         await m.createAll();
-        await initDummyData();
+        await initEventTypes();
+        if ("dev" == environment) {
+          await initDummyData();
+        }
       },
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
@@ -176,7 +182,12 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<void> initDummyData() async {
+  Future<void> initEventTypes() async {
+    int eventTypeCount = await managers.eventTypes.count();
+    if (eventTypeCount != 0) {
+      return;
+    }
+
     await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
       id: const Value(1),
       name: 'watering',
@@ -190,7 +201,9 @@ class AppDatabase extends _$AppDatabase {
       icon: 'bean',
       color: '#c04200',
     ));
+  }
 
+  Future<void> initDummyData() async {
     await createAndSaveImages();
 
     await into(plants).insertOnConflictUpdate(PlantsCompanion.insert(
