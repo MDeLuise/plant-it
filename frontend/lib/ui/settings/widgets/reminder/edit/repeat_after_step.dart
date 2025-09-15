@@ -5,7 +5,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
 class RepeatAfterStep extends StepSection<EditReminderViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<FrequencyUnit> _selectedFrequencyUnit =
       ValueNotifier(viewModel.repeatAfterUnit);
@@ -19,7 +18,7 @@ class RepeatAfterStep extends StepSection<EditReminderViewModel> {
   RepeatAfterStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

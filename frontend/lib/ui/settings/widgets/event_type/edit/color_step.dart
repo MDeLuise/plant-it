@@ -7,7 +7,6 @@ import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_view
 import 'package:plant_it/utils/common.dart' as common;
 
 class ColorStep extends StepSection<EditEventTypeViewModel> {
-  final L appLocalizations;
   late final ValueNotifier<Color> _selectedColor =
       ValueNotifier(common.hexToColor(viewModel.color));
   late final ValueNotifier<Color> _ongoingSelection =
@@ -17,7 +16,7 @@ class ColorStep extends StepSection<EditEventTypeViewModel> {
   ColorStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

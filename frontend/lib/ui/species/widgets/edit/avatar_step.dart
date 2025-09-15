@@ -18,6 +18,7 @@ class AvatarStep extends StepSection<EditSpeciesViewModel> {
   AvatarStep({
     super.key,
     required super.viewModel,
+    required super.appLocalizations,
   }) {
     db.Image? image = viewModel.image;
     if (image == null) {
@@ -60,7 +61,7 @@ class AvatarStep extends StepSection<EditSpeciesViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Avatar";
+  String get title => appLocalizations.avatar;
 
   @override
   String get value {

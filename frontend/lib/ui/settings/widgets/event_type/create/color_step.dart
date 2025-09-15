@@ -6,7 +6,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 
 class ColorStep extends StepSection<AddEventTypeViewModel> {
-  final L appLocalizations;
   final ValueNotifier<Color?> _selectedColor = ValueNotifier(null);
   final ValueNotifier<Color?> _ongoingSelection = ValueNotifier(null);
   final ValueNotifier<bool> _valid = ValueNotifier(false);
@@ -14,7 +13,7 @@ class ColorStep extends StepSection<AddEventTypeViewModel> {
   ColorStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

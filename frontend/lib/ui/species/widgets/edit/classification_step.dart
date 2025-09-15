@@ -26,6 +26,7 @@ class ClassificationStep extends StepSection<EditSpeciesViewModel> {
   ClassificationStep({
     super.key,
     required super.viewModel,
+    required super.appLocalizations,
   });
 
   @override
@@ -61,7 +62,7 @@ class ClassificationStep extends StepSection<EditSpeciesViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Classification";
+  String get title => appLocalizations.classification;
 
   @override
   String get value {

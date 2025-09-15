@@ -5,7 +5,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
 class PlantStep extends StepSection<EditReminderViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   late final ValueNotifier<Plant> _selectedPlants =
       ValueNotifier(viewModel.plants[viewModel.plant]!);
@@ -15,7 +14,7 @@ class PlantStep extends StepSection<EditReminderViewModel> {
   PlantStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

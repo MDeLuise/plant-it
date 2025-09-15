@@ -24,6 +24,8 @@ class EditSpeciesScreen extends StatefulWidget {
 class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -39,9 +41,18 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
           successText: L.of(context).speciesUpdated,
           isPrimary: false,
           sections: [
-            ClassificationStep(viewModel: widget.viewModel),
-            CareStep(viewModel: widget.viewModel),
-            AvatarStep(viewModel: widget.viewModel),
+            ClassificationStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            CareStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            AvatarStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ]),
     );
   }

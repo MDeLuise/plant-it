@@ -4,7 +4,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class NameStep extends StepSection<EditPlantViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   late final ValueNotifier<String?> _selectedName =
       ValueNotifier(viewModel.name);
@@ -14,7 +13,7 @@ class NameStep extends StepSection<EditPlantViewModel> {
   NameStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

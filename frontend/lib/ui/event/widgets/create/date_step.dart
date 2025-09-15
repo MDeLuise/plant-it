@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
 class DateStep extends StepSection<CreateEventFormViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime?> _selectedDate =
       ValueNotifier<DateTime?>(viewModel.date);
@@ -14,7 +12,7 @@ class DateStep extends StepSection<CreateEventFormViewModel> {
   DateStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

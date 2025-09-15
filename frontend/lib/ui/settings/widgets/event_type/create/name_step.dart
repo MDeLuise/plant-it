@@ -4,14 +4,13 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 
 class EventTypeNameStep extends StepSection<AddEventTypeViewModel> {
-  final L appLocalizations;
   final ValueNotifier<String?> name = ValueNotifier(null);
   final ValueNotifier<bool> valid = ValueNotifier(false);
 
   EventTypeNameStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

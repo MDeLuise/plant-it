@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/reminder/edit_reminder_viewmodel.dart';
 
 class EndStep extends StepSection<EditReminderViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime?> _selectedDate =
       ValueNotifier<DateTime?>(viewModel.endDate);
@@ -14,7 +12,7 @@ class EndStep extends StepSection<EditReminderViewModel> {
   EndStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

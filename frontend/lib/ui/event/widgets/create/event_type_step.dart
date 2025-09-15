@@ -6,7 +6,6 @@ import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CreateEventFormViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable([]));
@@ -16,7 +15,7 @@ class EventTypeStep extends StepSection<CreateEventFormViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

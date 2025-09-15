@@ -6,7 +6,6 @@ import 'package:plant_it/ui/settings/view_models/reminder/add_reminder_viewmodel
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<AddReminderViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<EventType?> _selectedEventTypes = ValueNotifier(null);
   final ValueNotifier<EventType?> _ongoingSelection = ValueNotifier(null);
@@ -14,7 +13,7 @@ class EventTypeStep extends StepSection<AddReminderViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

@@ -5,7 +5,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/event/view_models/event_viewmodel.dart';
 
 class PlantStep extends StepSection<CreateEventFormViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(false);
   final ValueNotifier<List<Plant>> _selectedPlants =
       ValueNotifier(List.unmodifiable([]));
@@ -15,7 +14,7 @@ class PlantStep extends StepSection<CreateEventFormViewModel> {
   PlantStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override
@@ -33,7 +32,7 @@ class PlantStep extends StepSection<CreateEventFormViewModel> {
     if (plants.length < 3) {
       return _returnTruncatedPlantName(plants);
     }
-    return "${plants.length} plants";
+    return appLocalizations.nPlants(plants.length);
   }
 
   String _returnTruncatedPlantName(List<Plant> plants) {

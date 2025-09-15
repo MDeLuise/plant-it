@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class StartDateStep extends StepSection<EditPlantViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<DateTime?> _selectedDate =
       ValueNotifier<DateTime?>(viewModel.date);
@@ -14,7 +12,7 @@ class StartDateStep extends StepSection<EditPlantViewModel> {
   StartDateStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

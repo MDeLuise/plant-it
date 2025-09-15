@@ -23,6 +23,7 @@ class CareStep extends StepSection<EditSpeciesViewModel> {
   CareStep({
     super.key,
     required super.viewModel,
+    required super.appLocalizations,
   }) {
     if (viewModel.phMin != null) {
       _selectedPh.value =
@@ -75,22 +76,22 @@ class CareStep extends StepSection<EditSpeciesViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Care";
+  String get title => appLocalizations.care;
 
   @override
   String get value {
     String fields = "";
     if (_ongoingLightSelection.value != null) {
-      fields += "light";
+      fields += appLocalizations.light;
     }
     if (_ongoingHumiditySelection.value != null) {
-      fields += "${fields.isEmpty ? "" : ", "}humidity";
+      fields += "${fields.isEmpty ? "" : ", "}${appLocalizations.humidity}";
     }
     if (_ongoingTemp.value != null) {
-      fields += "${fields.isEmpty ? "" : ", "}temp";
+      fields += "${fields.isEmpty ? "" : ", "}${appLocalizations.temperature}";
     }
     if (_ongoingPhSelection.value != null) {
-      fields += "${fields.isEmpty ? "" : ", "}ph";
+      fields += "${fields.isEmpty ? "" : ", "}${appLocalizations.ph}";
     }
     if (fields.length > 30) {
       fields = "${fields.substring(0, 30)}...";

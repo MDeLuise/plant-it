@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 
 abstract class StepSection<T> extends StatefulWidget {
   final T viewModel;
+  final L appLocalizations;
 
   const StepSection({
     super.key,
     required this.viewModel,
+    required this.appLocalizations,
   });
 
   /// Validation notifier

@@ -20,6 +20,7 @@ class ClassificationStep extends StepSection<AddSpeciesViewModel> {
   ClassificationStep({
     super.key,
     required super.viewModel,
+    required super.appLocalizations,
     String? initialSpecies,
   }) {
     if (initialSpecies != null) {
@@ -61,7 +62,7 @@ class ClassificationStep extends StepSection<AddSpeciesViewModel> {
   ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
 
   @override
-  String get title => "Classification";
+  String get title => appLocalizations.classification;
 
   @override
   String get value {

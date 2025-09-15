@@ -5,7 +5,6 @@ import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewm
 import 'package:plant_it/utils/icons.dart';
 
 class IconStep extends StepSection<AddEventTypeViewModel> {
-  final L appLocalizations;
   final ValueNotifier<String?> _selectedIcon = ValueNotifier(null);
   final ValueNotifier<String?> _ongoingSelection = ValueNotifier(null);
   final ValueNotifier<bool> _valid = ValueNotifier(false);
@@ -13,7 +12,7 @@ class IconStep extends StepSection<AddEventTypeViewModel> {
   IconStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

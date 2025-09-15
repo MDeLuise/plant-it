@@ -4,7 +4,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 
 class DescriptionStep extends StepSection<EditEventTypeViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<String?> _selectedNote =
       ValueNotifier(viewModel.description);
@@ -14,7 +13,7 @@ class DescriptionStep extends StepSection<EditEventTypeViewModel> {
   DescriptionStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

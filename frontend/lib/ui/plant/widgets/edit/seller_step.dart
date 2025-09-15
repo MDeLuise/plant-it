@@ -4,7 +4,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/ui/plant/view_models/edit_plant_viewmodel.dart';
 
 class SellerStep extends StepSection<EditPlantViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<String?> _selectedSeller =
       ValueNotifier(viewModel.seller);
@@ -14,7 +13,7 @@ class SellerStep extends StepSection<EditPlantViewModel> {
   SellerStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override

@@ -25,28 +25,37 @@ class AddSpeciesScreen extends StatefulWidget {
 class _AddSpeciesScreenState extends State<AddSpeciesScreen> {
   @override
   Widget build(BuildContext context) {
+    L appLocalizations = L.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
           onPressed: () => context.pop(),
         ),
-        title: Text(L.of(context).createSpecies),
+        title: Text(appLocalizations.createSpecies),
       ),
       body: AppStepper<AddSpeciesViewModel>(
           viewModel: widget.viewModel,
           mainCommand: Command.createAsyncNoParamNoResult(() => Future.value()),
-          actionText: L.of(context).create,
+          actionText: appLocalizations.create,
           actionCommand: widget.viewModel.insert,
-          successText: L.of(context).speciesCreated,
+          successText: appLocalizations.speciesCreated,
           summary: true,
           stepsInFocus: 2,
           steps: [
             ClassificationStep(
               viewModel: widget.viewModel,
               initialSpecies: widget.searchedTerm,
+              appLocalizations: appLocalizations,
             ),
-            CareStep(viewModel: widget.viewModel),
-            AvatarStep(viewModel: widget.viewModel),
+            CareStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
+            AvatarStep(
+              viewModel: widget.viewModel,
+              appLocalizations: appLocalizations,
+            ),
           ]),
     );
   }

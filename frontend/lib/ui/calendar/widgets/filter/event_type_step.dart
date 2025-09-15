@@ -6,7 +6,6 @@ import 'package:plant_it/ui/core/ui/step_section.dart';
 import 'package:plant_it/utils/icons.dart';
 
 class EventTypeStep extends StepSection<CalendarViewModel> {
-  final L appLocalizations;
   final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
   late final ValueNotifier<List<EventType>> _selectedEventTypes =
       ValueNotifier(List.unmodifiable(viewModel.filteredEventTypes));
@@ -16,7 +15,7 @@ class EventTypeStep extends StepSection<CalendarViewModel> {
   EventTypeStep({
     super.key,
     required super.viewModel,
-    required this.appLocalizations,
+    required super.appLocalizations,
   });
 
   @override
