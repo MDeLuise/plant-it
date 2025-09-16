@@ -99,7 +99,7 @@ class _ClassificationStep extends State<ClassificationStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
@@ -140,7 +140,7 @@ class _ClassificationStep extends State<ClassificationStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },
@@ -180,7 +180,7 @@ class _ClassificationStep extends State<ClassificationStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },

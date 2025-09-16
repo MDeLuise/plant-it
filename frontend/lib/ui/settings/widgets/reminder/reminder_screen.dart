@@ -105,7 +105,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       child: ListTile(
                         title: Text(plant.name),
                         subtitle: Text(
-                          //"Every ${et.frequencyQuantity} ${et.frequencyUnit.name} from ${et.startDate} ${et.endDate == null ? "" : "to ${et.endDate}"}",
                           L.of(context).reminderDescription(
                                 et.frequencyQuantity,
                                 et.frequencyUnit.name,

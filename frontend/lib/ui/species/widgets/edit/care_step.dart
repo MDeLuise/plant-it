@@ -108,21 +108,24 @@ class _CareStep extends State<CareStep> {
       builder: (context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Slider(
-              value: range,
-              min: 1,
-              max: 10,
-              divisions: 10,
-              label: range.round().toString(),
-              onChanged: (double values) {
-                setState(() {
-                  range = values;
-                });
-              },
-            );
-          }),
+          content: SizedBox(
+            height: 100,
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Slider(
+                value: range,
+                min: 1,
+                max: 10,
+                divisions: 10,
+                label: range.round().toString(),
+                onChanged: (double values) {
+                  setState(() {
+                    range = values;
+                  });
+                },
+              );
+            }),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -130,7 +133,14 @@ class _CareStep extends State<CareStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                widget._ongoingLightSelection.value = null;
+                Navigator.of(context).pop();
+              },
+              child: Text(L.of(context).remove),
+            ),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(range.toInt());
               },
@@ -153,21 +163,24 @@ class _CareStep extends State<CareStep> {
       builder: (context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Slider(
-              value: range,
-              max: 10,
-              min: 0,
-              divisions: 10,
-              label: range.round().toString(),
-              onChanged: (double values) {
-                setState(() {
-                  range = values;
-                });
-              },
-            );
-          }),
+          content: SizedBox(
+            height: 100,
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Slider(
+                value: range,
+                max: 10,
+                min: 0,
+                divisions: 10,
+                label: range.round().toString(),
+                onChanged: (double values) {
+                  setState(() {
+                    range = values;
+                  });
+                },
+              );
+            }),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -175,7 +188,14 @@ class _CareStep extends State<CareStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                widget._ongoingHumiditySelection.value = null;
+                Navigator.of(context).pop();
+              },
+              child: Text(L.of(context).remove),
+            ),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(range.toInt());
               },
@@ -198,24 +218,27 @@ class _CareStep extends State<CareStep> {
       builder: (context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return RangeSlider(
-              values: range,
-              max: 50,
-              min: -30,
-              divisions: 16,
-              labels: RangeLabels(
-                range.start.round().toString(),
-                range.end.round().toString(),
-              ),
-              onChanged: (RangeValues values) {
-                setState(() {
-                  range = values;
-                });
-              },
-            );
-          }),
+          content: SizedBox(
+            height: 100,
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return RangeSlider(
+                values: range,
+                max: 50,
+                min: -30,
+                divisions: 16,
+                labels: RangeLabels(
+                  range.start.round().toString(),
+                  range.end.round().toString(),
+                ),
+                onChanged: (RangeValues values) {
+                  setState(() {
+                    range = values;
+                  });
+                },
+              );
+            }),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -223,7 +246,14 @@ class _CareStep extends State<CareStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                widget._ongoingTemp.value = null;
+                Navigator.of(context).pop();
+              },
+              child: Text(L.of(context).remove),
+            ),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(range);
               },
@@ -246,24 +276,27 @@ class _CareStep extends State<CareStep> {
       builder: (context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return RangeSlider(
-              values: range,
-              max: 14,
-              min: 0,
-              divisions: 14,
-              labels: RangeLabels(
-                range.start.round().toString(),
-                range.end.round().toString(),
-              ),
-              onChanged: (RangeValues values) {
-                setState(() {
-                  range = values;
-                });
-              },
-            );
-          }),
+          content: SizedBox(
+            height: 100,
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return RangeSlider(
+                values: range,
+                max: 14,
+                min: 0,
+                divisions: 14,
+                labels: RangeLabels(
+                  range.start.round().toString(),
+                  range.end.round().toString(),
+                ),
+                onChanged: (RangeValues values) {
+                  setState(() {
+                    range = values;
+                  });
+                },
+              );
+            }),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -271,7 +304,14 @@ class _CareStep extends State<CareStep> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                widget._ongoingPhSelection.value = null;
+                Navigator.of(context).pop();
+              },
+              child: Text(L.of(context).remove),
+            ),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(range);
               },

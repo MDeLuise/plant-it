@@ -15,7 +15,7 @@ import 'package:plant_it/ui/plant/widgets/create/add_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/edit/edit_plant_screen.dart';
 import 'package:plant_it/ui/plant/widgets/plant_screen.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
-import 'package:plant_it/ui/settings/database_and_cache_screen.dart';
+import 'package:plant_it/ui/settings/widgets/database_and_cache_screen.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/add_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/edit_event_type_viewmodel.dart';
 import 'package:plant_it/ui/settings/view_models/event_type/event_type_viewmodel.dart';
