@@ -66,27 +66,27 @@ class AddSpeciesViewModel extends ChangeNotifier {
   }
 
   void setLight(int light) {
-    _speciesCareCompanion.copyWith(light: Value(light));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(light: Value(light));
   }
 
   void setHumidity(int humidity) {
-    _speciesCareCompanion.copyWith(humidity: Value(humidity));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(humidity: Value(humidity));
   }
 
   void setTempMax(int tempMax) {
-    _speciesCareCompanion.copyWith(tempMax: Value(tempMax));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(tempMax: Value(tempMax));
   }
 
   void setTempMin(int tempMin) {
-    _speciesCareCompanion.copyWith(tempMin: Value(tempMin));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(tempMin: Value(tempMin));
   }
 
   void setPhMax(int phMax) {
-    _speciesCareCompanion.copyWith(phMax: Value(phMax));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(phMax: Value(phMax));
   }
 
   void setPhMin(int phMin) {
-    _speciesCareCompanion.copyWith(phMin: Value(phMin));
+    _speciesCareCompanion = _speciesCareCompanion.copyWith(phMin: Value(phMin));
   }
 
   void setSynonyms(List<String> synonyms) {
