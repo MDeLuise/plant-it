@@ -169,7 +169,7 @@
   "max": "max",
   "errorWithMessage": "Error: {message}",
   "@errorWithMessage": {
-    "description": "An erro with a message",
+    "description": "An error with a message",
     "placeholders": {
       "message": {
         "type": "String"
@@ -186,7 +186,7 @@
   "icon": "Icon",
   "every": "Every",
   "repeatAfter": "Repeat after",
-  "repeatAfterMessage": "{quantity} {unit}{quantity, plural, =1{} other {s}}",
+  "repeatAfterMessage": "{quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}}",
   "@repeatAfterMessage": {
     "description": "A representation of repeat after",
     "placeholders": {
@@ -195,30 +195,11 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "days"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "weeks"
-          },
-          "months": {
-            "type": "String",
-            "value": "months"
-          },
-          "years": {
-            "type": "String",
-            "value": "years"
-          }
-        }
+        "type": "String"
       }
     }
   },
-  "frequencyMessage": "Every {quantity} {unit}{quantity, plural, =1 {} other {s}}",
+  "frequencyMessage": "Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 { } other {s}}",
   "@frequencyMessage": {
     "description": "A representation of frequency",
     "placeholders": {
@@ -227,30 +208,11 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "days"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "weeks"
-          },
-          "months": {
-            "type": "String",
-            "value": "months"
-          },
-          "years": {
-            "type": "String",
-            "value": "years"
-          }
-        }
+        "type": "String"
       }
     }
   },
-  "afterMessage": "After {quantity} {unit}{quantity, plural, =1 {} other {s}}",
+  "afterMessage": "After {quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 {} other {s}}",
   "@afterMessage": {
     "description": "A representation of after",
     "placeholders": {
@@ -259,26 +221,7 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "days"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "weeks"
-          },
-          "months": {
-            "type": "String",
-            "value": "months"
-          },
-          "years": {
-            "type": "String",
-            "value": "years"
-          }
-        }
+        "type": "String"
       }
     }
   },
@@ -286,7 +229,7 @@
   "week": "week",
   "month": "month",
   "year": "year",
-  "reminderDescription": "Every {quantity} {unit}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}",
+  "reminderDescription": "Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}",
   "@reminderDescription": {
     "description": "A description of reminder",
     "placeholders": {
@@ -295,26 +238,7 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "days"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "weeks"
-          },
-          "months": {
-            "type": "String",
-            "value": "months"
-          },
-          "years": {
-            "type": "String",
-            "value": "years"
-          }
-        }
+        "type": "String"
       },
       "startDate": {
         "type": "DateTime",
@@ -390,5 +314,34 @@
   "searchAndAddSpeciesInstructions": "You can add a new species, or you can connect the app to a service to access additional species.",
   "connectToAService": "Connect to a service",
   "noInfoAvailable": "No info available",
-  "noReminder": "No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take."
+  "noReminder": "No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take.",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "yesterday": "Yesterday",
+  "inTime": "in {quantity} {unit, select, days{day} weeks{week} months{month} other{year}}{quantity, plural, =1{} other {s}}",
+  "@inTime": {
+    "description": "In quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "agoTime": "{quantity} {unit, select, days{day} weeks{week} months{month} other{year}}{quantity, plural, =1{} other {s}} ago",
+  "@agoTime": {
+    "description": "Ago quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  }
 }

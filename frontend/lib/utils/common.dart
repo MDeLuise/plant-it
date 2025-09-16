@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
 
 String colorToHex(Color color) {
   return "#${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}";
@@ -12,7 +13,7 @@ Color hexToColor(String hexString) {
   return Color(int.parse('0x$hexString'));
 }
 
-String timeDiffStr(DateTime dateTime) {
+String timeDiffStr(DateTime dateTime, L appLocalizations) {
   DateTime now = DateTime.now();
   Duration difference = now.difference(dateTime);
 
@@ -21,29 +22,28 @@ String timeDiffStr(DateTime dateTime) {
 
   if (duration.inDays >= 365) {
     int years = duration.inDays ~/ 365;
-    return _buildTimeString(years, 'year', isFuture);
+    return _buildTimeString(years, 'years', isFuture, appLocalizations);
   } else if (duration.inDays >= 30) {
     int months = duration.inDays ~/ 30;
-    return _buildTimeString(months, 'month', isFuture);
+    return _buildTimeString(months, 'months', isFuture, appLocalizations);
   } else if (duration.inDays >= 7) {
     int weeks = duration.inDays ~/ 7;
-    return _buildTimeString(weeks, 'week', isFuture);
+    return _buildTimeString(weeks, 'weeks', isFuture, appLocalizations);
   } else if (duration.inDays >= 1) {
-    return _buildTimeString(duration.inDays, 'day', isFuture);
+    return _buildTimeString(duration.inDays, 'days', isFuture, appLocalizations);
   } else {
     if (now.day == dateTime.day) {
-      return 'Today';
+      return appLocalizations.today;
     } else {
-      return difference.isNegative ? "Tomorrow" : "Yesterday";
+      return difference.isNegative ? appLocalizations.tomorrow : appLocalizations.yesterday;
     }
   }
 }
 
-String _buildTimeString(int value, String unit, bool isFuture) {
-  String timeUnit = value == 1 ? unit : '$unit' 's';
+String _buildTimeString(int value, String unit, bool isFuture, L appLocalizations) {
   if (isFuture) {
-    return 'in $value $timeUnit';
+    return appLocalizations.inTime(value, unit);
   } else {
-    return '$value $timeUnit ago';
+    return appLocalizations.agoTime(value, unit);
   }
 }

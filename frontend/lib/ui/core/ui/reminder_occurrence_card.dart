@@ -38,7 +38,7 @@ class ReminderOccurrenceCard extends StatelessWidget {
         subtitle: Row(
           children: [
             Text(
-              timeDiffStr(reminderOccurrence.nextOccurrence),
+              timeDiffStr(reminderOccurrence.nextOccurrence, L.of(context)),
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,

@@ -530,7 +530,40 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    return '$quantityString $unit';
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp4 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp0',
+        'months': 'mes$_temp1',
+        'weeks': 'settiman$_temp2',
+        'other': 'ann$_temp3',
+      },
+    );
+    return '$quantityString $_temp4';
   }
 
   @override
@@ -540,7 +573,46 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    return 'Ogni $quantityString $unit';
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: ' $quantityString',
+      one: '',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp4 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp5 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp1',
+        'months': 'mes$_temp2',
+        'weeks': 'settiman$_temp3',
+        'other': 'ann$_temp4',
+      },
+    );
+    return 'Ogni$_temp0 $_temp5';
   }
 
   @override
@@ -550,7 +622,40 @@ class LIt extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    return 'Dopo $quantityString $unit';
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp4 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp0',
+        'months': 'mes$_temp1',
+        'weeks': 'settiman$_temp2',
+        'other': 'ann$_temp3',
+      },
+    );
+    return 'Dopo $quantityString $_temp4';
   }
 
   @override
@@ -568,12 +673,61 @@ class LIt extends L {
   @override
   String reminderDescription(
       num quantity, String unit, DateTime startDate, String endDate) {
+    final intl.DateFormat startDateDateFormat = intl.DateFormat.yMd(localeName);
+    final String startDateString = startDateDateFormat.format(startDate);
+
     final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    return 'Ogni $quantityString $unit';
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: ' $quantityString',
+      one: '',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp4 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp5 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp1',
+        'months': 'mes$_temp2',
+        'weeks': 'settiman$_temp3',
+        'other': 'ann$_temp4',
+      },
+    );
+    String _temp6 = intl.Intl.selectLogic(
+      endDate,
+      {
+        'null': '',
+        'other': ' a $endDate',
+      },
+    );
+    return 'Ogni$_temp0 $_temp5 da $startDateString$_temp6';
   }
 
   @override
@@ -697,4 +851,99 @@ class LIt extends L {
   @override
   String get noReminder =>
       'Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare.';
+
+  @override
+  String get today => 'Oggi';
+
+  @override
+  String get tomorrow => 'Domani';
+
+  @override
+  String get yesterday => 'Ieri';
+
+  @override
+  String inTime(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp4 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp0',
+        'months': 'mes$_temp1',
+        'weeks': 'settiman$_temp2',
+        'other': 'ann$_temp3',
+      },
+    );
+    return 'in $quantityString $_temp4';
+  }
+
+  @override
+  String agoTime(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp4 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp0',
+        'months': 'mes$_temp1',
+        'weeks': 'settiman$_temp2',
+        'other': 'ann$_temp3',
+      },
+    );
+    return '$quantityString $_temp4 fa';
+  }
 }

@@ -186,7 +186,7 @@
   "icon": "Icona",
   "every": "Ogni",
   "repeatAfter": "Ripeti dopo",
-  "repeatAfterMessage": "{quantity} {unit}",
+  "repeatAfterMessage": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
   "@repeatAfterMessage": {
     "description": "A representation of repeat after",
     "placeholders": {
@@ -195,30 +195,11 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "s": {
-            "type": "String",
-            "value": "giorni"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "settimane"
-          },
-          "months": {
-            "type": "String",
-            "value": "mesi"
-          },
-          "years": {
-            "type": "String",
-            "value": "anni"
-          }
-        }
+        "type": "String"
       }
     }
   },
-  "frequencyMessage": "Ogni {quantity} {unit}",
+  "frequencyMessage": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
   "@frequencyMessage": {
     "description": "A representation of frequency",
     "placeholders": {
@@ -227,30 +208,11 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "giorni"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "settimane"
-          },
-          "months": {
-            "type": "String",
-            "value": "mesi"
-          },
-          "years": {
-            "type": "String",
-            "value": "anni"
-          }
-        }
+        "type": "String"
       }
     }
   },
-  "afterMessage": "Dopo {quantity} {unit}",
+  "afterMessage": "Dopo {quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
   "@afterMessage": {
     "description": "A representation of after",
     "placeholders": {
@@ -259,26 +221,7 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "giorni"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "settimane"
-          },
-          "months": {
-            "type": "String",
-            "value": "mesi"
-          },
-          "years": {
-            "type": "String",
-            "value": "anni"
-          }
-        }
+        "type": "String"
       }
     }
   },
@@ -286,7 +229,7 @@
   "week": "settimane",
   "month": "mesi",
   "year": "anni",
-  "reminderDescription": "Ogni {quantity} {unit}",
+  "reminderDescription": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}} da {startDate}{endDate, select, null {} other { a {endDate}}}",
   "@reminderDescription": {
     "description": "A description of reminder",
     "placeholders": {
@@ -295,26 +238,7 @@
         "format": "compact"
       },
       "unit": {
-        "type": "String",
-        "format": "select",
-        "options": {
-          "days": {
-            "type": "String",
-            "value": "giorni"
-          },
-          "weeks": {
-            "type": "String",
-            "value": "settimane"
-          },
-          "months": {
-            "type": "String",
-            "value": "mesi"
-          },
-          "years": {
-            "type": "String",
-            "value": "anni"
-          }
-        }
+        "type": "String"
       },
       "startDate": {
         "type": "DateTime",
@@ -390,5 +314,34 @@
   "searchAndAddSpeciesInstructions": "Puoi aggiungere una nuova specie, oppure puoi collegare l'app a un servizio per accedere a ulteriori specie.",
   "connectToAService": "Connetti l'app ad un servizio",
   "noInfoAvailable": "Nessuna informazione disponibile",
-  "noReminder": "Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare."
+  "noReminder": "Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare.",
+  "today": "Oggi",
+  "tomorrow": "Domani",
+  "yesterday": "Ieri",
+  "inTime": "in {quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@inTime": {
+    "description": "In quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "agoTime": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}} fa",
+  "@agoTime": {
+    "description": "Ago quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  }
 }

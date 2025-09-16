@@ -37,7 +37,7 @@ class EventCard extends StatelessWidget {
               .copyWith(fontWeight: FontWeight.w500),
         ),
         subtitle: Text(
-          timeDiffStr(event.date),
+          timeDiffStr(event.date, L.of(context)),
           style: Theme.of(context)
               .textTheme
               .bodyLarge!

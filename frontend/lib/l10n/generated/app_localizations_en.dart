@@ -536,13 +536,22 @@ class LEn extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'months': 'month',
+        'weeks': 'week',
+        'other': 'years',
+      },
+    );
+    String _temp1 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
       other: 's',
       one: '',
     );
-    return '$quantityString $unit$_temp0';
+    return '$quantityString $_temp0$_temp1';
   }
 
   @override
@@ -555,10 +564,25 @@ class LEn extends L {
     String _temp0 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
-      other: 's',
+      other: ' $quantityString',
       one: '',
     );
-    return 'Every $quantityString $unit$_temp0';
+    String _temp1 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'months': 'month',
+        'weeks': 'week',
+        'other': 'years',
+      },
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: ' ',
+    );
+    return 'Every$_temp0 $_temp1$_temp2';
   }
 
   @override
@@ -568,13 +592,22 @@ class LEn extends L {
     );
     final String quantityString = quantityNumberFormat.format(quantity);
 
-    String _temp0 = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'months': 'month',
+        'weeks': 'week',
+        'other': 'years',
+      },
+    );
+    String _temp1 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
       other: 's',
       one: '',
     );
-    return 'After $quantityString $unit$_temp0';
+    return 'After $quantityString $_temp0$_temp1';
   }
 
   @override
@@ -603,17 +636,32 @@ class LEn extends L {
     String _temp0 = intl.Intl.pluralLogic(
       quantity,
       locale: localeName,
-      other: 's',
+      other: ' $quantityString',
       one: '',
     );
     String _temp1 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'months': 'month',
+        'weeks': 'week',
+        'other': 'years',
+      },
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    String _temp3 = intl.Intl.selectLogic(
       endDate,
       {
         'null': '',
         'other': ' to $endDate',
       },
     );
-    return 'Every $quantityString $unit$_temp0 from $startDateString$_temp1';
+    return 'Every$_temp0 $_temp1$_temp2 from $startDateString$_temp3';
   }
 
   @override
@@ -736,4 +784,63 @@ class LEn extends L {
   @override
   String get noReminder =>
       'No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take.';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String inTime(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'weeks': 'week',
+        'months': 'month',
+        'other': 'year',
+      },
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    return 'in $quantityString $_temp0$_temp1';
+  }
+
+  @override
+  String agoTime(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'day',
+        'weeks': 'week',
+        'months': 'month',
+        'other': 'year',
+      },
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    return '$quantityString $_temp0$_temp1 ago';
+  }
 }

@@ -191,7 +191,7 @@ class PlantEventInfoGridWidget extends InfoGridWidget {
     result.addAll(events.map((e) {
       return InfoWidget(
           title: eventTypes[e.type]!.name,
-          value: timeDiffStr(e.date),
+          value: timeDiffStr(e.date, appLocalizations),
           icon: appIcons[eventTypes[e.type]!.icon]!);
     }));
 
@@ -222,7 +222,7 @@ class PlantReminderInfoGridWidget extends InfoGridWidget {
     return plantReminders
         .map((ro) => InfoWidget(
             title: eventTypes[ro.reminder.type]!.name,
-            value: timeDiffStr(ro.nextOccurrence),
+            value: timeDiffStr(ro.nextOccurrence, appLocalizations),
             icon: appIcons[eventTypes[ro.reminder.type]!.icon]!))
         .toList();
   }

@@ -997,7 +997,7 @@ abstract class L {
   /// **'max'**
   String get max;
 
-  /// An erro with a message
+  /// An error with a message
   ///
   /// In en, this message translates to:
   /// **'Error: {message}'**
@@ -1066,19 +1066,19 @@ abstract class L {
   /// A representation of repeat after
   ///
   /// In en, this message translates to:
-  /// **'{quantity} {unit}{quantity, plural, =1{} other {s}}'**
+  /// **'{quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}}'**
   String repeatAfterMessage(num quantity, String unit);
 
   /// A representation of frequency
   ///
   /// In en, this message translates to:
-  /// **'Every {quantity} {unit}{quantity, plural, =1 {} other {s}}'**
+  /// **'Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 { } other {s}}'**
   String frequencyMessage(num quantity, String unit);
 
   /// A representation of after
   ///
   /// In en, this message translates to:
-  /// **'After {quantity} {unit}{quantity, plural, =1 {} other {s}}'**
+  /// **'After {quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 {} other {s}}'**
   String afterMessage(num quantity, String unit);
 
   /// No description provided for @day.
@@ -1108,7 +1108,7 @@ abstract class L {
   /// A description of reminder
   ///
   /// In en, this message translates to:
-  /// **'Every {quantity} {unit}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}'**
+  /// **'Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}} from {startDate}{endDate, select, null {} other { to {endDate}}}'**
   String reminderDescription(
       num quantity, String unit, DateTime startDate, String endDate);
 
@@ -1256,6 +1256,36 @@ abstract class L {
   /// In en, this message translates to:
   /// **'No reminders found.\n\nCreate a new reminder for your plants to receive notifications and see the next actions you need to take.'**
   String get noReminder;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// In quantity time
+  ///
+  /// In en, this message translates to:
+  /// **'in {quantity} {unit, select, days{day} weeks{week} months{month} other{year}}{quantity, plural, =1{} other {s}}'**
+  String inTime(num quantity, String unit);
+
+  /// Ago quantity time
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit, select, days{day} weeks{week} months{month} other{year}}{quantity, plural, =1{} other {s}} ago'**
+  String agoTime(num quantity, String unit);
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
