@@ -1,3 +1,4 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
@@ -33,27 +34,34 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         ),
         title: Text(L.of(context).editSpecies),
       ),
-      body: Summary<EditSpeciesViewModel>(
-          viewModel: widget.viewModel,
-          mainCommand: widget.viewModel.load,
-          actionText: L.of(context).update,
-          actionCommand: widget.viewModel.update,
-          successText: L.of(context).speciesUpdated,
-          isPrimary: false,
-          sections: [
-            ClassificationStep(
-              viewModel: widget.viewModel,
-              appLocalizations: appLocalizations,
-            ),
-            CareStep(
-              viewModel: widget.viewModel,
-              appLocalizations: appLocalizations,
-            ),
-            AvatarStep(
-              viewModel: widget.viewModel,
-              appLocalizations: appLocalizations,
-            ),
-          ]),
+      body: ValueListenableBuilder<CommandResult<void, void>>(
+          valueListenable: widget.viewModel.load.results,
+          builder: (context, value, child) {
+            if (value.isExecuting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return Summary<EditSpeciesViewModel>(
+                viewModel: widget.viewModel,
+                mainCommand: widget.viewModel.load,
+                actionText: L.of(context).update,
+                actionCommand: widget.viewModel.update,
+                successText: L.of(context).speciesUpdated,
+                isPrimary: false,
+                sections: [
+                  ClassificationStep(
+                    viewModel: widget.viewModel,
+                    appLocalizations: appLocalizations,
+                  ),
+                  CareStep(
+                    viewModel: widget.viewModel,
+                    appLocalizations: appLocalizations,
+                  ),
+                  AvatarStep(
+                    viewModel: widget.viewModel,
+                    appLocalizations: appLocalizations,
+                  ),
+                ]);
+          }),
     );
   }
 }

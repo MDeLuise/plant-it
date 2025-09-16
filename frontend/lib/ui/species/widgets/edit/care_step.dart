@@ -32,9 +32,9 @@ class CareStep extends StepSection<EditSpeciesViewModel> {
           RangeValues(viewModel.phMin!.toDouble(), viewModel.phMax!.toDouble());
     }
     if (viewModel.tempMin != null) {
-      _selectedPh.value = RangeValues(
+      _selectedTemp.value = RangeValues(
           viewModel.tempMin!.toDouble(), viewModel.tempMax!.toDouble());
-      _ongoingPhSelection.value = RangeValues(
+      _ongoingTemp.value = RangeValues(
           viewModel.tempMin!.toDouble(), viewModel.tempMax!.toDouble());
     }
   }

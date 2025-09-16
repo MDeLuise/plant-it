@@ -26,11 +26,11 @@ class EditSpeciesViewModel extends ChangeNotifier {
         _speciesSynonymsRepository = speciesSynonymsRepository,
         _imageRepository = imageRepository,
         _appCache = appCache {
-    load = Command.createAsyncNoResult((int id) async {
+    load = Command.createAsync((int id) async {
       Result<void> result = await _load(id);
       if (result.isError()) throw result.exceptionOrNull()!;
-      return result.getOrThrow();
-    });
+      return;
+    }, initialValue: Exception("not started"));
     update = Command.createAsyncNoParamNoResult(() async {
       Result<void> result = await _update();
       if (result.isError()) throw result.exceptionOrNull()!;
@@ -140,7 +140,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
     if (species.isError()) {
       return Failure(Exception(species.exceptionOrNull()));
     }
-    _log.fine("Specy loaded");
+    _log.fine("Species loaded");
     _species = species.getOrThrow().toCompanion(true);
 
     Result<db.SpeciesCareData> care =
@@ -149,7 +149,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       return Failure(Exception(care.exceptionOrNull()));
     }
     _speciesCare = care.getOrThrow().toCompanion(true);
-    _log.fine("Specy care loaded");
+    _log.fine("Species care loaded");
 
     Result<List<db.SpeciesSynonym>> synonyms =
         await _speciesSynonymsRepository.getBySpecies(speciesId);
@@ -158,7 +158,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
     }
     _speciesSynonyms =
         synonyms.getOrThrow().map((s) => s.toCompanion(true)).toList();
-    _log.fine("Specy synonyms loaded");
+    _log.fine("Species synonyms loaded");
 
     Result<db.Image>? speciesImage =
         await _imageRepository.getSpeciesImage(_species.id.value);
@@ -168,7 +168,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       }
       _image = speciesImage.getOrThrow();
     }
-    _log.fine("Specy image loaded");
+    _log.fine("Species image loaded");
 
     return Success("ok");
   }
