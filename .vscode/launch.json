@@ -6,6 +6,7 @@
     "configurations": [
         {
             "name": "Flutter (Development)",
+            "program": "frontend/lib/main.dart",
             "request": "launch",
             "type": "dart",
             "args": [
@@ -14,6 +15,7 @@
         },
         {
             "name": "Flutter (Production)",
+            "program": "frontend/lib/main.dart",
             "request": "launch",
             "type": "dart",
             "args": [

@@ -1,7 +1,6 @@
 <p align="center">
-<img src="images/plant-it-logo-rounded.png" alt="Plant-it" style="width: 150px; height: 150px"/>
+<img src="images/logo-square.png" alt="Plant-it" style="width: 130px; height: 130px; border-radius: 15px"/>
 </p>
-
 <p align="center">Plant-it is a <b>gardening companion app.</b><br>Useful for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.</p>
 
 <p align="center"><a href="https://github.com/MDeLuise/plant-it/#why">Why?</a> • <a href="https://github.com/MDeLuise/plant-it/#features-highlight">Features highlights</a> • <a href="https://github.com/MDeLuise/plant-it/#download">Download</a> • <a href="https://github.com/MDeLuise/plant-it/#support-the-project">Support</a> • <a href="https://github.com/MDeLuise/plant-it/#contribute">Contribute</a></p>
@@ -41,9 +40,6 @@ You can download the Plant-it Android app from the following sources:
   <p align="center">
       <a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/MDeLuise/plant-it" rel="nofollow"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" alt="Get it on Obtanium" height=40 ></a>
     </p>
-
-> **Note on iOS and Play Store Availability:**  
-> Currently, there is no iOS version of the app, nor is it available on the Play Store. This decision is based on my preference not to pay for publishing a free app, as well as concerns about privacy. I aim to minimize sharing personal data, such as my address, with large corporations like Google or Apple. Therefore, the app is currently exclusively available for Android users through the alternative sources mentioned above.
 
 ## Support the project
 If you find this project helpful and would like to support it, consider [buying me a coffee](https://www.buymeacoffee.com/mdeluise). Your generosity helps keep this project alive and ensures its continued development and improvement.
