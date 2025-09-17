@@ -46,7 +46,7 @@ class ReminderOccurrenceCard extends StatelessWidget {
             ),
             Text(" • "),
             Text(
-              L.of(context).frequencyMessage(
+              L.of(context).frequencyEvery(
                     reminderOccurrence.reminder.frequencyQuantity,
                     reminderOccurrence.reminder.frequencyUnit.name,
                   ),

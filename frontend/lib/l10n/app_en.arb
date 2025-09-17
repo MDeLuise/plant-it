@@ -186,21 +186,8 @@
   "icon": "Icon",
   "every": "Every",
   "repeatAfter": "Repeat after",
-  "repeatAfterMessage": "{quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}}",
-  "@repeatAfterMessage": {
-    "description": "A representation of repeat after",
-    "placeholders": {
-      "quantity": {
-        "type": "num",
-        "format": "compact"
-      },
-      "unit": {
-        "type": "String"
-      }
-    }
-  },
-  "frequencyMessage": "Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 { } other {s}}",
-  "@frequencyMessage": {
+  "frequencyEvery": "Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}",
+  "@frequencyEvery": {
     "description": "A representation of frequency",
     "placeholders": {
       "quantity": {
@@ -212,9 +199,22 @@
       }
     }
   },
-  "afterMessage": "After {quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 {} other {s}}",
+  "afterMessage": "After {quantity} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}",
   "@afterMessage": {
     "description": "A representation of after",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "frequency": "{quantity} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}",
+  "@frequency": {
+    "description": "A representation of time",
     "placeholders": {
       "quantity": {
         "type": "num",

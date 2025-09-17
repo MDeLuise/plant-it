@@ -39,8 +39,10 @@ class RepeatAfterStep extends StepSection<EditReminderViewModel> {
   String get title => appLocalizations.repeatAfter;
 
   @override
-  String get value =>
-      "${_ongoingFrequencyQuantity.value} ${_ongoingFrequencyUnit.value.name}";
+  String get value => appLocalizations.frequency(
+        _ongoingFrequencyQuantity.value,
+        _ongoingFrequencyUnit.value.name,
+      );
 
   @override
   void cancel() {

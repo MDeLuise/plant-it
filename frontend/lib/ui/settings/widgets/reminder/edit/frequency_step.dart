@@ -39,8 +39,10 @@ class FrequencyStep extends StepSection<EditReminderViewModel> {
   String get title => appLocalizations.every;
 
   @override
-  String get value =>
-      "${_ongoingFrequencyQuantity.value} ${_ongoingFrequencyUnit.value.name}";
+  String get value => appLocalizations.frequency(
+        _ongoingFrequencyQuantity.value,
+        _ongoingFrequencyUnit.value.name,
+      );
 
   @override
   void cancel() {

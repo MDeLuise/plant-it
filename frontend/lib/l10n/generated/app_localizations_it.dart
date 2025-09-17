@@ -524,50 +524,7 @@ class LIt extends L {
   String get repeatAfter => 'Ripeti dopo';
 
   @override
-  String repeatAfterMessage(num quantity, String unit) {
-    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
-      locale: localeName,
-    );
-    final String quantityString = quantityNumberFormat.format(quantity);
-
-    String _temp0 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 'i',
-      one: 'o',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 'i',
-      one: 'e',
-    );
-    String _temp2 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 'e',
-      one: 'a',
-    );
-    String _temp3 = intl.Intl.pluralLogic(
-      quantity,
-      locale: localeName,
-      other: 'i',
-      one: 'o',
-    );
-    String _temp4 = intl.Intl.selectLogic(
-      unit,
-      {
-        'days': 'giorn$_temp0',
-        'months': 'mes$_temp1',
-        'weeks': 'settiman$_temp2',
-        'other': 'ann$_temp3',
-      },
-    );
-    return '$quantityString $_temp4';
-  }
-
-  @override
-  String frequencyMessage(num quantity, String unit) {
+  String frequencyEvery(num quantity, String unit) {
     final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
     );
@@ -656,6 +613,49 @@ class LIt extends L {
       },
     );
     return 'Dopo $quantityString $_temp4';
+  }
+
+  @override
+  String frequency(num quantity, String unit) {
+    final intl.NumberFormat quantityNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String quantityString = quantityNumberFormat.format(quantity);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'e',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'e',
+      one: 'a',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: 'i',
+      one: 'o',
+    );
+    String _temp4 = intl.Intl.selectLogic(
+      unit,
+      {
+        'days': 'giorn$_temp0',
+        'months': 'mes$_temp1',
+        'weeks': 'settiman$_temp2',
+        'other': 'ann$_temp3',
+      },
+    );
+    return '$quantityString $_temp4';
   }
 
   @override

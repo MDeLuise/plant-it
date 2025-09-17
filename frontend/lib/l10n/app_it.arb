@@ -199,8 +199,8 @@
       }
     }
   },
-  "frequencyMessage": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
-  "@frequencyMessage": {
+  "frequencyEvery": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@frequencyEvery": {
     "description": "A representation of frequency",
     "placeholders": {
       "quantity": {
@@ -215,6 +215,19 @@
   "afterMessage": "Dopo {quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
   "@afterMessage": {
     "description": "A representation of after",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "frequency": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@frequency": {
+    "description": "A representation of time",
     "placeholders": {
       "quantity": {
         "type": "num",

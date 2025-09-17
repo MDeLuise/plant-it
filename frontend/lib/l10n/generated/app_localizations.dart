@@ -1063,23 +1063,23 @@ abstract class L {
   /// **'Repeat after'**
   String get repeatAfter;
 
-  /// A representation of repeat after
-  ///
-  /// In en, this message translates to:
-  /// **'{quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1{} other {s}}'**
-  String repeatAfterMessage(num quantity, String unit);
-
   /// A representation of frequency
   ///
   /// In en, this message translates to:
-  /// **'Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 { } other {s}}'**
-  String frequencyMessage(num quantity, String unit);
+  /// **'Every{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}'**
+  String frequencyEvery(num quantity, String unit);
 
   /// A representation of after
   ///
   /// In en, this message translates to:
-  /// **'After {quantity} {unit, select, days{day} months{month} weeks{week} other{years}}{quantity, plural, =1 {} other {s}}'**
+  /// **'After {quantity} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}'**
   String afterMessage(num quantity, String unit);
+
+  /// A representation of time
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit, select, days{day} months{month} weeks{week} other{year}}{quantity, plural, =1 {} other {s}}'**
+  String frequency(num quantity, String unit);
 
   /// No description provided for @day.
   ///
