@@ -86,7 +86,6 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
   }
 
   Future<void> _toggleAvatar() async {
-    widget.streamController.add(StreamCode.editPlant);
     return widget.viewModel.toggleAvatar
         .executeWithFuture(_currentImage.isAvatar ? null : _currentImage.id);
   }
@@ -148,6 +147,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
                 : L.of(context).setAsAvatar),
             onTap: () async {
               await _toggleAvatar();
+              widget.streamController.add(StreamCode.editPlant);
               setState(() {});
               Navigator.pop(context, true);
             },

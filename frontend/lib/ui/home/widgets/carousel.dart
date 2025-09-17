@@ -32,7 +32,9 @@ class _CarouselState extends State<Carousel> {
   Widget build(BuildContext context) {
     final Iterable<int> plantIds =
         widget.viewModel.plantMap.keys.toList().where((id) {
-      return widget.viewModel.plantMap[id]!.name.toLowerCase().contains(widget.filter.toLowerCase());
+      return widget.viewModel.plantMap[id]!.name
+          .toLowerCase()
+          .contains(widget.filter.toLowerCase());
     }).toList();
     final List<int> plantIdsList = plantIds.toList();
 
@@ -55,7 +57,9 @@ class _CarouselState extends State<Carousel> {
                   context.push(Routes.plantWithId(plantIdsList[index])),
               children: plantIds.map((int plantId) {
                 return HeroLayoutCard(
-                    plantId: plantId, viewModel: widget.viewModel);
+                  plantId: plantId,
+                  viewModel: widget.viewModel,
+                );
               }).toList(),
             ),
           ),
