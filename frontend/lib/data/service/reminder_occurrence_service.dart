@@ -90,6 +90,9 @@ class ReminderOccurrenceService {
       }
 
       DateTime occurrence = reminder.lastNotified ?? reminder.startDate;
+      occurrence = _calculateNextNotification(
+          occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
+
       while (occurrence.isBefore(endOfDay)) {
         result.removeWhere((r) => r.id == reminder.id);
         result.add(reminder);
