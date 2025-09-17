@@ -76,8 +76,9 @@ class FloraCodexSearcher extends SpeciesSearcher {
   String? _apiKey;
   bool _initialized = false;
 
-  FloraCodexSearcher({required UserSettingRepository userSettingRepository})
-      : _userSettingRepository = userSettingRepository;
+  FloraCodexSearcher({
+    required UserSettingRepository userSettingRepository,
+  }) : _userSettingRepository = userSettingRepository;
 
   void setKey(String? key) {
     _apiKey = key;
@@ -205,29 +206,37 @@ class FloraCodexSearcher extends SpeciesSearcher {
   }
 
   Future<Result<List<SpeciesSynonymsCompanion>>> _getSynonyms(String id) async {
-    // final String url =
-    //     "$baseUrl$version/plants/$id?key=$_apiKey";
-    // final http.Response response = await http.get(Uri.parse(url));
+    String url = "$baseUrl$version/species/$id?key=$_apiKey";
+    http.Response response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      return Failure(
+          Exception("Error while loading species synonyms from Flora Codex"));
+    }
 
-    // if (response.statusCode != 200) {
-    //   Failure(Exception("Error while loading species care from Flora Codex"));
-    // }
-    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    //final List<String> synonyms = [];
-    // final dynamic commonNames = jsonResponse['main_species']?['common_names'];
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+    List<SpeciesSynonymsCompanion> synonyms = [];
 
-    // if (commonNames != null && commonNames is List) {
-    //   for (final languageGroup in commonNames) {
-    //     if (languageGroup is Map<String, dynamic>) {
-    //       for (final names in languageGroup.values) {
-    //         if (names is List) {
-    //           synonyms.addAll(names.whereType<String>());
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    return Success([]);
+    dynamic commonNames = jsonResponse['common_names'];
+    if (commonNames != null && commonNames is List) {
+      for (dynamic languageGroup in commonNames) {
+        if (languageGroup is Map<String, dynamic>) {
+          dynamic englishNames = languageGroup['ENGLISH'];
+          if (englishNames != null && englishNames is List) {
+            for (dynamic name in englishNames) {
+              if (name is String) {
+                synonyms.add(SpeciesSynonymsCompanion(
+                  synonym: Value(name),
+                  species: Value(-1),
+                  id: Value(-1),
+                ));
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return Success(synonyms);
   }
 
   Future<Result<void>> _initialize() async {
