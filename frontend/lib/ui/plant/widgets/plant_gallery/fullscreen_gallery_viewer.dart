@@ -1,21 +1,25 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:plant_it/database/database.dart' as db_image;
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class FullscreenGalleryViewer extends StatefulWidget {
   final PlantViewModel viewModel;
   final int initialIndex;
   final VoidCallback reload;
+  final StreamController<StreamCode> streamController;
 
   const FullscreenGalleryViewer({
     super.key,
     required this.viewModel,
     required this.initialIndex,
     required this.reload,
+    required this.streamController,
   });
 
   @override
@@ -82,6 +86,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
   }
 
   Future<void> _toggleAvatar() async {
+    widget.streamController.add(StreamCode.editPlant);
     return widget.viewModel.toggleAvatar
         .executeWithFuture(_currentImage.isAvatar ? null : _currentImage.id);
   }

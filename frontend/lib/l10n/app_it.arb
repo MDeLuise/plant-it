@@ -356,5 +356,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "additionalInfo": "Altre informazioni"
 }

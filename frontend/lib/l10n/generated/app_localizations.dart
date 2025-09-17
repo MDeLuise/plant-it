@@ -1286,6 +1286,12 @@ abstract class L {
   /// In en, this message translates to:
   /// **'{quantity} {unit, select, days{day} weeks{week} months{month} other{year}}{quantity, plural, =1{} other {s}} ago'**
   String agoTime(num quantity, String unit);
+
+  /// No description provided for @additionalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional info'**
+  String get additionalInfo;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

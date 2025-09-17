@@ -71,7 +71,14 @@ class LocationStep extends StepSection<AddPlantViewModel> {
               },
               child: Text(L.of(context).cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                _ongoingSelection.value = null;
+                Navigator.of(context).pop();
+              },
+              child: Text(L.of(context).remove),
+            ),
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
               },

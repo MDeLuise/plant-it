@@ -843,4 +843,7 @@ class LEn extends L {
     );
     return '$quantityString $_temp0$_temp1 ago';
   }
+
+  @override
+  String get additionalInfo => 'Additional info';
 }

@@ -343,5 +343,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "additionalInfo": "Additional info"
 }

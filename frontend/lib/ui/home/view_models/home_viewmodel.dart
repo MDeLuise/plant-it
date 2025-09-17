@@ -90,6 +90,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _loadAvatarBase64() async {
+    _imagesBase64.clear();
     for (db.Plant p in _plants) {
       Result<String> base64 = await _loadBase64AvatarForPlant(p);
       if (base64.isError()) {

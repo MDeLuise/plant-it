@@ -1,18 +1,22 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
 import 'package:plant_it/ui/plant/widgets/plant_gallery/fullscreen_gallery_viewer.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class PlantGallery extends StatefulWidget {
   final PlantViewModel viewModel;
   final bool allowUpload;
   final VoidCallback? onUpload;
   final VoidCallback reload;
+  final StreamController<StreamCode> streamController;
 
   const PlantGallery({
     super.key,
     required this.viewModel,
     required this.reload,
+    required this.streamController,
     this.allowUpload = false,
     this.onUpload,
   });
@@ -58,6 +62,7 @@ class _PlantGalleryState extends State<PlantGallery> {
           viewModel: widget.viewModel,
           initialIndex: startIndex,
           reload: widget.reload,
+          streamController: widget.streamController,
         ),
       ),
     );

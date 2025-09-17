@@ -221,6 +221,56 @@ class _PlantScreenState extends State<PlantScreen> {
                           ),
                           const SizedBox(height: 16),
 
+                          // Additional info
+                          Text(
+                            appLocalizations.additionalInfo,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(height: 8),
+                          if (widget.viewModel.plant.seller != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  appLocalizations.seller,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                                Text(
+                                  widget.viewModel.plant.seller!,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                              ],
+                            ),
+                          if (widget.viewModel.plant.price != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  appLocalizations.price,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                                Text(
+                                  widget.viewModel.plant.price!.toString(),
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                              ],
+                            ),
+                          if (widget.viewModel.plant.location != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  appLocalizations.location,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                                Text(
+                                  widget.viewModel.plant.location!,
+                                  style: Theme.of(context).textTheme.bodyLarge!,
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 16),
+
                           // Gallery
                           Text(
                             appLocalizations.gallery,
@@ -232,6 +282,7 @@ class _PlantScreenState extends State<PlantScreen> {
                             allowUpload: true,
                             onUpload: _uploadNewPhoto,
                             reload: () => setState(() {}),
+                            streamController: widget.streamController,
                           ),
                         ],
                       ),

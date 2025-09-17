@@ -946,4 +946,7 @@ class LIt extends L {
     );
     return '$quantityString $_temp4 fa';
   }
+
+  @override
+  String get additionalInfo => 'Altre informazioni';
 }
