@@ -10,6 +10,7 @@ class SchedulingService {
   static const String taskName = "notification_task";
   static const String tagName = "notification_tag";
   final UserSettingRepository _userSettingRepository;
+  // ignore: unused_field
   final Workmanager _workmanager;
   final _log = Logger('SchedulingService');
 

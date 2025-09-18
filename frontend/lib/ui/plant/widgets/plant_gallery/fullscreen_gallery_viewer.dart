@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/image.dart' as flutter_image;
 import 'package:plant_it/database/database.dart' as db_image;
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/ui/plant/view_models/plant_view_model.dart';
@@ -179,7 +178,7 @@ class _FullscreenGalleryViewerState extends State<FullscreenGalleryViewer> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   return Center(
-                    child: flutter_image.Image.memory(
+                    child: Image.memory(
                       base64Decode(snapshot.data!.getOrThrow()),
                       fit: BoxFit.contain,
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 
 String colorToHex(Color color) {
+  // ignore: deprecated_member_use
   return "#${color.red.toRadixString(16).padLeft(2, '0')}${color.green.toRadixString(16).padLeft(2, '0')}${color.blue.toRadixString(16).padLeft(2, '0')}";
 }
 

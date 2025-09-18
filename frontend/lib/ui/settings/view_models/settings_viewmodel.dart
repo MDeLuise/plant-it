@@ -26,12 +26,12 @@ class SettingsViewModel extends ChangeNotifier {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     save = Command.createAsync((Map<String, String> newSettings) async {
       Result<void> result = await _put(newSettings);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     saveNotificationTime =
         Command.createAsync((Map<String, int> notificationTime) async {
       int minute = notificationTime['minute']!;
@@ -41,17 +41,17 @@ class SettingsViewModel extends ChangeNotifier {
           await _setNotificationTimeForDay(minute, hour, weekDay);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     removeAllNotificationTime = Command.createAsyncNoParam(() async {
       Result<void> result = await _removeAllNotificationTime();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     loadReminders = Command.createAsyncNoParam(() async {
       Result<void> result = await _loadReminders();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     clearCache = Command.createAsyncNoParam(() async {
       await _appCache.clear();
       return;

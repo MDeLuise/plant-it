@@ -31,7 +31,7 @@ class EditReminderViewModel extends ChangeNotifier {
     update = Command.createAsyncNoParam(() async {
       Result<void> result = await _update();
       if (result.isError()) throw result.exceptionOrNull()!;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
   final ReminderRepository _reminderRepository;

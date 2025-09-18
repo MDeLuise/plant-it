@@ -23,14 +23,14 @@ class ReminderViewModel extends ChangeNotifier {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     delete = Command.createAsync((int id) async {
       Result<void> result = await _delete(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       _reminders.removeWhere((r) => r.id == id);
       streamController.add(StreamCode.deleteReminder);
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
   final ReminderRepository _reminderRepository;

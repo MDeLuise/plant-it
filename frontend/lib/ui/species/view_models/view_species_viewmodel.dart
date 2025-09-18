@@ -55,7 +55,7 @@ class ViewSpeciesViewModel extends ChangeNotifier {
       Result<void> result = await _delete();
       if (result.isError()) throw result.exceptionOrNull()!;
       return result.getOrThrow();
-    }, initialValue: Exception('not started'));
+    }, initialValue: null);
   }
 
   final SpeciesRepository _speciesRepository;

@@ -36,7 +36,7 @@ class SearchViewModel extends ChangeNotifier {
       Result<void> result = await _query(q);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
   final _log = Logger('SearchViewModel');

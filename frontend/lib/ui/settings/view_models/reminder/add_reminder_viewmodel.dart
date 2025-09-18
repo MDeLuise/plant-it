@@ -26,12 +26,12 @@ class AddReminderViewModel extends ChangeNotifier {
     load = Command.createAsyncNoParam(() async {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     insert = Command.createAsyncNoParam(() async {
       Result<void> result = await _insert();
       if (result.isError()) throw result.exceptionOrNull()!;
       streamController.add(StreamCode.insertReminder);
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
   final ReminderRepository _reminderRepository;

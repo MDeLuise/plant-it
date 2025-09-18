@@ -30,7 +30,7 @@ class EditSpeciesViewModel extends ChangeNotifier {
       Result<void> result = await _load(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Exception("not started"));
+    }, initialValue: null);
     update = Command.createAsyncNoParamNoResult(() async {
       Result<void> result = await _update();
       if (result.isError()) throw result.exceptionOrNull()!;

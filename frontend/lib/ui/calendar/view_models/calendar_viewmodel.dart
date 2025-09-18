@@ -32,10 +32,11 @@ class CalendarViewModel extends ChangeNotifier {
       Result<void> loadResult = await _load();
       if (loadResult.isError()) throw loadResult.exceptionOrNull()!;
       await filter.executeWithFuture();
-      if (filter.results.value.hasError)
+      if (filter.results.value.hasError) {
         throw filter.results.value.error!.toFailure();
+      }
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     loadForMonth = Command.createAsyncNoResult((DateTime month) async {
       Result<void> result = await _loadForMonth(month);
       if (result.isError()) throw result.exceptionOrNull()!;

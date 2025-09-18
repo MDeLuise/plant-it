@@ -5,7 +5,7 @@ import 'package:command_it/command_it.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logging/logging.dart';
+//import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
@@ -59,20 +59,20 @@ class PlantViewModel extends ChangeNotifier {
       Result<void> result = await _deletePhoto(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     toggleAvatar = Command.createAsync((int? id) async {
       Result<void> result = await _toggleAvatar(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     downloadPhoto = Command.createAsync((int id) async {
       Result<void> result = await _downloadPhoto(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
-  final Logger _log = Logger('PlantViewModel');
+  //final Logger _log = Logger('PlantViewModel');
   final PlantRepository _plantRepository;
   final SpeciesRepository _speciesRepository;
   final SpeciesCareRepository _speciesCareRepository;

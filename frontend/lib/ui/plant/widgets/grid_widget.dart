@@ -70,6 +70,7 @@ class _InfoGridWidgetState extends State<InfoGridWidget> {
         slideIndicator: CircularSlideIndicator(
             slideIndicatorOptions: SlideIndicatorOptions(
           currentIndicatorColor: Theme.of(context).primaryColor,
+          // ignore: deprecated_member_use
           indicatorBackgroundColor: Colors.grey.withOpacity(.5),
         )),
       ),

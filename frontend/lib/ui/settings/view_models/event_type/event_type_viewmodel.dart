@@ -13,12 +13,12 @@ class EventTypeViewModel extends ChangeNotifier {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     delete = Command.createAsync((int id) async {
       Result<void> result = await _delete(id);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
   }
 
   final EventTypeRepository _eventTypeRepository;

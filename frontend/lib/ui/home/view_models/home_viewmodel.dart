@@ -29,7 +29,7 @@ class HomeViewModel extends ChangeNotifier {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     createEventFromReminder =
         Command.createAsyncNoResult((ReminderOccurrence ro) async {
       Result<void> result = await _createEventFromReminder(ro);

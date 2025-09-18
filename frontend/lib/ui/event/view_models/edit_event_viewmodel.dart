@@ -23,7 +23,7 @@ class EditEventFormViewModel extends ChangeNotifier {
       Result<void> result = await _load(eventId);
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     update = Command.createAsyncNoParam(() async {
       Result<void> result = await updateEvent();
       if (result.isError()) throw result.exceptionOrNull()!;

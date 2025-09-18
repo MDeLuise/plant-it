@@ -30,6 +30,7 @@ void callbackDispatcher() {
       }
       return Future.value(true);
     } catch (error) {
+      // ignore: avoid_print
       print('There is an error in the task $task: $error');
       return Future.error(error);
     }

@@ -71,6 +71,7 @@ class EditPlantViewModel extends ChangeNotifier {
       return plant;
     }
     _plant = plant.getOrThrow().toCompanion(true);
+    _log.fine("Plant loaded");
     return Success("ok");
   }
 }

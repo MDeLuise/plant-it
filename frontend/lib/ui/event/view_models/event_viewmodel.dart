@@ -29,7 +29,7 @@ class CreateEventFormViewModel extends ChangeNotifier {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
       return;
-    }, initialValue: Failure(Exception("not started")));
+    }, initialValue: null);
     insert = Command.createAsyncNoParam(() async {
       Result<void> result = await _saveEvent();
       if (result.isError()) throw result.exceptionOrNull()!;
