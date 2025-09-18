@@ -1,0 +1,6 @@
+* fix connect to http (without TLS) server
+* fix delete reminder operation result status
+* add translation for reminder add/edit action
+* add Portuguese language
+* improve German translation
+* improve Italian translation

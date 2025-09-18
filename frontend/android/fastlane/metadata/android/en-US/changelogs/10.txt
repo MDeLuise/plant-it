@@ -1,0 +1,3 @@
+In this release:
+* The app has been fully rewritten to eliminate the need for a backend.
+* There are many improvements.

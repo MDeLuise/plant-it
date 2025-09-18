@@ -1,0 +1,4 @@
+In this release:
+* Add language change functionality
+* Update German translation
+* Upgraded dependencies

@@ -1,0 +1,10 @@
+This app is designed for managing plant care. It provides a user-friendly interface to help you keep track of your plants and their needs.
+
+This app allows you to monitor plant care, receive notifications for watering schedules, upload plant images, and more.
+
+<b>Features highlight:</b>
+* Add existing plants or user created plants to your collection
+* Log events like watering, fertilizing, biostimulating, etc. for your plants
+* View all the logged events, filtering by plant and event type
+* Upload photos of your plants
+* Set reminder for some actions on your plants (e.g. notify if not watered every 4 days)

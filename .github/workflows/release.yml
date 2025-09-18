@@ -3,10 +3,10 @@ name: Automated Release
 on:
   push:
     tags:
-      - '[0-9]*.[0-9]*.[0-9]*'
+      - '[0-9]*\.[0-9]*\.[0-9]*(-[a-zA-Z0-9]+)?'
 
 env:
-  FLUTTER_VERSION: 3.24.3
+  FLUTTER_VERSION: 3.32.8
   DOCKER_NAME: plant-it-server
 
 jobs:
@@ -105,21 +105,20 @@ jobs:
           body: |
             Hello, Plant-it community!
 
-            # Services version
-            - server version: ``
-            - app version: ``
-
             # Highlights
+            Welcome to the release v${{ github.ref_name }} of Plant-it.
+
+            # Support Plant-it
+            If you find the project helpful, you can support Plant-it by buying me a coffee at https://www.buymeacoffee.com/mdeluise
+
+            https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW1xYWsxcHd1Zm85dnk0aGdmMzAzaTh4ZG14ZXUwcGFjdTdwNDEydCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FkD6uqVhmJMd2/giphy.gif
 
             # What's Changed
-            ## 📱 App
-            - 
-
-            ## 🗄️ Server
-            - 
-
-            ## 📓 Documentation
-            - 
+            ## 🚀 Features
+            ## 🌟 Enhancements
+            ## 🐛 Bug fixes
+            ## 🌐 Translations
+            ## 🚀 Features
 
             # New Contributors
             * X made their first contribution in Y
