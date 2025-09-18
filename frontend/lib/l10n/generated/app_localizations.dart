@@ -1292,6 +1292,18 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Additional info'**
   String get additionalInfo;
+
+  /// No description provided for @floraCodexDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'FloraCodex is a database service that provides access to a comprehensive database of plant species, including their scientific names, common names, and other relevant information. To use this service, you need to obtain an API key.'**
+  String get floraCodexDescription;
+
+  /// No description provided for @floraCodexGetApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'To get your API key, visit the FloraCodex website, or click here'**
+  String get floraCodexGetApiKey;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

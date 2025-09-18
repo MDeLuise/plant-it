@@ -846,4 +846,12 @@ class LEn extends L {
 
   @override
   String get additionalInfo => 'Additional info';
+
+  @override
+  String get floraCodexDescription =>
+      'FloraCodex is a database service that provides access to a comprehensive database of plant species, including their scientific names, common names, and other relevant information. To use this service, you need to obtain an API key.';
+
+  @override
+  String get floraCodexGetApiKey =>
+      'To get your API key, visit the FloraCodex website, or click here';
 }

@@ -58,46 +58,49 @@ class HomeScreenEmptyData extends StatelessWidget {
   Widget build(BuildContext context) {
     L appLocalizations = L.of(context);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
-            child: Container(
-              height: 80,
-              width: 80,
-              color: Theme.of(context).colorScheme.primary,
-              child: Icon(
-                LucideIcons.leaf,
-                color: Theme.of(context).colorScheme.onPrimary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
+              child: Container(
+                height: 80,
+                width: 80,
+                color: Theme.of(context).colorScheme.primary,
+                child: Icon(
+                  LucideIcons.leaf,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            appLocalizations.noPlantsFound,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            appLocalizations.yourPlantWillAppearHere,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => _showInstrutions(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              elevation: 0,
+            SizedBox(height: 10),
+            Text(
+              appLocalizations.noPlantsFound,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontWeight: FontWeight.bold),
             ),
-            child: Text(appLocalizations.howToAddPlants),
-          ),
-        ],
+            SizedBox(height: 10),
+            Text(
+              appLocalizations.yourPlantWillAppearHere,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () => _showInstrutions(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                elevation: 0,
+              ),
+              child: Text(appLocalizations.howToAddPlants),
+            ),
+          ],
+        ),
       ),
     );
   }

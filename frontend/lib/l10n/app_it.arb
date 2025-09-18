@@ -357,5 +357,7 @@
       }
     }
   },
-  "additionalInfo": "Altre informazioni"
+  "additionalInfo": "Altre informazioni",
+  "floraCodexDescription": "FloraCodex è un servizio che fornisce accesso a un database completo di specie, comprese le loro denominazioni scientifiche, nomi comuni e altre informazioni rilevanti. Per utilizzare questo servizio, è necessario ottenere una chiave API.",
+  "floraCodexGetApiKey": "Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui."
 }

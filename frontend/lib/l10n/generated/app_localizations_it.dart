@@ -949,4 +949,12 @@ class LIt extends L {
 
   @override
   String get additionalInfo => 'Altre informazioni';
+
+  @override
+  String get floraCodexDescription =>
+      'FloraCodex è un servizio che fornisce accesso a un database completo di specie, comprese le loro denominazioni scientifiche, nomi comuni e altre informazioni rilevanti. Per utilizzare questo servizio, è necessario ottenere una chiave API.';
+
+  @override
+  String get floraCodexGetApiKey =>
+      'Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.';
 }

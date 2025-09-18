@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DataSourcesScreen extends StatelessWidget {
@@ -103,6 +105,44 @@ class FloraCodexScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          L.of(context).floraCodexDescription,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () {
+                          launchUrl(Uri.parse("https://floracodex.com/auth/sign-up"));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  L.of(context).floraCodexGetApiKey,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(
+                                LucideIcons.external_link,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 15,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
                       SwitchListTile(
                         title: Text(L.of(context).enableDataSource),
                         value: useFloraCodex,

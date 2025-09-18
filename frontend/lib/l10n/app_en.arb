@@ -344,5 +344,7 @@
       }
     }
   },
-  "additionalInfo": "Additional info"
+  "additionalInfo": "Additional info",
+  "floraCodexDescription": "FloraCodex is a database service that provides access to a comprehensive database of plant species, including their scientific names, common names, and other relevant information. To use this service, you need to obtain an API key.",
+  "floraCodexGetApiKey": "To get your API key, visit the FloraCodex website, or click here"
 }
