@@ -198,8 +198,22 @@ class AppDatabase extends _$AppDatabase {
     await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
       id: const Value(2),
       name: 'seeding',
-      icon: 'bean',
-      color: '#c04200',
+      icon: 'bean', 
+      color: '#8F490B',
+    ));
+
+    await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
+      id: const Value(3),
+      name: 'fertilizing',
+      icon: 'wheat',
+      color: '#B02713',
+    ));
+
+    await into(eventTypes).insertOnConflictUpdate(EventTypesCompanion.insert(
+      id: const Value(4),
+      name: 'pruning',
+      icon: 'scissors',
+      color: '#C4C2C2',
     ));
   }
 
