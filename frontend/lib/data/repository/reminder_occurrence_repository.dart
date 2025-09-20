@@ -9,10 +9,6 @@ class ReminderOccurrenceRepository {
   ReminderOccurrenceRepository({required ReminderOccurrenceService service})
       : _service = service;
 
-  Future<Result<List<Reminder>>> getRemindersToNotifyToday() {
-    return _service.getRemindersToNotify();
-  }
-
   Future<Result<List<ReminderOccurrence>>> getNextOccurrences(int num) {
     return _service.getNextOccurrences(num);
   }

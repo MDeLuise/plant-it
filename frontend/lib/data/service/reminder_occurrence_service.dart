@@ -25,46 +25,6 @@ class ReminderOccurrenceService {
         _eventTypeRepository = eventTypeRepository,
         _plantRepository = plantRepository;
 
-  Future<Result<List<Reminder>>> getRemindersToNotifyToday() async {
-    Result<List<Reminder>> reminders = await _reminderRepository.getAll();
-    if (reminders.isError()) {
-      return reminders.exceptionOrNull()!.toFailure();
-    }
-    DateTime now = DateTime.now();
-    DateTime startOfDay = DateTime(now.year, now.month, now.day);
-    DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
-    List<Reminder> result = [];
-
-    for (Reminder reminder in reminders.getOrThrow()) {
-      if (!reminder.enabled) continue;
-      if (reminder.endDate != null && reminder.endDate!.isBefore(startOfDay)) {
-        continue;
-      }
-      if (reminder.startDate.isAfter(endOfDay)) {
-        continue;
-      }
-
-      bool isDue = await _isReminderDue(reminder, now);
-      if (!isDue) {
-        continue;
-      }
-
-      DateTime occurrence = reminder.lastNotified ?? reminder.startDate;
-
-      do {
-        occurrence = _calculateNextNotification(
-            occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
-
-        if (occurrence.isAfter(startOfDay) && occurrence.isBefore(endOfDay)) {
-          result.add(reminder);
-          break;
-        }
-      } while (occurrence.isBefore(endOfDay));
-    }
-
-    return result.toSuccess();
-  }
-
   Future<Result<List<Reminder>>> getRemindersToNotify() async {
     Result<List<Reminder>> reminders = await _reminderRepository.getAll();
     if (reminders.isError()) {
@@ -84,44 +44,61 @@ class ReminderOccurrenceService {
         continue;
       }
 
-      bool isDue = await _isReminderDue(reminder, now);
+      bool isDue = await _isReminderDue(reminder, endOfDay);
       if (!isDue) {
         continue;
       }
 
-      DateTime occurrence = reminder.lastNotified ?? reminder.startDate;
-      occurrence = _calculateNextNotification(
-          occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
-
-      while (occurrence.isBefore(endOfDay)) {
-        result.removeWhere((r) => r.id == reminder.id);
-        result.add(reminder);
-        occurrence = _calculateNextNotification(
-            occurrence, reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
+      bool isToNotify = await _isReminderToNotify(reminder, endOfDay);
+      if (!isToNotify) {
+        continue;
       }
+      result.add(reminder);
     }
 
     return result.toSuccess();
   }
 
-  Future<bool> _isReminderDue(Reminder reminder, DateTime now) async {
+  Future<bool> _isReminderDue(
+      Reminder reminder, DateTime dateTimeReference) async {
+    DateTime dueDate = await _getDueDate(reminder);
+    return dueDate.isBefore(dateTimeReference);
+  }
+
+  Future<DateTime> _getDueDate(Reminder reminder) async {
     Result<Event>? lastEvent = await _eventRepository
         .getLastFiltered([reminder.plant], [reminder.type]);
 
     if (lastEvent == null) {
-      return true;
+      return _addTimespanToDate(
+        reminder.startDate,
+        reminder.frequencyUnit,
+        reminder.frequencyQuantity,
+      );
     }
 
-    DateTime nextDueDate = _calculateNextNotification(
+    return _addTimespanToDate(
       lastEvent.getOrThrow().date,
       reminder.frequencyUnit,
       reminder.frequencyQuantity,
     );
-
-    return nextDueDate.isBefore(now);
   }
 
-  DateTime _calculateNextNotification(
+  Future<bool> _isReminderToNotify(
+      Reminder reminder, DateTime dateTimeReference) async {
+    DateTime occurrence;
+
+    if (reminder.lastNotified != null) {
+      occurrence = _addTimespanToDate(reminder.lastNotified!,
+          reminder.repeatAfterUnit, reminder.repeatAfterQuantity);
+    } else {
+      occurrence = _addTimespanToDate(reminder.startDate,
+          reminder.frequencyUnit, reminder.frequencyQuantity);
+    }
+    return occurrence.isBefore(dateTimeReference);
+  }
+
+  DateTime _addTimespanToDate(
       DateTime lastOccurrence, FrequencyUnit unit, int quantity) {
     switch (unit) {
       case FrequencyUnit.days:
@@ -187,7 +164,7 @@ class ReminderOccurrenceService {
     }
 
     do {
-      dateIterator = _calculateNextNotification(
+      dateIterator = _addTimespanToDate(
           dateIterator, reminder.frequencyUnit, reminder.frequencyQuantity);
     } while (dateIterator.isBefore(now));
 
@@ -196,7 +173,7 @@ class ReminderOccurrenceService {
         return result.toSuccess();
       }
       result.add(await _createOccurrence(reminder, dateIterator));
-      dateIterator = _calculateNextNotification(
+      dateIterator = _addTimespanToDate(
           dateIterator, reminder.frequencyUnit, reminder.frequencyQuantity);
     }
     return result.toSuccess();
@@ -235,13 +212,13 @@ class ReminderOccurrenceService {
           lastEvent != null ? lastEvent.getOrThrow().date : reminder.startDate;
 
       do {
-        occurrence = _calculateNextNotification(
+        occurrence = _addTimespanToDate(
             occurrence, reminder.frequencyUnit, reminder.frequencyQuantity);
       } while (occurrence.isBefore(startOfMonth));
 
       while (occurrence.isBefore(endOfMonth)) {
         result.add(await _createOccurrence(reminder, occurrence));
-        occurrence = _calculateNextNotification(
+        occurrence = _addTimespanToDate(
             occurrence, reminder.frequencyUnit, reminder.frequencyQuantity);
       }
     }
