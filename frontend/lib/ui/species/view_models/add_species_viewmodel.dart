@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:command_it/command_it.dart';
@@ -12,6 +13,7 @@ import 'package:plant_it/data/repository/species_repository.dart';
 import 'package:plant_it/data/repository/species_synonym_repository.dart';
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/database/database.dart';
+import 'package:plant_it/utils/stream_code.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AddSpeciesViewModel extends ChangeNotifier {
@@ -21,10 +23,12 @@ class AddSpeciesViewModel extends ChangeNotifier {
     required SpeciesSynonymsRepository speciesSynonymsRepository,
     required ImageRepository imageRepository,
     required AppCache appCache,
+    required StreamController<StreamCode> streamController,
   })  : _speciesRepository = speciesRepository,
         _speciesCareRepository = speciesCareRepository,
         _speciesSynonymsRepository = speciesSynonymsRepository,
         _imageRepository = imageRepository,
+        _streamController = streamController,
         _appCache = appCache {
     insert = Command.createAsyncNoParam(() async {
       Result<int> result = await _save();
@@ -37,6 +41,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
   final SpeciesCareRepository _speciesCareRepository;
   final SpeciesSynonymsRepository _speciesSynonymsRepository;
   final ImageRepository _imageRepository;
+  final StreamController<StreamCode> _streamController;
   final AppCache _appCache;
   final _log = Logger('AddSpeciesViewModel');
 
@@ -143,6 +148,7 @@ class AddSpeciesViewModel extends ChangeNotifier {
     }
 
     await _appCache.clearSearch();
+    _streamController.add(StreamCode.insertSpecies);
 
     return speciesId;
   }

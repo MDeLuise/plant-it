@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -10,13 +12,16 @@ import 'package:plant_it/ui/core/ui/error_indicator.dart';
 import 'package:plant_it/ui/search/view_models/search_viewmodel.dart';
 import 'package:plant_it/ui/search/widgets/empty_search.dart';
 import 'package:plant_it/ui/search/widgets/species_card.dart';
+import 'package:plant_it/utils/stream_code.dart';
 
 class SearchPage extends StatefulWidget {
   final SearchViewModel viewModel;
+  final StreamController<StreamCode> streamController;
 
   const SearchPage({
     super.key,
     required this.viewModel,
+    required this.streamController,
   });
 
   @override
@@ -39,6 +44,15 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
       }
+    });
+    widget.streamController.stream.listen((_) {
+      widget.viewModel.search.execute(
+        Query(
+            term: "",
+            offset: 0,
+            limit: 10,
+          ),
+      );
     });
   }
 

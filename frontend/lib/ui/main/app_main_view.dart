@@ -59,7 +59,10 @@ class _AppMainViewState extends State<AppMainView> {
         viewModel: widget.calendarViewModel,
         streamController: widget.streamController,
       ),
-      SearchPage(viewModel: widget.searchViewModel),
+      SearchPage(
+        viewModel: widget.searchViewModel,
+        streamController: widget.streamController,
+      ),
       SettingsScreen(viewModel: widget.settingsViewModel),
     ];
   }
@@ -78,23 +81,39 @@ class _AppMainViewState extends State<AppMainView> {
     }
     L appLocalizations = L.of(context);
 
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle1);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle2);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle3);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle4);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle5);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle6);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle7);
-    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle8);
-    
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody1);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody2);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody3);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody4);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody5);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody6);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody7);
-    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody8);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle1);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle2);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle3);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle4);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle5);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle6);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle7);
+    widget.notificationsLangRepository
+        .put(true, appLocalizations.notificationTitle8);
+
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody1);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody2);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody3);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody4);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody5);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody6);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody7);
+    widget.notificationsLangRepository
+        .put(false, appLocalizations.notificationBody8);
 
     await widget.pref.setBool('translationsInserted', true);
   }

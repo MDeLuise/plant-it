@@ -355,6 +355,7 @@ GoRouter router() => GoRouter(
               speciesSynonymsRepository: context.read(),
               imageRepository: context.read(),
               appCache: context.read(),
+              streamController: context.read(),
             );
             return AddSpeciesScreen(
               viewModel: viewModel,
@@ -396,6 +397,7 @@ GoRouter router() => GoRouter(
               speciesSynonymsRepository: context.read(),
               imageRepository: context.read(),
               appCache: context.read(),
+              streamController: context.read(),
             );
             viewModel.load.execute(id);
 
