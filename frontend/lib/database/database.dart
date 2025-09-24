@@ -135,6 +135,14 @@ class UserSettings extends Table {
   Set<Column<Object>> get primaryKey => {key};
 }
 
+class NotificationTranslations extends Table {
+  BoolColumn get title => boolean().withDefault(const Constant(true))();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {title, value};
+}
+
 @DriftDatabase(tables: [
   EventTypes,
   Plants,
@@ -145,6 +153,7 @@ class UserSettings extends Table {
   Reminders,
   Images,
   UserSettings,
+  NotificationTranslations,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

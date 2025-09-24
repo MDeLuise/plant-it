@@ -957,4 +957,61 @@ class LIt extends L {
   @override
   String get floraCodexGetApiKey =>
       'Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.';
+
+  @override
+  String get notificationTitle1 => 'Ops, l\'hai fatto di nuovo!';
+
+  @override
+  String get notificationTitle2 => 'SOS Piante!';
+
+  @override
+  String get notificationTitle3 =>
+      'È tempo di diventare un sussurratore di piante!';
+
+  @override
+  String get notificationTitle4 => 'Non oggi, Pianta!';
+
+  @override
+  String get notificationTitle5 => 'Caffeina per piante necessaria!';
+
+  @override
+  String get notificationTitle6 => 'La pianta sta chiamando!';
+
+  @override
+  String get notificationTitle7 => 'Chiama la Squadra Verde!';
+
+  @override
+  String get notificationTitle8 => 'Drin drin...';
+
+  @override
+  String get notificationBody1 =>
+      '|emoji| |plantName| ha bisogno del suo |eventType|. Non farlo aspettare!';
+
+  @override
+  String get notificationBody2 =>
+      '|emoji| |plantName| sta chiamando per |eventType|. È tempo di salvare la situazione!';
+
+  @override
+  String get notificationBody3 =>
+      '|emoji| |plantName| ha bisogno di |eventType|. Ti sta aspettando!';
+
+  @override
+  String get notificationBody4 =>
+      '|emoji| |plantName| è stanco di aspettare per |eventType|. Mostragli un po\' di affetto!';
+
+  @override
+  String get notificationBody5 =>
+      '|emoji| |plantName| è in ritardo per |eventType|. Dagli una spinta!';
+
+  @override
+  String get notificationBody6 =>
+      '|emoji| |plantName| è pronto per |eventType|. Non deluderlo!';
+
+  @override
+  String get notificationBody7 =>
+      '|emoji| |plantName| ha bisogno del suo |eventType|. Sei l\'eroe che merita!';
+
+  @override
+  String get notificationBody8 =>
+      '|emoji| |plantName| sente la mancanza del suo |eventType|. È tempo di renderlo felice di nuovo!';
 }

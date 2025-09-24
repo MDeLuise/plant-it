@@ -854,4 +854,60 @@ class LEn extends L {
   @override
   String get floraCodexGetApiKey =>
       'To get your API key, visit the FloraCodex website, or click here';
+
+  @override
+  String get notificationTitle1 => 'Oops, You Did It Again!';
+
+  @override
+  String get notificationTitle2 => 'Plant SOS!';
+
+  @override
+  String get notificationTitle3 => 'Time to be a Plant Whisperer!';
+
+  @override
+  String get notificationTitle4 => 'Not Today, Plant!';
+
+  @override
+  String get notificationTitle5 => 'Plant Caffeine Required!';
+
+  @override
+  String get notificationTitle6 => 'Leaf It Up to You!';
+
+  @override
+  String get notificationTitle7 => 'Call the Green Squad!';
+
+  @override
+  String get notificationTitle8 => 'You\'ve Been \'Leafing\' It Alone';
+
+  @override
+  String get notificationBody1 =>
+      '|emoji| |plantName| needs its |eventType|. Don\'t keep it waiting!';
+
+  @override
+  String get notificationBody2 =>
+      '|emoji| |plantName| is calling for |eventType|. Time to save the day!';
+
+  @override
+  String get notificationBody3 =>
+      '|emoji| |plantName| needs |eventType|. It\'s waiting for you!';
+
+  @override
+  String get notificationBody4 =>
+      '|emoji| |plantName| is tired of waiting for |eventType|. Show it some TLC!';
+
+  @override
+  String get notificationBody5 =>
+      '|emoji| |plantName| is overdue for |eventType|. Give it a boost!';
+
+  @override
+  String get notificationBody6 =>
+      '|emoji| |plantName| is ready for |eventType|. Don\'t let it down!';
+
+  @override
+  String get notificationBody7 =>
+      '|emoji| |plantName| needs its |eventType|. You\'re the hero it deserves!';
+
+  @override
+  String get notificationBody8 =>
+      '|emoji| |plantName| misses its |eventType|. Time to make it happy again!';
 }

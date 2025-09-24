@@ -66,7 +66,6 @@ class SchedulingService {
 
     if (difference.inSeconds < 0) {
       difference += Duration(days: 7);
-      //difference += Duration(days: 7 - _getDaysUntilNextWeekday(weekDayKey));
     }
 
     // Ensure the minimum delay is 15 minutes

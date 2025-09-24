@@ -359,5 +359,21 @@
   },
   "additionalInfo": "Altre informazioni",
   "floraCodexDescription": "FloraCodex è un servizio che fornisce accesso a un database completo di specie, comprese le loro denominazioni scientifiche, nomi comuni e altre informazioni rilevanti. Per utilizzare questo servizio, è necessario ottenere una chiave API.",
-  "floraCodexGetApiKey": "Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui."
+  "floraCodexGetApiKey": "Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.",
+  "notificationTitle1": "Ops, l'hai fatto di nuovo!",
+  "notificationTitle2": "SOS Piante!",
+  "notificationTitle3": "È tempo di diventare un sussurratore di piante!",
+  "notificationTitle4": "Non oggi, Pianta!",
+  "notificationTitle5": "Caffeina per piante necessaria!",
+  "notificationTitle6": "La pianta sta chiamando!",
+  "notificationTitle7": "Chiama la Squadra Verde!",
+  "notificationTitle8": "Drin drin...",
+  "notificationBody1": "|emoji| |plantName| ha bisogno del suo |eventType|. Non farlo aspettare!",
+  "notificationBody2": "|emoji| |plantName| sta chiamando per |eventType|. È tempo di salvare la situazione!",
+  "notificationBody3": "|emoji| |plantName| ha bisogno di |eventType|. Ti sta aspettando!",
+  "notificationBody4": "|emoji| |plantName| è stanco di aspettare per |eventType|. Mostragli un po' di affetto!",
+  "notificationBody5": "|emoji| |plantName| è in ritardo per |eventType|. Dagli una spinta!",
+  "notificationBody6": "|emoji| |plantName| è pronto per |eventType|. Non deluderlo!",
+  "notificationBody7": "|emoji| |plantName| ha bisogno del suo |eventType|. Sei l'eroe che merita!",
+  "notificationBody8": "|emoji| |plantName| sente la mancanza del suo |eventType|. È tempo di renderlo felice di nuovo!"
 }

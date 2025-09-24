@@ -3540,6 +3540,203 @@ class UserSettingsCompanion extends UpdateCompanion<UserSetting> {
   }
 }
 
+class $NotificationTranslationsTable extends NotificationTranslations
+    with TableInfo<$NotificationTranslationsTable, NotificationTranslation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotificationTranslationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<bool> title = GeneratedColumn<bool>(
+      'title', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("title" IN (0, 1))'),
+      defaultValue: const Constant(true));
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [title, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notification_translations';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<NotificationTranslation> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {title, value};
+  @override
+  NotificationTranslation map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotificationTranslation(
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}title'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+    );
+  }
+
+  @override
+  $NotificationTranslationsTable createAlias(String alias) {
+    return $NotificationTranslationsTable(attachedDatabase, alias);
+  }
+}
+
+class NotificationTranslation extends DataClass
+    implements Insertable<NotificationTranslation> {
+  final bool title;
+  final String value;
+  const NotificationTranslation({required this.title, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['title'] = Variable<bool>(title);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  NotificationTranslationsCompanion toCompanion(bool nullToAbsent) {
+    return NotificationTranslationsCompanion(
+      title: Value(title),
+      value: Value(value),
+    );
+  }
+
+  factory NotificationTranslation.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotificationTranslation(
+      title: serializer.fromJson<bool>(json['title']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'title': serializer.toJson<bool>(title),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  NotificationTranslation copyWith({bool? title, String? value}) =>
+      NotificationTranslation(
+        title: title ?? this.title,
+        value: value ?? this.value,
+      );
+  NotificationTranslation copyWithCompanion(
+      NotificationTranslationsCompanion data) {
+    return NotificationTranslation(
+      title: data.title.present ? data.title.value : this.title,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTranslation(')
+          ..write('title: $title, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(title, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotificationTranslation &&
+          other.title == this.title &&
+          other.value == this.value);
+}
+
+class NotificationTranslationsCompanion
+    extends UpdateCompanion<NotificationTranslation> {
+  final Value<bool> title;
+  final Value<String> value;
+  final Value<int> rowid;
+  const NotificationTranslationsCompanion({
+    this.title = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NotificationTranslationsCompanion.insert({
+    this.title = const Value.absent(),
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : value = Value(value);
+  static Insertable<NotificationTranslation> custom({
+    Expression<bool>? title,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (title != null) 'title': title,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NotificationTranslationsCompanion copyWith(
+      {Value<bool>? title, Value<String>? value, Value<int>? rowid}) {
+    return NotificationTranslationsCompanion(
+      title: title ?? this.title,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (title.present) {
+      map['title'] = Variable<bool>(title.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTranslationsCompanion(')
+          ..write('title: $title, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3553,6 +3750,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RemindersTable reminders = $RemindersTable(this);
   late final $ImagesTable images = $ImagesTable(this);
   late final $UserSettingsTable userSettings = $UserSettingsTable(this);
+  late final $NotificationTranslationsTable notificationTranslations =
+      $NotificationTranslationsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3566,7 +3765,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         events,
         reminders,
         images,
-        userSettings
+        userSettings,
+        notificationTranslations
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -6919,6 +7119,141 @@ typedef $$UserSettingsTableProcessedTableManager = ProcessedTableManager<
     ),
     UserSetting,
     PrefetchHooks Function()>;
+typedef $$NotificationTranslationsTableCreateCompanionBuilder
+    = NotificationTranslationsCompanion Function({
+  Value<bool> title,
+  required String value,
+  Value<int> rowid,
+});
+typedef $$NotificationTranslationsTableUpdateCompanionBuilder
+    = NotificationTranslationsCompanion Function({
+  Value<bool> title,
+  Value<String> value,
+  Value<int> rowid,
+});
+
+class $$NotificationTranslationsTableFilterComposer
+    extends Composer<_$AppDatabase, $NotificationTranslationsTable> {
+  $$NotificationTranslationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<bool> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
+}
+
+class $$NotificationTranslationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $NotificationTranslationsTable> {
+  $$NotificationTranslationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<bool> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
+}
+
+class $$NotificationTranslationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NotificationTranslationsTable> {
+  $$NotificationTranslationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<bool> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$NotificationTranslationsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $NotificationTranslationsTable,
+    NotificationTranslation,
+    $$NotificationTranslationsTableFilterComposer,
+    $$NotificationTranslationsTableOrderingComposer,
+    $$NotificationTranslationsTableAnnotationComposer,
+    $$NotificationTranslationsTableCreateCompanionBuilder,
+    $$NotificationTranslationsTableUpdateCompanionBuilder,
+    (
+      NotificationTranslation,
+      BaseReferences<_$AppDatabase, $NotificationTranslationsTable,
+          NotificationTranslation>
+    ),
+    NotificationTranslation,
+    PrefetchHooks Function()> {
+  $$NotificationTranslationsTableTableManager(
+      _$AppDatabase db, $NotificationTranslationsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationTranslationsTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationTranslationsTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationTranslationsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<bool> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotificationTranslationsCompanion(
+            title: title,
+            value: value,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<bool> title = const Value.absent(),
+            required String value,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotificationTranslationsCompanion.insert(
+            title: title,
+            value: value,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$NotificationTranslationsTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $NotificationTranslationsTable,
+        NotificationTranslation,
+        $$NotificationTranslationsTableFilterComposer,
+        $$NotificationTranslationsTableOrderingComposer,
+        $$NotificationTranslationsTableAnnotationComposer,
+        $$NotificationTranslationsTableCreateCompanionBuilder,
+        $$NotificationTranslationsTableUpdateCompanionBuilder,
+        (
+          NotificationTranslation,
+          BaseReferences<_$AppDatabase, $NotificationTranslationsTable,
+              NotificationTranslation>
+        ),
+        NotificationTranslation,
+        PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6941,4 +7276,7 @@ class $AppDatabaseManager {
       $$ImagesTableTableManager(_db, _db.images);
   $$UserSettingsTableTableManager get userSettings =>
       $$UserSettingsTableTableManager(_db, _db.userSettings);
+  $$NotificationTranslationsTableTableManager get notificationTranslations =>
+      $$NotificationTranslationsTableTableManager(
+          _db, _db.notificationTranslations);
 }

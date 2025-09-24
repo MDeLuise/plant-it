@@ -69,12 +69,15 @@ void main() async {
       cache: context.read(),
     ),
   );
+  SingleChildWidget prefProvider = Provider<SharedPreferences>(
+    create: (context) => pref,
+  );
 
   Logger.root.level = "dev" == environment ? Level.ALL : Level.WARNING;
 
   runApp(
     MultiProvider(
-      providers: [...providersLocal, cacheProvider, searchProvider],
+      providers: [...providersLocal, cacheProvider, searchProvider, prefProvider],
       child: const MainApp(),
     ),
   );

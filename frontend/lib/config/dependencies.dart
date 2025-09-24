@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
 import 'package:plant_it/data/repository/image_repository.dart';
+import 'package:plant_it/data/repository/notifications_lang_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_occurrence_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
@@ -65,6 +66,9 @@ List<SingleChildWidget> get providersLocal {
       create: (context) => UserSettingRepository(db: context.read()),
     ),
     Provider(
+      create: (context) => NotificationsLangRepository(db: context.read()),
+    ),
+    Provider(
       create: (context) => ReminderOccurrenceService(
         reminderRepository: context.read(),
         eventRepository: context.read(),
@@ -82,6 +86,7 @@ List<SingleChildWidget> get providersLocal {
         eventTypeRepository: context.read(),
         plantRepository: context.read(),
         userSettingRepository: context.read(),
+        notificationsLangRepository: context.read(),
       ),
     ),
     Provider(

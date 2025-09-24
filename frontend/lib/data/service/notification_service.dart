@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logging/logging.dart';
 import 'package:plant_it/data/repository/event_repository.dart';
 import 'package:plant_it/data/repository/event_type_repository.dart';
+import 'package:plant_it/data/repository/notifications_lang_repository.dart';
 import 'package:plant_it/data/repository/plant_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
@@ -28,26 +29,6 @@ class NotificationService {
     "🌵",
     "🪻"
   ];
-  final List<String> notificationTitles = [
-    "Oops, You Did It Again!",
-    "Plant SOS!",
-    "Time to be a Plant Whisperer!",
-    "Not Today, Plant!",
-    "Plant Caffeine Required!",
-    "Leaf It Up to You!",
-    "Call the Green Squad!",
-    "You've Been 'Leafing' It Alone"
-  ];
-  final List<String> notificationBodies = [
-    "{emoji} {plantName} needs its {eventType}. Don't keep it waiting!",
-    "{emoji} {plantName} is calling for {eventType}. Time to save the day!",
-    "{emoji} {plantName} needs {eventType}. It's waiting for you!",
-    "{emoji} {plantName} is tired of waiting for {eventType}. Show it some TLC!",
-    "{emoji} {plantName} is overdue for {eventType}. Give it a boost!",
-    "{emoji} {plantName} is ready for {eventType}. Don't let it down!",
-    "{emoji} {plantName} needs its {eventType}. You're the hero it deserves!",
-    "{emoji} {plantName} misses its {eventType}. Time to make it happy again!"
-  ];
 
   final AndroidNotificationDetails notificationDetails =
       AndroidNotificationDetails(
@@ -64,16 +45,19 @@ class NotificationService {
   late final EventTypeRepository _eventTypeRepository;
   late final PlantRepository _plantRepository;
   late final UserSettingRepository _userSettingRepository;
+  late final NotificationsLangRepository _notificationsLangRepository;
 
   NotificationService({
     required ReminderOccurrenceService reminderOccurrenceService,
     required EventTypeRepository eventTypeRepository,
     required PlantRepository plantRepository,
     required UserSettingRepository userSettingRepository,
+    required NotificationsLangRepository notificationsLangRepository,
   })  : _reminderOccurrenceService = reminderOccurrenceService,
         _eventTypeRepository = eventTypeRepository,
         _plantRepository = plantRepository,
-        _userSettingRepository = userSettingRepository;
+        _userSettingRepository = userSettingRepository,
+        _notificationsLangRepository = notificationsLangRepository;
 
   /// To use only in callbackDispatcher
   NotificationService.noParam() {
@@ -85,6 +69,8 @@ class NotificationService {
         plantRepository: PlantRepository(db: db));
     _eventTypeRepository = EventTypeRepository(db: db);
     _plantRepository = PlantRepository(db: db);
+    _userSettingRepository = UserSettingRepository(db: db);
+    _notificationsLangRepository = NotificationsLangRepository(db: db);
   }
 
   Future<bool?> initialize() async {
@@ -130,17 +116,30 @@ class NotificationService {
       return;
     }
     String eventTypeName = eventType.getOrThrow().name;
-
+    
     int randomIndexEmoji = Random().nextInt(notificationEmoji.length);
-    int randomIndexTitle = Random().nextInt(notificationTitles.length);
-    int randomIndexBody = Random().nextInt(notificationBodies.length);
     String emoji = notificationEmoji.elementAt(randomIndexEmoji);
-    String title = notificationTitles.elementAt(randomIndexTitle);
-    String body = notificationBodies
-        .elementAt(randomIndexBody)
-        .replaceAll('{emoji}', emoji)
-        .replaceAll('{plantName}', plantName)
-        .replaceAll('{eventType}', eventTypeName);
+
+    Result<String> titleResult =
+        await _notificationsLangRepository.getRandomTitle();
+    if (titleResult.isError()) {
+      _log.severe(
+          "Error loading the notification title: ${titleResult.exceptionOrNull()}");
+    }
+    String title = titleResult.getOrThrow();
+
+    Result<String> bodyResult =
+        await _notificationsLangRepository.getRandomBody();
+    if (bodyResult.isError()) {
+      _log.severe(
+          "Error loading the notification body: ${bodyResult.exceptionOrNull()}");
+    }
+    String body = bodyResult.getOrThrow();
+    
+    body = body
+        .replaceAll('|emoji|', emoji)
+        .replaceAll('|plantName|', plantName)
+        .replaceAll('|eventType|', eventTypeName);
 
     await FlutterLocalNotificationsPlugin().show(Random().nextInt(1000), title,
         body, NotificationDetails(android: notificationDetails));

@@ -1304,6 +1304,102 @@ abstract class L {
   /// In en, this message translates to:
   /// **'To get your API key, visit the FloraCodex website, or click here'**
   String get floraCodexGetApiKey;
+
+  /// No description provided for @notificationTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, You Did It Again!'**
+  String get notificationTitle1;
+
+  /// No description provided for @notificationTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant SOS!'**
+  String get notificationTitle2;
+
+  /// No description provided for @notificationTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to be a Plant Whisperer!'**
+  String get notificationTitle3;
+
+  /// No description provided for @notificationTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Today, Plant!'**
+  String get notificationTitle4;
+
+  /// No description provided for @notificationTitle5.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant Caffeine Required!'**
+  String get notificationTitle5;
+
+  /// No description provided for @notificationTitle6.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaf It Up to You!'**
+  String get notificationTitle6;
+
+  /// No description provided for @notificationTitle7.
+  ///
+  /// In en, this message translates to:
+  /// **'Call the Green Squad!'**
+  String get notificationTitle7;
+
+  /// No description provided for @notificationTitle8.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve Been \'Leafing\' It Alone'**
+  String get notificationTitle8;
+
+  /// No description provided for @notificationBody1.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| needs its |eventType|. Don\'t keep it waiting!'**
+  String get notificationBody1;
+
+  /// No description provided for @notificationBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| is calling for |eventType|. Time to save the day!'**
+  String get notificationBody2;
+
+  /// No description provided for @notificationBody3.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| needs |eventType|. It\'s waiting for you!'**
+  String get notificationBody3;
+
+  /// No description provided for @notificationBody4.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| is tired of waiting for |eventType|. Show it some TLC!'**
+  String get notificationBody4;
+
+  /// No description provided for @notificationBody5.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| is overdue for |eventType|. Give it a boost!'**
+  String get notificationBody5;
+
+  /// No description provided for @notificationBody6.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| is ready for |eventType|. Don\'t let it down!'**
+  String get notificationBody6;
+
+  /// No description provided for @notificationBody7.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| needs its |eventType|. You\'re the hero it deserves!'**
+  String get notificationBody7;
+
+  /// No description provided for @notificationBody8.
+  ///
+  /// In en, this message translates to:
+  /// **'|emoji| |plantName| misses its |eventType|. Time to make it happy again!'**
+  String get notificationBody8;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

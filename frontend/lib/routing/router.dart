@@ -104,6 +104,8 @@ GoRouter router() => GoRouter(
                 settingsViewModel: settingsViewModel,
                 selectedView: selectedView,
                 streamController: context.read(),
+                pref: context.read(),
+                notificationsLangRepository: context.read(),
               );
             },
             routes: [

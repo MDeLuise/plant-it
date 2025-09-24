@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:plant_it/data/repository/notifications_lang_repository.dart';
 import 'package:plant_it/l10n/generated/app_localizations.dart';
 import 'package:plant_it/routing/routes.dart';
 import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
@@ -13,6 +14,7 @@ import 'package:plant_it/ui/search/widgets/search_page.dart';
 import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:plant_it/ui/settings/widgets/settings_screen.dart';
 import 'package:plant_it/utils/stream_code.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppMainView extends StatefulWidget {
   final HomeViewModel homeViewModel;
@@ -21,6 +23,8 @@ class AppMainView extends StatefulWidget {
   final SettingsViewModel settingsViewModel;
   final StreamController<StreamCode> streamController;
   final int selectedView;
+  final SharedPreferences pref;
+  final NotificationsLangRepository notificationsLangRepository;
 
   const AppMainView({
     super.key,
@@ -30,6 +34,8 @@ class AppMainView extends StatefulWidget {
     required this.settingsViewModel,
     int? selectedView,
     required this.streamController,
+    required this.pref,
+    required this.notificationsLangRepository,
   }) : selectedView = selectedView ?? 0;
 
   @override
@@ -64,8 +70,39 @@ class _AppMainViewState extends State<AppMainView> {
     });
   }
 
+  Future<void> _insertTranslationsInDB() async {
+    bool translationsAlreadyInserted =
+        widget.pref.getBool('translationsInserted') ?? false;
+    if (translationsAlreadyInserted) {
+      return;
+    }
+    L appLocalizations = L.of(context);
+
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle1);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle2);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle3);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle4);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle5);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle6);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle7);
+    widget.notificationsLangRepository.put(true, appLocalizations.notificationTitle8);
+    
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody1);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody2);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody3);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody4);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody5);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody6);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody7);
+    widget.notificationsLangRepository.put(false, appLocalizations.notificationBody8);
+
+    await widget.pref.setBool('translationsInserted', true);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _insertTranslationsInDB();
+
     return Scaffold(
       floatingActionButton: _selectedIndex == 3
           ? null

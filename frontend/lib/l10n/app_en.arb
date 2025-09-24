@@ -346,5 +346,21 @@
   },
   "additionalInfo": "Additional info",
   "floraCodexDescription": "FloraCodex is a database service that provides access to a comprehensive database of plant species, including their scientific names, common names, and other relevant information. To use this service, you need to obtain an API key.",
-  "floraCodexGetApiKey": "To get your API key, visit the FloraCodex website, or click here"
+  "floraCodexGetApiKey": "To get your API key, visit the FloraCodex website, or click here",
+  "notificationTitle1": "Oops, You Did It Again!",
+  "notificationTitle2": "Plant SOS!",
+  "notificationTitle3": "Time to be a Plant Whisperer!",
+  "notificationTitle4": "Not Today, Plant!",
+  "notificationTitle5": "Plant Caffeine Required!",
+  "notificationTitle6": "Leaf It Up to You!",
+  "notificationTitle7": "Call the Green Squad!",
+  "notificationTitle8": "You've Been 'Leafing' It Alone",
+  "notificationBody1": "|emoji| |plantName| needs its |eventType|. Don't keep it waiting!",
+  "notificationBody2": "|emoji| |plantName| is calling for |eventType|. Time to save the day!",
+  "notificationBody3": "|emoji| |plantName| needs |eventType|. It's waiting for you!",
+  "notificationBody4": "|emoji| |plantName| is tired of waiting for |eventType|. Show it some TLC!",
+  "notificationBody5": "|emoji| |plantName| is overdue for |eventType|. Give it a boost!",
+  "notificationBody6": "|emoji| |plantName| is ready for |eventType|. Don't let it down!",
+  "notificationBody7": "|emoji| |plantName| needs its |eventType|. You're the hero it deserves!",
+  "notificationBody8": "|emoji| |plantName| misses its |eventType|. Time to make it happy again!"
 }
