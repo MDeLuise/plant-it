@@ -1305,6 +1305,18 @@ abstract class L {
   /// **'To get your API key, visit the FloraCodex website, or click here'**
   String get floraCodexGetApiKey;
 
+  /// No description provided for @reloadNotificationMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload the notification messages'**
+  String get reloadNotificationMessages;
+
+  /// No description provided for @notificationMessagesReloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification messages reloaded, close and open the app'**
+  String get notificationMessagesReloaded;
+
   /// No description provided for @notificationTitle1.
   ///
   /// In en, this message translates to:

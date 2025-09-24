@@ -1,6 +1,7 @@
 import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:plant_it/data/repository/notifications_lang_repository.dart';
 import 'package:plant_it/data/repository/reminder_repository.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';
@@ -9,6 +10,7 @@ import 'package:plant_it/data/service/search/cache/app_cache.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:result_dart/result_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsViewModel extends ChangeNotifier {
   SettingsViewModel({
@@ -16,12 +18,16 @@ class SettingsViewModel extends ChangeNotifier {
     required ReminderRepository reminderRepository,
     required SchedulingService schedulingService,
     required NotificationService notificationService,
+    required NotificationsLangRepository notificationsLangRepository,
+    required SharedPreferences sharedPreferences,
     required AppCache appCache,
   })  : _userSettingRepository = userSettingRepository,
         _reminderRepository = reminderRepository,
         _schedulingService = schedulingService,
         _notificationService = notificationService,
-        _appCache = appCache {
+        _appCache = appCache,
+        _notificationsLangRepository = notificationsLangRepository,
+        _pref = sharedPreferences {
     load = Command.createAsyncNoParam(() async {
       Result<void> result = await _load();
       if (result.isError()) throw result.exceptionOrNull()!;
@@ -62,6 +68,8 @@ class SettingsViewModel extends ChangeNotifier {
   final ReminderRepository _reminderRepository;
   final SchedulingService _schedulingService;
   final NotificationService _notificationService;
+  final NotificationsLangRepository _notificationsLangRepository;
+  final SharedPreferences _pref;
   final AppCache _appCache;
   final _log = Logger('SettingsViewModel');
   final Map<String, String> _userSettings = {};
@@ -202,5 +210,10 @@ class SettingsViewModel extends ChangeNotifier {
     int hours = totalMinutes ~/ 60;
     int minutes = totalMinutes % 60;
     return TimeOfDay(hour: hours, minute: minutes);
+  }
+
+  Future<void> clearNotificationMessages() async {
+    await _notificationsLangRepository.clear();
+    await _pref.remove("translationsInserted");
   }
 }

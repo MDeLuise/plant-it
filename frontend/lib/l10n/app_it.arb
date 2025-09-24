@@ -360,6 +360,8 @@
   "additionalInfo": "Altre informazioni",
   "floraCodexDescription": "FloraCodex è un servizio che fornisce accesso a un database completo di specie, comprese le loro denominazioni scientifiche, nomi comuni e altre informazioni rilevanti. Per utilizzare questo servizio, è necessario ottenere una chiave API.",
   "floraCodexGetApiKey": "Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.",
+  "reloadNotificationMessages": "Ricarica i messaggi delle notifiche",
+  "notificationMessagesReloaded": "Messaggi delle notifiche ricaricati, chiudi e apri di nuovo l'app",
   "notificationTitle1": "Ops, l'hai fatto di nuovo!",
   "notificationTitle2": "SOS Piante!",
   "notificationTitle3": "È tempo di diventare un sussurratore di piante!",

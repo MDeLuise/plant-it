@@ -856,6 +856,13 @@ class LEn extends L {
       'To get your API key, visit the FloraCodex website, or click here';
 
   @override
+  String get reloadNotificationMessages => 'Reload the notification messages';
+
+  @override
+  String get notificationMessagesReloaded =>
+      'Notification messages reloaded, close and open the app';
+
+  @override
   String get notificationTitle1 => 'Oops, You Did It Again!';
 
   @override

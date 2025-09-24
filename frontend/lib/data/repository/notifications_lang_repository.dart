@@ -68,4 +68,13 @@ class NotificationsLangRepository {
     }
     return Success(entriesNum.getOrThrow() == 0);
   }
+
+  Future<Result<void>> clear() async {
+    try {
+      await db.delete(db.notificationTranslations).go();
+      return Success("ok");
+    } catch (e) {
+      return Failure(Exception("Error clearing entries: $e"));
+    }
+  }
 }

@@ -959,6 +959,14 @@ class LIt extends L {
       'Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.';
 
   @override
+  String get reloadNotificationMessages =>
+      'Ricarica i messaggi delle notifiche';
+
+  @override
+  String get notificationMessagesReloaded =>
+      'Messaggi delle notifiche ricaricati, chiudi e apri di nuovo l\'app';
+
+  @override
   String get notificationTitle1 => 'Ops, l\'hai fatto di nuovo!';
 
   @override

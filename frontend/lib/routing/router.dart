@@ -94,6 +94,8 @@ GoRouter router() => GoRouter(
                 notificationService: context.read(),
                 reminderRepository: context.read(),
                 appCache: context.read(),
+                notificationsLangRepository: context.read(),
+                sharedPreferences: context.read(),
               );
               settingsViewModel.load.execute();
 
@@ -194,11 +196,14 @@ GoRouter router() => GoRouter(
                     viewModel = state.extra as SettingsViewModel;
                   } else {
                     viewModel = SettingsViewModel(
-                        userSettingRepository: context.read(),
-                        reminderRepository: context.read(),
-                        schedulingService: context.read(),
-                        notificationService: context.read(),
-                        appCache: context.read());
+                      userSettingRepository: context.read(),
+                      reminderRepository: context.read(),
+                      schedulingService: context.read(),
+                      notificationService: context.read(),
+                      appCache: context.read(),
+                      notificationsLangRepository: context.read(),
+                      sharedPreferences: context.read(),
+                    );
                     viewModel.load.execute();
                   }
                   return DataSourcesScreen(viewModel: viewModel);

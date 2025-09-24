@@ -18,15 +18,29 @@ class DatabaseAndCacheScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(appLocalizations.databaseAndCache)),
       body: SafeArea(
-        child: ListTile(
-          title: Text(appLocalizations.clearCache),
-          leading: Icon(LucideIcons.brush),
-          onTap: () async {
-            await viewModel.clearCache.executeWithFuture();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(appLocalizations.cacheCleaned)),
-            );
-          },
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(appLocalizations.clearCache),
+              leading: Icon(LucideIcons.eraser),
+              onTap: () async {
+                await viewModel.clearCache.executeWithFuture();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(appLocalizations.cacheCleaned)),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(appLocalizations.reloadNotificationMessages),
+              leading: Icon(LucideIcons.message_square_dot),
+              onTap: () async {
+                await viewModel.clearNotificationMessages();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(appLocalizations.notificationMessagesReloaded)),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
