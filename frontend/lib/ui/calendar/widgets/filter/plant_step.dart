@@ -1,0 +1,154 @@
+import 'package:flutter/material.dart';
+import 'package:plant_it/database/database.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
+import 'package:plant_it/ui/calendar/view_models/calendar_viewmodel.dart';
+import 'package:plant_it/ui/core/ui/step_section.dart';
+
+class PlantStep extends StepSection<CalendarViewModel> {
+  final ValueNotifier<bool> _isValidNotifier = ValueNotifier(true);
+  late final ValueNotifier<List<Plant>> _selectedPlants =
+      ValueNotifier(List.unmodifiable(viewModel.filteredPlants));
+  late final ValueNotifier<List<Plant>> _ongoingSelection =
+      ValueNotifier(List.unmodifiable(viewModel.filteredPlants));
+
+  PlantStep({
+    super.key,
+    required super.viewModel,
+    required super.appLocalizations,
+  });
+
+  @override
+  State<PlantStep> createState() => _PlantStepState();
+
+  @override
+  ValueNotifier<bool> get isValidNotifier => _isValidNotifier;
+
+  @override
+  String get title => appLocalizations.plants;
+
+  @override
+  String get value {
+    List<Plant> plants = _ongoingSelection.value;
+    if (plants.length < 3) {
+      return _returnTruncatedPlantName(plants);
+    }
+    return appLocalizations.nPlants(plants.length);
+  }
+
+  String _returnTruncatedPlantName(List<Plant> plants) {
+    String result = plants.map((p) => p.name).join(", ");
+    if (result.length > 50) {
+      result = "${result.substring(0, 50)}...";
+    }
+    return result;
+  }
+
+  @override
+  void confirm() {
+    viewModel.setFilteredPlants(_ongoingSelection.value);
+    _selectedPlants.value = _ongoingSelection.value;
+  }
+
+  @override
+  void cancel() {
+    _ongoingSelection.value = _selectedPlants.value;
+  }
+
+  void addSelectedPlant(Plant eventType) {
+    List<Plant> current = _ongoingSelection.value;
+    _ongoingSelection.value = [...current, eventType];
+    _isValidNotifier.value = true;
+  }
+
+  void removeSelectedPlant(Plant eventType) {
+    List<Plant> newValue = _ongoingSelection.value.toList();
+    newValue.removeWhere((et) => et.id == eventType.id);
+    _ongoingSelection.value = newValue;
+    _isValidNotifier.value = _ongoingSelection.value.isNotEmpty;
+  }
+}
+
+class _PlantStepState extends State<PlantStep> {
+  void togglePlant(Plant eventType) {
+    bool isSelected =
+        widget._ongoingSelection.value.any((et) => et.id == eventType.id);
+    if (isSelected) {
+      widget.removeSelectedPlant(eventType);
+    } else {
+      widget.addSelectedPlant(eventType);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L.of(context).whichPlantsYouWantToAdd,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(height: 10),
+        AnimatedBuilder(
+            animation: widget._ongoingSelection,
+            builder: (context, _) {
+              return SingleChildScrollView(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .7,
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 3.7 / 2,
+                    children:
+                        List.generate(widget.viewModel.plants.length, (index) {
+                      Plant plant =
+                          widget.viewModel.plants.values.elementAt(index);
+                      bool isSelected = widget._ongoingSelection.value
+                          .any((p) => p.id == plant.id);
+                      return GestureDetector(
+                        onTap: () => togglePlant(plant),
+                        child: Card.outlined(
+                            shape: isSelected
+                                ? RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.all(
+                                        Radius.circular(15)),
+                                    side: isSelected
+                                        ? BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            width: 2)
+                                        : BorderSide.none,
+                                  )
+                                : null,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(plant.name),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    widget.viewModel.species[plant.species]!
+                                        .scientificName,
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      );
+                    }),
+                  ),
+                ),
+              );
+            })
+      ],
+    );
+  }
+}

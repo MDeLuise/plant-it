@@ -1,6 +1,6 @@
-This is a client app for the self-hostable Plant-it Server (which can be found with the app's source repo). You will need to run/manage the server on your own in order to use the app.
+This app is designed for managing plant care. It provides a user-friendly interface to help you keep track of your plants and their needs.
 
-Once set up, this app can be used for keeping track of plant care, receiving notifications about when to water plants, uploading plant images, and more.
+This app allows you to monitor plant care, receive notifications for watering schedules, upload plant images, and more.
 
 <b>Features highlight:</b>
 * Add existing plants or user created plants to your collection

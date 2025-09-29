@@ -1,10 +1,1 @@
 *.DS_Store
-
-online-resources/**/public
-online-resources/**/node_modules
-online-resources/**/package-lock.json
-online-resources/**/resources
-online-resources/documentation/venv
-
-frontend/untranslated.txt
-

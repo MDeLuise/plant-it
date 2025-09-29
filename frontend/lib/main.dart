@@ -1,148 +1,117 @@
-import 'dart:async';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_it/app_exception.dart';
-import 'package:plant_it/app_http_client.dart';
-import 'package:plant_it/commons.dart';
-import 'package:plant_it/environment.dart';
-import 'package:plant_it/change_notifiers.dart';
-import 'package:plant_it/notify_conf_notifier.dart';
-import 'package:plant_it/set_server.dart';
-import 'package:plant_it/splash_screen.dart';
-import 'package:plant_it/template.dart';
-import 'package:plant_it/theme.dart';
-import 'package:plant_it/toast/toast_manager.dart';
-import 'package:plant_it/locale_provider.dart';
+import 'package:logging/logging.dart';
+import 'package:plant_it/config/dependencies.dart';
+import 'package:plant_it/data/service/notification_service.dart';
+import 'package:plant_it/data/service/scheduling_service.dart';
+import 'package:plant_it/data/service/search/cache/app_cache.dart';
+import 'package:plant_it/data/service/search/cache/app_cache_pref.dart';
+import 'package:plant_it/data/service/search/species_searcher_facade.dart';
+import 'package:plant_it/l10n/generated/app_localizations.dart';
+import 'package:plant_it/ui/core/ui/scroll_behaviour.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:workmanager/workmanager.dart';
 
+import 'routing/router.dart';
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      if (task == SchedulingService.taskName) {
+        NotificationService notificationService = NotificationService.noParam();
+        await notificationService.sendDueReminderNotifications();
+      }
+      if (task == AppCache.taskName) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        AppCachePref(pref: pref).clear();
+      }
+      return Future.value(true);
+    } catch (error) {
+      // ignore: avoid_print
+      print('There is an error in the task $task: $error');
+      return Future.error(error);
+    }
+  });
+}
+
+/// Default main method
 void main() async {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.containsKey('serverKey');
-    final AppHttpClient http = AppHttpClient();
-    final Environment env = Environment(
-      prefs: prefs,
-      http: http,
-      backendVersion: "",
-      credentials: Credentials(
-        username: "anonymous",
-        email: "not@an.email",
-      ),
-      notificationDispatcher: [],
-      eventTypes: [],
-      plants: [],
-    );
+  const String environment =
+      String.fromEnvironment('ENV', defaultValue: 'prod');
+  WidgetsFlutterBinding.ensureInitialized();
 
-    if (isLoggedIn) {
-      if (prefs.containsKey('serverURL')) {
-        final String? serverURL = prefs.getString("serverURL");
-        if (serverURL != null) {
-          http.backendUrl = serverURL;
-        }
-      }
-      if (prefs.containsKey('serverKey')) {
-        final String? serverKey = prefs.getString("serverKey");
-        if (serverKey != null) {
-          http.key = serverKey;
-        }
-      }
-      if (prefs.containsKey('username')) {
-        final String? username = prefs.getString("username");
-        if (username != null) {
-          env.credentials.username = username;
-        }
-      }
-      if (prefs.containsKey('email')) {
-        final String? email = prefs.getString("email");
-        if (email != null) {
-          env.credentials.email = email;
-        }
-      }
-    }
+  await Workmanager().initialize(
+    callbackDispatcher,
+    //isInDebugMode: true,
+  );
 
-    Locale? prefSavedLocale;
-    if (prefs.containsKey('language_code')) {
-      prefSavedLocale = Locale(
-          prefs.getString('language_code')!, prefs.getString('country_code'));
-    }
+  await NotificationService.noParam().initialize();
 
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => EventsNotifier()),
-          ChangeNotifierProvider(create: (context) => PhotosNotifier()),
-          ChangeNotifierProvider(create: (context) => NotifyConfNotifier()),
-          ChangeNotifierProvider(create: (context) => LocaleProvider()),
-        ],
-        child: Container(
-          color: const Color(0xFF061913),
-          child: Center(
-            child: SizedBox(
-              width: maxWidth,
-              child: MyApp(
-                env: env,
-                isLoggedIn: isLoggedIn,
-                prefSavedLocale: prefSavedLocale,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }, (error, stack) {
-    if (error is AppException) {
-      ToastificationToastManager().showToast(navigatorKey.currentContext!,
-          ToastNotificationType.error, error.cause);
-    }
-  });
+  Duration cacheRetention = Duration(days: 7);
+  Workmanager().registerPeriodicTask(
+    "${AppCache.taskName}_${DateTime.timestamp()}",
+    AppCache.taskName,
+    initialDelay: cacheRetention,
+    frequency: cacheRetention,
+  );
+
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  SingleChildWidget cacheProvider = Provider<AppCache>(
+    create: (context) => AppCachePref(pref: pref),
+  );
+  SingleChildWidget searchProvider = Provider(
+    create: (context) => SpeciesSearcherFacade(
+      localSearcher: context.read(),
+      floraCodexSearcher: context.read(),
+      cache: context.read(),
+    ),
+  );
+  SingleChildWidget prefProvider = Provider<SharedPreferences>(
+    create: (context) => pref,
+  );
+
+  Logger.root.level = "dev" == environment ? Level.ALL : Level.WARNING;
+
+  runApp(
+    MultiProvider(
+      providers: [...providersLocal, cacheProvider, searchProvider, prefProvider],
+      child: const MainApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-  final Environment env;
-  final bool isLoggedIn;
-  final Locale? prefSavedLocale;
-
-  const MyApp({
-    super.key,
-    required this.env,
-    required this.isLoggedIn,
-    this.prefSavedLocale,
-  });
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  Locale? _updatedLocale;
-
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<LocaleProvider>(context, listen: false).addListener(() async {
-      final prefs = await SharedPreferences.getInstance();
-      if (prefs.containsKey('language_code')) {
-        _updatedLocale = Locale(
-            prefs.getString('language_code')!, prefs.getString('country_code'));
-      }
-    });
-  }
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final localeProvider = Provider.of<LocaleProvider>(context);
-
-    return MaterialApp(
-      title: 'Plant-it',
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: _updatedLocale ?? widget.prefSavedLocale ?? localeProvider.locale,
-      theme: theme,
-      home: widget.isLoggedIn
-          ? SplashPage(env: widget.env)
-          : SetServer(env: widget.env),
-    );
+    // see https://github.com/material-foundation/flutter-packages/issues/574#issuecomment-2635023116
+    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+      return MaterialApp.router(
+        localizationsDelegates: L.localizationsDelegates,
+        supportedLocales: L.supportedLocales,
+        scrollBehavior: AppCustomScrollBehavior(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: lightColorScheme?.primary ?? Colors.green,
+            dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+            brightness: Brightness.light,
+          ),
+        ),
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: darkColorScheme?.primary ?? Colors.green,
+            dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+            brightness: Brightness.dark,
+          ),
+        ),
+        themeMode: ThemeMode.system,
+        routerConfig: router(),
+      );
+    });
   }
 }

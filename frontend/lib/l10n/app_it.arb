@@ -1,109 +1,11 @@
 {
-  "enterValue": "Insertisci un valore",
-  "enterValidURL": "Inserisci un indirizzo valido",
-  "go": "Avanti",
-  "noBackend": "Impossibile collegarsi al server",
-  "ok": "Ok",
-  "serverURL": "Indirizzo del server",
-  "username": "Username",
-  "password": "Password",
-  "login": "Accedi",
-  "badCredentials": "Password o utente errati",
-  "loginMessage": "Bentornato su",
-  "signupMessage": "Benvenuto su",
-  "appName": "Plant-it",
-  "forgotPassword": "Password dimenticata?",
-  "areYouNew": "Non hai un account?",
-  "createAccount": "Crea un account",
-  "email": "Email",
-  "usernameSize": "Lo username deve avere tra 3 e 20 caratteri",
-  "passwordSize": "La password deve avere tra 6 e 20 caratteri",
-  "enterValidEmail": "Inserisci un'email valida",
-  "alreadyRegistered": "Hai già un account?",
-  "signup": "Crea account",
-  "generalError": "Errore durante l'operazione",
-  "error": "Errore",
-  "details": "Dettagli",
-  "insertBackendURL": "Ciao! Pronto per iniziare? Cominciamo impostando l'URL del server a cui connettersi.",
-  "loginTagline": "Esplora la natura e coltiva la tua passione!",
-  "singupTagline": "Unisciti alla nostra community!",
-  "sentOTPCode": "Inserisci il codice inviato all'indirizzo: ",
-  "verify": "Verify",
-  "resendCode": "Resend code",
-  "otpCode": "Codice OTP",
-  "splashLoading": "Beep boop beep... Sto scaricando i dati dal server!",
-  "welcomeBack": "Bentornato",
-  "hello": "Ciao, {userName}",
-  "@hello": {
-    "placeholders": {
-      "userName": {
-        "type": "String",
-        "example": "Mario"
-      }
-    }
-  },
-  "search": "Cerca",
-  "today": "oggi",
-  "yesterday": "ieri",
-  "nDaysAgo": "{count} {count, plural, =1{giorno} other{giorni}} fa",
-  "@nDaysAgo": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nDaysInFuture": "{count} {count, plural, =1{giorno} other{giorni}} nel futuro (cosaaa?)",
-  "@nDaysInFuture": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nMonthsAgo": "{count} {count, plural, =1{mese} other{mesi}} fa",
-  "@nMonthsAgo": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nYearsAgo": "{count} {count, plural, =1{anno} other{anni}} fa",
-  "@nYearsAgo": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "events": "Eventi",
-  "plants": "Piante",
-  "or": "oppure",
+  "searchYourPlants": "Cerca nelle tue piante",
+  "filterActivities": "Filtra Attività",
   "filter": "Filtra",
-  "seeding": "seminazione",
-  "watering": "innaffiatura",
-  "fertilizing": "fertilizzazione",
-  "biostimulating": "biostimulazione",
-  "misting": "nebulizzazione",
-  "transplanting": "trapianto",
-  "water_changing": "cambio acqua",
-  "observation": "osservazione",
-  "treatment": "trattamento",
-  "propagating": "propagazione",
-  "pruning": "potatura",
-  "repotting": "rinvaso",
-  "recents": "Recenti",
-  "addNewEvent": "Crea un evento",
-  "selectDate": "Seleziona la data",
-  "selectEvents": "Seleziona gli eventi",
-  "selectPlants": "Seleziona le piante",
-  "nEventsCreated": "{count} {count, plural, =1{nuovo} other{nuovi}} {count, plural, =1{evento} other{eventi}} {count, plural, =1{creato} other{creati}}",
-  "@nEventsCreated": {
+  "eventTypes": "Tipi Evento",
+  "nEventTypes": "{count} tipi evento",
+  "@nEventTypes": {
+    "description": "A plural event type message",
     "placeholders": {
       "count": {
         "type": "num",
@@ -111,320 +13,369 @@
       }
     }
   },
-  "addNote": "Aggiungi una nota",
-  "enterNote": "Inserisci la nota",
-  "selectAtLeastOnePlant": "Seleziona almeno una pianta",
-  "selectAtLeastOneEvent": "Seleziona almeno un evento",
-  "eventSuccessfullyUpdated": "Evento modificato correttamente",
-  "editEvent": "Modifica evento",
-  "eventSuccessfullyDeleted": "Evento eliminato correttamente",
-  "noInfoAvailable": "Nessuna informazione",
-  "species": "Specie",
-  "plant": "Pianta",
-  "scientificClassification": "Classificazione botanica",
-  "family": "Famiglia",
-  "genus": "Genere",
-  "synonyms": "Sinonimi",
+  "whichEventsYouWantToAdd": "Quali eventi vuoi aggiungere?",
+  "plants": "Piante",
+  "nPlants": "{count} piant{count, plural, =1 {a} other {e}}",
+  "@nPlants": {
+    "description": "A plural plant message",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "whichPlantsYouWantToAdd": "Quali piante vuoi aggiungere?",
+  "error": "Errore",
+  "tryAgain": "Riprova",
+  "confirmDelete": "Conferma eliminazione",
+  "areYouSureYouWantToDeleteThisEvent": "Sei sicuro di rimuovere l'evento?",
+  "cancel": "Annulla",
+  "delete": "Rimuovi",
+  "eventDeleted": "Evento rimosso",
+  "edit": "Modifica",
+  "eventCreated": "Evento creato",
+  "markDone": "Segna fatto",
+  "reminder": "Promemoria",
+  "back": "Indietro",
+  "next": "Avanti",
+  "confirm": "Conferma",
+  "createEvent": "Crea Evento",
+  "create": "Crea",
+  "eventsCreated": "Evento creato",
+  "save": "Salva",
+  "editTheEvent": "Modifica l'evento",
+  "eventUpdated": "Evento aggiornato",
+  "selectTheEventType": "Seleziona il tipo di evento",
+  "selectThePlant": "Seleziona la pianta",
+  "nextActions": "Prossime azioni",
+  "home": "Home",
+  "calendar": "Calendario",
+  "search": "Cerca",
+  "more": "Altro",
+  "addPlant": "Aggiungi Pianta",
+  "add": "Aggiungi",
+  "plantAdded": "Pianta aggiunta",
+  "location": "Posizione",
+  "name": "Nome",
+  "price": "Prezzo",
+  "editPlant": "Modifica Pianta",
+  "plantUpdated": "Pianta aggiornata",
+  "deleteImage": "Elimina immagine",
+  "areYouSureYouWantToDeleteThisImage": "Sicuro di voler rimuovere l'immagine?",
+  "info": "Info",
+  "imageInfo": "Info sull'immagine",
+  "ok": "Ok",
+  "download": "Download",
+  "unsetAsAvatar": "Rimuovi come Avatar",
+  "setAsAvatar": "Seleziona come Avatar",
+  "information": "Informazioni",
   "care": "Cura",
+  "reminders": "Promemoria",
+  "events": "Eventi",
+  "gallery": "Galleria",
+  "duplicate": "Duplica",
+  "plantDuplicated": "Pianta duplicata",
+  "plantDeleted": "Pianta eliminata",
+  "searchGreenFriends": "Cerca nuovi amici",
+  "note": "Note",
+  "update": "Aggiorna",
+  "custom": "creato",
+  "floraCodex": "Flora Codex",
+  "seller": "Venditore",
+  "remove": "Rimuovi",
+  "createEventType": "Crea Tipo Evento",
+  "selectAColor": "Seleziona un colore",
+  "select": "Seleziona",
+  "whichColorYouWantToUse": "Quale colore vuoi usare?",
+  "description": "Descrizione",
+  "whichIconYouWantToUse": "Quale icona vuoi usare?",
+  "filterIcons": "Filtra icone",
+  "insertAName": "Inserisci un nome",
+  "editEventType": "Modifica Tipo Evento",
+  "eventTypeUpdated": "Tipo Evento aggiornato",
+  "areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents": "Sicuro di voler eliminare il tipo evento e tutti gli eventi collegati?",
+  "eventTypeDeleted": "Tipo Evento eliminato",
+  "createReminder": "Crea Promemoria",
+  "reminderCreated": "Promemoria creato",
+  "whichEventTypeYouWantToSet": "Quale tipo evento vuoi selezionare?",
+  "quantity": "Quantità",
+  "whichPlantsYouWantToSet": "Quale pianta vuoi selezionare?",
+  "editReminder": "Modifica Promemoria",
+  "reminderUpdated": "Promemoria aggiornato",
+  "whichEventsYouWantToSet": "Quali eventi vuoi selezionare?",
+  "reminderDeleted": "Promemoria eliminato",
+  "areYouSureYouWantToDeleteTheReminder": "Sicuro di voler eliminare il promemoria?",
+  "dataSources": "Sorgenti dei dati",
+  "configureTheFloraCodexSettings": "Configura le impostazioni di Flora Codex",
+  "insertTheFloraCodexApiKey": "Inserisci l'API Key di Flora Codex",
+  "enterApiKey": "Inserisci l'API Key",
+  "enableDataSource": "Attiva la sorgente dei dati",
+  "apiKey": "API Key",
+  "notProvided": "non specificata",
+  "appInfo": "Informazioni sull'app",
+  "appVersion": "Versione dell'app",
+  "sourceCode": "Codice sorgente",
+  "support": "Supporta ♥️",
+  "notifications": "Notifiche",
+  "enableNotifications": "Attiva Notifiche",
+  "selectWeekdaysAndTimes": "Seleziona giorni e orari",
+  "pickTime": "Scegli orario",
+  "done": "Fatto",
+  "aboutPlantIt": "Plant-it info",
+  "manageTheEventTypes": "Gestisci i tipi di evento",
+  "manageTheReminders": "Gestisci i promemoria",
+  "manageTheDataSources": "Gestisci le sorgenti di dati",
+  "configureWhenAndIfNotificationsAreReceived": "Configura se e quando ricevere notifiche",
+  "detailsAboutTheApp": "Dettagli sull'app",
+  "yourSupportHelpsUsGrow": "Il tuo supporto ci aiuta a crescere!",
+  "supportTheProject": "Supporta il progetto",
+  "whySupportPlantIt": "Perchè supportare Plant-it?",
+  "openSourceProjectThatBenefitsEveryone": "Progetto open-source utilizzabile da chiunque",
+  "yourDonationsHelpUsImproveTheApp": "Le donazioni ci aiutano a migliorare l'app",
+  "supportNewFeaturesAndUpdates": "Supporta nuovi aggiornamenti",
+  "donateNow": "Dona Ora",
+  "createSpecies": "Crea Specie",
+  "speciesCreated": "Specie creata",
+  "avatar": "Avatar",
+  "noAvatar": "Nessun avatar",
+  "uploadPhoto": "Carica foto",
+  "choosePhoto": "Scegli foto",
+  "noPhoto": "Nessuna foto",
+  "useWebImage": "Usa immagine web",
+  "url": "Url",
   "light": "Luce",
   "humidity": "Umidità",
-  "maxTemp": "Temperatura massima",
-  "minTemp": "Temperatura minima",
-  "minPh": "minimo ph",
-  "maxPh": "Massimo ph",
-  "info": "Informazioni",
-  "addPhotos": "Aggiungi foto",
-  "addEvents": "Aggiungi eventi",
-  "modifyPlant": "Modifica pianta",
-  "removePlant": "Elimina pianta",
-  "useBirthgiorno": "Usa compleanno",
-  "birthgiorno": "Compleanno",
-  "avatar": "Avatar",
-  "note": "Note",
-  "stats": "Statistiche",
-  "eventStats": "Statistiche degli eventi",
-  "age": "Età",
-  "newBorn": "Appena nata",
-  "nDays": "{count} {count, plural, =1{giorno} other{giorni}}",
-  "@nDays": {
+  "temperature": "Temperatura",
+  "ph": "Ph",
+  "genus": "Genere",
+  "family": "Famiglia",
+  "synonym": "Sinonimo",
+  "addSynonym": "Aggiungi sinonimo",
+  "classification": "Classificazione",
+  "species": "Specie",
+  "synonyms": "Sinonimi",
+  "editSpecies": "Modifica Specie",
+  "speciesUpdated": "Specie aggiornata",
+  "addToCollection": "Aggiungi alla collezione",
+  "showNextNotificationsDateTime": "Mostra prossimi giorni e orari delle notifiche",
+  "date": "Data",
+  "plant": "Pianta",
+  "low": "Basso",
+  "medium": "Medio",
+  "high": "Alto",
+  "sunlight": "Luce",
+  "min": "min",
+  "max": "max",
+  "errorWithMessage": "Errore: {message}",
+  "@errorWithMessage": {
+    "description": "An error with a message",
     "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nMonths": "{count} {count, plural, =1{mese} other{mesi}}",
-  "@nMonths": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nYears": "{count} {count, plural, =1{anno} other{anni}}",
-  "@nYears": {
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nMonthsAndDays": "{months} {months, plural, =1{mese} other{mesi}}, {days} {days, plural, =1{giorno} other{giorni}}",
-  "@nMonthsAndDays": {
-    "placeholders": {
-      "months": {
-        "type": "num",
-        "format": "compact"
-      },
-      "days": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nYearsAndDays": "{years} {years, plural, =1{anno} other{anni}}, {days} {days, plural, =1{giorno} other{giorni}}",
-  "@nYearsAndDays": {
-    "placeholders": {
-      "years": {
-        "type": "num",
-        "format": "compact"
-      },
-      "days": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nYearsAndMonths": "{years} {years, plural, =1{anno} other{anni}}, {months} {months, plural, =1{mese} other{mesi}}",
-  "@nYearsAndMonths": {
-    "placeholders": {
-      "years": {
-        "type": "num",
-        "format": "compact"
-      },
-      "months": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "nYearsAndMonthsAndDays": "{years} {years, plural, =1{anno} other{anni}}, {months} {months, plural, =1{mese} other{mesi}}, {days} {days, plural, =1{giorno} other{giorni}}",
-  "@nYearsAndMonthsAndDays": {
-    "placeholders": {
-      "years": {
-        "type": "num",
-        "format": "compact"
-      },
-      "months": {
-        "type": "num",
-        "format": "compact"
-      },
-      "days": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "name": "Nome",
-  "nOutOf": "{value} su {max}",
-  "@nOutOf": {
-    "placeholders": {
-      "value": {
-        "type": "num",
-        "format": "compact"
-      },
-      "max": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "temp": "{value} °C",
-  "@temp": {
-    "placeholders": {
-      "value": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "numberOfPhotos": "Numero di foto",
-  "numberOfEvents": "Numbero di eventi",
-  "searchInYourPlants": "Cerca le tue piante",
-  "searchNewGreenFriends": "Cerca nuovi amici verdi",
-  "custom": "Creato",
-  "addPlant": "Aggiungi pianta",
-  "yes": "Sì",
-  "no": "No",
-  "pleaseConfirm": "Richiesta conferma",
-  "areYouSureToRemoveEvent": "Sicuro di voler eliminare l'evento?",
-  "areYouSureToRemoveReminder": "Sicuro di voler eliminare il reminder?",
-  "areYouSureToRemoveSpecies": "Sicuro di voler eliminare la specie?",
-  "areYouSureToRemovePlant": "Sicuro di voler eliminare la pianta?",
-  "purchasedPrice": "Prezzo",
-  "seller": "Venditore",
-  "location": "Posizione",
-  "currency": "Valua",
-  "plantUpdatedSuccessfully": "Pianta modificata correttamente",
-  "plantCreatedSuccessfully": "Pianta creata correttamente",
-  "insertPrice": "Inserisci il prezzo",
-  "noBirthday": "Nessun compleanno",
-  "birthday": "Compleanno",
-  "appVersion": "Versione dell'app",
-  "serverVersion": "Versione del server",
-  "documentation": "Documentazione",
-  "openSource": "Codice sorgente",
-  "reportIssue": "Segnala problema",
-  "logout": "Esci",
-  "eventCount": "Numero eventi",
-  "plantCount": "Numero piante",
-  "speciesCount": "Numero specie",
-  "imageCount": "Numero immagini",
-  "unknown": "Sconosciuto",
-  "account": "Profilo",
-  "changePassword": "Cambia password",
-  "more": "Altro",
-  "editProfile": "Modifica il profilo",
-  "currentPassword": "Password attuale",
-  "updatePassword": "Modifica password",
-  "updateProfile": "Modifica profilo",
-  "newPassword": "Nuova password",
-  "removeEvent": "Elimina evento",
-  "appLog": "Log dell'applicazione",
-  "passwordUpdated": "Password modificata",
-  "userUpdated": "Account modificato",
-  "noChangesDetected": "Nessuna modifica rilevata",
-  "plantDeletedSuccessfully": "Pianta rimossa",
-  "server": "Server",
-  "notifications": "Notifiche",
-  "changeServer": "Modifica server",
-  "serverUpdated": "Server modificato",
-  "changeNotifications": "Modifica notifiche",
-  "updateNotifications": "Modifica notifiche",
-  "notificationUpdated": "Notifiche modificate",
-  "supportTheProject": "Supporta il progetto",
-  "buyMeACoffee": "Offrimi un caffè",
-  "gallery": "Galleria",
-  "photosOf": "Foto di {name}",
-  "@photosOf": {
-    "placeholders": {
-      "name": {
+      "message": {
         "type": "String"
       }
     }
   },
-  "nPhoto": "{count, plural, =1{Caricata} other{Caricate}} {count} {count, plural, =1{nuova} other{nuove}} foto",
-  "@nPhoto": {
+  "color": "Colore",
+  "red": "rosso",
+  "green": "verde",
+  "blue": "blu",
+  "white": "bianco",
+  "teal": "verde acqua",
+  "yellow": "giallo",
+  "icon": "Icona",
+  "every": "Ogni",
+  "repeatAfter": "Ripeti dopo",
+  "repeatAfterMessage": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@repeatAfterMessage": {
+    "description": "A representation of repeat after",
     "placeholders": {
-      "count": {
+      "quantity": {
         "type": "num",
         "format": "compact"
-      }
-    }
-  },
-  "errorCreatingPlant": "Errore durante la creazione della pianta",
-  "noImages": "Nessuna immagine",
-  "errorCreatingSpecies": "Errore durante la creazione della specie",
-  "errorUpdatingSpecies": "Errore durante la modifica della specie",
-  "speciesUpdatedSuccessfully": "Specie modificata correttamente",
-  "addCustom": "Crea nuova",
-  "speciesCreatedSuccessfully": "Specie creata correttamente",
-  "uploadPhoto": "Carica una foto",
-  "linkURL": "Usa un link",
-  "url": "URL",
-  "submit": "Conferma",
-  "cancel": "Annulla",
-  "actions": "Azioni",
-  "areYouSureToRemovePhoto": "Sicuro di voler eliminare la foto?",
-  "photoSuccessfullyDeleted": "Foto eliminata correttamente",
-  "errorUpdatingPlant": "Errore durante la modifica della pianta",
-  "reminders": "Avvisi",
-  "selectStartDate": "Seleziona data di inizio",
-  "selectEndDate": "Seleziona data di fine",
-  "addNewReminder": "Aggiungi nuovo avviso",
-  "noEndDate": "Nessuna data di fine",
-  "frequency": "Frequenza",
-  "repeatAfter": "Ripeti dopo",
-  "addNew": "Aggiungi nuovo",
-  "reminderCreatedSuccessfully": "Avviso creato correttamente",
-  "startAndEndDateOrderError": "La data di inizio deve essere prima di quella di fine",
-  "reminderUpdatedSuccessfully": "Avviso modificato correttamente",
-  "reminderDeletedSuccessfully": "Avviso rimosso correttamente",
-  "errorResettingPassword": "Errore durante il ripristino della password",
-  "resetPassword": "Ripristina password",
-  "resetPasswordHeader": "Inserisci lo username qui sotto per inviare una richiesta di ripristino password",
-  "editReminder": "Modifica avviso",
-  "ntfyServerUrl": "URL del server ntfy",
-  "ntfyServerTopic": "Topic del server ntfy",
-  "ntfyServerUsername": "Username per il server ntfy",
-  "ntfyServerPassword": "Password per il server ntfy",
-  "ntfyServerToken": "Token per il server ntfy",
-  "enterValidTopic": "Inserisci un topic valido",
-  "ntfySettings": "Impostazioni ntfy",
-  "ntfySettingsUpdated": "Configurazioni ntfy aggiornate correttamente",
-  "modifySpecies": "Modifica specie",
-  "removeSpecies": "Elimina specie",
-  "speciesDeletedSuccessfully": "Specie eliminata correttamente",
-  "success": "Successo",
-  "warning": "Attenzione",
-  "ops": "Ops!",
-  "changeLanguage": "Cambia lingua",
-  "gotifyServerUrl": "URL del server gotify",
-  "gotifyServerToken": "Token per il server gotify",
-  "gotifySettings": "Impostazioni gotify",
-  "gotifySettingsUpdated": "Configurazioni gotify aggiornate correttamente",
-  "activity": "Attività",
-  "fromDate": "dal",
-  "frequencyEvery": "ogni {amount} {unit}",
-  "@frequencyEvery": {
-    "placeholders": {
-      "amount": {
-        "type": "num",
-        "example": "2"
       },
       "unit": {
-        "type": "String",
-        "example": "giorni"
+        "type": "String"
       }
     }
   },
-  "day": "{count, plural, =1{giorno} other{giorni}}",
-  "@day": {
+  "frequencyEvery": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@frequencyEvery": {
+    "description": "A representation of frequency",
     "placeholders": {
-      "count": {
+      "quantity": {
         "type": "num",
-        "example": "1"
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
       }
     }
   },
-  "week": "{count, plural, =1{settimana} other{settimane}}",
-  "@week": {
+  "afterMessage": "Dopo {quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@afterMessage": {
+    "description": "A representation of after",
     "placeholders": {
-      "count": {
+      "quantity": {
         "type": "num",
-        "example": "1"
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
       }
     }
   },
-  "month": "{count, plural, =1{mese} other{mesi}}",
-  "@month": {
+  "frequency": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@frequency": {
+    "description": "A representation of time",
     "placeholders": {
-      "count": {
+      "quantity": {
         "type": "num",
-        "example": "1"
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
       }
     }
   },
-  "year": "{count, plural, =1{anno} other{anni}}",
-  "@year": {
+  "day": "giorno",
+  "week": "settimane",
+  "month": "mesi",
+  "year": "anni",
+  "reminderDescription": "Ogni{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}} da {startDate}{endDate, select, null {} other { a {endDate}}}",
+  "@reminderDescription": {
+    "description": "A description of reminder",
     "placeholders": {
-      "count": {
+      "quantity": {
         "type": "num",
-        "example": "1"
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "startDate": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endDate": {
+        "type": "String"
       }
     }
-  }
+  },
+  "start": "Inizio",
+  "plantClassificationInfo": "{name} è una pianta della specie |{species}|{genus, select, null {} other {, genere |{genus}|}}{family, select, null {} other {, famiglia |{family}|}}.",
+  "@plantClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesSynonyms": "{synonyms, select, null {{species} non ha sinonimi} other {{species} è conosciuta anche come: {synonyms}}}.",
+  "@speciesSynonyms": {
+    "description": "A list of species synonyms",
+    "placeholders": {
+      "synonyms": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesClassificationInfo": "{species} è una specie del genere {genus, select, null {sconosciuto} other {|{genus}|}} e famiglia {family, select, null {sconosciuta} other {|{family}|}}.",
+  "@speciesClassificationInfo": {
+    "description": "A description of a plant classification",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "eventType": "Tipo Evento",
+  "end": "Fine",
+  "databaseAndCache": "Database e Cache",
+  "manageDatabaseAndCache": "Gestisci le impostazioni del Database e della Cache",
+  "clearCache": "Svuota la Cache",
+  "cacheCleaned": "Cache svuotata",
+  "noSynonyms": "Nessun sinonimo conosciuto",
+  "areYouSureYouWantToDeleteThisPlant": "Sicuro di voler eliminare questa pianta?",
+  "areYouSureYouWantToDeleteThisSpecies": "Sicuro di voler eliminare questa specie e tutte le tue piante collegate?",
+  "speciesDeleted": "Specie eliminata",
+  "noPlantsFound": "Nessuna pianta trovata",
+  "yourPlantWillAppearHere": "Le tue piante appariranno qui una volta aggiunte alla tua collezione",
+  "howToAddPlants": "Come aggiungere una pianta",
+  "addPlantInstruction": "Questa app funziona con piante di varie specie.\n\nPuoi aggiungere una nuova pianta cercando prima la specie (o aggiungendone una nuova) e poi collegando una pianta ad essa.\n\nPer iniziare, cerca una specie.",
+  "searchASpecies": "Cerca una specie",
+  "noSpeciesFound": "Nessuna specie trovata",
+  "searchAndAddSpeciesInstructions": "Puoi aggiungere una nuova specie, oppure puoi collegare l'app a un servizio per accedere a ulteriori specie.",
+  "connectToAService": "Connetti l'app ad un servizio",
+  "noInfoAvailable": "Nessuna informazione disponibile",
+  "noReminder": "Nessun promemoria trovato.\n\nCrea un nuovo promemoria per le tue piante per ricevere notifiche e vedere le prossime azioni da fare.",
+  "today": "Oggi",
+  "tomorrow": "Domani",
+  "yesterday": "Ieri",
+  "inTime": "in {quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}}",
+  "@inTime": {
+    "description": "In quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "agoTime": "{quantity} {unit, select, days{giorn{quantity, plural, =1{o} other {i}}} months{mes{quantity, plural, =1{e} other {i}}} weeks{settiman{quantity, plural, =1{a} other {e}}} other{ann{quantity, plural, =1{o} other {i}}}} fa",
+  "@agoTime": {
+    "description": "Ago quantity time",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalInfo": "Altre informazioni",
+  "floraCodexDescription": "FloraCodex è un servizio che fornisce accesso a un database completo di specie, comprese le loro denominazioni scientifiche, nomi comuni e altre informazioni rilevanti. Per utilizzare questo servizio, è necessario ottenere una chiave API.",
+  "floraCodexGetApiKey": "Per ottenere la tua chiave API, visita il sito web di FloraCodex, oppure clicca qui.",
+  "reloadNotificationMessages": "Ricarica i messaggi delle notifiche",
+  "notificationMessagesReloaded": "Messaggi delle notifiche ricaricati, chiudi e apri di nuovo l'app",
+  "notificationTitle1": "Ops, l'hai fatto di nuovo!",
+  "notificationTitle2": "SOS Piante!",
+  "notificationTitle3": "È tempo di diventare un sussurratore di piante!",
+  "notificationTitle4": "Non oggi, Pianta!",
+  "notificationTitle5": "Caffeina per piante necessaria!",
+  "notificationTitle6": "La pianta sta chiamando!",
+  "notificationTitle7": "Chiama la Squadra Verde!",
+  "notificationTitle8": "Drin drin...",
+  "notificationBody1": "|emoji| |plantName| ha bisogno del suo |eventType|. Non farlo aspettare!",
+  "notificationBody2": "|emoji| |plantName| sta chiamando per |eventType|. È tempo di salvare la situazione!",
+  "notificationBody3": "|emoji| |plantName| ha bisogno di |eventType|. Ti sta aspettando!",
+  "notificationBody4": "|emoji| |plantName| è stanco di aspettare per |eventType|. Mostragli un po' di affetto!",
+  "notificationBody5": "|emoji| |plantName| è in ritardo per |eventType|. Dagli una spinta!",
+  "notificationBody6": "|emoji| |plantName| è pronto per |eventType|. Non deluderlo!",
+  "notificationBody7": "|emoji| |plantName| ha bisogno del suo |eventType|. Sei l'eroe che merita!",
+  "notificationBody8": "|emoji| |plantName| sente la mancanza del suo |eventType|. È tempo di renderlo felice di nuovo!"
 }

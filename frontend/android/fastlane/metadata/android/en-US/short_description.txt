@@ -1,1 +1,1 @@
-This is a client app for the self-hostable Plant-it Server
+Open-source gardening companion app that helps you care for your green friends.

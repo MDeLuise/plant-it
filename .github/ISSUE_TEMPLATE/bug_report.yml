@@ -38,14 +38,6 @@ body:
     validations:
       required: true
   - type: textarea
-    id: logs
-    attributes:
-      label: Logs
-      description: If applicable, add complete logs from the system logs.
-      render: shell
-    validations:
-      required: false
-  - type: textarea
     id: screenshots
     attributes:
       label: Screenshots
@@ -53,7 +45,7 @@ body:
     validations:
       required: false
 
-  # Host details
+  # App details
   - type: input
     id: plant-it-version
     attributes:
@@ -61,39 +53,10 @@ body:
       placeholder: v1.0.0
     validations:
       required: true
-  - type: dropdown
-    id: plant-it-setup-method
-    attributes:
-      label: Setup Method
-      description: How did you installed Plant-it?
-      options:
-        - Docker
-        - Non-docker
-    validations:
-      required: true
-  - type: dropdown
+  - type: input
     id: plant-it-setup-os
     attributes:
-      label: Operating System
-      description: In which operating system does the server run?
-      options:
-        - Linux (Ubuntu, CentOS,...)
-        - Windows
-        - macOS
-        - other (please specify in description)
+      label: Phone Model and Operating System version
+      description: In which operating system does the app run?
     validations:
       required: true
-
-  # Client details
-  - type: textarea
-    id: client-details
-    attributes:
-      label: Client details
-      description: Details about your browser and operating system used to access Plant-it.
-      placeholder: |
-        - OS: [e.g. Windows, macOS, iOS, Android]
-        - Browser [e.g. Chrome, Firefox, Safari]
-        - Browser Version [e.g. 101.4]
-        - Android APK
-    validations:
-      required: false

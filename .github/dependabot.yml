@@ -1,19 +1,5 @@
 version: 2
 updates:
-  # Maintain dependencies for server
-  - package-ecosystem: "maven"
-    directory: "/backend"
-    schedule:
-      interval: "daily"
-      time: "06:30"
-      timezone: "Europe/Rome"
-    open-pull-requests-limit: 5
-    labels:
-      - "Status: Review Needed"
-      - "Type: Maintenance"
-      - "Priority: Low"
-
-  # Maintain dependencies for app
   - package-ecosystem: "pub"
     directory: "/frontend"
     schedule:
