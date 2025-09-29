@@ -8,7 +8,7 @@ on:
         type: boolean
 
 env:
-  FLUTTER_VERSION: 3.24.3
+  FLUTTER_VERSION: 3.32.8
 
 jobs:
   create_apk:
