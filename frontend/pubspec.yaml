@@ -2,7 +2,7 @@ name: plant_it
 description: "Open source gardening companion app 🪴"
 publish_to: 'none'
 
-version: 1.0.0-beta3+10
+version: 1.0.0+10
 
 environment:
   sdk: ^3.5.3
