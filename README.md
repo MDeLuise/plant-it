@@ -55,6 +55,4 @@ Please refer to the [Contributing Guidelines](contributing.md) for detailed inst
 
 ### Translations
 
-Translations status via weblate:
-
-...
+If you're interested in contributing transactions to enhance the app, you can get started by following the guide provided [here](https://github.com/MDeLuise/plant-it/discussions/148). Your support and contributions are greatly appreciated.
