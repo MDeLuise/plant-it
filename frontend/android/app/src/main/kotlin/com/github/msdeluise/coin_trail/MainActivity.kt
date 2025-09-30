@@ -1,4 +1,4 @@
-package com.github.msdeluise.plant_it
+package com.github.mdeluise.plantit
 
 import io.flutter.embedding.android.FlutterActivity
 
