@@ -280,7 +280,7 @@
       }
     }
   },
-  "speciesClassificationInfo": "{species} is a species of genus {genus, select, null {uknown} other {|{genus}|}} and family {family, select, null {uknown} other {|{family}|}}.",
+  "speciesClassificationInfo": "{species} is a species of genus {genus, select, null {unknown} other {|{genus}|}} and family {family, select, null {unknown} other {|{family}|}}.",
   "@speciesClassificationInfo": {
     "description": "A description of a plant classification",
     "placeholders": {

@@ -1,0 +1,368 @@
+{
+  "searchYourPlants": "Rechercher vos plantes",
+  "filterActivities": "Filtrer les activités",
+  "filter": "Filtrer",
+  "eventTypes": "Types d'événements",
+  "nEventTypes": "{count} type{count, plural, =1 {} other {s}} d'événement{count, plural, =1 {} other {s}}",
+  "@nEventTypes": {
+    "description": "Un message au pluriel pour les types d'événements",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "whichEventsYouWantToAdd": "Quels événements souhaitez-vous ajouter ?",
+  "plants": "Plantes",
+  "nPlants": "{count} plante{count, plural, =1 {} other {s}}",
+  "@nPlants": {
+    "description": "Un message au pluriel pour les plantes",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "whichPlantsYouWantToAdd": "Quelles plantes souhaitez-vous ajouter ?",
+  "error": "Erreur",
+  "tryAgain": "Réessayer",
+  "confirmDelete": "Confirmer la suppression",
+  "areYouSureYouWantToDeleteThisEvent": "Êtes-vous sûr de vouloir supprimer cet événement ?",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "eventDeleted": "Événement supprimé",
+  "edit": "Modifier",
+  "eventCreated": "Événement créé",
+  "markDone": "Marquer comme terminé",
+  "reminder": "Rappel",
+  "back": "Retour",
+  "next": "Suivant",
+  "confirm": "Confirmer",
+  "createEvent": "Créer un événement",
+  "create": "Créer",
+  "eventsCreated": "Événements créés",
+  "save": "Enregistrer",
+  "editTheEvent": "Modifier l'événement",
+  "eventUpdated": "Événement mis à jour",
+  "selectTheEventType": "Sélectionner le type d'événement",
+  "selectThePlant": "Sélectionner la plante",
+  "nextActions": "Prochaines actions",
+  "home": "Accueil",
+  "calendar": "Calendrier",
+  "search": "Rechercher",
+  "more": "Plus",
+  "addPlant": "Ajouter une plante",
+  "add": "Ajouter",
+  "plantAdded": "Plante ajoutée",
+  "location": "Emplacement",
+  "name": "Nom",
+  "price": "Prix",
+  "editPlant": "Modifier la plante",
+  "plantUpdated": "Plante mise à jour",
+  "deleteImage": "Supprimer l'image",
+  "areYouSureYouWantToDeleteThisImage": "Êtes-vous sûr de vouloir supprimer cette image ?",
+  "info": "Infos",
+  "imageInfo": "Informations sur l'image",
+  "ok": "OK",
+  "download": "Télécharger",
+  "unsetAsAvatar": "Annuler l'avatar",
+  "setAsAvatar": "Définir comme avatar",
+  "information": "Informations",
+  "care": "Entretien",
+  "reminders": "Rappels",
+  "events": "Événements",
+  "gallery": "Galerie",
+  "duplicate": "Dupliquer",
+  "plantDuplicated": "Plante dupliquée",
+  "plantDeleted": "Plante supprimée",
+  "searchGreenFriends": "Rechercher des amis verts",
+  "note": "Note",
+  "update": "Mettre à jour",
+  "custom": "personnalisé",
+  "floraCodex": "Flora Codex",
+  "seller": "Vendeur",
+  "remove": "Supprimer",
+  "createEventType": "Créer un type d'événement",
+  "selectAColor": "Sélectionner une couleur",
+  "select": "Sélectionner",
+  "whichColorYouWantToUse": "Quelle couleur souhaitez-vous utiliser ?",
+  "description": "Description",
+  "whichIconYouWantToUse": "Quel icône souhaitez-vous utiliser ?",
+  "filterIcons": "Filtrer les icônes",
+  "insertAName": "Saisir un nom",
+  "editEventType": "Modifier le type d'événement",
+  "eventTypeUpdated": "Type d'événement mis à jour",
+  "areYouSureYouWantToDeleteTheEventTypeAndAllLinkedEvents": "Êtes-vous sûr de vouloir supprimer le type d'événement et tous les événements liés ?",
+  "eventTypeDeleted": "Type d'événement supprimé",
+  "createReminder": "Créer un rappel",
+  "reminderCreated": "Rappel créé",
+  "whichEventTypeYouWantToSet": "Quel type d'événement souhaitez-vous définir ?",
+  "quantity": "Quantité",
+  "whichPlantsYouWantToSet": "Quelle plante souhaitez-vous définir ?",
+  "editReminder": "Modifier le rappel",
+  "reminderUpdated": "Rappel mis à jour",
+  "whichEventsYouWantToSet": "Quels événements souhaitez-vous définir ?",
+  "reminderDeleted": "Rappel supprimé",
+  "areYouSureYouWantToDeleteTheReminder": "Êtes-vous sûr de vouloir supprimer le rappel ?",
+  "dataSources": "Sources de données",
+  "configureTheFloraCodexSettings": "Configurer les paramètres de Flora Codex",
+  "insertTheFloraCodexApiKey": "Saisir la clé API de Flora Codex",
+  "enterApiKey": "Saisir la clé API",
+  "enableDataSource": "Activer la source de données",
+  "apiKey": "Clé API",
+  "notProvided": "non fournie",
+  "appInfo": "Informations sur l'application",
+  "appVersion": "Version de l'application",
+  "sourceCode": "Code source",
+  "support": "Soutenir ♥️",
+  "notifications": "Notifications",
+  "enableNotifications": "Activer les notifications",
+  "selectWeekdaysAndTimes": "Sélectionner les jours et heures",
+  "pickTime": "Choisir l'heure",
+  "done": "Terminé",
+  "aboutPlantIt": "À propos de Plant-it",
+  "manageTheEventTypes": "Gérer les types d'événements",
+  "manageTheReminders": "Gérer les rappels",
+  "manageTheDataSources": "Gérer les sources de données",
+  "configureWhenAndIfNotificationsAreReceived": "Configurer quand et si les notifications sont reçues",
+  "detailsAboutTheApp": "Détails sur l'application",
+  "yourSupportHelpsUsGrow": "Votre soutien nous aide à grandir !",
+  "supportTheProject": "Soutenir le projet",
+  "whySupportPlantIt": "Pourquoi soutenir Plant-it ?",
+  "openSourceProjectThatBenefitsEveryone": "Projet open-source qui profite à tous.",
+  "yourDonationsHelpUsImproveTheApp": "Vos dons nous aident à améliorer l'application.",
+  "supportNewFeaturesAndUpdates": "Soutenir les nouvelles fonctionnalités et mises à jour.",
+  "donateNow": "Faire un don maintenant",
+  "createSpecies": "Créer une espèce",
+  "speciesCreated": "Espèce créée",
+  "avatar": "Avatar",
+  "noAvatar": "Aucun avatar",
+  "uploadPhoto": "Télécharger une photo",
+  "choosePhoto": "Choisir une photo",
+  "noPhoto": "Aucune photo",
+  "useWebImage": "Utiliser une image sur le web",
+  "url": "URL",
+  "light": "Lumière",
+  "humidity": "Humidité",
+  "temperature": "Température",
+  "ph": "pH",
+  "genus": "Genre",
+  "family": "Famille",
+  "synonym": "Synonyme",
+  "addSynonym": "Ajouter un synonyme",
+  "classification": "Classification",
+  "species": "Espèce",
+  "synonyms": "Synonymes",
+  "editSpecies": "Modifier l'espèce",
+  "speciesUpdated": "Espèce mise à jour",
+  "addToCollection": "Ajouter à la collection",
+  "showNextNotificationsDateTime": "Afficher la date et l'heure des prochaines notifications",
+  "date": "Date",
+  "plant": "Plante",
+  "low": "Faible",
+  "medium": "Moyen",
+  "high": "Élevé",
+  "sunlight": "Ensoleillement",
+  "min": "min",
+  "max": "max",
+  "errorWithMessage": "Erreur : {message}",
+  "@errorWithMessage": {
+    "description": "Une erreur avec un message",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "color": "Couleur",
+  "red": "rouge",
+  "green": "vert",
+  "blue": "bleu",
+  "white": "blanc",
+  "teal": "turquoise",
+  "yellow": "jaune",
+  "icon": "Icône",
+  "every": "Tous les",
+  "repeatAfter": "Répéter",
+  "frequencyEvery": "Chaque{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{jour} months{mois} weeks{semaine} other{année}}",
+  "@frequencyEvery": {
+    "description": "Une représentation de la fréquence",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "afterMessage": "Après {quantity} {unit, select, days{jour} months{mois} weeks{semaine} other{année}}{quantity, plural, =1 {} other {s}}",
+  "@afterMessage": {
+    "description": "Une représentation du temps passé",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "frequency": "{quantity} {unit, select, days{jour} months{mois} weeks{semaine} other{année}}{quantity, plural, =1 {} other {s}}",
+  "@frequency": {
+    "description": "Une représentation du temps",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "day": "jour",
+  "week": "semaine",
+  "month": "mois",
+  "year": "année",
+  "reminderDescription": "Chaque{quantity, plural, =1{} other{ {quantity}}} {unit, select, days{jour} months{mois} weeks{semaine} other{années}} à partir du {startDate}{endDate, select, null {} other { jusqu'au {endDate}}}",
+  "@reminderDescription": {
+    "description": "Une description de rappel",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "startDate": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "endDate": {
+        "type": "String"
+      }
+    }
+  },
+  "start": "Début",
+  "plantClassificationInfo": "{name} est une plante de l'espèce |{species}|{genus, select, null {} other {, genre |{genus}|}}{family, select, null {} other {, famille |{family}|}}.",
+  "@plantClassificationInfo": {
+    "description": "Une description de la classification d'une plante",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesSynonyms": "{synonyms, select, null {{species} n'a pas de synonymes} other {{species} est aussi connu sous le nom de : {synonyms}}}.",
+  "@speciesSynonyms": {
+    "description": "Une liste de synonymes d'espèce",
+    "placeholders": {
+      "synonyms": {
+        "type": "String"
+      },
+      "species": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesClassificationInfo": "{species} est une espèce du genre {genus, select, null {inconnu} other {|{genus}|}} et de la famille {family, select, null {inconnue} other {|{family}|}}.",
+  "@speciesClassificationInfo": {
+    "description": "Une description de la classification d'une plante",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "genus": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "eventType": "Type d'événement",
+  "end": "Fin",
+  "databaseAndCache": "Base de données et cache",
+  "manageDatabaseAndCache": "Gérer les paramètres de la base de données et du cache",
+  "clearCache": "Vider le cache",
+  "cacheCleaned": "Cache vidé",
+  "noSynonyms": "Aucun synonyme connu",
+  "areYouSureYouWantToDeleteThisPlant": "Êtes-vous sûr de vouloir supprimer cette plante ?",
+  "areYouSureYouWantToDeleteThisSpecies": "Êtes-vous sûr de vouloir supprimer cette espèce et toutes les plantes associées ?",
+  "speciesDeleted": "Espèce supprimée",
+  "noPlantsFound": "Aucune plante trouvée",
+  "yourPlantWillAppearHere": "Vos plantes apparaîtront ici une fois ajoutées à votre collection",
+  "howToAddPlants": "Comment ajouter des plantes",
+  "addPlantInstruction": "Cette application fonctionne avec des plantes de diverses espèces.\n\nVous pouvez ajouter une nouvelle plante en recherchant d'abord l'espèce (ou en en ajoutant une nouvelle), puis en liant une plante à celle-ci.\n\nPour commencer, recherchez une espèce.",
+  "searchASpecies": "Rechercher une espèce",
+  "noSpeciesFound": "Aucune espèce trouvée",
+  "searchAndAddSpeciesInstructions": "Vous pouvez ajouter une nouvelle espèce, ou connecter l'application à un service pour accéder à des espèces supplémentaires.",
+  "connectToAService": "Connecter à un service",
+  "noInfoAvailable": "Aucune information disponible",
+  "noReminder": "Aucun rappel trouvé.\n\nCréez un nouveau rappel pour vos plantes afin de recevoir des notifications et voir les prochaines actions à effectuer.",
+  "today": "Aujourd'hui",
+  "tomorrow": "Demain",
+  "yesterday": "Hier",
+  "inTime": "dans {quantity} {unit, select, days{jour} weeks{semaine} months{mois} other{année}}{quantity, plural, =1{} other {s}}",
+  "@inTime": {
+    "description": "Dans une quantité de temps",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "agoTime": "il y a {quantity} {unit, select, days{jour} weeks{semaine} months{mois} other{année}}{quantity, plural, =1{} other {s}}",
+  "@agoTime": {
+    "description": "Il y a une quantité de temps",
+    "placeholders": {
+      "quantity": {
+        "type": "num",
+        "format": "compact"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalInfo": "Informations supplémentaires",
+  "floraCodexDescription": "FloraCodex est un service qui fournit l'accès à une base de données complète d'espèces végétales, incluant leurs noms scientifiques, noms communs et autres informations pertinentes. Pour utiliser ce service, vous devez obtenir une clé API.",
+  "floraCodexGetApiKey": "Pour obtenir votre clé API, visitez le site web de FloraCodex, ou cliquez ici",
+  "reloadNotificationMessages": "Recharger les messages de notification",
+  "notificationMessagesReloaded": "Messages de notification rechargés, fermez et rouvrez l'application",
+  "notificationTitle1": "Pas de rose sans épines !",
+  "notificationTitle2": "SOS Plante !",
+  "notificationTitle3": "Chuchote à l'oreille des plantes !",
+  "notificationTitle4": "Pas aujourd'hui, Plante !",
+  "notificationTitle5": "Mets du beurre dans les épinards !",
+  "notificationTitle6": "C'est le bouquet !",
+  "notificationTitle7": "Ça sent le sapin !",
+  "notificationTitle8": "Ramène ta fraise !",
+  "notificationBody1": "|emoji| |plantName| se sent mi figue mi raisin sans son |eventType|...!",
+  "notificationBody2": "|emoji| La moutarde monte au nez de |plantName| qui attend son |eventType| !",
+  "notificationBody3": "|emoji| C'est bête comme chou, |plantName| a besoin de son |eventType| !",
+  "notificationBody4": "|emoji| Sans |eventType|, |plantName| va manger les pissenlits par la racine !",
+  "notificationBody5": "|emoji| Reste pas planté comme un poireau, |plantName| attend son |eventType| !",
+  "notificationBody6": "|emoji| |plantName| file un mauvais côton sans |eventType| !",
+  "notificationBody7": "|emoji| |plantName| poireaute en attendant son |eventType|...",
+  "notificationBody8": "|emoji| C'est la fin des haricots, |plantName| veut son |eventType| !"
+}
