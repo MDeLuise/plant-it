@@ -9,6 +9,9 @@
   <img src="images/banner.png" width="100%" />
 </p>
 
+> [!NOTE]
+> This project has reached a stable level of maturity, and as such, active development has slowed down. While pull requests and small bug fixes are still welcome, new feature requests will be considered with difficulty.
+
 ## Why?
 Plant-it is a gardening companion app that helps you take care of your plants.
 
