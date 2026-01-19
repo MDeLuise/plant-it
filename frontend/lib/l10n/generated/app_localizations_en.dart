@@ -325,7 +325,7 @@ class LEn extends L {
   String get apiKey => 'API Key';
 
   @override
-  String get notProvided => 'not porvided';
+  String get notProvided => 'not provided';
 
   @override
   String get appInfo => 'App Info';
