@@ -670,7 +670,7 @@ abstract class L {
   /// No description provided for @notProvided.
   ///
   /// In en, this message translates to:
-  /// **'not porvided'**
+  /// **'not provided'**
   String get notProvided;
 
   /// No description provided for @appInfo.
