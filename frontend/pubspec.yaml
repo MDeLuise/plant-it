@@ -46,7 +46,7 @@ dependencies:
   go_router: ^16.0.0
   google_fonts: ^6.3.0
   material_shapes: ^0.0.2
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.4
   flutter_carousel_widget: ^3.1.0
   # https://pub.dev/packages/flutter_popup
   # https://pub.dev/packages/dotted_border
