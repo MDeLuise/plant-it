@@ -1,0 +1,4 @@
+In this release:
+* Fix small typo in english translation
+* Add French translation
+* Add Spanish translation
