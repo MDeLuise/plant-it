@@ -31,40 +31,32 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
 
+  // Tracks the most recent Query so "Try again" can re-execute it.
+  // Passing `search.execute` directly as a VoidCallback would invoke it with
+  // a null argument, which crashes when the Command casts to Query.
+  Query _lastQuery = Query(term: "", offset: 0, limit: 10);
+
+  void _runSearch(Query query) {
+    _lastQuery = query;
+    widget.viewModel.search.execute(query);
+  }
+
   @override
   void initState() {
     super.initState();
     _searchController.addListener(() {
       if (_searchController.text.isEmpty) {
-        widget.viewModel.search.execute(
-          Query(
-            term: "",
-            offset: 0,
-            limit: 10,
-          ),
-        );
+        _runSearch(Query(term: "", offset: 0, limit: 10));
       }
     });
     widget.streamController.stream.listen((_) {
-      widget.viewModel.search.execute(
-        Query(
-            term: "",
-            offset: 0,
-            limit: 10,
-          ),
-      );
+      _runSearch(Query(term: "", offset: 0, limit: 10));
     });
   }
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      widget.viewModel.search.execute(
-        Query(
-          term: value,
-          offset: 0,
-          limit: 10,
-        ),
-      );
+      _runSearch(Query(term: value, offset: 0, limit: 10));
     }
   }
 
@@ -84,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
               return ErrorIndicator(
                 title: L.of(context).errorWithMessage(command.error.toString()),
                 label: L.of(context).tryAgain,
-                onPressed: widget.viewModel.search.execute,
+                onPressed: () => _runSearch(_lastQuery),
               );
             }
 
