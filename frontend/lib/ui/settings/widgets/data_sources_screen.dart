@@ -10,6 +10,22 @@ import 'package:plant_it/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
 
+// Strips leading/trailing whitespace and cuts the string at the first
+// URL-fragment character (& ? # whitespace). Users pasting from their
+// FloraCodex dashboard URL sometimes include trailing query fragments like
+// "&q"; left unsanitized these inject a second `q=` parameter into the
+// search URL, which makes FloraCodex return empty results silently.
+String _sanitizeApiKey(String raw) {
+  final trimmed = raw.trim();
+  const delimiters = ['&', '?', '#', ' ', '\n', '\t', '\r'];
+  int cut = trimmed.length;
+  for (final d in delimiters) {
+    final idx = trimmed.indexOf(d);
+    if (idx != -1 && idx < cut) cut = idx;
+  }
+  return trimmed.substring(0, cut);
+}
+
 class DataSourcesScreen extends StatelessWidget {
   final SettingsViewModel viewModel;
   const DataSourcesScreen({
@@ -72,7 +88,7 @@ class FloraCodexScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                String apiKey = controller.text.trim();
+                String apiKey = _sanitizeApiKey(controller.text);
                 if (apiKey.isNotEmpty) {
                   viewModel.save.executeWithFuture({
                     UserSettingsKeys.floraCodexKey.key: apiKey,
