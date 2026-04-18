@@ -147,87 +147,75 @@ class FloraCodexSearcher extends SpeciesSearcher {
 
   @override
   Future<Result<SpeciesSearcherResult>> getDetails(String id) async {
-    Result<SpeciesCompanion> species = await _getSpecies(id);
-    if (species.isError()) {
-      return Failure(Exception(species.exceptionOrNull()));
+    // Ensure the API key has been loaded from storage. Without this,
+    // tapping an external species from (for example) a fresh app launch
+    // or a non-search entry point sends a literal "key=null" in the URL,
+    // which FloraCodex answers with 403. `search()` already performs
+    // this initialization guard; `getDetails()` previously did not.
+    if (!_initialized) {
+      Result<void> init = await _initialize();
+      if (init.isError()) {
+        return Failure(Exception(init.exceptionOrNull()));
+      }
     }
-    Result<SpeciesCareCompanion> care = await _getCare(id);
-    if (care.isError()) {
-      return Failure(Exception(care.exceptionOrNull()));
-    }
-    Result<List<SpeciesSynonymsCompanion>> synonyms = await _getSynonyms(id);
-    if (synonyms.isError()) {
-      return Failure(Exception(synonyms.exceptionOrNull()));
+    if (_apiKey == null) {
+      return Failure(
+          Exception("Error while loading species from Flora Codex"));
     }
 
-    return Success(SpeciesSearcherResult(
-      speciesCompanion: species.getOrThrow(),
-      speciesCareCompanion: care.getOrThrow(),
-      speciesSynonymsCompanion: synonyms.getOrThrow(),
-    ));
-  }
-
-  Future<Result<SpeciesCompanion>> _getSpecies(String id) async {
-    String url = "$baseUrl$version/species/$id?key=$_apiKey";
-    http.Response response = await http.get(Uri.parse(url));
+    // FloraCodex returns species data AND common_names from a single
+    // `/species/{id}` call. Previously the searcher fetched this endpoint
+    // twice per detail load (once for the species, once for synonyms),
+    // which burned through the free-tier rate limit twice as fast as
+    // necessary. Now we parse both from one response.
+    final String url = "$baseUrl$version/species/$id?key=$_apiKey";
+    final http.Response response = await http.get(Uri.parse(url));
     if (response.statusCode != 200) {
       return Failure(Exception("Error while loading species from Flora Codex"));
     }
-    dynamic jsonResponse = json.decode(response.body);
-    _FloraCodexSpeciesDTO dto = _FloraCodexSpeciesDTO.fromJson(jsonResponse);
-    return Success(
-      SpeciesCompanion(
-        id: Value(-1),
-        scientificName: Value(dto.scientificName),
-        family: Value(dto.family),
-        genus: Value(dto.genus),
-        species: Value(dto.scientificName),
-        author: Value(dto.author),
-        externalAvatarUrl: Value(dto.imageUrl),
-        dataSource: const Value(SpeciesDataSource.floraCodex),
-        externalId: Value(dto.id),
-      ),
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    final _FloraCodexSpeciesDTO dto =
+        _FloraCodexSpeciesDTO.fromJson(jsonResponse);
+    final SpeciesCompanion speciesCompanion = SpeciesCompanion(
+      id: const Value(-1),
+      scientificName: Value(dto.scientificName),
+      family: Value(dto.family),
+      genus: Value(dto.genus),
+      species: Value(dto.scientificName),
+      author: Value(dto.author),
+      externalAvatarUrl: Value(dto.imageUrl),
+      dataSource: const Value(SpeciesDataSource.floraCodex),
+      externalId: Value(dto.id),
     );
+
+    final List<SpeciesSynonymsCompanion> synonyms =
+        _parseSynonyms(jsonResponse);
+
+    return Success(SpeciesSearcherResult(
+      speciesCompanion: speciesCompanion,
+      // Care data is not currently fetched; the /plants/{id} call is
+      // commented out upstream and would cost another request.
+      speciesCareCompanion: const SpeciesCareCompanion(species: Value(-1)),
+      speciesSynonymsCompanion: synonyms,
+    ));
   }
 
-  // always get from API the following (check better?)
-  // "growth": {},
-  Future<Result<SpeciesCareCompanion>> _getCare(String id) async {
-    // final String url =
-    //     "$baseUrl$version/plants/$id?key=$_apiKey";
-    // final http.Response response = await http.get(Uri.parse(url));
-    // if (response.statusCode != 200) {
-    //   return Failure(
-    //       Exception("Error while loading species care from Flora Codex"));
-    // }
-    // final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    return Future.value(
-        const Success(SpeciesCareCompanion(species: Value(-1))));
-  }
-
-  Future<Result<List<SpeciesSynonymsCompanion>>> _getSynonyms(String id) async {
-    String url = "$baseUrl$version/species/$id?key=$_apiKey";
-    http.Response response = await http.get(Uri.parse(url));
-    if (response.statusCode != 200) {
-      return Failure(
-          Exception("Error while loading species synonyms from Flora Codex"));
-    }
-
-    Map<String, dynamic> jsonResponse = json.decode(response.body);
-    List<SpeciesSynonymsCompanion> synonyms = [];
-
-    dynamic commonNames = jsonResponse['common_names'];
-    if (commonNames != null && commonNames is List) {
-      for (dynamic languageGroup in commonNames) {
+  List<SpeciesSynonymsCompanion> _parseSynonyms(
+      Map<String, dynamic> jsonResponse) {
+    final List<SpeciesSynonymsCompanion> synonyms = [];
+    final dynamic commonNames = jsonResponse['common_names'];
+    if (commonNames is List) {
+      for (final dynamic languageGroup in commonNames) {
         if (languageGroup is Map<String, dynamic>) {
-          dynamic englishNames = languageGroup['ENGLISH'];
-          if (englishNames != null && englishNames is List) {
-            for (dynamic name in englishNames) {
+          final dynamic englishNames = languageGroup['ENGLISH'];
+          if (englishNames is List) {
+            for (final dynamic name in englishNames) {
               if (name is String) {
                 synonyms.add(SpeciesSynonymsCompanion(
                   synonym: Value(name),
-                  species: Value(-1),
-                  id: Value(-1),
+                  species: const Value(-1),
+                  id: const Value(-1),
                 ));
               }
             }
@@ -235,8 +223,7 @@ class FloraCodexSearcher extends SpeciesSearcher {
         }
       }
     }
-
-    return Success(synonyms);
+    return synonyms;
   }
 
   Future<Result<void>> _initialize() async {
