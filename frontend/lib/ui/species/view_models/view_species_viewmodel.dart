@@ -151,7 +151,12 @@ class ViewSpeciesViewModel extends ChangeNotifier {
     _speciesSynonyms = details.getOrThrow().speciesSynonymsCompanion;
     _log.fine("External species synonyms loaded");
 
-    if (details.getOrThrow().speciesCompanion.externalAvatarUrl.present) {
+    // Drift's `.present` is true for both `Value(something)` and `Value(null)`,
+    // so we also have to guard against a present-but-null URL. FloraCodex
+    // can return a species with no `image_url`, which would otherwise crash
+    // with "null check operator used on a null value" at `.value!` below.
+    if (details.getOrThrow().speciesCompanion.externalAvatarUrl.present &&
+        details.getOrThrow().speciesCompanion.externalAvatarUrl.value != null) {
       String url =
           details.getOrThrow().speciesCompanion.externalAvatarUrl.value!;
 
