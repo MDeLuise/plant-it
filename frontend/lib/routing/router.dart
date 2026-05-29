@@ -96,6 +96,7 @@ GoRouter router() => GoRouter(
                 appCache: context.read(),
                 notificationsLangRepository: context.read(),
                 sharedPreferences: context.read(),
+                floraCodexSearcher: context.read(),
               );
               settingsViewModel.load.execute();
 
@@ -203,6 +204,7 @@ GoRouter router() => GoRouter(
                       appCache: context.read(),
                       notificationsLangRepository: context.read(),
                       sharedPreferences: context.read(),
+                      floraCodexSearcher: context.read(),
                     );
                     viewModel.load.execute();
                   }

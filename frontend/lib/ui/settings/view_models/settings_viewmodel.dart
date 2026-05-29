@@ -7,6 +7,7 @@ import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/notification_service.dart';
 import 'package:plant_it/data/service/scheduling_service.dart';
 import 'package:plant_it/data/service/search/cache/app_cache.dart';
+import 'package:plant_it/data/service/search/flora_codex_searcher.dart';
 import 'package:plant_it/database/database.dart';
 import 'package:plant_it/domain/models/user_settings_keys.dart';
 import 'package:result_dart/result_dart.dart';
@@ -21,11 +22,13 @@ class SettingsViewModel extends ChangeNotifier {
     required NotificationsLangRepository notificationsLangRepository,
     required SharedPreferences sharedPreferences,
     required AppCache appCache,
+    required FloraCodexSearcher floraCodexSearcher,
   })  : _userSettingRepository = userSettingRepository,
         _reminderRepository = reminderRepository,
         _schedulingService = schedulingService,
         _notificationService = notificationService,
         _appCache = appCache,
+        _floraCodexSearcher = floraCodexSearcher,
         _notificationsLangRepository = notificationsLangRepository,
         _pref = sharedPreferences {
     load = Command.createAsyncNoParam(() async {
@@ -71,6 +74,7 @@ class SettingsViewModel extends ChangeNotifier {
   final NotificationsLangRepository _notificationsLangRepository;
   final SharedPreferences _pref;
   final AppCache _appCache;
+  final FloraCodexSearcher _floraCodexSearcher;
   final _log = Logger('SettingsViewModel');
   final Map<String, String> _userSettings = {};
 
@@ -141,6 +145,12 @@ class SettingsViewModel extends ChangeNotifier {
         return result.exceptionOrNull()!.toFailure();
       }
       _userSettings[k] = newSettings[k]!;
+    }
+    // Refresh the searcher's cached key and drop stale search results so a newly
+    // saved key takes effect without restarting the app.
+    if (newSettings.containsKey(UserSettingsKeys.floraCodexKey.key)) {
+      _floraCodexSearcher.setKey(newSettings[UserSettingsKeys.floraCodexKey.key]);
+      await _appCache.clearSearch();
     }
     if (newSettings.containsKey(UserSettingsKeys.notificationEnabled.key) &&
         newSettings[UserSettingsKeys.notificationEnabled.key] == "true") {
