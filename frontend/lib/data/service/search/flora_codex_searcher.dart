@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plant_it/data/repository/user_setting_repository.dart';
 import 'package:plant_it/data/service/search/species_searcher.dart';
 import 'package:plant_it/database/database.dart';
@@ -72,8 +74,9 @@ import 'package:result_dart/result_dart.dart';
 class FloraCodexSearcher extends SpeciesSearcher {
   final UserSettingRepository _userSettingRepository;
   final String baseUrl = "https://api.floracodex.com";
-  final String version = "/v1/";
+  final String version = "/v1";
   String? _apiKey;
+  String? _userAgent;
   bool _initialized = false;
 
   FloraCodexSearcher({
@@ -82,6 +85,21 @@ class FloraCodexSearcher extends SpeciesSearcher {
 
   void setKey(String? key) {
     _apiKey = key;
+  }
+
+  /// HTTP headers for every Flora Codex request. The User-Agent identifies the
+  /// app, its version, and the host platform (android/ios/macos/...). Built
+  /// once and memoized, since none of it changes within a run. Resolved lazily
+  /// here rather than only in [_initialize] because [getDetails] reaches the
+  /// network without going through [search]/[_initialize].
+  Future<Map<String, String>> _headers() async {
+    _userAgent ??= await _buildUserAgent();
+    return {"User-Agent": _userAgent!};
+  }
+
+  Future<String> _buildUserAgent() async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return "plant-it/${packageInfo.version} (${Platform.operatingSystem})";
   }
 
   @override
@@ -99,7 +117,8 @@ class FloraCodexSearcher extends SpeciesSearcher {
 
     final String url =
         "$baseUrl$version/species/search?q=$term&limit=$limit&page=0&key=$_apiKey";
-    final http.Response response = await http.get(Uri.parse(url));
+    final http.Response response =
+        await http.get(Uri.parse(url), headers: await _headers());
     if (response.statusCode != 200) {
       return Failure(Exception("Error while loading species from Flora Codex"));
     }
@@ -169,7 +188,8 @@ class FloraCodexSearcher extends SpeciesSearcher {
 
   Future<Result<SpeciesCompanion>> _getSpecies(String id) async {
     String url = "$baseUrl$version/species/$id?key=$_apiKey";
-    http.Response response = await http.get(Uri.parse(url));
+    http.Response response =
+        await http.get(Uri.parse(url), headers: await _headers());
     if (response.statusCode != 200) {
       return Failure(Exception("Error while loading species from Flora Codex"));
     }
@@ -207,7 +227,8 @@ class FloraCodexSearcher extends SpeciesSearcher {
 
   Future<Result<List<SpeciesSynonymsCompanion>>> _getSynonyms(String id) async {
     String url = "$baseUrl$version/species/$id?key=$_apiKey";
-    http.Response response = await http.get(Uri.parse(url));
+    http.Response response =
+        await http.get(Uri.parse(url), headers: await _headers());
     if (response.statusCode != 200) {
       return Failure(
           Exception("Error while loading species synonyms from Flora Codex"));
